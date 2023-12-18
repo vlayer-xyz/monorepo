@@ -3,26 +3,6 @@ fn main(x: Field, y: pub Field) {
     assert(x != y);
 }
 
-struct WithProof<T> {
-    value: T,
-    proof: [u8; 1],
-}
-
-struct Account {
-    nonce: [u8; 32],
-    balance: [u8; 32],
-    storageRoot: [u8; 32],
-    codeHash: [u8; 32]
-}
-
-// #[oracle(get_account)]
-// unconstrained fn get_account_oracle(block_no: Field, account: str<42>) -> WithProof<Account> {}
-
-// unconstrained fn get_account(block_no: Field, account: str<42>) -> Account {
-//     let WithProof { value, proof } = get_account_oracle(block_no, account);
-//     value
-// }
-
 #[oracle(get_account)]
 unconstrained fn get_account_oracle(block_no: Field, account: str<42>) -> Field {}
 

@@ -3,7 +3,6 @@ import { Noir } from '@noir-lang/noir_js';
 import noir_ethereum_history_api from './circuit/target/noir_ethereum_history_api.json';
 
 const oracles = async (name, args) => {
-  console.log("call oracles", name, args);
   if (name === "get_account") {
     return Promise.resolve(["0x1"])
   }
