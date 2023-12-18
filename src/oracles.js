@@ -1,15 +1,22 @@
 import initNoirAbi, { abiEncode, abiDecode, WitnessMap, Field } from '@noir-lang/noirc_abi';
 import { createPublicClient, http } from 'viem'
 import { mainnet } from 'viem/chains'
+import { argToString } from './encode.js'
 
-function argToBigIng(arg) {
-  return parseInt(arg[0], 16)
+async function fetchAccountWithProof(address, storageKeys = []) {
+  const client = createPublicClient({
+    chain: mainnet,
+    transport: http(process.env.ETHEREUM_JSON_RPC_API_URL)
+  })
+  return client.getProof({address, storageKeys});
 }
 
 const getAccount = async (blockNo, address) => {
+  const account = await fetchAccountWithProof(argToString(address));
   const result = [
-    (18800000n).toString(16),
-    (0n).toString(16)
+    account.balance.toString(16),
+    account.codeHash,
+    account.nonce.toString(16),
   ]
   return Promise.resolve(result)
 }
