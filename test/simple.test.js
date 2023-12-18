@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import { generate_and_verify_simple_proof } from '../src/main.js'
-import initNoirAbi, { abiEncode, abiDecode, WitnessMap, Field } from '@noir-lang/noirc_abi';
 
 describe('getAccount', () => {
   it('proof successes', async () => {
