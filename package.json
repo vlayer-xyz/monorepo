@@ -13,7 +13,8 @@
   "license": "ISC",
   "dependencies": {
     "@noir-lang/backend_barretenberg": "^0.21.0",
-    "@noir-lang/noir_js": "^0.21.0"
+    "@noir-lang/noir_js": "^0.21.0",
+    "alchemy-sdk": "^3.1.0"
   },
   "devDependencies": {
     "rollup-plugin-copy": "^3.5.0",
