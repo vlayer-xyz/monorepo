@@ -2,6 +2,6 @@
 name = "noir_ethereum_history_api"
 type = "bin"
 authors = ["Arkadiusz Konior, Marek Kirejczyk"]
-compiler_version = "0.22.0"
+compiler_version = ">=0.21.0"
 
 [dependencies]
