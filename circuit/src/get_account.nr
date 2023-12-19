@@ -13,5 +13,5 @@ unconstrained fn get_account(block_no: Field, address: str<42>) -> Account {
 
 #[test]
 fn test_get_account() {
-    // TODO: implement get_account using oracle mock
+    // TODO: need and empty test for CI to pass
 }
