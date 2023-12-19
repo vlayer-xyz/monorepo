@@ -1,16 +1,8 @@
-fn main(x: Field, y: pub Field) {
-    let account = get_account(18800000, "0xe9c3123e4cf348c66b20a985af264891fc0a441a");
-    assert(x != y);
-}
+mod get_account;
+use crate::get_account::{get_account, Account};
 
-#[oracle(get_account)]
-unconstrained fn get_account_oracle(block_no: Field, account: str<42>) -> Field {}
-
-unconstrained fn get_account(block_no: Field, account: str<42>) -> Field {
-    get_account_oracle(block_no, account)
-}
-
-#[test]
-fn test_main() {
-    main(1, 2);
+fn main(block_no: pub Field, address: pub str<42>) -> pub Account {
+    let account = get_account(block_no, address);
+    assert(account.nonce == 0); // Temporary test
+    account
 }
