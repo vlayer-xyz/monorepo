@@ -6,6 +6,7 @@ jobs:
   test:
     name: npm test
     runs-on: ubuntu-latest
+    environment: CI
 
     steps:
       - name: Checkout
