@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: CI
     env:
-      ETHEREUM_JSON_RPC_API_URL: example.com
+      ETHEREUM_JSON_RPC_API_URL: ${{ secrets.ETHEREUM_JSON_RPC_API_URL }}
 
     steps:
       - name: Checkout
