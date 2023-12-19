@@ -4,11 +4,14 @@ import { mainnet } from 'viem/chains'
 import { argToString } from './encode.js'
 
 async function fetchAccountWithProof(address, storageKeys = []) {
+  console.log(process.env.ETHEREUM_JSON_RPC_API_URL);
   const client = createPublicClient({
     chain: mainnet,
     transport: http(process.env.ETHEREUM_JSON_RPC_API_URL)
   })
-  return client.getProof({address, storageKeys});
+  let proof = client.getProof({address, storageKeys});
+  console.log(await proof);
+  return proof;
 }
 
 const getAccount = async (blockNo, address) => {
