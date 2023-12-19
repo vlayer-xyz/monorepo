@@ -1,4 +1,3 @@
-import initNoirAbi, { abiEncode, abiDecode, WitnessMap, Field } from '@noir-lang/noirc_abi';
 import { createPublicClient, http } from 'viem'
 import { mainnet } from 'viem/chains'
 import { argToString } from './encode.js'
