@@ -4,6 +4,7 @@ on: [push]
 
 jobs:
   test:
+    name: npm test
     runs-on: ubuntu-latest
 
     steps:
