@@ -1,17 +1,13 @@
-import initNoirAbi, { abiEncode, abiDecode, WitnessMap, Field } from '@noir-lang/noirc_abi';
 import { createPublicClient, http } from 'viem'
 import { mainnet } from 'viem/chains'
 import { argToString } from './encode.js'
 
 async function fetchAccountWithProof(address, storageKeys = []) {
-  console.log(`process.env.ETHEREUM_JSON_RPC_API_URL: ${process.env.ETHEREUM_JSON_RPC_API_URL}`);
   const client = createPublicClient({
     chain: mainnet,
     transport: http(process.env.ETHEREUM_JSON_RPC_API_URL)
   })
-  let proof = client.getProof({address, storageKeys});
-  console.log(await proof);
-  return proof;
+  return client.getProof({address, storageKeys});
 }
 
 const getAccount = async (blockNo, address) => {
