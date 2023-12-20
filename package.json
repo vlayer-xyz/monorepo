@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npx vitest run",
+    "test": "vitest run",
     "test:watch": "npx vitest watch",
     "start": "vite --open",
     "build": "vite build",
