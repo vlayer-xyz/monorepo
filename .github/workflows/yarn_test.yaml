@@ -23,6 +23,9 @@ jobs:
         run: |
           corepack enable
           yarn set version latest
+      - name: Install depdendencies
+        run: |
+          yarn install
 
       - name: Run tests
         run: yarn test
