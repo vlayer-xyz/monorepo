@@ -19,5 +19,14 @@ jobs:
         with:
           node-version: '20.x'
 
+      - name: Install yarn 4
+        run: |
+          corepack enable
+          yarn set version latest
+      - name: Install depdendencies
+        run: |
+          yarn --version
+          yarn install
+
       - name: Run tests
         run: yarn test
