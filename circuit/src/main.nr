@@ -1,4 +1,6 @@
 mod get_account;
+mod get_storage;
+
 use crate::get_account::{get_account, Account};
 
 fn main(block_no: pub Field, address: pub str<42>) -> pub Account {
