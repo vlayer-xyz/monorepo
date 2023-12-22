@@ -5,3 +5,4 @@ authors = ["Arkadiusz Konior, Marek Kirejczyk"]
 compiler_version = "0.22.0"
 
 [dependencies]
+proof = { path = "./deps/noir-trie-proofs/lib/" }
