@@ -1,4 +1,4 @@
-name: yarn  test
+name: yarn tests
 
 on: [push]
 

@@ -1,4 +1,4 @@
-name: circuit test
+name: circuit tests
 
 on: [push]
 
