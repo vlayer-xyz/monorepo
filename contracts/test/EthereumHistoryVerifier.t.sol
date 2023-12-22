@@ -2,9 +2,7 @@
 pragma solidity ^0.8.13;
 
 import {Test, console2} from "forge-std/Test.sol";
-import {EthereumHistoryVerifier, InvalidBlockHash} from "../src/EthereumHistoryVerifier.sol";
-
-import "forge-std/console.sol";
+import {EthereumHistoryVerifier, InvalidBlockHash, InvalidBlockNumber} from "../src/EthereumHistoryVerifier.sol";
 
 
 contract EthereumHistoryVerifierTest is Test {
@@ -16,14 +14,12 @@ contract EthereumHistoryVerifierTest is Test {
     }
 
     function test_correct_block() public view {
-        console.log("block.number", block.number);
         uint blockNo = block.number-1;
         bytes32 blockHash = blockhash(blockNo);
         verifier.verify(blockNo, blockHash);
     }
 
     function test_RevertWhenInvalidHash() public {
-        console.log("block.number", block.number);
         uint blockNo = block.number-1;
         bytes32 blockHash = blockhash(blockNo-1);
 
@@ -31,4 +27,34 @@ contract EthereumHistoryVerifierTest is Test {
         verifier.verify(blockNo, blockHash);
     }
 
+    function test_RevertIfCurrentBlock() public {
+        uint blockNo = block.number;
+        bytes32 blockHash = blockhash(blockNo);
+
+        vm.expectRevert(abi.encodeWithSelector(InvalidBlockNumber.selector, blockNo));
+        verifier.verify(blockNo, blockHash);
+    }
+
+    function test_RevertIfFutureBlock() public {
+        uint blockNo = block.number + 1;
+        bytes32 blockHash = blockhash(blockNo);
+
+        vm.expectRevert(abi.encodeWithSelector(InvalidBlockNumber.selector, blockNo));
+        verifier.verify(blockNo, blockHash);
+    }
+
+    function test_RevertIfBlockTooOld() public {
+        uint blockNo = block.number - 257;
+        bytes32 blockHash = blockhash(blockNo);
+
+        vm.expectRevert(abi.encodeWithSelector(InvalidBlockNumber.selector, blockNo));
+        verifier.verify(blockNo, blockHash);
+    }
+
+    function test_BlockJustOldEnough() public view {
+        uint blockNo = block.number - 256;
+        bytes32 blockHash = blockhash(blockNo);
+
+        verifier.verify(blockNo, blockHash);
+    }
 }
