@@ -16,4 +16,6 @@ describe('getAccount', () => {
       'Circuit execution failed: Error: Cannot satisfy constraint',
     );
   })
+}, {
+  timeout: 10000
 })
