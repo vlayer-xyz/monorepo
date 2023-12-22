@@ -1,5 +1,4 @@
 mod get_account;
-mod get_storage;
 
 use crate::get_account::{get_account, Account};
 
