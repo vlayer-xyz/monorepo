@@ -25,10 +25,10 @@ jobs:
           yarn set version latest
       - name: Install depdendencies
         run: |
-          cd packages/ethereum
+          cd packages/noir-ethereum-api
           yarn install
 
       - name: Run tests
         run: |
-          cd packages/ethereum
+          cd packages/noir-ethereum-api
           yarn test
