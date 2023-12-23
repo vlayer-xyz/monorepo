@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { argToString } from '../src/encode';
+import { argToAddress } from '../src/encode.js';
 
 describe('encode', () => {
   it('argToString', () => {
@@ -47,6 +47,6 @@ describe('encode', () => {
       '0x0000000000000000000000000000000000000000000000000000000000000031',
       '0x0000000000000000000000000000000000000000000000000000000000000061'
     ];
-    expect(argToString(arg)).toBe("0xe9c3123e4cf348c66b20a985af264891fc0a441a");
+    expect(argToAddress(arg)).toBe("0xe9c3123e4cf348c66b20a985af264891fc0a441a");
   });
 })
