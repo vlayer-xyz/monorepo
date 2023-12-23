@@ -1,1 +1,0 @@
-{"version":3,"file":"getEventSignature.js","sourceRoot":"","sources":["../../../utils/hash/getEventSignature.ts"],"names":[],"mappings":"AAGA,OAAO,EAEL,oBAAoB,GACrB,MAAM,2BAA2B,CAAA;AAMlC,MAAM,CAAC,MAAM,iBAAiB,GAAG,CAAC,EAAqB,EAAE,EAAE;IACzD,OAAO,oBAAoB,CAAC,EAAuB,CAAC,CAAA;AACtD,CAAC,CAAA"}

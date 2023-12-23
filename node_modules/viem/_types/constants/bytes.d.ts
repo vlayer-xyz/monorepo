@@ -1,2 +1,0 @@
-export declare const zeroHash: "0x0000000000000000000000000000000000000000000000000000000000000000";
-//# sourceMappingURL=bytes.d.ts.map
