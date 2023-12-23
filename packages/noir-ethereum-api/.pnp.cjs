@@ -30,6 +30,7 @@ const RAW_RUNTIME_STATE =
           ["@noir-lang/noir_js", "npm:0.22.0"],\
           ["dotenv", "npm:16.3.1"],\
           ["rollup-plugin-copy", "npm:3.5.0"],\
+          ["typescript", "patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"],\
           ["viem", "virtual:003e2a12d10be9d46f8d546479e77eaf150a0b093d3001eacfb2f0ac7091069bf96f8945fc724f10155418756f3ea558a2c844ce787b132adc5867f016fb0403#npm:1.20.3"],\
           ["vite", "virtual:003e2a12d10be9d46f8d546479e77eaf150a0b093d3001eacfb2f0ac7091069bf96f8945fc724f10155418756f3ea558a2c844ce787b132adc5867f016fb0403#npm:4.5.1"],\
           ["vitest", "virtual:003e2a12d10be9d46f8d546479e77eaf150a0b093d3001eacfb2f0ac7091069bf96f8945fc724f10155418756f3ea558a2c844ce787b132adc5867f016fb0403#npm:1.1.0"]\
@@ -877,7 +878,7 @@ const RAW_RUNTIME_STATE =
           ["abitype", "virtual:b25b0d5090aaa3e2288389ea55983d05e6c79e97b72795c2013cd9b595cc2ff50a4d0486788bc407a92bd1e7db4fddd6684d9fffeb9f16b848a767bb67fe6cba#npm:0.9.8"],\
           ["@types/typescript", null],\
           ["@types/zod", null],\
-          ["typescript", null],\
+          ["typescript", "patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"],\
           ["zod", null]\
         ],\
         "packagePeers": [\
@@ -2078,6 +2079,7 @@ const RAW_RUNTIME_STATE =
           ["@noir-lang/noir_js", "npm:0.22.0"],\
           ["dotenv", "npm:16.3.1"],\
           ["rollup-plugin-copy", "npm:3.5.0"],\
+          ["typescript", "patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"],\
           ["viem", "virtual:003e2a12d10be9d46f8d546479e77eaf150a0b093d3001eacfb2f0ac7091069bf96f8945fc724f10155418756f3ea558a2c844ce787b132adc5867f016fb0403#npm:1.20.3"],\
           ["vite", "virtual:003e2a12d10be9d46f8d546479e77eaf150a0b093d3001eacfb2f0ac7091069bf96f8945fc724f10155418756f3ea558a2c844ce787b132adc5867f016fb0403#npm:4.5.1"],\
           ["vitest", "virtual:003e2a12d10be9d46f8d546479e77eaf150a0b093d3001eacfb2f0ac7091069bf96f8945fc724f10155418756f3ea558a2c844ce787b132adc5867f016fb0403#npm:1.1.0"]\
@@ -2636,6 +2638,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["typescript", [\
+      ["patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7", {\
+        "packageLocation": "./.yarn/cache/typescript-patch-4778c7998b-c93786fcc9.zip/node_modules/typescript/",\
+        "packageDependencies": [\
+          ["typescript", "patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["ufo", [\
       ["npm:1.3.2", {\
         "packageLocation": "./.yarn/cache/ufo-npm-1.3.2-dcaf8105d0-7133290d49.zip/node_modules/ufo/",\
@@ -2703,7 +2714,7 @@ const RAW_RUNTIME_STATE =
           ["@types/typescript", null],\
           ["abitype", "virtual:b25b0d5090aaa3e2288389ea55983d05e6c79e97b72795c2013cd9b595cc2ff50a4d0486788bc407a92bd1e7db4fddd6684d9fffeb9f16b848a767bb67fe6cba#npm:0.9.8"],\
           ["isows", "virtual:b25b0d5090aaa3e2288389ea55983d05e6c79e97b72795c2013cd9b595cc2ff50a4d0486788bc407a92bd1e7db4fddd6684d9fffeb9f16b848a767bb67fe6cba#npm:1.0.3"],\
-          ["typescript", null],\
+          ["typescript", "patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"],\
           ["ws", "virtual:b25b0d5090aaa3e2288389ea55983d05e6c79e97b72795c2013cd9b595cc2ff50a4d0486788bc407a92bd1e7db4fddd6684d9fffeb9f16b848a767bb67fe6cba#npm:8.13.0"]\
         ],\
         "packagePeers": [\
