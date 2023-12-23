@@ -1,0 +1,37 @@
+import { NegativeOffsetError, PositionOutOfBoundsError } from '../errors/cursor.js';
+import type { ErrorType } from '../errors/utils.js';
+import type { ByteArray } from '../types/misc.js';
+export type Cursor = {
+    bytes: ByteArray;
+    dataView: DataView;
+    position: number;
+    assertPosition(position: number): void;
+    decrementPosition(offset: number): void;
+    incrementPosition(offset: number): void;
+    inspectByte(position?: number): ByteArray[number];
+    inspectBytes(length: number, position?: number): ByteArray;
+    inspectUint8(position?: number): number;
+    inspectUint16(position?: number): number;
+    inspectUint24(position?: number): number;
+    inspectUint32(position?: number): number;
+    pushByte(byte: ByteArray[number]): void;
+    pushBytes(bytes: ByteArray): void;
+    pushUint8(value: number): void;
+    pushUint16(value: number): void;
+    pushUint24(value: number): void;
+    pushUint32(value: number): void;
+    readByte(): ByteArray[number];
+    readBytes(length: number): ByteArray;
+    readUint8(): number;
+    readUint16(): number;
+    readUint24(): number;
+    readUint32(): number;
+    setPosition(position: number): void;
+};
+export type CreateCursorErrorType = ErrorType;
+export type CursorErrorType = CursorAssertPositionErrorType | CursorDecrementPositionErrorType | CursorIncrementPositionErrorType | ErrorType;
+export type CursorAssertPositionErrorType = PositionOutOfBoundsError | ErrorType;
+export type CursorDecrementPositionErrorType = NegativeOffsetError | ErrorType;
+export type CursorIncrementPositionErrorType = NegativeOffsetError | ErrorType;
+export declare function createCursor(bytes: ByteArray): Cursor;
+//# sourceMappingURL=cursor.d.ts.map

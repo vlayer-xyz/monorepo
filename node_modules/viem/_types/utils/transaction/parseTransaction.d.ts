@@ -1,0 +1,26 @@
+import { type InvalidAddressErrorType } from '../../errors/address.js';
+import { type InvalidLegacyVErrorType, type InvalidSerializedTransactionErrorType } from '../../errors/transaction.js';
+import type { ErrorType } from '../../errors/utils.js';
+import type { Hex } from '../../types/misc.js';
+import type { AccessList, TransactionSerializableEIP1559, TransactionSerializableEIP2930, TransactionSerializableLegacy, TransactionSerialized, TransactionType } from '../../types/transaction.js';
+import { type IsAddressErrorType } from '../address/isAddress.js';
+import { type IsHexErrorType } from '../data/isHex.js';
+import { type PadHexErrorType } from '../data/pad.js';
+import { type HexToBigIntErrorType, type HexToNumberErrorType } from '../encoding/fromHex.js';
+import { type FromRlpErrorType } from '../encoding/fromRlp.js';
+import type { RecursiveArray } from '../encoding/toRlp.js';
+import { type AssertTransactionEIP1559ErrorType, type AssertTransactionEIP2930ErrorType, type AssertTransactionLegacyErrorType } from './assertTransaction.js';
+import { type GetSerializedTransactionType, type GetSerializedTransactionTypeErrorType } from './getSerializedTransactionType.js';
+export type ParseTransactionReturnType<TSerialized extends TransactionSerialized = TransactionSerialized, TType extends TransactionType = GetSerializedTransactionType<TSerialized>> = (TType extends 'eip1559' ? TransactionSerializableEIP1559 : never) | (TType extends 'eip2930' ? TransactionSerializableEIP2930 : never) | (TType extends 'legacy' ? TransactionSerializableLegacy : never);
+export type ParseTransactionErrorType = GetSerializedTransactionTypeErrorType | ParseTransactionEIP1559ErrorType | ParseTransactionEIP2930ErrorType | ParseTransactionLegacyErrorType;
+export declare function parseTransaction<TSerialized extends TransactionSerialized>(serializedTransaction: TSerialized): ParseTransactionReturnType<TSerialized>;
+type ParseTransactionEIP1559ErrorType = AssertTransactionEIP1559ErrorType | ToTransactionArrayErrorType | HexToBigIntErrorType | HexToNumberErrorType | InvalidLegacyVErrorType | InvalidSerializedTransactionErrorType | IsHexErrorType | ParseEIP155SignatureErrorType | ErrorType;
+type ParseTransactionEIP2930ErrorType = AssertTransactionEIP2930ErrorType | ToTransactionArrayErrorType | HexToBigIntErrorType | HexToNumberErrorType | InvalidLegacyVErrorType | InvalidSerializedTransactionErrorType | IsHexErrorType | ParseEIP155SignatureErrorType | ErrorType;
+type ParseTransactionLegacyErrorType = AssertTransactionLegacyErrorType | FromRlpErrorType | HexToBigIntErrorType | HexToNumberErrorType | InvalidLegacyVErrorType | InvalidSerializedTransactionErrorType | IsHexErrorType | ErrorType;
+export type ToTransactionArrayErrorType = FromRlpErrorType | ErrorType;
+export declare function toTransactionArray(serializedTransaction: string): import("../encoding/fromRlp.js").FromRlpReturnType<"hex">;
+export type ParseAccessListErrorType = InvalidAddressErrorType | IsAddressErrorType | ErrorType;
+export declare function parseAccessList(accessList_: RecursiveArray<Hex>): AccessList;
+type ParseEIP155SignatureErrorType = HexToBigIntErrorType | PadHexErrorType | ErrorType;
+export {};
+//# sourceMappingURL=parseTransaction.d.ts.map

@@ -1,0 +1,1 @@
+{"version":3,"file":"index.d.ts","sourceRoot":"","sources":["../../../src/barretenberg_wasm/index.ts"],"names":[],"mappings":";AAIA,OAAO,EAAE,oBAAoB,EAAE,0BAA0B,EAAE,MAAM,mCAAmC,CAAC;AAIrG,qBAAa,gBAAiB,SAAQ,oBAAoB;IACxD;;;OAGG;WACiB,GAAG,CAAC,OAAO,CAAC,EAAE,MAAM;;;;CAMzC;AAED,MAAM,MAAM,sBAAsB,GAAG,0BAA0B,CAAC"}

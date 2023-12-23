@@ -1,0 +1,253 @@
+import { z } from 'zod';
+import { isSolidityType } from './human-readable/runtime/utils.js';
+import { bytesRegex, execTyped, integerRegex } from './regex.js';
+const Identifier = z.string().regex(/[a-zA-Z$_][a-zA-Z0-9$_]*/);
+export const Address = z.string().transform((val, ctx) => {
+    const regex = /^0x[a-fA-F0-9]{40}$/;
+    if (!regex.test(val)) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Invalid Address ${val}`,
+        });
+    }
+    return val;
+});
+export const SolidityAddress = z.literal('address');
+export const SolidityBool = z.literal('bool');
+export const SolidityBytes = z.string().regex(bytesRegex);
+export const SolidityFunction = z.literal('function');
+export const SolidityString = z.literal('string');
+export const SolidityTuple = z.literal('tuple');
+export const SolidityInt = z.string().regex(integerRegex);
+export const SolidityArrayWithoutTuple = z
+    .string()
+    .regex(/^(address|bool|function|string|bytes([1-9]|1[0-9]|2[0-9]|3[0-2])?|u?int(8|16|24|32|40|48|56|64|72|80|88|96|104|112|120|128|136|144|152|160|168|176|184|192|200|208|216|224|232|240|248|256)?)(\[[0-9]{0,}\])+$/);
+export const SolidityArrayWithTuple = z
+    .string()
+    .regex(/^tuple(\[[0-9]{0,}\])+$/);
+export const SolidityArray = z.union([
+    SolidityArrayWithTuple,
+    SolidityArrayWithoutTuple,
+]);
+export const AbiParameter = z.lazy(() => z.intersection(z.object({
+    name: z.union([Identifier.optional(), z.literal('')]),
+    internalType: z.string().optional(),
+}), z.union([
+    z.object({
+        type: z.union([
+            SolidityAddress,
+            SolidityBool,
+            SolidityBytes,
+            SolidityFunction,
+            SolidityString,
+            SolidityInt,
+            SolidityArrayWithoutTuple,
+        ]),
+    }),
+    z.object({
+        type: z.union([SolidityTuple, SolidityArrayWithTuple]),
+        components: z.array(AbiParameter),
+    }),
+])));
+export const AbiEventParameter = z.intersection(AbiParameter, z.object({ indexed: z.boolean().optional() }));
+export const AbiStateMutability = z.union([
+    z.literal('pure'),
+    z.literal('view'),
+    z.literal('nonpayable'),
+    z.literal('payable'),
+]);
+export const AbiFunction = z.preprocess((val) => {
+    const abiFunction = val;
+    if (abiFunction.stateMutability === undefined) {
+        if (abiFunction.constant)
+            abiFunction.stateMutability = 'view';
+        else if (abiFunction.payable)
+            abiFunction.stateMutability = 'payable';
+        else
+            abiFunction.stateMutability = 'nonpayable';
+    }
+    return val;
+}, z.object({
+    type: z.literal('function'),
+    constant: z.boolean().optional(),
+    gas: z.number().optional(),
+    inputs: z.array(AbiParameter),
+    name: Identifier,
+    outputs: z.array(AbiParameter),
+    payable: z.boolean().optional(),
+    stateMutability: AbiStateMutability,
+}));
+export const AbiConstructor = z.preprocess((val) => {
+    const abiFunction = val;
+    if (abiFunction.stateMutability === undefined) {
+        if (abiFunction.payable)
+            abiFunction.stateMutability = 'payable';
+        else
+            abiFunction.stateMutability = 'nonpayable';
+    }
+    return val;
+}, z.object({
+    type: z.literal('constructor'),
+    inputs: z.array(AbiParameter),
+    payable: z.boolean().optional(),
+    stateMutability: z.union([z.literal('nonpayable'), z.literal('payable')]),
+}));
+export const AbiFallback = z.preprocess((val) => {
+    const abiFunction = val;
+    if (abiFunction.stateMutability === undefined) {
+        if (abiFunction.payable)
+            abiFunction.stateMutability = 'payable';
+        else
+            abiFunction.stateMutability = 'nonpayable';
+    }
+    return val;
+}, z.object({
+    type: z.literal('fallback'),
+    inputs: z.tuple([]).optional(),
+    payable: z.boolean().optional(),
+    stateMutability: z.union([z.literal('nonpayable'), z.literal('payable')]),
+}));
+export const AbiReceive = z.object({
+    type: z.literal('receive'),
+    stateMutability: z.literal('payable'),
+});
+export const AbiEvent = z.object({
+    type: z.literal('event'),
+    anonymous: z.boolean().optional(),
+    inputs: z.array(AbiEventParameter),
+    name: Identifier,
+});
+export const AbiError = z.object({
+    type: z.literal('error'),
+    inputs: z.array(AbiParameter),
+    name: z.string(),
+});
+export const AbiItemType = z.union([
+    z.literal('constructor'),
+    z.literal('event'),
+    z.literal('error'),
+    z.literal('fallback'),
+    z.literal('function'),
+    z.literal('receive'),
+]);
+export const Abi = z.array(z.union([
+    AbiError,
+    AbiEvent,
+    z.preprocess((val) => {
+        const abiItem = val;
+        if (abiItem.type === 'receive')
+            return abiItem;
+        if (val
+            .stateMutability === undefined) {
+            if (abiItem.type === 'function' &&
+                abiItem.constant)
+                abiItem.stateMutability = 'view';
+            else if (abiItem
+                .payable)
+                abiItem.stateMutability = 'payable';
+            else
+                abiItem.stateMutability = 'nonpayable';
+        }
+        return val;
+    }, z.intersection(z.object({
+        constant: z.boolean().optional(),
+        gas: z.number().optional(),
+        payable: z.boolean().optional(),
+        stateMutability: AbiStateMutability,
+    }), z.discriminatedUnion('type', [
+        z.object({
+            type: z.literal('function'),
+            inputs: z.array(AbiParameter),
+            name: z.string().regex(/[a-zA-Z$_][a-zA-Z0-9$_]*/),
+            outputs: z.array(AbiParameter),
+        }),
+        z.object({
+            type: z.literal('constructor'),
+            inputs: z.array(AbiParameter),
+        }),
+        z.object({
+            type: z.literal('fallback'),
+            inputs: z.tuple([]).optional(),
+        }),
+        z.object({
+            type: z.literal('receive'),
+            stateMutability: z.literal('payable'),
+        }),
+    ]))),
+]));
+export const TypedDataDomain = z.object({
+    chainId: z.number().optional(),
+    name: Identifier.optional(),
+    salt: z.string().optional(),
+    verifyingContract: Address.optional(),
+    version: z.string().optional(),
+});
+export const TypedDataType = z.union([
+    SolidityAddress,
+    SolidityBool,
+    SolidityBytes,
+    SolidityString,
+    SolidityInt,
+    SolidityArray,
+]);
+export const TypedDataParameter = z.object({
+    name: Identifier,
+    type: z.string(),
+});
+export const TypedData = z
+    .record(Identifier, z.array(TypedDataParameter))
+    .transform((val, ctx) => validateTypedDataKeys(val, ctx));
+function validateTypedDataKeys(typedData, zodContext) {
+    const keys = Object.keys(typedData);
+    for (let i = 0; i < keys.length; i++) {
+        if (isSolidityType(keys[i])) {
+            zodContext.addIssue({
+                code: 'custom',
+                message: `Invalid key. ${keys[i]} is a solidity type.`,
+            });
+            return z.NEVER;
+        }
+        validateTypedDataParameters(keys[i], typedData, zodContext);
+    }
+    return typedData;
+}
+const typeWithoutTupleRegex = /^(?<type>[a-zA-Z$_][a-zA-Z0-9$_]*?)(?<array>(?:\[\d*?\])+?)?$/;
+function validateTypedDataParameters(key, typedData, zodContext, ancestors = new Set()) {
+    const val = typedData[key];
+    const length = val.length;
+    for (let i = 0; i < length; i++) {
+        if (val[i]?.type === key) {
+            zodContext.addIssue({
+                code: 'custom',
+                message: `Invalid type. ${key} is a self reference.`,
+            });
+            return z.NEVER;
+        }
+        const match = execTyped(typeWithoutTupleRegex, val[i]?.type);
+        if (!match?.type) {
+            zodContext.addIssue({
+                code: 'custom',
+                message: `Invalid type. ${key} does not have a type.`,
+            });
+            return z.NEVER;
+        }
+        if (match.type in typedData) {
+            if (ancestors.has(match.type)) {
+                zodContext.addIssue({
+                    code: 'custom',
+                    message: `Invalid type. ${match.type} is a circular reference.`,
+                });
+                return z.NEVER;
+            }
+            validateTypedDataParameters(match.type, typedData, zodContext, new Set([...ancestors, match.type]));
+        }
+        else if (!isSolidityType(match.type)) {
+            zodContext.addIssue({
+                code: 'custom',
+                message: `Invalid type. ${match.type} is not a valid EIP-712 type.`,
+            });
+        }
+    }
+    return;
+}
+//# sourceMappingURL=zod.js.map
