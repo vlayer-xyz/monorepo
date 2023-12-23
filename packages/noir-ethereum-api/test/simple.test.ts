@@ -1,10 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { generate_and_verify_simple_proof } from '../src/main'
-require('dotenv').config()
+import { generate_and_verify_simple_proof } from '../src/main.js'
+import dotenv from 'dotenv';
 
+dotenv.config();
 
-import { createPublicClient, http } from 'viem'
-import { mainnet } from 'viem/chains'
 
 describe('getAccount', () => {
   it('proof successes', async () => {
