@@ -1,6 +1,6 @@
-import { hexToRlp, Hex } from 'viem';
+import { keccak256, hexToRlp, Hex } from 'viem';
 
-export interface Block {
+export interface BlockHeader {
   parentHash: Hex;
   sha3Uncles: Hex;
   miner: Hex;
@@ -20,7 +20,7 @@ export interface Block {
 }
 
 
-export function encodeBlockHeader(blockHeader: Block) {
+export function encodeBlockHeader(blockHeader: BlockHeader) {
   let header = [
     blockHeader.parentHash,
     blockHeader.sha3Uncles,
@@ -42,4 +42,8 @@ export function encodeBlockHeader(blockHeader: Block) {
     header.push(blockHeader.baseFeePerGas);
   }
   return hexToRlp(header);
+}
+
+export function calculateBlockHeaderHash(blockHeader: BlockHeader) : Hex {
+  return keccak256(encodeBlockHeader(blockHeader));
 }
