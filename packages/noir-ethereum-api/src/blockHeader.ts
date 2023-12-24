@@ -1,8 +1,26 @@
-import { ReturnTypeBlockHeader, createPublicClient, http, keccak256, numberToHex, toRlp } from 'viem';
-import { mainnet } from 'viem/chains';
+import { hexToRlp, Hex } from 'viem';
+
+export interface Block {
+  parentHash: Hex;
+  sha3Uncles: Hex;
+  miner: Hex;
+  stateRoot: Hex;
+  transactionsRoot: Hex;
+  receiptsRoot: Hex;
+  logsBloom: Hex;
+  difficulty: Hex;
+  number: Hex;
+  gasLimit: Hex;
+  gasUsed: Hex;
+  timestamp: Hex;
+  extraData: Hex;
+  mixHash: Hex;
+  nonce: Hex;
+  baseFeePerGas?: Hex;
+}
 
 
-export function encodeBlockHeader(blockHeader: ReturnTypeBlockHeader) {
+export function encodeBlockHeader(blockHeader: Block) {
   let header = [
     blockHeader.parentHash,
     blockHeader.sha3Uncles,
@@ -23,5 +41,5 @@ export function encodeBlockHeader(blockHeader: ReturnTypeBlockHeader) {
   if (blockHeader.baseFeePerGas) {
     header.push(blockHeader.baseFeePerGas);
   }
-  return toRlp(header);
+  return hexToRlp(header);
 }
