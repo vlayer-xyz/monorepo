@@ -1,6 +1,6 @@
 import { createPublicClient, http, Address } from 'viem'
 import { mainnet } from 'viem/chains'
-import { argToAddress } from './encode.js'
+import { decodeHexAddress } from './noir/encode.js'
 import { assert } from './assert.js';
 
 async function fetchAccountWithProof(address: Address, storageKeys = []) {
@@ -12,7 +12,7 @@ async function fetchAccountWithProof(address: Address, storageKeys = []) {
 }
 
 const getAccount = async (_blockNo: string, address: string[]) => {
-  const account = await fetchAccountWithProof(argToAddress(address));
+  const account = await fetchAccountWithProof(decodeHexAddress(address));
   const result = [
     account.balance.toString(16),
     account.codeHash,
