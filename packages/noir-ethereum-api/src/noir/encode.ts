@@ -14,3 +14,7 @@ export function decodeHexAddress(arg: string[]): Address {
 export function decodeField(arg: string) {
   return parseInt(arg[0], 16)
 }
+
+export function encodeField(arg: number | bigint) {
+  return arg.toString(16);
+}
