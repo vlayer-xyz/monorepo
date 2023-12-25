@@ -18,8 +18,8 @@ export interface BlockHeader {
   mixHash: Hex;
   nonce: Hex;
   baseFeePerGas?: Hex;
+  withdrawalsRoot?: Hex;
 }
-
 
 export function encodeBlockHeader(blockHeader: BlockHeader) {
   let header = [
@@ -30,10 +30,10 @@ export function encodeBlockHeader(blockHeader: BlockHeader) {
     blockHeader.transactionsRoot,
     blockHeader.receiptsRoot,
     blockHeader.logsBloom,
-    blockHeader.difficulty,
+    blockHeader.difficulty === "0x0" ? "0x" : blockHeader.difficulty,
     blockHeader.number,
     blockHeader.gasLimit,
-    blockHeader.gasUsed,
+    blockHeader.gasUsed === "0x0" ? "0x" : blockHeader.gasUsed,
     blockHeader.timestamp,
     blockHeader.extraData,
     blockHeader.mixHash,
@@ -42,10 +42,13 @@ export function encodeBlockHeader(blockHeader: BlockHeader) {
   if (blockHeader.baseFeePerGas) {
     header.push(blockHeader.baseFeePerGas);
   }
+  if (blockHeader.withdrawalsRoot) {
+    header.push(blockHeader.withdrawalsRoot);
+  }
   return hexToRlp(header);
 }
 
-export function blockToHeader(block: GetBlockReturnType) {
+export function blockToHeader(block: GetBlockReturnType) : BlockHeader {
   return {
     parentHash: block.parentHash,
     sha3Uncles: block.sha3Uncles,
@@ -61,11 +64,16 @@ export function blockToHeader(block: GetBlockReturnType) {
     timestamp: encodeField(block.timestamp),
     extraData: block.extraData,
     mixHash: block.mixHash,
-    nonce: block.nonce
-  };
+    nonce: block.nonce,
+    baseFeePerGas: block.baseFeePerGas ? encodeField(block.baseFeePerGas) : undefined,
+    withdrawalsRoot: block.withdrawalsRoot ? block.withdrawalsRoot : undefined,
+  } as BlockHeader;
 }
-
 
 export function calculateBlockHeaderHash(blockHeader: BlockHeader) : Hex {
   return keccak256(hexToBytes(encodeBlockHeader(blockHeader)));
+}
+
+export function calculateBlockHash(block: GetBlockReturnType) : Hex {
+  return calculateBlockHeaderHash(blockToHeader(block));
 }
