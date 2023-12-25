@@ -1,5 +1,5 @@
 {
-  "blocks": [
+  "blockHeaders": [
     {
       "source": "https://eips.ethereum.org/EIPS/eip-2481",
       "title": "pre eip1559 block header",

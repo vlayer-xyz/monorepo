@@ -1,4 +1,5 @@
-import { keccak256, hexToRlp, Hex } from 'viem';
+import { keccak256, hexToRlp, Hex, hexToBytes, GetBlockReturnType } from 'viem';
+import { encodeField } from '../noir/encode.js';
 
 export interface BlockHeader {
   parentHash: Hex;
@@ -44,6 +45,27 @@ export function encodeBlockHeader(blockHeader: BlockHeader) {
   return hexToRlp(header);
 }
 
+export function blockToHeader(block: GetBlockReturnType) {
+  return {
+    parentHash: block.parentHash,
+    sha3Uncles: block.sha3Uncles,
+    miner: block.miner,
+    stateRoot: block.stateRoot,
+    transactionsRoot: block.transactionsRoot,
+    receiptsRoot: block.receiptsRoot,
+    logsBloom: block.logsBloom,
+    difficulty: encodeField(block.difficulty),
+    number: encodeField(block.number),
+    gasLimit: encodeField(block.gasLimit),
+    gasUsed: encodeField(block.gasUsed),
+    timestamp: encodeField(block.timestamp),
+    extraData: block.extraData,
+    mixHash: block.mixHash,
+    nonce: block.nonce
+  };
+}
+
+
 export function calculateBlockHeaderHash(blockHeader: BlockHeader) : Hex {
-  return keccak256(encodeBlockHeader(blockHeader));
+  return keccak256(hexToBytes(encodeBlockHeader(blockHeader)));
 }

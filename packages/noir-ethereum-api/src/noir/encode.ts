@@ -16,5 +16,5 @@ export function decodeField(arg: string) {
 }
 
 export function encodeField(arg: number | bigint) {
-  return arg.toString(16);
+  return `0x${arg.toString(16)}`;
 }

@@ -9,6 +9,10 @@ async function fetchAccountWithProof(client: PublicClient, address: Address, sto
   return client.getProof({address, storageKeys});
 }
 
+export function fetchBlock(client: PublicClient, blockNumber: bigint) {
+  return client.getBlock({blockNumber});
+}
+
 const getAccountOracle = async (client: PublicClient, args: string[][]) => {
   assert(args.length == 2, "get_account requires 2 arguments");
   assert(args[0].length == 1, "get_account first argument must be a block number");
@@ -19,7 +23,7 @@ const getAccountOracle = async (client: PublicClient, args: string[][]) => {
     encodeField(account.balance),
     account.codeHash,
     encodeField(account.nonce),
-  ]
+  ];
 }
 
 export const oracles = async (name: string, args: string[][]) => {

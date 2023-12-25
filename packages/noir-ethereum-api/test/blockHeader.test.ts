@@ -1,9 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { BlockHeader, calculateBlockHeaderHash, encodeBlockHeader } from '../src/ethereum/blockHeader.js';
-import { blocks } from './resources/blockHeader.json';
+import { blockHeaders } from './resources/blockHeader.json';
 
-
-for (let block of blocks) {
+for (let block of blockHeaders) {
 
   describe('encodeBlockHeader', () => {
     it(block.title, async () => {
