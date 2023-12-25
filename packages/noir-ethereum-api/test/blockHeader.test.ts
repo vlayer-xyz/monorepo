@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BlockHeader, calculateBlockHeaderHash, encodeBlockHeader } from '../src/blockHeader.js';
+import { BlockHeader, calculateBlockHeaderHash, encodeBlockHeader } from '../src/ethereum/blockHeader.js';
 import { blocks } from './resources/blockHeader.json';
 
 
