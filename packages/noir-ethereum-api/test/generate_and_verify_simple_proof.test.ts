@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 
-describe('getAccount', () => {
+describe('generate_and_verify_simple_proof', () => {
   it('proof successes', async () => {
     expect(await generate_and_verify_simple_proof({ block_no: 18800000, address: "0x4200000000000000000000000000000000000016" })).toEqual(true)
   })

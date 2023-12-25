@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { decodeHexAddress } from '../src/noir/encode.js';
 
-describe('encode', () => {
-  it('argToString', () => {
+describe('decodeHexAddress', () => {
+  it('success', () => {
     const arg = [
       '0x0000000000000000000000000000000000000000000000000000000000000030',
       '0x0000000000000000000000000000000000000000000000000000000000000078',
