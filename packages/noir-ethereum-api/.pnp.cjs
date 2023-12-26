@@ -28,8 +28,10 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@noir-lang/backend_barretenberg", "npm:0.22.0"],\
           ["@noir-lang/noir_js", "npm:0.22.0"],\
+          ["@types/json-bigint", "npm:1.0.4"],\
           ["@types/node", "npm:20.10.5"],\
           ["dotenv", "npm:16.3.1"],\
+          ["json-bigint", "npm:1.0.0"],\
           ["rollup-plugin-copy", "npm:3.5.0"],\
           ["typescript", "patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"],\
           ["viem", "virtual:003e2a12d10be9d46f8d546479e77eaf150a0b093d3001eacfb2f0ac7091069bf96f8945fc724f10155418756f3ea558a2c844ce787b132adc5867f016fb0403#npm:1.20.3"],\
@@ -779,6 +781,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@types/json-bigint", [\
+      ["npm:1.0.4", {\
+        "packageLocation": "./.yarn/cache/@types-json-bigint-npm-1.0.4-aa3c88df86-7aee137b37.zip/node_modules/@types/json-bigint/",\
+        "packageDependencies": [\
+          ["@types/json-bigint", "npm:1.0.4"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["@types/minimatch", [\
       ["npm:5.1.2", {\
         "packageLocation": "./.yarn/cache/@types-minimatch-npm-5.1.2-aab9c394d3-94db5060d2.zip/node_modules/@types/minimatch/",\
@@ -993,6 +1004,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/balanced-match-npm-1.0.2-a53c126459-9706c088a2.zip/node_modules/balanced-match/",\
         "packageDependencies": [\
           ["balanced-match", "npm:1.0.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["bignumber.js", [\
+      ["npm:9.1.2", {\
+        "packageLocation": "./.yarn/cache/bignumber.js-npm-9.1.2-c2228c6a4a-d89b8800a9.zip/node_modules/bignumber.js/",\
+        "packageDependencies": [\
+          ["bignumber.js", "npm:9.1.2"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -1772,6 +1792,16 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["json-bigint", [\
+      ["npm:1.0.0", {\
+        "packageLocation": "./.yarn/cache/json-bigint-npm-1.0.0-8e35bcb143-cd3973b88e.zip/node_modules/json-bigint/",\
+        "packageDependencies": [\
+          ["json-bigint", "npm:1.0.0"],\
+          ["bignumber.js", "npm:9.1.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["jsonc-parser", [\
       ["npm:3.2.0", {\
         "packageLocation": "./.yarn/cache/jsonc-parser-npm-3.2.0-1896ece3b7-bd68b902e5.zip/node_modules/jsonc-parser/",\
@@ -2078,8 +2108,10 @@ const RAW_RUNTIME_STATE =
           ["noir-ethereum-history-api", "workspace:."],\
           ["@noir-lang/backend_barretenberg", "npm:0.22.0"],\
           ["@noir-lang/noir_js", "npm:0.22.0"],\
+          ["@types/json-bigint", "npm:1.0.4"],\
           ["@types/node", "npm:20.10.5"],\
           ["dotenv", "npm:16.3.1"],\
+          ["json-bigint", "npm:1.0.0"],\
           ["rollup-plugin-copy", "npm:3.5.0"],\
           ["typescript", "patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"],\
           ["viem", "virtual:003e2a12d10be9d46f8d546479e77eaf150a0b093d3001eacfb2f0ac7091069bf96f8945fc724f10155418756f3ea558a2c844ce787b132adc5867f016fb0403#npm:1.20.3"],\
