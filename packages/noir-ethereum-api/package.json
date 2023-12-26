@@ -10,7 +10,8 @@
     "start": "vite --open",
     "build": "vite build",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "fetch-headers": "node src/script/fetchBlockHeaders"
   },
   "author": "",
   "license": "ISC",
