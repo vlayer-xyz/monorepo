@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { argToAddress } from '../src/encode.js';
+import { decodeHexAddress } from '../src/noir/encode.js';
 
-describe('encode', () => {
-  it('argToString', () => {
+describe('decodeHexAddress', () => {
+  it('success', () => {
     const arg = [
       '0x0000000000000000000000000000000000000000000000000000000000000030',
       '0x0000000000000000000000000000000000000000000000000000000000000078',
@@ -47,6 +47,6 @@ describe('encode', () => {
       '0x0000000000000000000000000000000000000000000000000000000000000031',
       '0x0000000000000000000000000000000000000000000000000000000000000061'
     ];
-    expect(argToAddress(arg)).toBe("0xe9c3123e4cf348c66b20a985af264891fc0a441a");
+    expect(decodeHexAddress(arg)).toBe("0xe9c3123e4cf348c66b20a985af264891fc0a441a");
   });
 })

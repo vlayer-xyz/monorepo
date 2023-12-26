@@ -1,0 +1,10 @@
+import { createPublicClient, http, PublicClient } from 'viem'
+import { mainnet } from 'viem/chains'
+
+export function createDefaultClient() : PublicClient {
+    return createPublicClient({
+        chain: mainnet,
+        transport: http(process.env.ETHEREUM_JSON_RPC_API_URL)
+    })
+}
+
