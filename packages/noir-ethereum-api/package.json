@@ -11,7 +11,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "fetch-headers": "node src/script/fetchBlockHeaders"
+    "fetch-blocks": "node src/script/fetchBlocks"
   },
   "author": "",
   "license": "ISC",
