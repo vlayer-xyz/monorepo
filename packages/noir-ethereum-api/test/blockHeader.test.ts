@@ -1,10 +1,8 @@
+import { readFile } from 'fs/promises';
+import { parse } from 'json-bigint';
 import { describe, expect, it } from 'vitest';
 import { BlockHeader, calculateBlockHash, calculateBlockHeaderHash, encodeBlockHeader } from '../src/ethereum/blockHeader.js';
-import { createDefaultClient } from '../src/ethereum/client.js';
-import { fetchBlock } from '../src/noir/oracles.js';
 import { blockHeaders } from './resources/blockHeader.json';
-import { parse } from 'json-bigint';
-import { readFile } from 'fs/promises';
 
 for (let block of blockHeaders) {
 
