@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "vitest run",
     "test:watch": "npx vitest watch",
     "start": "vite --open",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "fetch-blocks": "node src/script/fetchBlocks"
   },
   "author": "",
   "license": "ISC",
@@ -19,7 +22,11 @@
     "viem": "^1.20.1"
   },
   "devDependencies": {
+    "@types/json-bigint": "^1",
+    "@types/node": "^20.10.5",
+    "json-bigint": "^1.0.0",
     "rollup-plugin-copy": "^3.5.0",
+    "typescript": "^5.3.3",
     "vite": "^4.5.0",
     "vitest": "^1.0.4"
   },
