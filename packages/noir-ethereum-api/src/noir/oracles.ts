@@ -5,7 +5,7 @@ import { decodeHexAddress } from '../noir/encode.js';
 import { createDefaultClient } from '../ethereum/client.js';
 import { encodeField } from './encode.js';
 
-export type Oracles = (client: PublicClient, args: string[][]) => Promise<ForeignCallOutput[]>;
+export type Oracles = (name: string, args: string[][]) => Promise<ForeignCallOutput[]>;
 
 const getAccountOracle = async (client: PublicClient, args: string[][]): Promise<ForeignCallOutput[]> => {
   assert(args.length == 2, "get_account requires 2 arguments");
