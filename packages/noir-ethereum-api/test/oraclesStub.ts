@@ -2,7 +2,9 @@ import { ForeignCallOutput } from '@noir-lang/noir_js';
 
 import { decodeHexAddress } from "../src/noir/encode.js";
 
-export const oraclesStub = async (name: string, args: string[][]): Promise<ForeignCallOutput[]> => {
+import { Oracles } from "../src/noir/oracles.js";
+
+export const oraclesStub: Oracles = async (name: string, args: string[][]): Promise<ForeignCallOutput[]> => {
   if (name === "get_account") {
     return await getAccountOracle(args);
   }
