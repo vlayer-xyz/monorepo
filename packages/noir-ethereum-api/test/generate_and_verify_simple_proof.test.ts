@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { generate_and_verify_simple_proof } from '../src/main.js'
 import { loadAccountWithProof, stubOracles } from './oraclesStub.js';
-import { AccountWithProof, Oracles, serializeAccountWithProof } from "../src/noir/oracles.js";
+import { Oracles } from "../src/noir/oracles/oracles.js";
+import { AccountWithProof, serializeAccountWithProof } from "../src/noir/oracles/accountOracles.js";
 
 const defaultTestCircuitInputParams = {
   block_no: 0,
@@ -42,10 +43,10 @@ describe('generate_and_verify_simple_proof', () => {
       'Circuit execution failed: Error: Failed to solve brillig function, reason: explicit trap hit in brillig',
     );
   })
-  
+
   it('proof fails: invalid state root', async () => {
     let accountWithProof: AccountWithProof = loadAccountWithProof('accountWithProof.json');
-    accountWithProof.value[0] += 1
+    accountWithProof.stateRoot[0] += 1
     const oracles: Oracles = stubOracles({ 'get_account': serializeAccountWithProof(accountWithProof) })
     expect(generate_and_verify_simple_proof(defaultTestCircuitInputParams, oracles)).rejects.toThrow(
       'Circuit execution failed: Error: Failed to solve brillig function, reason: explicit trap hit in brillig',

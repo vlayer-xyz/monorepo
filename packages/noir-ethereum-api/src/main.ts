@@ -1,7 +1,7 @@
 import { BarretenbergBackend, CompiledCircuit } from '@noir-lang/backend_barretenberg';
-import { Noir, InputMap } from '@noir-lang/noir_js';
+import { InputMap, Noir } from '@noir-lang/noir_js';
 import noir_ethereum_history_api from '../../../circuit/target/noir_ethereum_history_api.json';
-import { Oracles, oracles as defaultOracles} from './noir/oracles.js';
+import { Oracles, oracles as defaultOracles } from './noir/oracles/oracles.js';
 
 export async function generate_and_verify_simple_proof(input: InputMap, oracles: Oracles = defaultOracles) {
   const circuit = noir_ethereum_history_api as unknown as CompiledCircuit;
