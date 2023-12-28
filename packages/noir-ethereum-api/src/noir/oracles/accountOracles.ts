@@ -1,11 +1,7 @@
-import { PublicClient, Address } from 'viem';
-import { ForeignCallOutput } from '@noir-lang/noir_js';
-import { assert } from '../assert.js';
-import { decodeHexAddress } from '../noir/encode.js';
-import { createDefaultClient } from '../ethereum/client.js';
-import { encodeField } from './encode.js';
-
-export type Oracles = (name: string, args: string[][]) => Promise<ForeignCallOutput[]>;
+import { ForeignCallOutput } from "@noir-lang/noir_js";
+import { PublicClient } from "viem";
+import { assert } from "../../assert.js";
+import { decodeHexAddress, encodeField } from "../encode.js";
 
 export interface AccountWithProof {
   balance: string,
@@ -31,7 +27,7 @@ export function serializeAccountWithProof(account: AccountWithProof): ForeignCal
   ];
 }
 
-const getAccountOracle = async (client: PublicClient, args: string[][]): Promise<ForeignCallOutput[]> => {
+export const getAccountOracle = async (client: PublicClient, args: string[][]): Promise<ForeignCallOutput[]> => {
   assert(args.length == 2, "get_account requires 2 arguments");
   assert(args[0].length == 1, "get_account first argument must be a block number");
   assert(args[1].length == 42, "get_account second argument must be an address");
@@ -43,11 +39,4 @@ const getAccountOracle = async (client: PublicClient, args: string[][]): Promise
     account.codeHash,
     encodeField(account.nonce),
   ];
-}
-
-export const oracles: Oracles = async (name: string, args: string[][]): Promise<ForeignCallOutput[]> => {
-  if (name === "get_account") {
-    return await getAccountOracle(createDefaultClient(), args);
-  }
-  return Promise.reject("Unknown oracle");
 }
