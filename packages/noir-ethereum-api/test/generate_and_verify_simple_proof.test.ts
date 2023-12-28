@@ -1,8 +1,9 @@
-import { describe, expect, it } from 'vitest'
-import { generate_and_verify_simple_proof } from '../src/main.js'
-import { loadAccountWithProof, stubOracles } from './oraclesStub.js';
-import { Oracles } from "../src/noir/oracles/oracles.js";
+import { beforeEach, describe, expect, it } from 'vitest';
+import { createDefaultClient } from '../src/ethereum/client.js';
+import { generate_and_verify_simple_proof } from '../src/main.js';
 import { AccountWithProof, serializeAccountWithProof } from "../src/noir/oracles/accountOracles.js";
+import { Oracle, Oracles, createOracles } from "../src/noir/oracles/oracles.js";
+import { loadAccountWithProof, expectCircuitFail } from './helpers.js';
 
 const defaultTestCircuitInputParams = {
   block_no: 0,
@@ -10,47 +11,38 @@ const defaultTestCircuitInputParams = {
 };
 
 describe('generate_and_verify_simple_proof', () => {
+  let accountWithProof: AccountWithProof;
+  let get_account: Oracle;
+  let oracles: Oracles;
+
+  beforeEach(async () => {
+    accountWithProof = await loadAccountWithProof('accountWithProof.json');
+    get_account = async () => serializeAccountWithProof(accountWithProof);
+    oracles = createOracles(createDefaultClient())({get_account});
+  });
 
   it('proof successes', async () => {
-    let accountWithProof: AccountWithProof = loadAccountWithProof('accountWithProof.json');
-    const oracles: Oracles = stubOracles({ 'get_account': serializeAccountWithProof(accountWithProof) })
     expect(await generate_and_verify_simple_proof(defaultTestCircuitInputParams, oracles)).toEqual(true)
   })
 
   it('proof fails: invalid storage proof', async () => {
-    let accountWithProof: AccountWithProof = loadAccountWithProof('accountWithProof.json');
     accountWithProof.proof[0] += 1
-    const oracles: Oracles = stubOracles({ 'get_account': serializeAccountWithProof(accountWithProof) })
-    expect(generate_and_verify_simple_proof(defaultTestCircuitInputParams, oracles)).rejects.toThrow(
-      'Circuit execution failed: Error: Failed to solve brillig function, reason: explicit trap hit in brillig',
-    );
+    expectCircuitFail(generate_and_verify_simple_proof(defaultTestCircuitInputParams, oracles))
   })
 
   it('proof fails: invalid address', async () => {
-    let accountWithProof: AccountWithProof = loadAccountWithProof('accountWithProof.json');
     accountWithProof.key[0] += 1
-    const oracles: Oracles = stubOracles({ 'get_account': serializeAccountWithProof(accountWithProof) })
-    expect(generate_and_verify_simple_proof(defaultTestCircuitInputParams, oracles)).rejects.toThrow(
-      'Circuit execution failed: Error: Failed to solve brillig function, reason: explicit trap hit in brillig',
-    );
+    expectCircuitFail(generate_and_verify_simple_proof(defaultTestCircuitInputParams, oracles))
   })
 
   it('proof fails: invalid account state', async () => {
-    let accountWithProof: AccountWithProof = loadAccountWithProof('accountWithProof.json');
     accountWithProof.value[0] += 1
-    const oracles: Oracles = stubOracles({ 'get_account': serializeAccountWithProof(accountWithProof) })
-    expect(generate_and_verify_simple_proof(defaultTestCircuitInputParams, oracles)).rejects.toThrow(
-      'Circuit execution failed: Error: Failed to solve brillig function, reason: explicit trap hit in brillig',
-    );
+    expectCircuitFail(generate_and_verify_simple_proof(defaultTestCircuitInputParams, oracles))
   })
 
   it('proof fails: invalid state root', async () => {
-    let accountWithProof: AccountWithProof = loadAccountWithProof('accountWithProof.json');
     accountWithProof.stateRoot[0] += 1
-    const oracles: Oracles = stubOracles({ 'get_account': serializeAccountWithProof(accountWithProof) })
-    expect(generate_and_verify_simple_proof(defaultTestCircuitInputParams, oracles)).rejects.toThrow(
-      'Circuit execution failed: Error: Failed to solve brillig function, reason: explicit trap hit in brillig',
-    );
+    expectCircuitFail(generate_and_verify_simple_proof(defaultTestCircuitInputParams, oracles))
   })
 }, {
   timeout: 20000
