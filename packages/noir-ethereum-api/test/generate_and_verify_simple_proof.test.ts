@@ -3,8 +3,9 @@ import { createDefaultClient } from '../src/ethereum/client.js';
 import { generate_and_verify_simple_proof } from '../src/main.js';
 import { AccountWithProof, serializeAccountWithProof } from "../src/noir/oracles/accountOracles.js";
 import { Oracle, Oracles, createOracles } from "../src/noir/oracles/oracles.js";
-import { loadAccountWithProof, expectCircuitFail } from './helpers.js';
+import { expectCircuitFail } from './helpers.js';
 import { encodeBytes32 } from '../src/noir/encode.js';
+import accountWithProof from './resources/accountWithProof.json';
 
 const defaultTestCircuitInputParams = {
   block_no: 0,
@@ -12,13 +13,11 @@ const defaultTestCircuitInputParams = {
 };
 
 describe('generate_and_verify_simple_proof', () => {
-  let accountWithProof: AccountWithProof;
   let get_account: Oracle;
   let get_header: Oracle;
   let oracles: Oracles;
 
   beforeEach(async () => {
-    accountWithProof = await loadAccountWithProof('accountWithProof.json');
     get_account = async () => serializeAccountWithProof(accountWithProof);
     get_header = async () => [encodeBytes32(0n)]
     oracles = createOracles(createDefaultClient())({get_account, get_header});
