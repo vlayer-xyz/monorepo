@@ -24,6 +24,33 @@ describe('generate_and_verify_simple_proof', () => {
       'Circuit execution failed: Error: Failed to solve brillig function, reason: explicit trap hit in brillig',
     );
   })
+
+  it('proof fails: invalid address', async () => {
+    let accountWithProof: AccountWithProof = loadAccountWithProof('accountWithProof.json');
+    accountWithProof.key[0] += 1
+    const oracles: Oracles = stubOracles({ 'get_account': serializeAccountWithProof(accountWithProof) })
+    expect(generate_and_verify_simple_proof(defaultTestCircuitInputParams, oracles)).rejects.toThrow(
+      'Circuit execution failed: Error: Failed to solve brillig function, reason: explicit trap hit in brillig',
+    );
+  })
+
+  it('proof fails: invalid account state', async () => {
+    let accountWithProof: AccountWithProof = loadAccountWithProof('accountWithProof.json');
+    accountWithProof.value[0] += 1
+    const oracles: Oracles = stubOracles({ 'get_account': serializeAccountWithProof(accountWithProof) })
+    expect(generate_and_verify_simple_proof(defaultTestCircuitInputParams, oracles)).rejects.toThrow(
+      'Circuit execution failed: Error: Failed to solve brillig function, reason: explicit trap hit in brillig',
+    );
+  })
+  
+  it('proof fails: invalid state root', async () => {
+    let accountWithProof: AccountWithProof = loadAccountWithProof('accountWithProof.json');
+    accountWithProof.value[0] += 1
+    const oracles: Oracles = stubOracles({ 'get_account': serializeAccountWithProof(accountWithProof) })
+    expect(generate_and_verify_simple_proof(defaultTestCircuitInputParams, oracles)).rejects.toThrow(
+      'Circuit execution failed: Error: Failed to solve brillig function, reason: explicit trap hit in brillig',
+    );
+  })
 }, {
   timeout: 20000
 })
