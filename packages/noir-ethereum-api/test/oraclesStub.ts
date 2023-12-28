@@ -1,7 +1,7 @@
+import { readFileSync } from 'fs';
 import { ForeignCallOutput } from '@noir-lang/noir_js';
 
 import { AccountWithProof, Oracles } from "../src/noir/oracles.js";
-import { readFileSync } from "fs";
 
 export function loadAccountWithProof(name: string): AccountWithProof {
   return JSON.parse(readFileSync(`./test/resources/${name}`, 'utf-8')) as AccountWithProof;
