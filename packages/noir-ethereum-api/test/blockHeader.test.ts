@@ -2,7 +2,7 @@ import { readFile } from 'fs/promises';
 import { parse } from 'json-bigint';
 import { describe, expect, it } from 'vitest';
 import { BlockHeader, calculateBlockHash, calculateBlockHeaderHash, encodeBlockHeader } from '../src/ethereum/blockHeader.js';
-import { blockHeaders } from './resources/blockHeader.json';
+import { blockHeaders } from './fixtures/blockHeader.json';
 
 for (let block of blockHeaders) {
 
@@ -20,7 +20,7 @@ for (let block of blockHeaders) {
 }
 
 describe('calculateBlockHash', async () => {
-  const blocks = parse(await readFile('./test/resources/blocks.json', 'utf-8'));
+  const blocks = parse(await readFile('./test/fixtures/blocks.json', 'utf-8'));
   for (let block of blocks) {
     it(`block #${block.number}`, async () => {
       expect(calculateBlockHash(block)).toBe(block.hash);
