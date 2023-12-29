@@ -12,7 +12,7 @@ const defaultTestCircuitInputParams = {
   address: "0x0000000000000000000000000000000000000000"
 };
 
-describe('generate_and_verify_simple_proof', () => {
+describe('e2e', () => {
   let get_account: Oracle;
   let get_header: Oracle;
   let oracles: Oracles;

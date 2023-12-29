@@ -2,7 +2,7 @@ import { readFile } from 'fs/promises';
 import { parse } from 'json-bigint';
 import { describe, expect, it } from 'vitest';
 import { BlockHeader, calculateBlockHash, calculateBlockHeaderHash, encodeBlockHeader } from '../src/ethereum/blockHeader.js';
-import { blockHeaders } from './resources/blockHeader.json';
+import { blockHeaders } from './fixtures/blockHeader.json';
 
 for (let block of blockHeaders) {
 
