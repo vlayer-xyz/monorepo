@@ -5,7 +5,7 @@ import { AccountWithProof, serializeAccountWithProof } from "../src/noir/oracles
 import { Oracle, Oracles, createOracles } from "../src/noir/oracles/oracles.js";
 import { expectCircuitFail } from './helpers.js';
 import { encodeBytes32 } from '../src/noir/encode.js';
-import accountWithProof from './resources/accountWithProof.json';
+import accountWithProof from './fixtures/accountWithProof.json';
 
 const defaultTestCircuitInputParams = {
   block_no: 0,
