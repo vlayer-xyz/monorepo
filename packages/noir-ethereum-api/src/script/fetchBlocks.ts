@@ -1,8 +1,6 @@
-import { createPublicClient, http } from 'viem'
-import { mainnet } from 'viem/chains'
+import { createDefaultClient } from '../ethereum/client.js';
 import { writeFile } from 'fs'
 import { stringify } from 'json-bigint';
-
 
 const filePath = './result.json';
 const blocks = [
@@ -21,11 +19,7 @@ const blocks = [
   18869415n
 ];
 
-const client = createPublicClient({
-  chain: mainnet,
-  transport: http(process.env.ETHEREUM_JSON_RPC_API_URL)
-})
-
+const client = createDefaultClient();
 console.log(`Downloading blocks...`);
 
 const result = [];
