@@ -48,6 +48,10 @@ export function encodeBlockHeader(blockHeader: BlockHeader) {
   return hexToRlp(header);
 }
 
+export function toHexString(arg: number | bigint) {
+  return `0x${arg.toString(16)}`;
+}
+
 export function blockToHeader(block: GetBlockReturnType) : BlockHeader {
   return {
     parentHash: block.parentHash,
@@ -57,15 +61,15 @@ export function blockToHeader(block: GetBlockReturnType) : BlockHeader {
     transactionsRoot: block.transactionsRoot,
     receiptsRoot: block.receiptsRoot,
     logsBloom: block.logsBloom,
-    difficulty: encodeField(block.difficulty),
-    number: encodeField(block.number),
-    gasLimit: encodeField(block.gasLimit),
-    gasUsed: encodeField(block.gasUsed),
-    timestamp: encodeField(block.timestamp),
+    difficulty: toHexString(block.difficulty),
+    number: toHexString(block.number),
+    gasLimit: toHexString(block.gasLimit),
+    gasUsed: toHexString(block.gasUsed),
+    timestamp: toHexString(block.timestamp),
     extraData: block.extraData,
     mixHash: block.mixHash,
     nonce: block.nonce,
-    baseFeePerGas: block.baseFeePerGas ? encodeField(block.baseFeePerGas) : undefined,
+    baseFeePerGas: block.baseFeePerGas ? toHexString(block.baseFeePerGas) : undefined,
     withdrawalsRoot: block.withdrawalsRoot ? block.withdrawalsRoot : undefined,
   } as BlockHeader;
 }
