@@ -20,9 +20,17 @@ export function encodeField(arg: number | bigint) {
 }
 
 export function encodeBytes32(value: bigint) {
+  return encodeBytes(value, 32);
+}
+
+export function encodeAddress(value: bigint) {
+  return encodeBytes(value, 20);
+}
+
+export function encodeBytes(value: bigint, length: number) {
   assert(value >= 0n, 'Invalid Bytes32: Negative');
-  assert(value < (1n << 256n), 'Invalid Bytes32: Overflow');
-  const hexValue = value.toString(16).padStart(64, '0');
+  assert(value < (1n << (8n * BigInt(length))), 'Invalid Bytes32: Overflow');
+  const hexValue = value.toString(16).padStart(length * 2, '0');
   const chunks = [];
   for (let i = 0; i < hexValue.length; i += 2) {
       const chunk = hexValue.substring(i, i + 2);

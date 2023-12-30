@@ -14,9 +14,9 @@ struct AccountWithProof {
 }
 
 #[oracle(get_account)]
-unconstrained fn get_account_oracle(block_no: Field, address: str<42>) -> AccountWithProof {}
+unconstrained fn get_account_oracle(_block_no: Field, _address: [u8; 20]) -> AccountWithProof {}
 
-unconstrained fn get_account(block_no: Field, address: str<42>) -> AccountWithProof {
+unconstrained fn get_account(block_no: Field, address: [u8; 20]) -> AccountWithProof {
     let account = get_account_oracle(block_no, address);
     let trie_proof = proof::TrieProof { key: account.key, proof: account.proof, depth: account.depth, value: account.value };
     assert(trie_proof.verify_state_root(account.state_root));
