@@ -6,8 +6,7 @@ import { inspect } from 'util';
 
 const hex = encodeBlockHeader(blockHeaders[0].header as BlockHeader)
 
-const rlp = hexToRlp(hex)
-const bytes = hexToBytes(rlp);
+const bytes = hexToBytes(hex);
 console.log(`let input: [u8; ${bytes.length}] =`, inspect(bytes, { maxArrayLength: null }));
 
 const keccak = keccak256(bytes)
