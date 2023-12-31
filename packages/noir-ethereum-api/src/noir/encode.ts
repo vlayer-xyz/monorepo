@@ -5,14 +5,22 @@ export function hexToString(hex: string) {
   return String.fromCharCode(parseInt(hex, 16))
 }
 
+export function encodeHexString(hex: string): Uint8Array {
+  assert(hex.startsWith('0x'), "Invalid hex string");
+  const chunks = new Uint8Array(hex.length/2-1);
+  for (let i = 2; i < hex.length; i += 2) {
+      const chunk = hex.substring(i, i + 2);
+      console.log(i/2-1, chunk, parseInt(chunk, 16));
+      chunks[i/2-1] = parseInt(chunk, 16);
+  }
+  console.log(chunks);
+  return chunks;
+}
+
 export function decodeHexAddress(arg: string[]): Address {
   const result = arg.map((e) => hexToString(e.slice(2))).join('');
   assert(isAddress(result), `Invalid address: ${result}`)
   return result as Address;
-}
-
-export function decodeField(arg: string) {
-  return parseInt(arg[0], 16)
 }
 
 export function encodeField(arg: number | bigint) {
