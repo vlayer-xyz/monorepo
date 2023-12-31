@@ -10,10 +10,8 @@ export function encodeHexString(hex: string): Uint8Array {
   const chunks = new Uint8Array(hex.length/2-1);
   for (let i = 2; i < hex.length; i += 2) {
       const chunk = hex.substring(i, i + 2);
-      console.log(i/2-1, chunk, parseInt(chunk, 16));
       chunks[i/2-1] = parseInt(chunk, 16);
   }
-  console.log(chunks);
   return chunks;
 }
 
