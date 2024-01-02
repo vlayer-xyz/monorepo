@@ -1,5 +1,5 @@
 import { ForeignCallOutput } from "@noir-lang/noir_js";
-import { GetBlockReturnType, Hash, PublicClient } from "viem";
+import { PublicClient } from "viem";
 import { assert } from "../../assert.js";
 import { decodeHexAddress, encodeField } from "../encode.js";
 import { TODO } from "../../../test/helpers.js";
@@ -16,16 +16,16 @@ export interface AccountWithProof {
 }
 
 export interface EthBlock {
-  stateRoot: Hash
+  stateRoot: string
 }
 
 export interface EthProof {
-  address: Hash
-  balance: string
-  codeHash: Hash
-  nonce: string
-  storageHash: Hash
-  accountProof: Hash[]
+  address: string
+  balance: number
+  codeHash: string
+  nonce: number
+  storageHash: string
+  accountProof: string[]
 }
 
 export function serializeAccountWithProof(account: AccountWithProof): ForeignCallOutput[] {
@@ -57,4 +57,21 @@ export const getAccountOracle = async (client: PublicClient, args: string[][]): 
 
 export function convertEthToNoirProof(block: EthBlock, proof: EthProof): AccountWithProof {
   TODO()
+}
+
+export function convertAddress(address: string): string[] {
+  assert(address.length === 42, "");
+  assert(address.startsWith('0x'), "");
+  return splitStringInPairs(address.substring(2)).map((it) => `0x${it}`);
+}
+
+export function splitStringInPairs(input: string): string[] {
+  assert(input.length % 2 == 0, "Input length should be even")
+  let result: string[] = [];
+
+  for (let i = 0; i < input.length; i += 2) {
+    result.push(input.substring(i, i + 2));
+  }
+
+  return result;
 }
