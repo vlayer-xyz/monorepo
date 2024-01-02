@@ -3,6 +3,7 @@ import { PublicClient } from "viem";
 import { assert } from "../../assert.js";
 import { decodeHexAddress, encodeField } from "../encode.js";
 import { TODO } from "../../../test/helpers.js";
+import { isHexString } from "../../utils.js";
 
 export interface AccountWithProof {
   balance: string,
@@ -55,13 +56,14 @@ export const getAccountOracle = async (client: PublicClient, args: string[][]): 
   ];
 }
 
-export function convertEthToNoirProof(block: EthBlock, proof: EthProof): AccountWithProof {
+export function convertEthDataToNoirProof(block: EthBlock, proof: EthProof): AccountWithProof {
   TODO()
 }
 
 export function convertAddress(address: string): string[] {
-  assert(address.length === 42, "");
-  assert(address.startsWith('0x'), "");
+  assert(address.length === 42, "Address should be 42 bytes long");
+  assert(address.startsWith('0x'), "Address should start with '0x'");
+  assert(isHexString(address), "Address should be a hexadecimal string");
   return splitStringInPairs(address.substring(2)).map((it) => `0x${it}`);
 }
 
