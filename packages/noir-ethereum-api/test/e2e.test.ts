@@ -6,6 +6,9 @@ import { serializeAccountWithProof } from "../src/noir/oracles/accountOracles.js
 import { Oracle, Oracles, createOracles } from "../src/noir/oracles/oracles.js";
 import accountWithProof from './fixtures/accountWithProof.json';
 import { expectCircuitFail } from './helpers.js';
+import { blockHeaders } from './fixtures/blockHeader.json';
+import { encodeBlockHeaderPartial } from '../src/noir/oracles/headerOracle.js';
+import { BlockHeader } from '../src/ethereum/blockHeader.js';
 
 const defaultTestCircuitInputParams = {
   block_no: 0,
@@ -19,7 +22,7 @@ describe('e2e', () => {
 
   beforeEach(async () => {
     get_account = async () => serializeAccountWithProof(accountWithProof);
-    get_header = async () => [encodeBytes32(0n)]
+    get_header = async () => encodeBlockHeaderPartial(blockHeaders[1].header as BlockHeader)
     oracles = createOracles(createDefaultClient())({ get_account, get_header });
   });
 

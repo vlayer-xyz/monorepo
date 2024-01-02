@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { decodeHexAddress, encodeBytes32, encodeHexString } from '../src/noir/encode.js';
+import { decodeHexAddress, encodeBytes32 } from '../src/noir/encode.js';
 
 describe('encodeBytes32', () => {
   it('zero', () => {
@@ -61,25 +61,6 @@ describe('encodeBytes32', () => {
   it('throws if overflows', () => {
     expect(() => encodeBytes32(2n ** 256n)).toThrow('Invalid Bytes32: Overflow');
   });
-});
-
-describe('encodeHexString', () => {
-  it('Fails Starts with not 0x', () => {
-    const input = 'ec3c94b18b8a1cff7d60f8d258ec723312932928626b4c9355eb4ab3568ec7f7';
-    expect(() => encodeHexString(input)).toThrow("Invalid hex string")
-  });
-
-  it('bytes32', () => {
-    const input = '0xec3c94b18b8a1cff7d60f8d258ec723312932928626b4c9355eb4ab3568ec7f7';
-    const output = [
-      236,  60, 148, 177, 139, 138,  28, 255,
-      125,  96, 248, 210,  88, 236, 114,  51,
-       18, 147,  41,  40,  98, 107,  76, 147,
-       85, 235,  74, 179,  86, 142, 199, 247
-    ];
-    expect(Array.from(encodeHexString(input))).toEqual(Array.from(output));
-  });
-
 });
 
 describe('decodeHexAddress', () => {

@@ -1,35 +1,18 @@
-import { keccak256, hexToRlp, hexToBytes } from 'viem';
-import { encodeHexString, encodeHexToBytes32 } from '../noir/encode.js';
 import { blockHeaders } from '../../test/fixtures/blockHeader.json';
+import { padArrayRight } from '../arrays.js';
 import { BlockHeader, encodeBlockHeader } from '../ethereum/blockHeader.js';
-import { inspect } from 'util';
-
-const MAX_HEADER_RLP_SIZE = 708;
-
-function formatUint8Array(array: Uint8Array | number[]) {
-    const core = array.map((item) => item).join(', ')
-    return `[${core}]`;
-}
-
-function padRightUint8Array(array: Uint8Array, n: number) {
-    const result = new Uint8Array(n);
-    for (let i = 0; i < n; i++) {
-        result[i] = i < array.length ? array[i] : 0;
-    }
-    return result;
-}
+import { encodeHex } from '../noir/encode.js';
+import { MAX_HEADER_RLP_SIZE } from '../noir/oracles/headerOracle.js';
 
 const block = blockHeaders[1].header;
 const hex = encodeBlockHeader(block as BlockHeader)
-const bytes = hexToBytes(hex);
+const bytes = encodeHex(hex);
+const encoded = padArrayRight(bytes, MAX_HEADER_RLP_SIZE, "0x");
 
-console.log('let blockPartial = BlockHeaderPartial {');
-console.log(`   stateRoot: ${formatUint8Array(encodeHexString(block.stateRoot))},`);
-console.log(`   transactionsRoot: ${formatUint8Array(encodeHexString(block.transactionsRoot))},`);
-console.log(`   receiptsRoot: ${formatUint8Array(encodeHexString(block.receiptsRoot))},`);
-console.log(`   number: ${parseInt(block.number, 16)},`);
-console.log(`   encoded_len: ${bytes.length},`);
-console.log(`   encoded: ${formatUint8Array(padRightUint8Array(bytes, MAX_HEADER_RLP_SIZE))}\n\};`);
-
-const keccak = encodeHexToBytes32(keccak256(bytes));
-console.log(`let keccak: [u8; ${keccak.length}] = ${formatUint8Array(keccak)};`);
+console.log('stateRoot: ', encodeHex(block.stateRoot));
+console.log('transactionsRoot: ', encodeHex(block.transactionsRoot));
+console.log('receiptsRoot: ', encodeHex(block.receiptsRoot));
+console.log('number: ', parseInt(block.number, 16));
+console.log('encoded_len: ', encoded.length);
+console.log('encoded: ');
+console.dir(encoded, { 'maxArrayLength': null });

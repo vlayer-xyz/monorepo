@@ -1,5 +1,6 @@
 mod get_account;
 mod get_header;
+mod arrays;
 
 use crate::get_account::{get_account, AccountWithProof};
 use crate::get_header::{get_header, BlockHeaderPartial};
