@@ -1,7 +1,8 @@
 import { ForeignCallOutput } from "@noir-lang/noir_js";
-import { PublicClient } from "viem";
+import { GetBlockReturnType, Hash, PublicClient } from "viem";
 import { assert } from "../../assert.js";
 import { decodeHexAddress, encodeField } from "../encode.js";
+import { TODO } from "../../../test/helpers.js";
 
 export interface AccountWithProof {
   balance: string,
@@ -12,6 +13,19 @@ export interface AccountWithProof {
   value: string[],
   proof: string[],
   depth: string,
+}
+
+export interface EthBlock {
+  stateRoot: Hash
+}
+
+export interface EthProof {
+  address: Hash
+  balance: string
+  codeHash: Hash
+  nonce: string
+  storageHash: Hash
+  accountProof: Hash[]
 }
 
 export function serializeAccountWithProof(account: AccountWithProof): ForeignCallOutput[] {
@@ -39,4 +53,8 @@ export const getAccountOracle = async (client: PublicClient, args: string[][]): 
     account.codeHash,
     encodeField(account.nonce),
   ];
+}
+
+export function convertEthToNoirProof(block: EthBlock, proof: EthProof): AccountWithProof {
+  TODO()
 }
