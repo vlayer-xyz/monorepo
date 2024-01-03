@@ -1,20 +1,20 @@
 import { readFile } from 'fs/promises';
 import { parse } from 'json-bigint';
 import { describe, expect, it } from 'vitest';
-import { BlockHeader, calculateBlockHash, calculateBlockHeaderHash, encodeBlockHeader } from '../src/ethereum/blockHeader.js';
+import { BlockHeader, calculateBlockHash, calculateBlockHeaderHash, headerToRlp } from '../src/ethereum/blockHeader.js';
 import { blockHeaders } from './fixtures/blockHeader.json';
 
-for (let block of blockHeaders) {
+for (let header of blockHeaders) {
 
   describe('encodeBlockHeader', () => {
-    it(block.title, async () => {
-      expect(encodeBlockHeader(block.header as BlockHeader)).toBe(block.rlp);
+    it(header.title, async () => {
+      expect(headerToRlp(header.header as BlockHeader)).toBe(header.rlp);
     });
   });
 
   describe('calculateBlockHeaderHash', () => {
-    it(block.title, async () => {
-      expect(calculateBlockHeaderHash(block.header as BlockHeader)).toBe(block.hash);
+    it(header.title, async () => {
+      expect(calculateBlockHeaderHash(header.header as BlockHeader)).toBe(header.hash);
     });
   });
 }
