@@ -63,7 +63,6 @@ describe('encodeBytes32', () => {
   });
 });
 
-
 describe('decodeHexAddress', () => {
   it('success', () => {
     const arg = [
