@@ -4,11 +4,15 @@ import { encodeBlockHeaderPartial } from '../noir/oracles/headerOracle.js';
 
 const partial = encodeBlockHeaderPartial(blockHeaders[1].header as BlockHeader);
 
-console.log('stateRoot:', partial[0]);
-console.log('transactionsRoot:', partial[1]);
-console.log('receiptsRoot:', partial[2]);
-console.log('number:', partial[3]);
-console.log('encoded_len:', partial[4]);
-console.log('encoded:');
-console.dir(partial[5], { 'maxArrayLength': null });
+function mapHexToInt(arr: string[]): number[] {
+  return arr.map((hex) => hex == "0x" ? 0 : parseInt(hex, 16));
+}
 
+console.log('stateRoot:', mapHexToInt(partial[0]));
+console.log('transactionsRoot:', mapHexToInt(partial[1]));
+console.log('receiptsRoot:', mapHexToInt(partial[2]));
+console.log('number:', partial[3]);
+console.log('hash:', mapHexToInt(partial[4]));
+console.log('encoded_len:', partial[5]);
+console.log('encoded:');
+console.dir(mapHexToInt(partial[6]), { 'maxArrayLength': null });
