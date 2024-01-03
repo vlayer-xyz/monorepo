@@ -1,10 +1,12 @@
 import { blockHeaders } from '../../test/fixtures/blockHeader.json';
+import { assert } from '../assert.js';
 import { BlockHeader } from '../ethereum/blockHeader.js';
 import { encodeBlockHeaderPartial } from '../noir/oracles/headerOracle.js';
 
 const partial = encodeBlockHeaderPartial(blockHeaders[1].header as BlockHeader);
 
-function mapHexToInt(arr: string[]): number[] {
+function mapHexToInt(arr: string | string[]): number[]{
+  assert(typeof arr != 'string', 'Invalid input, expected hex array');
   return arr.map((hex) => hex == "0x" ? 0 : parseInt(hex, 16));
 }
 
