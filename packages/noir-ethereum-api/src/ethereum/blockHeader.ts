@@ -1,5 +1,4 @@
-import { keccak256, hexToRlp, Hex, hexToBytes, GetBlockReturnType } from 'viem';
-import { encodeField } from '../noir/encode.js';
+import { GetBlockReturnType, Hex, hexToBytes, hexToRlp, keccak256 } from 'viem';
 
 export interface BlockHeader {
   parentHash: Hex;
