@@ -7,7 +7,7 @@ import {
   AccountWithProof, convertAddress,
   convertEthDataToNoirProof,
   EthBlock,
-  EthProof, splitStringInPairs
+  EthProof
 } from "../../../src/noir/oracles/accountOracles.js";
 
 describe('accountOracle', () => {
@@ -30,13 +30,5 @@ describe('accountOracle', () => {
     expect(() => convertAddress("0x12345678901234567890123456789012345678901")).toThrow("Address should be 42 bytes long")
     expect(() => convertAddress("123456789012345678901234567890123456789012")).toThrow("Address should start with '0x'")
     expect(() => convertAddress("0x123456789012345678901234567890123456789g")).toThrow("Address should be a hexadecimal string")
-  })
-
-  it('test splitStringInPairs', () => {
-    expect(splitStringInPairs("")).toEqual([]);
-    expect(splitStringInPairs("ab")).toEqual(["ab"]);
-    expect(splitStringInPairs("abcdef")).toEqual(["ab", "cd", "ef"]);
-
-    expect(() => splitStringInPairs("a")).toThrow('Input length should be even')
   })
 })

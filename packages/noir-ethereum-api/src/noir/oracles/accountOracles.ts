@@ -1,7 +1,7 @@
 import { ForeignCallOutput } from "@noir-lang/noir_js";
 import { PublicClient } from "viem";
 import { assert } from "../../assert.js";
-import { decodeHexAddress, encodeField } from "../encode.js";
+import { decodeHexAddress, encodeField, encodeHex } from "../encode.js";
 import { TODO } from "../../../test/helpers.js";
 import { isHexString } from "../../utils.js";
 
@@ -64,16 +64,5 @@ export function convertAddress(address: string): string[] {
   assert(address.length === 42, "Address should be 42 bytes long");
   assert(address.startsWith('0x'), "Address should start with '0x'");
   assert(isHexString(address), "Address should be a hexadecimal string");
-  return splitStringInPairs(address.substring(2)).map((it) => `0x${it}`);
-}
-
-export function splitStringInPairs(input: string): string[] {
-  assert(input.length % 2 == 0, "Input length should be even")
-  let result: string[] = [];
-
-  for (let i = 0; i < input.length; i += 2) {
-    result.push(input.substring(i, i + 2));
-  }
-
-  return result;
+  return encodeHex(address);
 }
