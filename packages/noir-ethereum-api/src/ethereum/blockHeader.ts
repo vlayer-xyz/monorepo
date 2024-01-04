@@ -20,7 +20,7 @@ export interface BlockHeader {
   withdrawalsRoot?: Hex;
 }
 
-export function encodeBlockHeader(blockHeader: BlockHeader) {
+export function headerToRlp(blockHeader: BlockHeader) {
   let header = [
     blockHeader.parentHash,
     blockHeader.sha3Uncles,
@@ -74,7 +74,7 @@ export function blockToHeader(block: GetBlockReturnType) : BlockHeader {
 }
 
 export function calculateBlockHeaderHash(blockHeader: BlockHeader) : Hex {
-  return keccak256(hexToBytes(encodeBlockHeader(blockHeader)));
+  return keccak256(hexToBytes(headerToRlp(blockHeader)));
 }
 
 export function calculateBlockHash(block: GetBlockReturnType) : Hex {

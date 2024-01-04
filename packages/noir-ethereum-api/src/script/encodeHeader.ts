@@ -1,18 +1,20 @@
 import { blockHeaders } from '../../test/fixtures/blockHeader.json';
-import { padArrayRight } from '../arrays.js';
-import { BlockHeader, encodeBlockHeader } from '../ethereum/blockHeader.js';
-import { encodeHex } from '../noir/encode.js';
-import { MAX_HEADER_RLP_SIZE } from '../noir/oracles/headerOracle.js';
+import { assert } from '../assert.js';
+import { BlockHeader } from '../ethereum/blockHeader.js';
+import { encodeBlockHeaderPartial } from '../noir/oracles/headerOracle.js';
 
-const block = blockHeaders[1].header;
-const hex = encodeBlockHeader(block as BlockHeader)
-const bytes = encodeHex(hex);
-const encoded = padArrayRight(bytes, MAX_HEADER_RLP_SIZE, "0x");
+const partial = encodeBlockHeaderPartial(blockHeaders[1].header as BlockHeader);
 
-console.log('stateRoot: ', encodeHex(block.stateRoot));
-console.log('transactionsRoot: ', encodeHex(block.transactionsRoot));
-console.log('receiptsRoot: ', encodeHex(block.receiptsRoot));
-console.log('number: ', parseInt(block.number, 16));
-console.log('encoded_len: ', encoded.length);
-console.log('encoded: ');
-console.dir(encoded, { 'maxArrayLength': null });
+function mapHexToInt(arr: string | string[]): number[]{
+  assert(typeof arr != 'string', 'Invalid input, expected hex array');
+  return arr.map((hex) => hex == "0x" ? 0 : parseInt(hex, 16));
+}
+
+console.log('stateRoot:', mapHexToInt(partial[0]));
+console.log('transactionsRoot:', mapHexToInt(partial[1]));
+console.log('receiptsRoot:', mapHexToInt(partial[2]));
+console.log('number:', partial[3]);
+console.log('hash:', mapHexToInt(partial[4]));
+console.log('encoded_len:', partial[5]);
+console.log('encoded:');
+console.dir(mapHexToInt(partial[6]), { 'maxArrayLength': null });
