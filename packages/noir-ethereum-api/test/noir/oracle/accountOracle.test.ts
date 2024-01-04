@@ -15,26 +15,26 @@ describe('encodeAccount', async () => {
   });
 
   it('encode codeHash', async () => {
-    expect(encodeAccount(proof).codeHash).toEqual(accountWithProof.codeHash);
+    expect(encodeAccount(proof).codeHash).toStrictEqual(accountWithProof.codeHash);
   })
 
   it('encode nonce', async () => {
-    expect(encodeAccount(proof).nonce).toEqual(accountWithProof.nonce);
+    expect(encodeAccount(proof).nonce).toStrictEqual(accountWithProof.nonce);
   })
 
   it('encode address', async () => {
-    expect(encodeAccount(proof).key).toEqual(accountWithProof.key);
+    expect(encodeAccount(proof).key).toStrictEqual(accountWithProof.key);
   })
 
   it('encode account proof', async () => {
-    expect(encodeAccount(proof).proof).toEqual(accountWithProof.proof);
+    expect(encodeAccount(proof).proof).toStrictEqual(accountWithProof.proof);
   })
 
   it('encode depth', async () => {
-    expect(encodeAccount(proof).depth).toEqual(accountWithProof.depth);
+    expect(encodeAccount(proof).depth).toStrictEqual(accountWithProof.depth);
   })
 
   it('encode value', async () => {
-    expect(encodeAccount(proof).value).toEqual(accountWithProof.value);
+    expect(encodeAccount(proof).value).toStrictEqual(accountWithProof.value);
   })
 })
