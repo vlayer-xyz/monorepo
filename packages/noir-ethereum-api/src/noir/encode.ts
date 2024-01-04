@@ -46,12 +46,3 @@ export function encodeHex(hexString: string) {
   }
   return chunks;
 }
-
-export function encodeHexToBytes32(hex: string) {
-  const chunks = [];
-  for (let i = 2; i < hex.length; i += 2) {
-    const chunk = hex.substring(i, i + 2);
-    chunks.push(parseInt(chunk, 16));
-  }
-  return chunks;
-}

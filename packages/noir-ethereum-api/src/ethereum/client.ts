@@ -1,5 +1,7 @@
 import { createPublicClient, http, PublicClient } from 'viem'
 import { mainnet } from 'viem/chains'
+import dotenv from 'dotenv';
+dotenv.config();
 
 export function createDefaultClient() : PublicClient {
     return createPublicClient({
