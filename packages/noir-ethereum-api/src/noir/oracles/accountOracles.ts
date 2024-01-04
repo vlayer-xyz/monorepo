@@ -68,6 +68,6 @@ function encodeProof(proof: string[]): string[] {
 
 function encodeValue(proof: Hex[]): string[] {
   const lastProofEntry = fromRlp(proof[proof.length - 1], 'hex');
-  const value = lastProofEntry[1];
+  const value = lastProofEntry[1] as string;
   return padArray(encodeHex(value, false), MAX_ACCOUNT_STATE_LENGTH, ZERO_PAD_VALUE, 'left')
 }
