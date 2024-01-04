@@ -1,3 +1,5 @@
+use dep::std;
+
 pub fn sub_array_equals<T, N, M>(subarray: [T; N], array: [T; M], start_index: Field) -> bool {
     assert(start_index as u64 + N <= M, "Invalid range");
     let mut result = true;
@@ -5,6 +7,12 @@ pub fn sub_array_equals<T, N, M>(subarray: [T; N], array: [T; M], start_index: F
         result &= subarray[i] == array[start_index as u64 + i];
     }
     result
+}
+
+fn alter_array<N>(array: [u8; N]) -> [u8; N] {
+    let mut copy = array.map(|x| x);
+    copy[0] = std::wrapping_add(copy[0], 1);
+    copy
 }
 
 #[test]
