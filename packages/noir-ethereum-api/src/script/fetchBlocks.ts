@@ -1,5 +1,5 @@
 import { createDefaultClient } from '../ethereum/client.js';
-import { writeFile } from 'fs'
+import { writeFile } from 'fs/promises'
 import { stringify } from 'json-bigint';
 
 const filePath = './result.json';
@@ -29,12 +29,7 @@ for (let blockNumber of blocks) {
   result.push(block);
 }
 
+await writeFile(filePath, stringify(result));
+console.log(`File has been saved: ${filePath}`);
 
-writeFile(filePath, stringify(result), (err) => {
-  if (err) {
-      console.error('An error occurred:', err);
-      return;
-  }
-  console.log(`File has been saved: ${filePath}`);
-});
 
