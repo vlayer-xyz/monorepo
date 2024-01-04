@@ -14,7 +14,7 @@ export function encodeBlockHeaderPartial(header: BlockHeader) : ForeignCallOutpu
   const hex = headerToRlp(header);
   const bytes = encodeHex(hex);
   const encoded = padArray(bytes, MAX_HEADER_RLP_SIZE, "0x");
-  const encoded_len = encodeField(encoded.length);
+  const encoded_len = encodeField(bytes.length);
   const hash = encodeHex(keccak256(hexToBytes(hex)));
   return [stateRoot, transactionsRoot, receiptsRoot, number, hash, encoded_len, encoded];
 }
