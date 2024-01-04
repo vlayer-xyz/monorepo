@@ -15,6 +15,11 @@ const defaultTestCircuitInputParams = {
   address: encodeAddress(0n),
 };
 
+function incHexByte(hexByte: string) {
+  const newByte = ((parseInt(hexByte) + 1) % 256).toString(16);
+  return '0x' + newByte;
+}
+
 describe('e2e', () => {
   let get_account: Oracle;
   let get_header: Oracle;
@@ -31,22 +36,22 @@ describe('e2e', () => {
   })
 
   it('proof fails: invalid storage proof', async () => {
-    accountWithProof.proof[0] += 1
+    accountWithProof.proof[0] = incHexByte(accountWithProof.proof[0])
     expectCircuitFail(generate_and_verify_simple_proof(defaultTestCircuitInputParams, oracles))
   })
 
   it('proof fails: invalid address', async () => {
-    accountWithProof.key[0] += 1
+    accountWithProof.key[0] = incHexByte(accountWithProof.key[0]);
     expectCircuitFail(generate_and_verify_simple_proof(defaultTestCircuitInputParams, oracles))
   })
 
   it('proof fails: invalid account state', async () => {
-    accountWithProof.value[0] += 1
+    accountWithProof.value[0] = incHexByte(accountWithProof.value[0]);
     expectCircuitFail(generate_and_verify_simple_proof(defaultTestCircuitInputParams, oracles))
   })
 
   it('proof fails: invalid state root', async () => {
-    accountWithProof.stateRoot[0] += 1
+    accountWithProof.stateRoot[0] = incHexByte(accountWithProof.stateRoot[0]);
     expectCircuitFail(generate_and_verify_simple_proof(defaultTestCircuitInputParams, oracles))
   })
 }, {
