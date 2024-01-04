@@ -1,24 +1,20 @@
 import { createDefaultClient } from '../ethereum/client.js';
 import { writeFile } from 'fs'
 import { stringify } from 'json-bigint';
-import { Hex } from "viem";
+import { GetProofParameters, GetProofReturnType } from "viem";
 
 const filePath = './result.json';
 
-interface GetProofParams {
-  address: Hex,
-  blockNumber: bigint
-}
-
-const getProofParams: GetProofParams = {
+const getProofParams: GetProofParameters = {
   address: "0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb",
+  storageKeys: [],
   blockNumber: 14194126n
 }
 
 const client = createDefaultClient();
 console.log(`Downloading proof...`);
 
-const proof = await client.getProof({
+const proof: GetProofReturnType = await client.getProof({
   address: getProofParams.address,
   storageKeys: [],
   blockNumber: getProofParams.blockNumber
