@@ -12,6 +12,7 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "fetch-blocks": "tsx src/script/fetchBlocks",
+    "fetch-proofs": "tsx src/script/fetchProofs",
     "encode-header": "tsx src/script/encodeHeader"
   },
   "author": "",
