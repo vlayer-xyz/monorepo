@@ -34,6 +34,13 @@ unconstrained fn get_header(block_no: Field) -> BlockHeaderPartial {
             rlp_list.offset[STATE_ROOT_INDEX]
         )
     );
+    assert(
+        sub_array_equals(
+            keccak256(header.encoded, header.encoded_len as u32),
+            header.hash,
+            0
+        )
+    );
     header
 }
 
@@ -77,6 +84,20 @@ fn test_get_header_invalid_state_root() {
     let stateRoot = [
         235, 60, 148, 177, 139, 138, 28, 255, 125, 96, 248, 210, 88, 236, 114, 51, 18, 147, 41, 40, 98, 107, 76, 147, 85, 235, 74, 179, 86, 142, 199, 247
     ];
+    let blockPartial = BlockHeaderPartial { stateRoot, transactionsRoot, receiptsRoot, number, hash, encoded_len, encoded };
+    OracleMock::mock("get_header").returns(blockPartial);
+    assert(get_header(0).stateRoot == stateRoot);
+}
+
+#[test(should_fail_with = "explicit trap hit in brillig")]
+fn test_get_header_invalid_hash() {
+    let hash = [
+        105, 37, 28, 124, 60, 93, 202, 123,
+        66, 64, 122, 55, 82, 255, 72, 243,
+        187, 202, 31, 171, 127, 152, 104, 55,
+        29, 153, 24, 218, 241, 152, 141, 31
+    ];
+
     let blockPartial = BlockHeaderPartial { stateRoot, transactionsRoot, receiptsRoot, number, hash, encoded_len, encoded };
     OracleMock::mock("get_header").returns(blockPartial);
     assert(get_header(0).stateRoot == stateRoot);
