@@ -11,10 +11,10 @@ export function encodeBlockHeaderPartial(header: BlockHeader) : ForeignCallOutpu
   const transactionsRoot = encodeHex(header.transactionsRoot);
   const receiptsRoot = encodeHex(header.receiptsRoot);
   const number = header.number;
-  const hex = headerToRlp(header);
-  const bytes = encodeHex(hex);
-  const encoded = padArrayRight(bytes, MAX_HEADER_RLP_SIZE, "0x");
-  const encoded_len = encodeField(bytes.length);
-  const hash = encodeHex(keccak256(hexToBytes(hex)));
+  const rlpHex = headerToRlp(header);
+  const rlpBytes = encodeHex(rlpHex);
+  const encoded_len = encodeField(rlpBytes.length);
+  const encoded = padArrayRight(rlpBytes, MAX_HEADER_RLP_SIZE, "0x");
+  const hash = encodeHex(keccak256(hexToBytes(rlpHex)));
   return [stateRoot, transactionsRoot, receiptsRoot, number, hash, encoded_len, encoded];
 }
