@@ -1,7 +1,7 @@
 import { ForeignCallOutput } from "@noir-lang/noir_js";
-import { PublicClient } from "viem";
+import { GetProofReturnType, PublicClient } from "viem";
 import { assert } from "../../assert.js";
-import { decodeHexAddress, encodeField } from "../encode.js";
+import { decodeHexAddress, encodeField, encodeHex } from "../encode.js";
 
 export interface AccountWithProof {
   balance: string,
@@ -39,4 +39,17 @@ export const getAccountOracle = async (client: PublicClient, args: string[][]): 
     account.codeHash,
     encodeField(account.nonce),
   ];
+}
+
+export function encodeAccount(ethProof: GetProofReturnType): AccountWithProof {
+  return {
+    balance: "",
+    codeHash: "",
+    nonce: "",
+    stateRoot: [],
+    key: encodeHex(ethProof.address, false),
+    value: [],
+    proof: [],
+    depth: ""
+  };
 }
