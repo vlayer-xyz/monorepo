@@ -26,6 +26,10 @@ describe('encodeAccount', async () => {
     expect(encodeAccount(proof).key).toEqual(accountWithProof.key);
   })
 
+  it('encode account proof', async () => {
+    expect(encodeAccount(proof).proof).toEqual(accountWithProof.proof);
+  })
+
   it('encode depth', async () => {
     expect(encodeAccount(proof).depth).toEqual(accountWithProof.depth);
   })

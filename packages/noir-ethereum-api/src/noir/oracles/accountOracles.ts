@@ -2,6 +2,9 @@ import { ForeignCallOutput } from "@noir-lang/noir_js";
 import { GetProofReturnType, PublicClient } from "viem";
 import { assert } from "../../assert.js";
 import { decodeHexAddress, encodeField, encodeHex } from "../encode.js";
+import { padArrayRight } from "../../arrays.js";
+
+const PROOF_ONE_LEVEL_LENGTH = 532;
 
 export interface AccountWithProof {
   balance: string,
@@ -49,7 +52,14 @@ export function encodeAccount(ethProof: GetProofReturnType): AccountWithProof {
     stateRoot: [],
     key: encodeHex(ethProof.address, false),
     value: [],
-    proof: [],
+    proof: encodeProof(ethProof.accountProof),
     depth: encodeField(ethProof.accountProof.length)
   };
+}
+
+export function encodeProof(proof: string[]): string[] {
+  return proof
+    .map(it => encodeHex(it, false))
+    .map(it => padArrayRight(it, PROOF_ONE_LEVEL_LENGTH, "0x00"))
+    .reduce((accumulator, current) => accumulator.concat(current), [])
 }
