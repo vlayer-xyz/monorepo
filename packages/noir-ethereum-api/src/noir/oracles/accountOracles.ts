@@ -48,10 +48,10 @@ export const getAccountOracle = async (client: PublicClient, args: string[][]): 
 
 export function encodeAccount(ethProof: GetProofReturnType): AccountWithProof {
   return {
-    balance: "",
+    balance: "", // TODO
     codeHash: encodeHex(ethProof.codeHash),
     nonce: encodeField(ethProof.nonce),
-    stateRoot: [],
+    stateRoot: [], // TODO
     key: encodeHex(ethProof.address, false),
     value: encodeValue(ethProof.accountProof),
     proof: encodeProof(ethProof.accountProof),
