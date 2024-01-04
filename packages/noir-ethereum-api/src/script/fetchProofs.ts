@@ -1,5 +1,5 @@
 import { createDefaultClient } from '../ethereum/client.js';
-import { writeFile } from 'fs'
+import { writeFile } from 'fs/promises'
 import { stringify } from 'json-bigint';
 import { GetProofParameters, GetProofReturnType } from "viem";
 
@@ -20,10 +20,5 @@ const proof: GetProofReturnType = await client.getProof({
   blockNumber: getProofParams.blockNumber
 });
 
-writeFile(filePath, stringify(proof), (err) => {
-  if (err) {
-    console.error('An error occurred:', err);
-    return;
-  }
-  console.log(`File has been saved: ${filePath}`);
-});
+await writeFile(filePath, stringify(proof));
+console.log(`File has been saved: ${filePath}`);
