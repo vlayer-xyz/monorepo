@@ -50,6 +50,6 @@ export function encodeAccount(ethProof: GetProofReturnType): AccountWithProof {
     key: encodeHex(ethProof.address, false),
     value: [],
     proof: [],
-    depth: ""
+    depth: encodeField(ethProof.accountProof.length)
   };
 }
