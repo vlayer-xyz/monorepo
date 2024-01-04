@@ -1,10 +1,12 @@
 import { ForeignCallOutput } from "@noir-lang/noir_js";
-import { GetProofReturnType, PublicClient } from "viem";
+import { fromRlp, GetProofReturnType, Hex, PublicClient } from "viem";
 import { assert } from "../../assert.js";
 import { decodeHexAddress, encodeField, encodeHex } from "../encode.js";
-import { padArrayRight } from "../../arrays.js";
+import { padArray } from "../../arrays.js";
 
 const PROOF_ONE_LEVEL_LENGTH = 532;
+const MAX_ACCOUNT_STATE_LENGTH = 134;
+const ZERO_PAD_VALUE = "0x00";
 
 export interface AccountWithProof {
   balance: string,
@@ -51,15 +53,21 @@ export function encodeAccount(ethProof: GetProofReturnType): AccountWithProof {
     nonce: encodeField(ethProof.nonce),
     stateRoot: [],
     key: encodeHex(ethProof.address, false),
-    value: [],
+    value: encodeValue(ethProof.accountProof),
     proof: encodeProof(ethProof.accountProof),
     depth: encodeField(ethProof.accountProof.length)
   };
 }
 
-export function encodeProof(proof: string[]): string[] {
+function encodeProof(proof: string[]): string[] {
   return proof
     .map(it => encodeHex(it, false))
-    .map(it => padArrayRight(it, PROOF_ONE_LEVEL_LENGTH, "0x00"))
+    .map(it => padArray(it, PROOF_ONE_LEVEL_LENGTH, ZERO_PAD_VALUE))
     .reduce((accumulator, current) => accumulator.concat(current), [])
+}
+
+function encodeValue(proof: Hex[]): string[] {
+  const lastProofEntry = fromRlp(proof[proof.length - 1], 'hex');
+  const value = lastProofEntry[1];
+  return padArray(encodeHex(value, false), MAX_ACCOUNT_STATE_LENGTH, ZERO_PAD_VALUE, 'left')
 }
