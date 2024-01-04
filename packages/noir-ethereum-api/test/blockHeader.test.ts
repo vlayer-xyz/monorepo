@@ -7,13 +7,13 @@ import { blockHeaders } from './fixtures/blockHeader.json';
 for (let header of blockHeaders) {
 
   describe('encodeBlockHeader', () => {
-    it(header.title, async () => {
+    it(header.title, () => {
       expect(headerToRlp(header.header as BlockHeader)).toBe(header.rlp);
     });
   });
 
   describe('calculateBlockHeaderHash', () => {
-    it(header.title, async () => {
+    it(header.title, () => {
       expect(calculateBlockHeaderHash(header.header as BlockHeader)).toBe(header.hash);
     });
   });
