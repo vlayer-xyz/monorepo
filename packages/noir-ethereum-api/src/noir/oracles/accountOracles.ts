@@ -45,7 +45,7 @@ export function encodeAccount(ethProof: GetProofReturnType): AccountWithProof {
   return {
     balance: "",
     codeHash: "",
-    nonce: "",
+    nonce: encodeField(ethProof.nonce),
     stateRoot: [],
     key: encodeHex(ethProof.address, false),
     value: [],
