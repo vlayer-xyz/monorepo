@@ -5,7 +5,7 @@ import { decodeHexAddress, encodeField, encodeHex } from "../encode.js";
 
 export interface AccountWithProof {
   balance: string,
-  codeHash: string,
+  codeHash: string[],
   nonce: string,
   stateRoot: string[],
   key: string[],
@@ -36,7 +36,7 @@ export const getAccountOracle = async (client: PublicClient, args: string[][]): 
 
   return [
     encodeField(account.balance),
-    account.codeHash,
+    encodeHex(account.codeHash),
     encodeField(account.nonce),
   ];
 }
@@ -44,7 +44,7 @@ export const getAccountOracle = async (client: PublicClient, args: string[][]): 
 export function encodeAccount(ethProof: GetProofReturnType): AccountWithProof {
   return {
     balance: "",
-    codeHash: "",
+    codeHash: encodeHex(ethProof.codeHash),
     nonce: encodeField(ethProof.nonce),
     stateRoot: [],
     key: encodeHex(ethProof.address, false),
