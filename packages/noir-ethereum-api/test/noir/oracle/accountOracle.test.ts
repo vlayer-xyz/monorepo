@@ -5,7 +5,7 @@ import { readFile } from "fs/promises";
 import JSONBig from "json-bigint";
 import accountWithProof from "../../fixtures/accountWithProof.json"
 
-const parseUseBigInt = (s: string) => JSONBig({ useNativeBigInt: true }).parse(s);
+const parseUseBigInt = JSONBig({ useNativeBigInt: true }).parse;
 
 describe('encodeAccount', async () => {
 
