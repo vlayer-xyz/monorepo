@@ -4,7 +4,7 @@ global PROOF_LEN = 4256;
 
 struct AccountWithProof {
     balance: Field,
-    codeHash: Field,
+    codeHash: [u8; 32],
     nonce: Field,
     state_root: [u8; proof::KEY_LENGTH],
     key: [u8; 20],

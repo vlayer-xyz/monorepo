@@ -41,8 +41,8 @@ export function encodeHex(hexString: string) {
   }
   const chunks = [];
   for (let i = 2; i < hexString.length; i += 2) {
-      const chunk = hexString.substring(i, i + 2);
-      chunks.push(`0x${chunk[0] == '0' ? chunk[1] : chunk}`);
+    const chunk = hexString.substring(i, i + 2);
+    chunks.push(`0x${chunk[0] == '0' ? chunk[1] : chunk}`);
   }
   return chunks;
 }

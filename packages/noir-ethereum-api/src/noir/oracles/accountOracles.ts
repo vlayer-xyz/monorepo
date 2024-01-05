@@ -1,11 +1,17 @@
 import { ForeignCallOutput } from "@noir-lang/noir_js";
-import { PublicClient } from "viem";
+import { fromRlp, GetProofReturnType, Hex, isHex, PublicClient } from "viem";
 import { assert } from "../../assert.js";
-import { decodeHexAddress, encodeField } from "../encode.js";
+import { decodeHexAddress, encodeField, encodeHex } from "../encode.js";
+import { padArray } from "../../arrays.js";
+
+const PROOF_ONE_LEVEL_LENGTH = 532;
+const MAX_ACCOUNT_STATE_LENGTH = 134;
+const ZERO_PAD_VALUE = "0x0";
+const RLP_VALUE_INDEX = 1;
 
 export interface AccountWithProof {
   balance: string,
-  codeHash: string,
+  codeHash: string[],
   nonce: string,
   stateRoot: string[],
   key: string[],
@@ -36,7 +42,34 @@ export const getAccountOracle = async (client: PublicClient, args: string[][]): 
 
   return [
     encodeField(account.balance),
-    account.codeHash,
+    encodeHex(account.codeHash),
     encodeField(account.nonce),
   ];
+}
+
+export function encodeAccount(ethProof: GetProofReturnType): AccountWithProof {
+  return {
+    balance: encodeField(ethProof.balance),
+    codeHash: encodeHex(ethProof.codeHash),
+    nonce: encodeField(ethProof.nonce),
+    stateRoot: [], // TODO
+    key: encodeHex(ethProof.address),
+    value: encodeValue(ethProof.accountProof),
+    proof: encodeProof(ethProof.accountProof),
+    depth: encodeField(ethProof.accountProof.length)
+  };
+}
+
+function encodeProof(proof: string[]): string[] {
+  return proof
+    .map(it => encodeHex(it))
+    .map(it => padArray(it, PROOF_ONE_LEVEL_LENGTH, ZERO_PAD_VALUE))
+    .reduce((accumulator, current) => accumulator.concat(current), [])
+}
+
+function encodeValue(proof: Hex[]): string[] {
+  const lastProofEntry = fromRlp(proof[proof.length - 1], 'hex');
+  const value = lastProofEntry[RLP_VALUE_INDEX];
+  assert(isHex(value), "value should be of type Hex");
+  return padArray(encodeHex(value), MAX_ACCOUNT_STATE_LENGTH, ZERO_PAD_VALUE, 'left')
 }
