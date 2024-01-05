@@ -1,5 +1,5 @@
 import { ForeignCallOutput } from "@noir-lang/noir_js";
-import { fromRlp, GetProofReturnType, Hex, PublicClient } from "viem";
+import { fromRlp, GetProofReturnType, Hex, isHex, PublicClient } from "viem";
 import { assert } from "../../assert.js";
 import { decodeHexAddress, encodeField, encodeHex } from "../encode.js";
 import { padArray } from "../../arrays.js";
@@ -7,6 +7,7 @@ import { padArray } from "../../arrays.js";
 const PROOF_ONE_LEVEL_LENGTH = 532;
 const MAX_ACCOUNT_STATE_LENGTH = 134;
 const ZERO_PAD_VALUE = "0x00";
+const RLP_VALUE_INDEX = 1;
 
 export interface AccountWithProof {
   balance: string,
@@ -68,6 +69,7 @@ function encodeProof(proof: string[]): string[] {
 
 function encodeValue(proof: Hex[]): string[] {
   const lastProofEntry = fromRlp(proof[proof.length - 1], 'hex');
-  const value = lastProofEntry[1] as string;
+  const value = lastProofEntry[RLP_VALUE_INDEX];
+  assert(isHex(value), "value should be of type Hex");
   return padArray(encodeHex(value, false), MAX_ACCOUNT_STATE_LENGTH, ZERO_PAD_VALUE, 'left')
 }
