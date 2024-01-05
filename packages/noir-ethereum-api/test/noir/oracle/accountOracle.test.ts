@@ -31,7 +31,7 @@ describe('encodeAccount', async () => {
     expect(encodeAccount(proof).key).toStrictEqual(accountWithProof.key);
   })
 
-  it.only('encode value', async () => {
+  it('encode value', async () => {
     expect(encodeAccount(proof).value).toStrictEqual(accountWithProof.value);
   })
 
