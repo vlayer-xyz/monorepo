@@ -2,17 +2,22 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { encodeAccount } from "../../../src/noir/oracles/accountOracles.js";
 import { GetProofReturnType } from "viem";
 import { readFile } from "fs/promises";
-import { parse } from "json-bigint";
+import JSONBig from "json-bigint";
 import accountWithProof from "../../fixtures/accountWithProof.json"
 
+const parseUseBigInt = (s: string) => JSONBig({ useNativeBigInt: true }).parse(s);
 
 describe('encodeAccount', async () => {
 
   let proof: GetProofReturnType;
 
   beforeEach(async () => {
-    proof = parse(await readFile('./test/fixtures/eth_getProof_response.json', 'utf-8'));
+    proof = parseUseBigInt(await readFile('./test/fixtures/eth_getProof_response.json', 'utf-8'));
   });
+
+  it('encode balance', async () => {
+    expect(encodeAccount(proof).balance).toStrictEqual(accountWithProof.balance);
+  })
 
   it('encode codeHash', async () => {
     expect(encodeAccount(proof).codeHash).toStrictEqual(accountWithProof.codeHash);
@@ -26,15 +31,15 @@ describe('encodeAccount', async () => {
     expect(encodeAccount(proof).key).toStrictEqual(accountWithProof.key);
   })
 
+  it('encode value', async () => {
+    expect(encodeAccount(proof).value).toStrictEqual(accountWithProof.value);
+  })
+
   it('encode account proof', async () => {
     expect(encodeAccount(proof).proof).toStrictEqual(accountWithProof.proof);
   })
 
   it('encode depth', async () => {
     expect(encodeAccount(proof).depth).toStrictEqual(accountWithProof.depth);
-  })
-
-  it('encode value', async () => {
-    expect(encodeAccount(proof).value).toStrictEqual(accountWithProof.value);
   })
 })
