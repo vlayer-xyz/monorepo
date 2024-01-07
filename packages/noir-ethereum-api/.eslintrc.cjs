@@ -1,12 +1,25 @@
 module.exports = {
-    "env": {
+    'parser': '@typescript-eslint/parser',
+    'parserOptions': {
+        "ecmaVersion": "latest",
+        "sourceType": "module",
+        "project": './tsconfig.json'
+    },
+    'env': {
         "browser": true,
         "es2021": true
     },
     extends: [
         'eslint:recommended',
-        'plugin:@typescript-eslint/recommended'  // Uses the recommended rules from the @typescript-eslint/eslint-plugin
+        'standard-with-typescript'
     ],
+    rules: {
+        // Override specific rules
+        'space-before-function-paren': ['error', 'never'],
+        '@typescript-eslint/space-before-function-paren': ["error", "never"],
+        "semi": "off",
+        "@typescript-eslint/semi": ["error", "always"]
+    },
     "overrides": [
         {
             "env": {
@@ -20,10 +33,4 @@ module.exports = {
             }
         }
     ],
-    "parserOptions": {
-        "ecmaVersion": "latest",
-        "sourceType": "module"
-    },
-    "rules": {
-    }
 }
