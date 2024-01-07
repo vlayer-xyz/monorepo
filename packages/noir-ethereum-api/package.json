@@ -11,8 +11,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint . --fix",
-    "lint:fix": "eslint .",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
     "fetch-blocks": "tsx src/script/fetchBlocks",
     "fetch-proofs": "tsx src/script/fetchProofs",
     "encode-header": "tsx src/script/encodeHeader"
