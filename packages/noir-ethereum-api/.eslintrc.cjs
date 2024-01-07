@@ -18,7 +18,11 @@ module.exports = {
         'space-before-function-paren': ['error', 'never'],
         '@typescript-eslint/space-before-function-paren': ["error", "never"],
         "semi": "off",
-        "@typescript-eslint/semi": ["error", "always"]
+        "@typescript-eslint/semi": ["error", "always"],
+        "@typescript-eslint/consistent-type-assertions": ["error", {
+            "assertionStyle": "as",
+            "objectLiteralTypeAssertions": "allow"
+        }]
     },
     "overrides": [
         {
