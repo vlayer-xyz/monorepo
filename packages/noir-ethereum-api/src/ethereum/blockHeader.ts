@@ -52,7 +52,7 @@ export function toHexString(arg: number | bigint): Hex {
 }
 
 export function blockToHeader(block: GetBlockReturnType): BlockHeader {
-  return {
+  const blockHeader: BlockHeader = {
     parentHash: block.parentHash,
     sha3Uncles: block.sha3Uncles,
     miner: block.miner,
@@ -70,7 +70,8 @@ export function blockToHeader(block: GetBlockReturnType): BlockHeader {
     nonce: block.nonce,
     baseFeePerGas: block.baseFeePerGas !== null ? toHexString(block.baseFeePerGas) : undefined,
     withdrawalsRoot: block.withdrawalsRoot !== null ? block.withdrawalsRoot : undefined
-  } as BlockHeader;
+  };
+  return blockHeader;
 }
 
 export function calculateBlockHeaderHash(blockHeader: BlockHeader): Hex {
