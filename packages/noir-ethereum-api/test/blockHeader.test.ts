@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { BlockHeader, calculateBlockHash, calculateBlockHeaderHash, headerToRlp } from '../src/ethereum/blockHeader.js';
 import { blockHeaders } from './fixtures/blockHeader.json';
 
-for (let header of blockHeaders) {
+for (const header of blockHeaders) {
 
   describe('encodeBlockHeader', () => {
     it(header.title, () => {
@@ -21,7 +21,7 @@ for (let header of blockHeaders) {
 
 describe('calculateBlockHash', async () => {
   const blocks = parse(await readFile('./test/fixtures/blocks.json', 'utf-8'));
-  for (let block of blocks) {
+  for (const block of blocks) {
     it(`block #${block.number}`, async () => {
       expect(calculateBlockHash(block)).toBe(block.hash);
     })

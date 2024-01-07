@@ -23,7 +23,7 @@ const client = createDefaultClient();
 console.log(`Downloading blocks...`);
 
 const result = [];
-for (let blockNumber of blocks) {
+for (const blockNumber of blocks) {
   console.log(blockNumber);
   const block = await client.getBlock({ blockNumber });
   result.push(block);

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { createDefaultClient } from '../src/ethereum/client.js';
 import { generate_and_verify_simple_proof } from '../src/main.js';
-import { encodeBytes32, encodeAddress } from '../src/noir/encode.js';
+import { encodeAddress } from '../src/noir/encode.js';
 import { serializeAccountWithProof } from "../src/noir/oracles/accountOracles.js";
 import { Oracle, Oracles, createOracles } from "../src/noir/oracles/oracles.js";
 import accountWithProof from './fixtures/accountWithProof.json';

@@ -21,7 +21,7 @@ export interface BlockHeader {
 }
 
 export function headerToRlp(blockHeader: BlockHeader) {
-  let header = [
+  const header = [
     blockHeader.parentHash,
     blockHeader.sha3Uncles,
     blockHeader.miner,

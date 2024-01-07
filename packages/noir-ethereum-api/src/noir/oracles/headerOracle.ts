@@ -1,5 +1,5 @@
 import { ForeignCallOutput } from "@noir-lang/noir_js";
-import { BlockHeader, calculateBlockHeaderHash, headerToRlp } from "../../ethereum/blockHeader.js";
+import { BlockHeader, headerToRlp } from "../../ethereum/blockHeader.js";
 import { encodeField, encodeHex } from "../encode.js";
 import { padArray } from "../../arrays.js";
 import { hexToBytes, keccak256 } from "viem";

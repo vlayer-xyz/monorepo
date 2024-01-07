@@ -9,4 +9,4 @@ export async function generate_and_verify_simple_proof(input: InputMap, oracles:
   const noir = new Noir(circuit, backend);
   const proof = await noir.generateFinalProof(input, oracles);
   return await noir.verifyFinalProof(proof);
-};
+}
