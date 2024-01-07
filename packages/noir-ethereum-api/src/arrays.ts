@@ -2,7 +2,7 @@ import { assert } from './assert.js';
 
 type PaddingDirection = 'left' | 'right';
 
-export function padArray(array: string[], len: number, pad: string, direction: PaddingDirection = 'right') {
+export function padArray(array: string[], len: number, pad: string, direction: PaddingDirection = 'right'): string[] {
   assert(len >= array.length, `len param: ${len} should be greater than array length: ${array.length}`);
 
   const padding = new Array(len - array.length).fill(pad);

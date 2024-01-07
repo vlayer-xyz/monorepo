@@ -13,8 +13,8 @@ export function encodeBlockHeaderPartial(header: BlockHeader): ForeignCallOutput
   const number = header.number;
   const rlpHex = headerToRlp(header);
   const rlpBytes = encodeHex(rlpHex);
-  const encoded_len = encodeField(rlpBytes.length);
+  const encodedLen = encodeField(rlpBytes.length);
   const encoded = padArray(rlpBytes, MAX_HEADER_RLP_SIZE, '0x');
   const hash = encodeHex(keccak256(hexToBytes(rlpHex)));
-  return [stateRoot, transactionsRoot, receiptsRoot, number, hash, encoded_len, encoded];
+  return [stateRoot, transactionsRoot, receiptsRoot, number, hash, encodedLen, encoded];
 }

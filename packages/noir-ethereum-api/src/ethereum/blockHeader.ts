@@ -20,8 +20,8 @@ export interface BlockHeader {
   withdrawalsRoot?: Hex
 }
 
-export function headerToRlp(blockHeader: BlockHeader) {
-  const header = [
+export function headerToRlp(blockHeader: BlockHeader): Hex {
+  const header: Hex[] = [
     blockHeader.parentHash,
     blockHeader.sha3Uncles,
     blockHeader.miner,
@@ -38,16 +38,16 @@ export function headerToRlp(blockHeader: BlockHeader) {
     blockHeader.mixHash,
     blockHeader.nonce
   ];
-  if (blockHeader.baseFeePerGas) {
+  if (blockHeader.baseFeePerGas !== undefined) {
     header.push(blockHeader.baseFeePerGas);
   }
-  if (blockHeader.withdrawalsRoot) {
+  if (blockHeader.withdrawalsRoot !== undefined) {
     header.push(blockHeader.withdrawalsRoot);
   }
   return hexToRlp(header);
 }
 
-export function toHexString(arg: number | bigint) {
+export function toHexString(arg: number | bigint): Hex {
   return `0x${arg.toString(16)}`;
 }
 
@@ -68,8 +68,8 @@ export function blockToHeader(block: GetBlockReturnType): BlockHeader {
     extraData: block.extraData,
     mixHash: block.mixHash,
     nonce: block.nonce,
-    baseFeePerGas: block.baseFeePerGas ? toHexString(block.baseFeePerGas) : undefined,
-    withdrawalsRoot: block.withdrawalsRoot ? block.withdrawalsRoot : undefined
+    baseFeePerGas: block.baseFeePerGas !== null ? toHexString(block.baseFeePerGas) : undefined,
+    withdrawalsRoot: block.withdrawalsRoot !== null ? block.withdrawalsRoot : undefined
   } as BlockHeader;
 }
 
