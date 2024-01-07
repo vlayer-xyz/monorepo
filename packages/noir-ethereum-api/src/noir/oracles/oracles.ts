@@ -12,7 +12,10 @@ type OracleMap = Record<string, Oracle>;
 export const createOracles = (client: PublicClient) => (dict: OracleMap): Oracles =>
   async(name: string, args: string[][]): Promise<ForeignCallOutput[]> => {
     const fn = dict[name];
-    return fn ? await fn(client, args) : await Promise.reject(new Error('Unknown oracle'));
+    if (fn === undefined) {
+      throw new Error(`Unknown oracle ${name}`);
+    }
+    return await fn(client, args);
   };
 
 export const defaultOracles = createOracles(createDefaultClient())({ getAccountOracle });
