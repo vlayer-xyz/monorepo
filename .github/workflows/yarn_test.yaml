@@ -31,6 +31,10 @@ jobs:
         run: |
           cd packages/noir-ethereum-api
           yarn typecheck
+      - name: Run linter
+        run: |
+          cd packages/noir-ethereum-api
+          yarn lint
       - name: Run tests
         run: |
           cd packages/noir-ethereum-api
