@@ -1,22 +1,21 @@
-import { Address, isAddress, isHex } from 'viem';
+import { type Address, isAddress, isHex } from 'viem';
 import { assert } from '../assert.js';
-
 
 export const MODULUS = 21888242871839275222246405745257275088696311157297823662689037894645226208583n;
 
 export function hexToString(hex: string) {
-  return String.fromCharCode(parseInt(hex, 16))
+  return String.fromCharCode(parseInt(hex, 16));
 }
 
 export function decodeHexAddress(arg: string[]): Address {
   const result = arg.map((e) => hexToString(e.slice(2))).join('');
-  assert(isAddress(result), `Invalid address: ${result}`)
-  return result as Address;
+  assert(isAddress(result), `Invalid address: ${result}`);
+  return result;
 }
 
 export function encodeField(arg: number | bigint) {
-  assert(arg < MODULUS, `Field overflow`);
-  assert(arg >= 0, `Field underflow`);
+  assert(arg < MODULUS, 'Field overflow');
+  assert(arg >= 0, 'Field underflow');
   return `0x${arg.toString(16)}`;
 }
 

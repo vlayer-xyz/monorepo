@@ -1,23 +1,23 @@
-import { GetBlockReturnType, Hex, hexToBytes, hexToRlp, keccak256 } from 'viem';
+import { type GetBlockReturnType, type Hex, hexToBytes, hexToRlp, keccak256 } from 'viem';
 
 export interface BlockHeader {
-  parentHash: Hex;
-  sha3Uncles: Hex;
-  miner: Hex;
-  stateRoot: Hex;
-  transactionsRoot: Hex;
-  receiptsRoot: Hex;
-  logsBloom: Hex;
-  difficulty: Hex;
-  number: Hex;
-  gasLimit: Hex;
-  gasUsed: Hex;
-  timestamp: Hex;
-  extraData: Hex;
-  mixHash: Hex;
-  nonce: Hex;
-  baseFeePerGas?: Hex;
-  withdrawalsRoot?: Hex;
+  parentHash: Hex
+  sha3Uncles: Hex
+  miner: Hex
+  stateRoot: Hex
+  transactionsRoot: Hex
+  receiptsRoot: Hex
+  logsBloom: Hex
+  difficulty: Hex
+  number: Hex
+  gasLimit: Hex
+  gasUsed: Hex
+  timestamp: Hex
+  extraData: Hex
+  mixHash: Hex
+  nonce: Hex
+  baseFeePerGas?: Hex
+  withdrawalsRoot?: Hex
 }
 
 export function headerToRlp(blockHeader: BlockHeader) {
@@ -29,10 +29,10 @@ export function headerToRlp(blockHeader: BlockHeader) {
     blockHeader.transactionsRoot,
     blockHeader.receiptsRoot,
     blockHeader.logsBloom,
-    blockHeader.difficulty === "0x0" ? "0x" : blockHeader.difficulty,
+    blockHeader.difficulty === '0x0' ? '0x' : blockHeader.difficulty,
     blockHeader.number,
     blockHeader.gasLimit,
-    blockHeader.gasUsed === "0x0" ? "0x" : blockHeader.gasUsed,
+    blockHeader.gasUsed === '0x0' ? '0x' : blockHeader.gasUsed,
     blockHeader.timestamp,
     blockHeader.extraData,
     blockHeader.mixHash,
@@ -51,7 +51,7 @@ export function toHexString(arg: number | bigint) {
   return `0x${arg.toString(16)}`;
 }
 
-export function blockToHeader(block: GetBlockReturnType) : BlockHeader {
+export function blockToHeader(block: GetBlockReturnType): BlockHeader {
   return {
     parentHash: block.parentHash,
     sha3Uncles: block.sha3Uncles,
@@ -69,14 +69,14 @@ export function blockToHeader(block: GetBlockReturnType) : BlockHeader {
     mixHash: block.mixHash,
     nonce: block.nonce,
     baseFeePerGas: block.baseFeePerGas ? toHexString(block.baseFeePerGas) : undefined,
-    withdrawalsRoot: block.withdrawalsRoot ? block.withdrawalsRoot : undefined,
+    withdrawalsRoot: block.withdrawalsRoot ? block.withdrawalsRoot : undefined
   } as BlockHeader;
 }
 
-export function calculateBlockHeaderHash(blockHeader: BlockHeader) : Hex {
+export function calculateBlockHeaderHash(blockHeader: BlockHeader): Hex {
   return keccak256(hexToBytes(headerToRlp(blockHeader)));
 }
 
-export function calculateBlockHash(block: GetBlockReturnType) : Hex {
+export function calculateBlockHash(block: GetBlockReturnType): Hex {
   return calculateBlockHeaderHash(blockToHeader(block));
 }
