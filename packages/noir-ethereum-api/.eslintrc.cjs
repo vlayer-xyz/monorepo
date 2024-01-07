@@ -3,7 +3,10 @@ module.exports = {
         "browser": true,
         "es2021": true
     },
-    "extends": "standard-with-typescript",
+    extends: [
+        'eslint:recommended',
+        'plugin:@typescript-eslint/recommended'  // Uses the recommended rules from the @typescript-eslint/eslint-plugin
+    ],
     "overrides": [
         {
             "env": {

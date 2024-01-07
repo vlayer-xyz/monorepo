@@ -954,7 +954,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^6.4.0":
+"@typescript-eslint/parser@npm:^6.18.0, @typescript-eslint/parser@npm:^6.4.0":
   version: 6.18.0
   resolution: "@typescript-eslint/parser@npm:6.18.0"
   dependencies:
@@ -3430,6 +3430,7 @@ __metadata:
     "@types/json-bigint": "npm:^1"
     "@types/node": "npm:^20.10.5"
     "@typescript-eslint/eslint-plugin": "npm:^6.4.0"
+    "@typescript-eslint/parser": "npm:^6.18.0"
     dotenv: "npm:^16.3.1"
     eslint: "npm:^8.0.1"
     eslint-config-standard-with-typescript: "npm:^43.0.0"
