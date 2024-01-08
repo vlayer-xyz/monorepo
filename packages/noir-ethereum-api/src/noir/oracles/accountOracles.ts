@@ -1,32 +1,32 @@
-import { type ForeignCallOutput } from "@noir-lang/noir_js";
+import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import {
   fromRlp,
   type GetProofReturnType,
   type Hex,
   isHex,
-  type PublicClient,
-} from "viem";
-import { assert } from "../../assert.js";
-import { decodeHexAddress, encodeField, encodeHex } from "../encode.js";
-import { padArray } from "../../arrays.js";
+  type PublicClient
+} from 'viem';
+import { assert } from '../../assert.js';
+import { decodeHexAddress, encodeField, encodeHex } from '../encode.js';
+import { padArray } from '../../arrays.js';
 
 const PROOF_ONE_LEVEL_LENGTH = 532;
 const MAX_ACCOUNT_STATE_LENGTH = 134;
-const ZERO_PAD_VALUE = "0x0";
+const ZERO_PAD_VALUE = '0x0';
 const RLP_VALUE_INDEX = 1;
 
 export interface AccountWithProof {
-  balance: string;
-  codeHash: string[];
-  nonce: string;
-  key: string[];
-  value: string[];
-  proof: string[];
-  depth: string;
+  balance: string
+  codeHash: string[]
+  nonce: string
+  key: string[]
+  value: string[]
+  proof: string[]
+  depth: string
 }
 
 export function serializeAccountWithProof(
-  account: AccountWithProof,
+  account: AccountWithProof
 ): ForeignCallOutput[] {
   return [
     account.balance,
@@ -35,22 +35,22 @@ export function serializeAccountWithProof(
     account.key,
     account.value,
     account.proof,
-    account.depth,
+    account.depth
   ];
 }
 
-export const getAccountOracle = async (
+export const getAccountOracle = async(
   client: PublicClient,
-  args: string[][],
+  args: string[][]
 ): Promise<ForeignCallOutput[]> => {
-  assert(args.length === 2, "get_account requires 2 arguments");
+  assert(args.length === 2, 'get_account requires 2 arguments');
   assert(
     args[0].length === 1,
-    "get_account first argument must be a block number",
+    'get_account first argument must be a block number'
   );
   assert(
     args[1].length === 42,
-    "get_account second argument must be an address",
+    'get_account second argument must be an address'
   );
   const address = decodeHexAddress(args[1]);
   const account = await client.getProof({ address, storageKeys: [] });
@@ -58,7 +58,7 @@ export const getAccountOracle = async (
   return [
     encodeField(account.balance),
     encodeHex(account.codeHash),
-    encodeField(account.nonce),
+    encodeField(account.nonce)
   ];
 };
 
@@ -70,7 +70,7 @@ export function encodeAccount(ethProof: GetProofReturnType): AccountWithProof {
     key: encodeHex(ethProof.address),
     value: encodeValue(ethProof.accountProof),
     proof: encodeProof(ethProof.accountProof),
-    depth: encodeField(ethProof.accountProof.length),
+    depth: encodeField(ethProof.accountProof.length)
   };
 }
 
@@ -82,13 +82,13 @@ function encodeProof(proof: string[]): string[] {
 }
 
 function encodeValue(proof: Hex[]): string[] {
-  const lastProofEntry = fromRlp(proof[proof.length - 1], "hex");
+  const lastProofEntry = fromRlp(proof[proof.length - 1], 'hex');
   const value = lastProofEntry[RLP_VALUE_INDEX];
-  assert(isHex(value), "value should be of type Hex");
+  assert(isHex(value), 'value should be of type Hex');
   return padArray(
     encodeHex(value),
     MAX_ACCOUNT_STATE_LENGTH,
     ZERO_PAD_VALUE,
-    "left",
+    'left'
   );
 }
