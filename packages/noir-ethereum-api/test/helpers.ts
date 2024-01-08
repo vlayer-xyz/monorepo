@@ -9,3 +9,7 @@ export function expectCircuitFail(p: Promise<any>) {
 export function clone<T>(obj: T): T {
   return JSON.parse(JSON.stringify(obj));
 }
+
+export type FieldsOfType<ObjectType, FieldType> = {
+  [K in keyof ObjectType]: ObjectType[K] extends FieldType ? K : never
+}[keyof ObjectType];
