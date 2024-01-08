@@ -7,6 +7,9 @@ jobs:
     name: Lint and Typecheck
     runs-on: ubuntu-latest
     environment: CI
+    defaults:
+      run:
+        working-directory: packages/noir-ethereum-api
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -23,12 +26,9 @@ jobs:
 
       - name: Install Dependencies
         run: yarn install
-        working-directory: packages/noir-ethereum-api
 
       - name: Run TypeScript Linter
         run: yarn lint
-        working-directory: packages/noir-ethereum-api
 
       - name: Run TypeScript Typecheck
         run: yarn typecheck
-        working-directory: packages/noir-ethereum-api
