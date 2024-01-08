@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { padArray } from "../src/arrays.js";
+import { alterArray, padArray } from "../src/arrays.js";
 
 describe('arrays', () => {
   it('padArray right', () => {
@@ -15,5 +15,10 @@ describe('arrays', () => {
 
   it('padArray invalid len', () => {
     expect(() => padArray(["a"], 0, "a")).toThrow("len param: 0 should be greater than array length: 1")
+  })
+
+  it('alterArray', () => {
+    expect(alterArray(["0x1", "0x2"])).toStrictEqual(["0x2", "0x2"])
+    expect(() => alterArray([])).toThrow("Array should not be empty")
   })
 })
