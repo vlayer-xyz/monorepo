@@ -1,0 +1,34 @@
+name: TS Lint and Typecheck
+
+on: [push]
+
+jobs:
+  lint-and-typecheck:
+    name: Lint and Typecheck
+    runs-on: ubuntu-latest
+    environment: CI
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+
+      - name: Enable Corepack and Install Yarn 4
+        run: |
+          corepack enable
+          yarn set version latest
+
+      - name: Install Dependencies
+        run: yarn install
+        working-directory: packages/noir-ethereum-api
+
+      - name: Run TypeScript Linter
+        run: yarn lint
+        working-directory: packages/noir-ethereum-api
+
+      - name: Run TypeScript Typecheck
+        run: yarn typecheck
+        working-directory: packages/noir-ethereum-api
