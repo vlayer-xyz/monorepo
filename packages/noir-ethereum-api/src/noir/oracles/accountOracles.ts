@@ -13,7 +13,6 @@ export interface AccountWithProof {
   balance: string,
   codeHash: string[],
   nonce: string,
-  stateRoot: string[],
   key: string[],
   value: string[],
   proof: string[],
@@ -25,7 +24,6 @@ export function serializeAccountWithProof(account: AccountWithProof): ForeignCal
     account.balance,
     account.codeHash,
     account.nonce,
-    account.stateRoot,
     account.key,
     account.value,
     account.proof,
@@ -52,7 +50,6 @@ export function encodeAccount(ethProof: GetProofReturnType): AccountWithProof {
     balance: encodeField(ethProof.balance),
     codeHash: encodeHex(ethProof.codeHash),
     nonce: encodeField(ethProof.nonce),
-    stateRoot: [], // TODO
     key: encodeHex(ethProof.address),
     value: encodeValue(ethProof.accountProof),
     proof: encodeProof(ethProof.accountProof),

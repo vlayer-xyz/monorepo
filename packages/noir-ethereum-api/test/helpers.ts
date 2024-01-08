@@ -5,3 +5,7 @@ export function expectCircuitFail(p: Promise<any>) {
     'Circuit execution failed: Error: Failed to solve brillig function, reason: explicit trap hit in brillig',
   );
 }
+
+export function clone<T>(obj: T): T {
+  return JSON.parse(JSON.stringify(obj));
+}
