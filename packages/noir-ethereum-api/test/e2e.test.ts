@@ -2,10 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { createDefaultClient } from '../src/ethereum/client.js';
 import { generateAndVerifyStorageProof, type MainInputs } from '../src/main.js';
 import { encodeAddress } from '../src/noir/encode.js';
-import {
-  type AccountWithProof,
-  serializeAccountWithProof
-} from '../src/noir/oracles/accountOracles.js';
+import { type AccountWithProof, serializeAccountWithProof } from '../src/noir/oracles/accountOracles.js';
 import { createOracles, type Oracles } from '../src/noir/oracles/oracles.js';
 import accountWithProofJSON from './fixtures/accountWithProof.json';
 import { expectCircuitFail, type FieldsOfType } from './helpers.js';
@@ -56,32 +53,20 @@ const defaultTestCircuitInputParams: MainInputs = {
 describe(
   'e2e',
   () => {
-    function oracles(
-      accountWithProof: AccountWithProof = accountWithProofJSON
-    ): Oracles {
+    function oracles(accountWithProof: AccountWithProof = accountWithProofJSON): Oracles {
       return createOracles(createDefaultClient())({
-        get_account: async() => serializeAccountWithProof(accountWithProof),
-        get_header: async() =>
-          encodeBlockHeaderPartial(blockHeaders[1].header as BlockHeader)
+        get_account: async () => serializeAccountWithProof(accountWithProof),
+        get_header: async () => encodeBlockHeaderPartial(blockHeaders[1].header as BlockHeader)
       });
     }
 
-    it('proof successes', async() => {
-      expect(
-        await generateAndVerifyStorageProof(
-          defaultTestCircuitInputParams,
-          oracles()
-        )
-      ).toEqual(true);
+    it('proof successes', async () => {
+      expect(await generateAndVerifyStorageProof(defaultTestCircuitInputParams, oracles())).toEqual(true);
     });
 
-    const arrayKeys: Array<FieldsOfType<AccountWithProof, readonly string[]>> = [
-      'key',
-      'value',
-      'proof'
-    ];
+    const arrayKeys: Array<FieldsOfType<AccountWithProof, readonly string[]>> = ['key', 'value', 'proof'];
     arrayKeys.forEach((arrayField) => {
-      it(`proof fails: invalid field: ${arrayField}`, async() => {
+      it(`proof fails: invalid field: ${arrayField}`, async () => {
         await expectCircuitFail(
           generateAndVerifyStorageProof(
             defaultTestCircuitInputParams,
@@ -94,7 +79,7 @@ describe(
       });
     });
 
-    it('proof fails: invalid state root', async() => {
+    it('proof fails: invalid state root', async () => {
       const inputParams = {
         ...defaultTestCircuitInputParams,
         state_root: alterArray(defaultTestCircuitInputParams.state_root)

@@ -9,8 +9,10 @@ export type Oracles = (name: string, args: string[][]) => Promise<ForeignCallOut
 
 type OracleMap = Record<string, Oracle>;
 
-export const createOracles = (client: PublicClient) => (dict: OracleMap): Oracles =>
-  async(name: string, args: string[][]): Promise<ForeignCallOutput[]> => {
+export const createOracles =
+  (client: PublicClient) =>
+  (dict: OracleMap): Oracles =>
+  async (name: string, args: string[][]): Promise<ForeignCallOutput[]> => {
     const fn = dict[name];
     if (fn === undefined) {
       throw new Error(`Unknown oracle ${name}`);

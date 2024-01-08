@@ -29,7 +29,7 @@ export function encodeAddress(value: bigint): string[] {
 
 export function encodeBytes(value: bigint, length: number): string[] {
   assert(value >= 0n, 'Invalid Bytes32: Negative');
-  assert(value < (1n << (8n * BigInt(length))), 'Invalid Bytes32: Overflow');
+  assert(value < 1n << (8n * BigInt(length)), 'Invalid Bytes32: Overflow');
   const hexValue = value.toString(16).padStart(length * 2, '0');
   return encodeHex(`0x${hexValue}`);
 }
