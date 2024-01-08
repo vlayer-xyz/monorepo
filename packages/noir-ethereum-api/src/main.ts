@@ -3,6 +3,7 @@ import {
   type CompiledCircuit
 } from '@noir-lang/backend_barretenberg';
 import { type InputMap, Noir } from '@noir-lang/noir_js';
+// @ts-expect-error The circuit is not yet compiled during the typecheck phase
 import noir_ethereum_history_api from '../../../circuit/target/noir_ethereum_history_api.json';
 import { type Oracles, defaultOracles } from './noir/oracles/oracles.js';
 
