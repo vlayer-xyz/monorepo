@@ -3,7 +3,7 @@ import { createDefaultClient } from '../src/ethereum/client.js';
 import { generate_and_verify_simple_proof, MainInputs } from '../src/main.js';
 import { encodeAddress } from '../src/noir/encode.js';
 import { AccountWithProof, serializeAccountWithProof } from "../src/noir/oracles/accountOracles.js";
-import { createOracles } from "../src/noir/oracles/oracles.js";
+import { createOracles, Oracles } from "../src/noir/oracles/oracles.js";
 import accountWithProofJSON from './fixtures/accountWithProof.json';
 import { expectCircuitFail, FieldsOfType } from './helpers.js';
 import { blockHeaders } from './fixtures/blockHeader.json';
@@ -22,12 +22,12 @@ const defaultTestCircuitInputParams: MainInputs = {
 
 describe('e2e', () => {
 
-  const oracles = (
-    accountWithProof: AccountWithProof = accountWithProofJSON
-  ) => createOracles(createDefaultClient())({
-    get_account: async () => serializeAccountWithProof(accountWithProof),
-    get_header: async () => encodeBlockHeaderPartial(blockHeaders[1].header as BlockHeader)
-  });
+  function oracles(accountWithProof: AccountWithProof = accountWithProofJSON): Oracles {
+    return createOracles(createDefaultClient())({
+      get_account: async () => serializeAccountWithProof(accountWithProof),
+      get_header: async () => encodeBlockHeaderPartial(blockHeaders[1].header as BlockHeader)
+    });
+  }
 
   it('proof successes', async () => {
     expect(await generate_and_verify_simple_proof(defaultTestCircuitInputParams, oracles())).toEqual(true)
