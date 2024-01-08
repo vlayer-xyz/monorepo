@@ -25,7 +25,7 @@ describe('encodeBytes32', () => {
       '0x0', '0x0', '0x0', '0x0',
       '0x0', '0x0', '0x0', '0x0',
       '0x0', '0x0', '0x0', '0x1'
-    ])
+    ]);
   });
 
   it('4 bytes number', () => {
@@ -38,7 +38,7 @@ describe('encodeBytes32', () => {
       '0x0', '0x0', '0x0', '0x0',
       '0x0', '0x0', '0x0', '0x0',
       '0xb2', '0xd0', '0x5e', '0x13'
-    ])
+    ]);
   });
 
   it('MAX_INT_256', () => {
@@ -51,7 +51,7 @@ describe('encodeBytes32', () => {
       '0xff', '0xff', '0xff', '0xff',
       '0xff', '0xff', '0xff', '0xff',
       '0xff', '0xff', '0xff', '0xff'
-    ])
+    ]);
   });
 
   it('throws if negative value', () => {
@@ -109,6 +109,6 @@ describe('decodeHexAddress', () => {
       '0x0000000000000000000000000000000000000000000000000000000000000031',
       '0x0000000000000000000000000000000000000000000000000000000000000061'
     ];
-    expect(decodeHexAddress(arg)).toBe("0xe9c3123e4cf348c66b20a985af264891fc0a441a");
+    expect(decodeHexAddress(arg)).toBe('0xe9c3123e4cf348c66b20a985af264891fc0a441a');
   });
-})
+});
