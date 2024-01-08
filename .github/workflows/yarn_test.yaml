@@ -9,6 +9,9 @@ jobs:
     environment: CI
     env:
       ETHEREUM_JSON_RPC_API_URL: ${{ secrets.ETHEREUM_JSON_RPC_API_URL }}
+    defaults:
+      run:
+        working-directory: packages/noir-ethereum-api
 
     steps:
       - name: Checkout
@@ -24,18 +27,10 @@ jobs:
           corepack enable
           yarn set version latest
       - name: Install depdendencies
-        run: |
-          cd packages/noir-ethereum-api
-          yarn install
+        run: yarn install
       - name: Run typecheck
-        run: |
-          cd packages/noir-ethereum-api
-          yarn typecheck
+        run: yarn typecheck
       - name: Run linter
-        run: |
-          cd packages/noir-ethereum-api
-          yarn lint
+        run: yarn lint
       - name: Run tests
-        run: |
-          cd packages/noir-ethereum-api
-          yarn test
+        run: yarn test
