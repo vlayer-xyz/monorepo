@@ -19,6 +19,7 @@ describe('arrays', () => {
 
   it('alterArray', () => {
     expect(alterArray(["0x1", "0x2"])).toStrictEqual(["0x2", "0x2"])
+    expect(alterArray(["0xFF", "0x2"])).toStrictEqual(["0x0", "0x2"])
     expect(() => alterArray([])).toThrow("Array should not be empty")
   })
 })
