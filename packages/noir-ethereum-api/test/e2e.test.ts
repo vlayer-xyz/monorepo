@@ -1,64 +1,108 @@
-import { type Hex } from 'viem';
-import { beforeEach, describe, expect, it } from 'vitest';
-import { createDefaultClient } from '../src/ethereum/client.js';
-import { generateAndVerifyStorageProof } from '../src/main.js';
-import { encodeAddress } from '../src/noir/encode.js';
-import { serializeAccountWithProof } from '../src/noir/oracles/accountOracles.js';
-import { type Oracle, type Oracles, createOracles } from '../src/noir/oracles/oracles.js';
-import accountWithProof from './fixtures/accountWithProof.json';
-import { expectCircuitFail } from './helpers.js';
-import { blockHeaders } from './fixtures/blockHeader.json';
-import { encodeBlockHeaderPartial } from '../src/noir/oracles/headerOracle.js';
-import { type BlockHeader } from '../src/ethereum/blockHeader.js';
+import { describe, expect, it } from "vitest";
+import { createDefaultClient } from "../src/ethereum/client.js";
+import { generateAndVerifyStorageProof, MainInputs } from "../src/main.js";
+import { encodeAddress } from "../src/noir/encode.js";
+import {
+  AccountWithProof,
+  serializeAccountWithProof,
+} from "../src/noir/oracles/accountOracles.js";
+import { createOracles, Oracles } from "../src/noir/oracles/oracles.js";
+import accountWithProofJSON from "./fixtures/accountWithProof.json";
+import { expectCircuitFail, FieldsOfType } from "./helpers.js";
+import { blockHeaders } from "./fixtures/blockHeader.json";
+import { encodeBlockHeaderPartial } from "../src/noir/oracles/headerOracle.js";
+import { BlockHeader } from "../src/ethereum/blockHeader.js";
+import { alterArray } from "../src/arrays.js";
 
-const defaultTestCircuitInputParams = {
+const defaultTestCircuitInputParams: MainInputs = {
   block_no: 0,
-  address: encodeAddress(0n)
+  address: encodeAddress(0n),
+  state_root: [
+    "0xd7",
+    "0x8d",
+    "0x4f",
+    "0x18",
+    "0x2e",
+    "0xbd",
+    "0x7f",
+    "0xd",
+    "0xc8",
+    "0x6c",
+    "0x5b",
+    "0x32",
+    "0x8b",
+    "0x73",
+    "0xf9",
+    "0xea",
+    "0x3d",
+    "0xfe",
+    "0x17",
+    "0xee",
+    "0x56",
+    "0xfb",
+    "0xb4",
+    "0x90",
+    "0xd9",
+    "0xb6",
+    "0x7e",
+    "0xda",
+    "0xc4",
+    "0x8e",
+    "0x2b",
+    "0x4",
+  ],
 };
 
-function incHexByte(hexByte: string): Hex {
-  const newByte = ((parseInt(hexByte) + 1) % 256).toString(16);
-  return `0x${newByte}`;
-}
+describe(
+  "e2e",
+  () => {
+    function oracles(
+      accountWithProof: AccountWithProof = accountWithProofJSON,
+    ): Oracles {
+      return createOracles(createDefaultClient())({
+        get_account: async () => serializeAccountWithProof(accountWithProof),
+        get_header: async () =>
+          encodeBlockHeaderPartial(blockHeaders[1].header as BlockHeader),
+      });
+    }
 
-function alterArray(array: string[]): void {
-  array[0] = incHexByte(array[0]);
-}
+    it("proof successes", async () => {
+      expect(
+        await generateAndVerifyStorageProof(
+          defaultTestCircuitInputParams,
+          oracles(),
+        ),
+      ).toEqual(true);
+    });
 
-describe('e2e', () => {
-  let getAccount: Oracle;
-  let getHeader: Oracle;
-  let oracles: Oracles;
+    const arrayKeys: FieldsOfType<AccountWithProof, readonly string[]>[] = [
+      "key",
+      "value",
+      "proof",
+    ];
+    arrayKeys.forEach((arrayField) => {
+      it(`proof fails: invalid field: ${arrayField}`, async () => {
+        expectCircuitFail(
+          generateAndVerifyStorageProof(
+            defaultTestCircuitInputParams,
+            oracles({
+              ...accountWithProofJSON,
+              [arrayField]: alterArray(accountWithProofJSON[arrayField]),
+            }),
+          ),
+        );
+      });
+    });
 
-  beforeEach(async() => {
-    getAccount = async() => serializeAccountWithProof(accountWithProof);
-    getHeader = async() => encodeBlockHeaderPartial(blockHeaders[1].header as BlockHeader);
-    oracles = createOracles(createDefaultClient())({ get_account: getAccount, get_header: getHeader });
-  });
-
-  it('proof successes', async() => {
-    expect(await generateAndVerifyStorageProof(defaultTestCircuitInputParams, oracles)).toEqual(true);
-  });
-
-  it('proof fails: invalid storage proof', async() => {
-    alterArray(accountWithProof.proof);
-    await expectCircuitFail(generateAndVerifyStorageProof(defaultTestCircuitInputParams, oracles));
-  });
-
-  it('proof fails: invalid address', async() => {
-    alterArray(accountWithProof.key);
-    await expectCircuitFail(generateAndVerifyStorageProof(defaultTestCircuitInputParams, oracles));
-  });
-
-  it('proof fails: invalid account state', async() => {
-    alterArray(accountWithProof.value);
-    await expectCircuitFail(generateAndVerifyStorageProof(defaultTestCircuitInputParams, oracles));
-  });
-
-  it('proof fails: invalid state root', async() => {
-    alterArray(accountWithProof.stateRoot);
-    await expectCircuitFail(generateAndVerifyStorageProof(defaultTestCircuitInputParams, oracles));
-  });
-}, {
-  timeout: 20000
-});
+    it("proof fails: invalid state root", async () => {
+      const inputParams = {
+        ...defaultTestCircuitInputParams,
+        state_root: alterArray(defaultTestCircuitInputParams.state_root),
+      };
+      expectCircuitFail(generateAndVerifyStorageProof(inputParams, oracles()));
+    });
+  },
+  {
+    timeout: 20000,
+  },
+);
