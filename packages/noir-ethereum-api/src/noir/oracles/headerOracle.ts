@@ -1,10 +1,18 @@
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { type BlockHeader, headerToRlp } from '../../ethereum/blockHeader.js';
-import { encodeField, encodeHex } from '../encode.js';
+import { decodeField, encodeField, encodeHex } from '../encode.js';
 import { padArray } from '../../arrays.js';
-import { hexToBytes, keccak256 } from 'viem';
+import { hexToBytes, isHex, keccak256 } from 'viem';
+import { assert } from '../../assert.js';
 
 export const MAX_HEADER_RLP_SIZE = 708;
+
+export function parseArguments(args: string[][]): bigint {
+  assert(args.length == 1, "get_header requires 1 argument");
+  assert(args[0].length == 1, "get_account first argument must be an array of length 1");
+  assert(isHex(args[0][0]), "get_account first argument must be a hex value");
+  return decodeField(args[0][0]);
+}
 
 export function encodeBlockHeaderPartial(header: BlockHeader): ForeignCallOutput[] {
   const stateRoot = encodeHex(header.stateRoot);
