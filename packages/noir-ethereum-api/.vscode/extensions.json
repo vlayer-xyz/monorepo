@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+		"arcanis.vscode-zipfs",
+		"noir-lang.vscode-noir",
+		"JuanBlanco.solidity",
+		"dbaeumer.vscode-eslint",
+		"esbenp.prettier-vscode"
+  ]
+}
