@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { decodeHexAddress, encodeBytes32 } from '../src/noir/encode.js';
+import { decodeField, decodeHexAddress, encodeBytes32 } from '../src/noir/encode.js';
 
 describe('encodeBytes32', () => {
   it('zero', () => {
@@ -110,5 +110,18 @@ describe('decodeHexAddress', () => {
       '0x0000000000000000000000000000000000000000000000000000000000000061'
     ];
     expect(decodeHexAddress(arg)).toBe('0xe9c3123e4cf348c66b20a985af264891fc0a441a');
+  });
+});
+
+describe('decodeField', () => {
+  it('success', () => {
+    expect(decodeField('0x0')).toEqual(0n);
+    expect(decodeField('0x0000')).toEqual(0n);
+    expect(decodeField('0x1')).toEqual(1n);
+    expect(decodeField('0xff')).toEqual(255n);
+    expect(decodeField('0x1fffffffffffff')).toEqual(9007199254740991n);
+    expect(decodeField('0x0000000000000000000000000000000000000000000000000000000000000000')).toEqual(0n);
+    expect(decodeField('0x0000000000000000000000000000000000000000000000000003f28cb71571c7')).toEqual(1111111111111111n);
+    expect(decodeField('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')).toEqual(115792089237316195423570985008687907853269984665640564039457584007913129639935n);
   });
 });

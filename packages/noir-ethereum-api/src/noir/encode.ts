@@ -45,3 +45,5 @@ export function encodeHex(hexString: string): string[] {
   }
   return chunks;
 }
+
+export const decodeField = (arg: string): bigint => BigInt(arg);
