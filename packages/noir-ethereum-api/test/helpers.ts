@@ -11,5 +11,5 @@ export function clone<T>(obj: T): T {
 }
 
 export type FieldsOfType<ObjectType, FieldType> = {
-  [K in keyof ObjectType]: ObjectType[K] extends FieldType ? K : never
+  [K in keyof ObjectType]: ObjectType[K] extends FieldType ? K : never;
 }[keyof ObjectType];
