@@ -7,7 +7,7 @@ import { assert } from '../../assert.js';
 
 export const MAX_HEADER_RLP_SIZE = 708;
 
-export const getHeaderOracle = async(client: PublicClient, args: string[][]): Promise<ForeignCallOutput[]> => {
+export const getHeaderOracle = async (client: PublicClient, args: string[][]): Promise<ForeignCallOutput[]> => {
   const blockNumber: bigint = parseNoirGetHeaderArguments(args);
   const blockHeader: BlockHeader = await getBlock(client, blockNumber);
   return encodeBlockHeaderPartial(blockHeader);
@@ -21,7 +21,7 @@ export function parseNoirGetHeaderArguments(args: string[][]): bigint {
 }
 
 export async function getBlock(client: PublicClient, blockNumber: bigint): Promise<BlockHeader> {
-  const block: GetBlockReturnType = await client.getBlock({ blockNumber }) as GetBlockReturnType;
+  const block: GetBlockReturnType = (await client.getBlock({ blockNumber })) as GetBlockReturnType;
   return blockToHeader(block);
 }
 
