@@ -16,7 +16,7 @@ const wasmContentTypePlugin = {
       }
       next();
     });
-  }
+  },
 };
 
 export default defineConfig(({ command }) => {
@@ -26,10 +26,10 @@ export default defineConfig(({ command }) => {
         copy({
           targets: [{ src: 'node_modules/**/*.wasm', dest: 'node_modules/.vite/dist' }],
           copySync: true,
-          hook: 'buildStart'
+          hook: 'buildStart',
         }),
-        command === 'serve' ? wasmContentTypePlugin : []
-      ]
+        command === 'serve' ? wasmContentTypePlugin : [],
+      ],
     };
   }
 
