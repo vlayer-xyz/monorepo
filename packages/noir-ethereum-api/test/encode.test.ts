@@ -217,7 +217,11 @@ describe('decodeField', () => {
     expect(decodeField('0xff')).toEqual(255n);
     expect(decodeField('0x1fffffffffffff')).toEqual(9007199254740991n);
     expect(decodeField('0x0000000000000000000000000000000000000000000000000000000000000000')).toEqual(0n);
-    expect(decodeField('0x0000000000000000000000000000000000000000000000000003f28cb71571c7')).toEqual(1111111111111111n);
-    expect(decodeField('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')).toEqual(115792089237316195423570985008687907853269984665640564039457584007913129639935n);
+    expect(decodeField('0x0000000000000000000000000000000000000000000000000003f28cb71571c7')).toEqual(
+      1111111111111111n
+    );
+    expect(decodeField('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')).toEqual(
+      115792089237316195423570985008687907853269984665640564039457584007913129639935n
+    );
   });
 });

@@ -30,5 +30,16 @@ jobs:
       - name: Run TypeScript Linter
         run: yarn lint
 
+      # We don't store circuit compilation artefacts in the repo,
+      # but typecheck fails on import without them so we just create a fake file here
+      - name: Create fake circuit compilation artefacts
+        working-directory: circuit
+        run: |
+          mkdir target
+          touch target/noir_ethereum_history_api.json
+
       - name: Run TypeScript Typecheck
         run: yarn typecheck
+
+      - name: Run TypeScript format check
+        run: yarn format:ci
