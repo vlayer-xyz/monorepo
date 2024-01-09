@@ -14,6 +14,7 @@
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write .",
+    "format:ci": "prettier --check .",
     "fetch-blocks": "tsx src/script/fetchBlocks",
     "fetch-proofs": "tsx src/script/fetchProofs",
     "encode-header": "tsx src/script/encodeHeader"
