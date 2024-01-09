@@ -34,7 +34,9 @@ jobs:
       # but typecheck fails on import without them so we just create a fake file here
       - name: Create fake circuit compilation artefacts
         working-directory: circuit
-        run: touch target/noir_ethereum_history_api.json
+        run: |
+          mkdir target
+          touch target/noir_ethereum_history_api.json
 
       - name: Run TypeScript Typecheck
         run: yarn typecheck
