@@ -34,6 +34,14 @@ export function parseNoirGetAccountArguments(args: string[][]): {
   return { blockNumber, address };
 }
 
+export async function getAccountProof(
+  client: PublicClient,
+  address: `0x${string}`,
+  blockNumber: bigint
+): Promise<GetProofReturnType> {
+  return (await client.getProof({ address, storageKeys: [], blockNumber })) as GetProofReturnType;
+}
+
 export function serializeAccountWithProof(account: AccountWithProof): ForeignCallOutput[] {
   return [account.balance, account.codeHash, account.nonce, account.key, account.value, account.proof, account.depth];
 }
