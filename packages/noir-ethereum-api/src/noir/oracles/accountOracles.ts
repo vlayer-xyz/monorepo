@@ -32,18 +32,24 @@ export function parseNoirGetAccountArguments(args: string[][]): {
   address: Hex;
 } {
   assert(args.length === 2, 'get_account requires 2 arguments');
-  assert(args[0].length === 1, 'get_account first argument must be an array of length 1');
-  assert(isHex(args[0][0]), 'get_account first argument must be a hex value');
-  assert(args[1].length === 42, 'get_account second argument must be an address');
-  assert(all(isHex)(args[1]), 'get_account second argument must be an array of hex string values');
-  const blockNumber: bigint = decodeField(args[0][0]);
-  const address: Hex = decodeHexAddress(args[1]);
+
+  const [noirBlockNumber, noirAddress] = args;
+
+  assert(noirBlockNumber.length === 1, 'get_account first argument must be an array of length 1');
+  assert(isHex(noirBlockNumber[0]), 'get_account first argument must be a hex value');
+
+  assert(noirAddress.length === 42, 'get_account second argument must be an address');
+  assert(all(isHex)(noirAddress), 'get_account second argument must be an array of hex string values');
+
+  const blockNumber: bigint = decodeField(noirBlockNumber[0]);
+  const address: Hex = decodeHexAddress(noirAddress);
+
   return { blockNumber, address };
 }
 
 export async function getAccountProof(
   client: PublicClient,
-  address: `0x${string}`,
+  address: Hex,
   blockNumber: bigint
 ): Promise<GetProofReturnType> {
   return (await client.getProof({ address, storageKeys: [], blockNumber })) as GetProofReturnType;
