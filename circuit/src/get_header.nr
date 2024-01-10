@@ -26,7 +26,7 @@ struct BlockHeaderPartial {
 #[oracle(get_header)]
 unconstrained fn get_header_oracle(_block_no: Field) -> BlockHeaderPartial {}
 
-unconstrained fn get_header(block_no: Field) -> BlockHeaderPartial {
+unconstrained pub(crate) fn get_header(block_no: Field) -> BlockHeaderPartial {
     let header = get_header_oracle(block_no);
     let rlp_list:RLP_List<HEADER_FIELDS_COUNT> = decode1(header.encoded);
     assert(
