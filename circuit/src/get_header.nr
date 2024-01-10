@@ -97,7 +97,7 @@ pub fn alter_array<N>(array: [u8; N]) -> [u8; N] {
 
 #[test]
 fn test_get_header_success() {
-    OracleMock::mock("get_header").returns(blockPartial);
+    let _ = OracleMock::mock("get_header").returns(blockPartial);
     assert(get_header(0).stateRoot == stateRoot);
 }
 
@@ -105,7 +105,7 @@ fn test_get_header_success() {
 fn test_get_header_invalid_state_root() {
     let stateRoot = alter_array(stateRoot);
     let blockPartial = BlockHeaderPartial { stateRoot, transactionsRoot, receiptsRoot, number, hash, encoded_len, encoded };
-    OracleMock::mock("get_header").returns(blockPartial);
+    let _ = OracleMock::mock("get_header").returns(blockPartial);
     assert(get_header(0).stateRoot == stateRoot);
 }
 
@@ -113,7 +113,7 @@ fn test_get_header_invalid_state_root() {
 fn test_get_header_invalid_transactions_root() {
     let transactionsRoot = alter_array(transactionsRoot);
     let blockPartial = BlockHeaderPartial { stateRoot, transactionsRoot, receiptsRoot, number, hash, encoded_len, encoded };
-    OracleMock::mock("get_header").returns(blockPartial);
+    let _ = OracleMock::mock("get_header").returns(blockPartial);
     assert(get_header(0).stateRoot == stateRoot);
 }
 
@@ -121,7 +121,7 @@ fn test_get_header_invalid_transactions_root() {
 fn test_get_header_invalid_receipt_root() {
     let receiptsRoot = alter_array(receiptsRoot);
     let blockPartial = BlockHeaderPartial { stateRoot, transactionsRoot, receiptsRoot, number, hash, encoded_len, encoded };
-    OracleMock::mock("get_header").returns(blockPartial);
+    let _ = OracleMock::mock("get_header").returns(blockPartial);
     assert(get_header(0).stateRoot == stateRoot);
 }
 
@@ -129,6 +129,6 @@ fn test_get_header_invalid_receipt_root() {
 fn test_get_header_invalid_hash() {
     let hash = alter_array(hash);
     let blockPartial = BlockHeaderPartial { stateRoot, transactionsRoot, receiptsRoot, number, hash, encoded_len, encoded };
-    OracleMock::mock("get_header").returns(blockPartial);
+    let _ = OracleMock::mock("get_header").returns(blockPartial);
     assert(get_header(0).stateRoot == stateRoot);
 }
