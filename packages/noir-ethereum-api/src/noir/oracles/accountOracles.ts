@@ -20,6 +20,13 @@ export interface AccountWithProof {
   depth: string;
 }
 
+export const getAccountOracle = async (client: PublicClient, args: string[][]): Promise<ForeignCallOutput[]> => {
+  const { blockNumber, address } = parseNoirGetAccountArguments(args);
+  const accountProof: GetProofReturnType = await getAccountProof(client, address, blockNumber);
+  const accountWithProof = encodeAccount(accountProof);
+  return serializeAccountWithProof(accountWithProof);
+};
+
 export function parseNoirGetAccountArguments(args: string[][]): {
   blockNumber: bigint;
   address: Hex;
@@ -45,16 +52,6 @@ export async function getAccountProof(
 export function serializeAccountWithProof(account: AccountWithProof): ForeignCallOutput[] {
   return [account.balance, account.codeHash, account.nonce, account.key, account.value, account.proof, account.depth];
 }
-
-export const getAccountOracle = async (client: PublicClient, args: string[][]): Promise<ForeignCallOutput[]> => {
-  assert(args.length === 2, 'get_account requires 2 arguments');
-  assert(args[0].length === 1, 'get_account first argument must be a block number');
-  assert(args[1].length === 42, 'get_account second argument must be an address');
-  const address = decodeHexAddress(args[1]);
-  const account = await client.getProof({ address, storageKeys: [] });
-
-  return [encodeField(account.balance), encodeHex(account.codeHash), encodeField(account.nonce)];
-};
 
 export function encodeAccount(ethProof: GetProofReturnType): AccountWithProof {
   return {
