@@ -26,11 +26,13 @@
     "@noir-lang/noir_js": "^0.22.0",
     "dotenv": "^16.3.1",
     "json-bigint": "^1.0.0",
+    "lodash.every": "^4.6.0",
     "viem": "^2.0.0"
   },
   "devDependencies": {
     "@types/eslint": "^8",
     "@types/json-bigint": "^1",
+    "@types/lodash.every": "^4",
     "@types/node": "^20.10.5",
     "@typescript-eslint/eslint-plugin": "^6.18.0",
     "@typescript-eslint/parser": "^6.18.0",

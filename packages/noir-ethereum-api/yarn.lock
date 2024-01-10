@@ -913,6 +913,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash.every@npm:^4":
+  version: 4.6.9
+  resolution: "@types/lodash.every@npm:4.6.9"
+  dependencies:
+    "@types/lodash": "npm:*"
+  checksum: 9239e078c1aba47ead8d3232d46869a6b9e886387c92c8d9a0a1549b7f21864cfa8428b5725ebbfcd31e5c54761a6fa3d4bbe049a776fe3e973cb10d967fbd0c
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:*":
+  version: 4.14.202
+  resolution: "@types/lodash@npm:4.14.202"
+  checksum: 1bb9760a5b1dda120132c4b987330d67979c95dbc22612678682cd61b00302e190f4207228f3728580059cdab5582362262e3819aea59960c1017bd2b9fb26f6
+  languageName: node
+  linkType: hard
+
 "@types/minimatch@npm:*":
   version: 5.1.2
   resolution: "@types/minimatch@npm:5.1.2"
@@ -3187,6 +3203,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash.every@npm:^4.6.0":
+  version: 4.6.0
+  resolution: "lodash.every@npm:4.6.0"
+  checksum: 9f90e6b9f7ab26234fb4048886f150e61910db509f5c3f9685149e72a434865c688468771be1b269783f703abdbf49c0822f92dc2e1456cd8e90ee53a6f55b6b
+  languageName: node
+  linkType: hard
+
 "lodash.merge@npm:^4.6.2":
   version: 4.6.2
   resolution: "lodash.merge@npm:4.6.2"
@@ -3473,6 +3496,7 @@ __metadata:
     "@noir-lang/noir_js": "npm:^0.22.0"
     "@types/eslint": "npm:^8"
     "@types/json-bigint": "npm:^1"
+    "@types/lodash.every": "npm:^4"
     "@types/node": "npm:^20.10.5"
     "@typescript-eslint/eslint-plugin": "npm:^6.18.0"
     "@typescript-eslint/parser": "npm:^6.18.0"
@@ -3485,6 +3509,7 @@ __metadata:
     eslint-plugin-prettier: "npm:^5.1.2"
     eslint-plugin-promise: "npm:^6.0.0"
     json-bigint: "npm:^1.0.0"
+    lodash.every: "npm:^4.6.0"
     prettier: "npm:^3.1.1"
     rollup-plugin-copy: "npm:^3.5.0"
     tsx: "npm:^4.7.0"
