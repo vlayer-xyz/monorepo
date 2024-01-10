@@ -1,6 +1,6 @@
 import { createDefaultClient } from '../ethereum/client.js';
 import { writeFile } from 'fs/promises';
-import { stringify } from 'json-bigint';
+import { stringify } from '../utils/json-bigint.js';
 
 const filePath = './result.json';
 const blocks = [
