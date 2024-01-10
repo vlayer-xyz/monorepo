@@ -1,7 +1,10 @@
 use dep::proof::rlp::{decode1, RLP_List};
-use dep::std::test::OracleMock;
-use dep::std::hash::keccak256;
-use crate::arrays::{sub_array_equals, alter_array};
+use dep::std::{
+    test::OracleMock,
+    hash::keccak256,
+    wrapping_add
+};
+use crate::arrays::sub_array_equals;
 
 global MAX_HEADER_RLP_SIZE = 708;
 global HEADER_FIELDS_COUNT = 17;
@@ -85,6 +88,12 @@ global hash = [
 global encoded_len: Field = 515;
 
 global blockPartial = BlockHeaderPartial { stateRoot, transactionsRoot, receiptsRoot, number, hash, encoded_len, encoded };
+
+pub fn alter_array<N>(array: [u8; N]) -> [u8; N] {
+    let mut copy = array.map(|x| x);
+    copy[0] = wrapping_add(copy[0], 1);
+    copy
+}
 
 #[test]
 fn test_get_header_success() {
