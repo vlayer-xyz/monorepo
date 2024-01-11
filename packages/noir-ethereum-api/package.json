@@ -26,14 +26,12 @@
     "@noir-lang/noir_js": "^0.22.0",
     "dotenv": "^16.3.1",
     "json-bigint": "^1.0.0",
-    "ramda": "^0.29.1",
     "viem": "^2.0.0"
   },
   "devDependencies": {
     "@types/eslint": "^8",
     "@types/json-bigint": "^1",
     "@types/node": "^20.10.5",
-    "@types/ramda": "^0",
     "@typescript-eslint/eslint-plugin": "^6.18.0",
     "@typescript-eslint/parser": "^6.18.0",
     "eslint": "^8.56.0",

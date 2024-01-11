@@ -3,7 +3,6 @@ import { fromRlp, type GetProofReturnType, type Hex, isHex, type PublicClient } 
 import { assert } from '../../assert.js';
 import { decodeField, decodeHexAddress, encodeField, encodeHex } from '../encode.js';
 import { padArray } from '../../arrays.js';
-import { all } from 'ramda';
 
 const PROOF_ONE_LEVEL_LENGTH = 532;
 const MAX_ACCOUNT_STATE_LENGTH = 134;
@@ -39,7 +38,10 @@ export function parseNoirGetAccountArguments(args: string[][]): {
   assert(isHex(noirBlockNumber[0]), 'get_account first argument must be a hex value');
 
   assert(noirAddress.length === 42, 'get_account second argument must be an address');
-  assert(all(isHex)(noirAddress), 'get_account second argument must be an array of hex string values');
+  assert(
+    noirAddress.every((it) => isHex(it)),
+    'get_account second argument must be an array of hex string values'
+  );
 
   const blockNumber: bigint = decodeField(noirBlockNumber[0]);
   const address: Hex = decodeHexAddress(noirAddress);
