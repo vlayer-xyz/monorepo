@@ -22,8 +22,7 @@ export interface AccountWithProof {
 export const getAccountOracle = async (client: PublicClient, args: string[][]): Promise<ForeignCallOutput[]> => {
   const { blockNumber, address } = parseNoirGetAccountArguments(args);
   const accountProof: GetProofReturnType = await getAccountProof(client, address, blockNumber);
-  const accountWithProof = encodeAccount(accountProof);
-  return serializeAccountWithProof(accountWithProof);
+  return encodeAccount(accountProof);
 };
 
 export function parseNoirGetAccountArguments(args: string[][]): {
@@ -57,20 +56,15 @@ export async function getAccountProof(
   return (await client.getProof({ address, storageKeys: [], blockNumber })) as GetProofReturnType;
 }
 
-export function serializeAccountWithProof(account: AccountWithProof): ForeignCallOutput[] {
-  return [account.balance, account.codeHash, account.nonce, account.key, account.value, account.proof, account.depth];
-}
-
-export function encodeAccount(ethProof: GetProofReturnType): AccountWithProof {
-  return {
-    balance: encodeField(ethProof.balance),
-    codeHash: encodeHex(ethProof.codeHash),
-    nonce: encodeField(ethProof.nonce),
-    key: encodeHex(ethProof.address),
-    value: encodeValue(ethProof.accountProof),
-    proof: encodeProof(ethProof.accountProof),
-    depth: encodeField(ethProof.accountProof.length)
-  };
+export function encodeAccount(ethProof: GetProofReturnType): ForeignCallOutput[] {
+  const balance = encodeField(ethProof.balance);
+  const codeHash = encodeHex(ethProof.codeHash);
+  const nonce = encodeField(ethProof.nonce);
+  const key = encodeHex(ethProof.address);
+  const value = encodeValue(ethProof.accountProof);
+  const proof = encodeProof(ethProof.accountProof);
+  const depth = encodeField(ethProof.accountProof.length);
+  return [balance, codeHash, nonce, key, value, proof, depth];
 }
 
 function encodeProof(proof: string[]): string[] {
