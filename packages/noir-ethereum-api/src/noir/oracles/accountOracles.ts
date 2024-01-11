@@ -1,7 +1,7 @@
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { fromRlp, type GetProofReturnType, type Hex, isHex, type PublicClient } from 'viem';
 import { assert } from '../../assert.js';
-import { decodeHexAddress, encodeField, encodeHex } from '../encode.js';
+import { decodeField, decodeHexAddress, encodeField, encodeHex } from '../encode.js';
 import { padArray } from '../../arrays.js';
 
 const PROOF_ONE_LEVEL_LENGTH = 532;
@@ -9,40 +9,48 @@ const MAX_ACCOUNT_STATE_LENGTH = 134;
 const ZERO_PAD_VALUE = '0x0';
 const RLP_VALUE_INDEX = 1;
 
-export interface AccountWithProof {
-  balance: string;
-  codeHash: string[];
-  nonce: string;
-  key: string[];
-  value: string[];
-  proof: string[];
-  depth: string;
-}
-
-export function serializeAccountWithProof(account: AccountWithProof): ForeignCallOutput[] {
-  return [account.balance, account.codeHash, account.nonce, account.key, account.value, account.proof, account.depth];
-}
-
 export const getAccountOracle = async (client: PublicClient, args: string[][]): Promise<ForeignCallOutput[]> => {
-  assert(args.length === 2, 'get_account requires 2 arguments');
-  assert(args[0].length === 1, 'get_account first argument must be a block number');
-  assert(args[1].length === 42, 'get_account second argument must be an address');
-  const address = decodeHexAddress(args[1]);
-  const account = await client.getProof({ address, storageKeys: [] });
-
-  return [encodeField(account.balance), encodeHex(account.codeHash), encodeField(account.nonce)];
+  const { blockNumber, address } = parseNoirGetAccountArguments(args);
+  const accountProof = await client.getProof({
+    address,
+    storageKeys: [],
+    blockNumber
+  });
+  return encodeAccount(accountProof);
 };
 
-export function encodeAccount(ethProof: GetProofReturnType): AccountWithProof {
-  return {
-    balance: encodeField(ethProof.balance),
-    codeHash: encodeHex(ethProof.codeHash),
-    nonce: encodeField(ethProof.nonce),
-    key: encodeHex(ethProof.address),
-    value: encodeValue(ethProof.accountProof),
-    proof: encodeProof(ethProof.accountProof),
-    depth: encodeField(ethProof.accountProof.length)
-  };
+export function parseNoirGetAccountArguments(args: string[][]): {
+  blockNumber: bigint;
+  address: Hex;
+} {
+  assert(args.length === 2, 'get_account requires 2 arguments');
+
+  const [noirBlockNumber, noirAddress] = args;
+
+  assert(noirBlockNumber.length === 1, 'get_account first argument must be an array of length 1');
+  assert(isHex(noirBlockNumber[0]), 'get_account first argument must be a hex value');
+
+  assert(noirAddress.length === 42, 'get_account second argument must be an address');
+  assert(
+    noirAddress.every((it) => isHex(it)),
+    'get_account second argument must be an array of hex string values'
+  );
+
+  const blockNumber: bigint = decodeField(noirBlockNumber[0]);
+  const address: Hex = decodeHexAddress(noirAddress);
+
+  return { blockNumber, address };
+}
+
+export function encodeAccount(ethProof: GetProofReturnType): ForeignCallOutput[] {
+  const balance = encodeField(ethProof.balance);
+  const codeHash = encodeHex(ethProof.codeHash);
+  const nonce = encodeField(ethProof.nonce);
+  const key = encodeHex(ethProof.address);
+  const value = encodeValue(ethProof.accountProof);
+  const proof = encodeProof(ethProof.accountProof);
+  const depth = encodeField(ethProof.accountProof.length);
+  return [balance, codeHash, nonce, key, value, proof, depth];
 }
 
 function encodeProof(proof: string[]): string[] {
