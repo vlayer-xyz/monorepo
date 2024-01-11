@@ -9,16 +9,6 @@ const MAX_ACCOUNT_STATE_LENGTH = 134;
 const ZERO_PAD_VALUE = '0x0';
 const RLP_VALUE_INDEX = 1;
 
-export interface AccountWithProof {
-  balance: string;
-  codeHash: string[];
-  nonce: string;
-  key: string[];
-  value: string[];
-  proof: string[];
-  depth: string;
-}
-
 export const getAccountOracle = async (client: PublicClient, args: string[][]): Promise<ForeignCallOutput[]> => {
   const { blockNumber, address } = parseNoirGetAccountArguments(args);
   const accountProof: GetProofReturnType = (await client.getProof({

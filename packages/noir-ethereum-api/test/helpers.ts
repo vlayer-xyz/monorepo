@@ -1,5 +1,4 @@
 import { expect } from 'vitest';
-import type { AccountWithProof } from '../src/noir/oracles/accountOracles.js';
 import { ForeignCallOutput } from '@noir-lang/noir_js';
 
 export async function expectCircuitFail(p: Promise<boolean>): Promise<void> {
@@ -15,6 +14,16 @@ export function clone<T>(obj: T): T {
 export type FieldsOfType<ObjectType, FieldType> = {
   [K in keyof ObjectType]: ObjectType[K] extends FieldType ? K : never;
 }[keyof ObjectType];
+
+export interface AccountWithProof {
+  balance: string;
+  codeHash: string[];
+  nonce: string;
+  key: string[];
+  value: string[];
+  proof: string[];
+  depth: string;
+}
 
 export function serializeAccountWithProof(account: AccountWithProof): ForeignCallOutput[] {
   return [account.balance, account.codeHash, account.nonce, account.key, account.value, account.proof, account.depth];
