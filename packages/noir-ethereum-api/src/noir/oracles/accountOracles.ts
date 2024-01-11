@@ -11,11 +11,11 @@ const RLP_VALUE_INDEX = 1;
 
 export const getAccountOracle = async (client: PublicClient, args: string[][]): Promise<ForeignCallOutput[]> => {
   const { blockNumber, address } = parseNoirGetAccountArguments(args);
-  const accountProof: GetProofReturnType = (await client.getProof({
+  const accountProof = await client.getProof({
     address,
     storageKeys: [],
     blockNumber
-  })) as GetProofReturnType;
+  });
   return encodeAccount(accountProof);
 };
 
