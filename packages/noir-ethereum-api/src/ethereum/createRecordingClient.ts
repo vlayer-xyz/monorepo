@@ -2,13 +2,13 @@ import { PublicClient } from 'viem';
 
 export type CallResultEntry = {
   method: string;
-  arguments: any[];
+  arguments: object[];
   result: Promise<object>;
 };
 
 export type AwaitedCallResultEntry = {
   method: string;
-  arguments: any[];
+  arguments: object[];
   result: object;
 };
 
@@ -26,9 +26,10 @@ function createLoggingProxy<T extends object>(target: T): T & GetCallResults {
         return async () => sequenceResultPromises(this._callResults);
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const origMethod = (target as any)[prop];
       if (typeof origMethod === 'function' && prop.startsWith('get')) {
-        return async (...args: any[]): Promise<any> => {
+        return async (...args: object[]): Promise<object> => {
           const result = origMethod.apply(target, args);
           this._callResults.push({
             method: prop,
