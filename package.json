@@ -1,0 +1,9 @@
+{
+  "packageManager": "yarn@4.0.2",
+  "dependencies": {
+    "prettier": "^3.2.2"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}
