@@ -52,7 +52,7 @@ function createLoggingProxy<Method, Target extends { [key: string]: Method }>(
 }
 
 export async function saveCallsToFile(client: RecordingClient, filePath: string): Promise<void> {
-  return await fs.writeFile(filePath, stringify(await client.getCalls()));
+  return fs.writeFile(filePath, stringify(await client.getCalls()));
 }
 
 async function awaitResults(entries: CallWithResultPromise[]): Promise<Call[]> {

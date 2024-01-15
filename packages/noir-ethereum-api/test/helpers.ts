@@ -1,6 +1,8 @@
 import { expect } from 'vitest';
 import { ForeignCallOutput } from '@noir-lang/noir_js';
-import { file } from 'tmp-promise';
+import * as os from 'os';
+import * as fs from 'fs/promises';
+import packgeJson from '../package.json';
 
 export async function expectCircuitFail(p: Promise<boolean>): Promise<void> {
   await expect(p).rejects.toThrow(
@@ -30,11 +32,13 @@ export function serializeAccountWithProof(account: AccountWithProof): ForeignCal
   return [account.balance, account.codeHash, account.nonce, account.key, account.value, account.proof, account.depth];
 }
 
-export async function withTempFile(callback: (path: string) => Promise<void>): Promise<void> {
-  const { path, cleanup } = await file();
+export async function withTempFile<T>(callback: (path: string) => Promise<T>): Promise<T> {
+  const testTempDir = await fs.mkdtemp(`${os.tmpdir()}/${packgeJson.name}-temp-dir-`);
+  const tempFilePath = `${testTempDir}/temp-${Date.now()}.json`;
   try {
-    await callback(path);
+    return await callback(tempFilePath);
   } finally {
-    await cleanup();
+    await fs.unlink(tempFilePath);
+    await fs.rmdir(testTempDir);
   }
 }
