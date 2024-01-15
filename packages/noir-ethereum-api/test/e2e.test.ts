@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createDefaultClient } from '../src/ethereum/client.js';
-import { generateAndVerifyStorageProof, type MainInputs } from '../src/main.js';
+import { generateAndVerifyStorageProof, recordStorageProof, type MainInputs } from '../src/main.js';
 import { encodeAddress } from '../src/noir/encode.js';
 import { type AccountWithProof, serializeAccountWithProof } from '../src/noir/oracles/accountOracles.js';
 import { createOracles, type Oracles } from '../src/noir/oracles/oracles.js';
