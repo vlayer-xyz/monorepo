@@ -44,7 +44,6 @@ const RAW_RUNTIME_STATE =
           ["json-bigint", "npm:1.0.0"],\
           ["prettier", "npm:3.1.1"],\
           ["rollup-plugin-copy", "npm:3.5.0"],\
-          ["tmp-promise", "npm:3.0.3"],\
           ["tsx", "npm:4.7.0"],\
           ["typescript", "patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"],\
           ["viem", "virtual:003e2a12d10be9d46f8d546479e77eaf150a0b093d3001eacfb2f0ac7091069bf96f8945fc724f10155418756f3ea558a2c844ce787b132adc5867f016fb0403#npm:2.0.0"],\
@@ -4102,7 +4101,6 @@ const RAW_RUNTIME_STATE =
           ["json-bigint", "npm:1.0.0"],\
           ["prettier", "npm:3.1.1"],\
           ["rollup-plugin-copy", "npm:3.5.0"],\
-          ["tmp-promise", "npm:3.0.3"],\
           ["tsx", "npm:4.7.0"],\
           ["typescript", "patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"],\
           ["viem", "virtual:003e2a12d10be9d46f8d546479e77eaf150a0b093d3001eacfb2f0ac7091069bf96f8945fc724f10155418756f3ea558a2c844ce787b132adc5867f016fb0403#npm:2.0.0"],\
@@ -5011,26 +5009,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/tinyspy-npm-2.2.0-226debb582-bcc5a08c2d.zip/node_modules/tinyspy/",\
         "packageDependencies": [\
           ["tinyspy", "npm:2.2.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["tmp", [\
-      ["npm:0.2.1", {\
-        "packageLocation": "./.yarn/cache/tmp-npm-0.2.1-a9c8d9c0ca-445148d72d.zip/node_modules/tmp/",\
-        "packageDependencies": [\
-          ["tmp", "npm:0.2.1"],\
-          ["rimraf", "npm:3.0.2"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["tmp-promise", [\
-      ["npm:3.0.3", {\
-        "packageLocation": "./.yarn/cache/tmp-promise-npm-3.0.3-6df4ad8df9-0ca65b4f23.zip/node_modules/tmp-promise/",\
-        "packageDependencies": [\
-          ["tmp-promise", "npm:3.0.3"],\
-          ["tmp", "npm:0.2.1"]\
         ],\
         "linkType": "HARD"\
       }]\
