@@ -13,8 +13,9 @@ export type Call = {
 };
 
 export type GetCalls = { getCalls: () => Promise<Call[]> };
+type RecordingClient = PublicClient & GetCalls;
 
-export const createRecordingClient = (client: PublicClient): PublicClient & GetCalls => createLoggingProxy(client);
+export const createRecordingClient = (client: PublicClient): RecordingClient => createLoggingProxy(client);
 
 function createLoggingProxy<T extends object>(target: T): T & GetCalls {
   const handler: ProxyHandler<T> & { _calls: CallWithResultPromise[] } = {
@@ -22,7 +23,7 @@ function createLoggingProxy<T extends object>(target: T): T & GetCalls {
 
     get(target: T, prop: string, receiver) {
       if (prop === 'getCalls') {
-        return async () => sequenceResultPromises(this._calls);
+        return async () => awaitResults(this._calls);
       }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,6 +46,6 @@ function createLoggingProxy<T extends object>(target: T): T & GetCalls {
   return new Proxy(target, handler) as T & GetCalls;
 }
 
-async function sequenceResultPromises(entries: CallWithResultPromise[]): Promise<Call[]> {
+async function awaitResults(entries: CallWithResultPromise[]): Promise<Call[]> {
   return Promise.all(entries.map(async (entry) => ({ ...entry, result: await entry.result })));
 }
