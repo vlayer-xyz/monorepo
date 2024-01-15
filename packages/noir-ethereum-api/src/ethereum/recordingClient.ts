@@ -15,9 +15,10 @@ export type Call = {
 export type GetCalls = { getCalls: () => Promise<Call[]> };
 type RecordingClient = PublicClient & GetCalls;
 
-export const createRecordingClient = (client: PublicClient): RecordingClient => createLoggingProxy(client);
+export const createRecordingClient = (client: PublicClient): RecordingClient =>
+  createLoggingProxy(client, (prop) => prop.startsWith('get'));
 
-function createLoggingProxy<T extends object>(target: T): T & GetCalls {
+function createLoggingProxy<T extends object>(target: T, propCondition: (prop: string) => boolean): T & GetCalls {
   const handler: ProxyHandler<T> & { _calls: CallWithResultPromise[] } = {
     _calls: [],
 
@@ -28,7 +29,7 @@ function createLoggingProxy<T extends object>(target: T): T & GetCalls {
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const origMethod = (target as any)[prop];
-      if (typeof origMethod === 'function' && prop.startsWith('get')) {
+      if (typeof origMethod === 'function' && propCondition(prop)) {
         return async (...args: object[]): Promise<object> => {
           const result = origMethod.apply(target, args);
           this._calls.push({
