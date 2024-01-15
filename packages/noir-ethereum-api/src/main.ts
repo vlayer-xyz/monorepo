@@ -22,6 +22,7 @@ export async function generateAndVerifyStorageProof(
   return await noir.verifyFinalProof(proof);
 }
 
+/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 export async function recordStorageProof(
   input: MainInputs,
   oracles: Oracles = defaultOracles,
@@ -35,7 +36,7 @@ export async function recordStorageProof(
   const proofHex = uint8ArrayToHexString(proof.proof);
   await fs.writeFile(`${name}.proof`, proofHex);
 
-  let publicInputsData = Array.from(proof.publicInputs.values()).join('\n');
+  const publicInputsData = Array.from(proof.publicInputs.values()).join('\n');
   await fs.writeFile(`${name}.publicInputs`, publicInputsData);
 
   const isCorrect = await noir.verifyFinalProof(proof);
