@@ -47,3 +47,7 @@ export function encodeHex(hexString: string): string[] {
 }
 
 export const decodeField = (arg: string): bigint => BigInt(arg);
+
+export function uint8ArrayToHexString(uint8Array: Uint8Array): string {
+    return Array.from(uint8Array).map(b => b.toString(16).padStart(2, '0')).join('');
+}
