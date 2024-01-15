@@ -1,5 +1,6 @@
 import { expect } from 'vitest';
 import { ForeignCallOutput } from '@noir-lang/noir_js';
+import { file } from 'tmp-promise';
 
 export async function expectCircuitFail(p: Promise<boolean>): Promise<void> {
   await expect(p).rejects.toThrow(
@@ -27,4 +28,13 @@ export interface AccountWithProof {
 
 export function serializeAccountWithProof(account: AccountWithProof): ForeignCallOutput[] {
   return [account.balance, account.codeHash, account.nonce, account.key, account.value, account.proof, account.depth];
+}
+
+export async function withTempFile(callback: (path: string) => Promise<void>): Promise<void> {
+  const { path, cleanup } = await file();
+  try {
+    await callback(path);
+  } finally {
+    await cleanup();
+  }
 }

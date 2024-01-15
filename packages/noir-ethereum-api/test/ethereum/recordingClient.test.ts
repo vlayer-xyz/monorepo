@@ -4,6 +4,7 @@ import { Call, createRecordingClient, saveCallsToFile } from '../../src/ethereum
 import { GetBlockReturnType, GetProofReturnType } from 'viem';
 import * as fs from 'fs/promises';
 import { parse } from '../../src/utils/json-bigint.js';
+import { withTempFile } from '../helpers.js';
 
 describe('recordingClient', () => {
   it('record JSON-RPC API calls', async () => {
@@ -20,19 +21,24 @@ describe('recordingClient', () => {
   });
 
   it('save recorded JSON-RPC API calls to file', async () => {
-    // given
-    const filePath = './temp_test_calls.json';
-    const client = createRecordingClient(createDefaultClient());
+    await withTempFile(async (tempFilePath) => {
+      // given
+      const client = createRecordingClient(createDefaultClient());
 
-    // when
-    client.getBlock({ blockNumber: 14194126n });
-    client.getProof({ blockNumber: 14194126n, storageKeys: [], address: '0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbb' });
-    await saveCallsToFile(client, filePath);
+      // when
+      client.getBlock({ blockNumber: 14194126n });
+      client.getProof({
+        blockNumber: 14194126n,
+        storageKeys: [],
+        address: '0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbb'
+      });
+      await saveCallsToFile(client, tempFilePath);
 
-    // then
-    const fileContent = await fs.readFile(filePath, 'utf8');
-    const savedCalls = parse(fileContent) as Call[];
-    validateResults(savedCalls);
+      // then
+      const fileContent = await fs.readFile(tempFilePath, 'utf8');
+      const savedCalls = parse(fileContent) as Call[];
+      validateResults(savedCalls);
+    });
   });
 });
 
