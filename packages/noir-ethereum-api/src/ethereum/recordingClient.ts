@@ -1,4 +1,6 @@
 import { PublicClient } from 'viem';
+import { stringify } from '../utils/json-bigint.js';
+import * as fs from 'fs/promises';
 
 type CallWithResultPromise = {
   method: string;
@@ -47,6 +49,10 @@ function createLoggingProxy<Method, Target extends { [key: string]: Method }>(
   };
 
   return new Proxy(target, handler) as Target & GetCalls;
+}
+
+export async function saveCallsToFile(client: RecordingClient, filePath: string): Promise<void> {
+  return await fs.writeFile(filePath, stringify(await client.getCalls()));
 }
 
 async function awaitResults(entries: CallWithResultPromise[]): Promise<Call[]> {
