@@ -1,29 +1,28 @@
 import { PublicClient } from 'viem';
 
-export type CallResultEntry = {
+type CallWithResultPromise = {
   method: string;
   arguments: object[];
   result: Promise<object>;
 };
 
-export type AwaitedCallResultEntry = {
+export type Call = {
   method: string;
   arguments: object[];
   result: object;
 };
 
-export type GetCallResults = { getCallResults: () => Promise<AwaitedCallResultEntry[]> };
+export type GetCalls = { getCalls: () => Promise<Call[]> };
 
-export const createRecordingClient = (client: PublicClient): PublicClient & GetCallResults =>
-  createLoggingProxy(client);
+export const createRecordingClient = (client: PublicClient): PublicClient & GetCalls => createLoggingProxy(client);
 
-function createLoggingProxy<T extends object>(target: T): T & GetCallResults {
-  const handler: ProxyHandler<T> & { _callResults: CallResultEntry[] } = {
-    _callResults: [],
+function createLoggingProxy<T extends object>(target: T): T & GetCalls {
+  const handler: ProxyHandler<T> & { _calls: CallWithResultPromise[] } = {
+    _calls: [],
 
     get(target: T, prop: string, receiver) {
-      if (prop === 'getCallResults') {
-        return async () => sequenceResultPromises(this._callResults);
+      if (prop === 'getCalls') {
+        return async () => sequenceResultPromises(this._calls);
       }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -31,7 +30,7 @@ function createLoggingProxy<T extends object>(target: T): T & GetCallResults {
       if (typeof origMethod === 'function' && prop.startsWith('get')) {
         return async (...args: object[]): Promise<object> => {
           const result = origMethod.apply(target, args);
-          this._callResults.push({
+          this._calls.push({
             method: prop,
             arguments: args,
             result: result as Promise<object>
@@ -43,9 +42,9 @@ function createLoggingProxy<T extends object>(target: T): T & GetCallResults {
     }
   };
 
-  return new Proxy(target, handler) as T & GetCallResults;
+  return new Proxy(target, handler) as T & GetCalls;
 }
 
-async function sequenceResultPromises(entries: CallResultEntry[]): Promise<AwaitedCallResultEntry[]> {
+async function sequenceResultPromises(entries: CallWithResultPromise[]): Promise<Call[]> {
   return Promise.all(entries.map(async (entry) => ({ ...entry, result: await entry.result })));
 }
