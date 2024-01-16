@@ -3,6 +3,12 @@
   "workspaces": [
     "packages/*"
   ],
+  "scripts": {
+    "check": "yarn format:all && yarn lint:all && yarn typecheck:all",
+    "lint:all": "yarn workspaces foreach --all --parallel --verbose run lint",
+    "typecheck:all": "yarn workspaces foreach --all --parallel --verbose run typecheck",
+    "format:all": "yarn workspaces foreach --all --parallel --verbose run format"
+  },
   "packageManager": "yarn@4.0.2",
   "devDependencies": {
     "eslint": "^8.56.0",
