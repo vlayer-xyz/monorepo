@@ -1,8 +1,5 @@
 import { expect } from 'vitest';
 import { ForeignCallOutput } from '@noir-lang/noir_js';
-import * as os from 'os';
-import * as fs from 'fs/promises';
-import packgeJson from '../package.json';
 
 export async function expectCircuitFail(p: Promise<boolean>): Promise<void> {
   await expect(p).rejects.toThrow(

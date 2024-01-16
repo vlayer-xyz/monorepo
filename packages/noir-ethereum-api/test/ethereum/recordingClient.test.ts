@@ -1,9 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { createDefaultClient } from '../../src/ethereum/client.js';
 import { Call, createRecordingClient } from '../../src/ethereum/recordingClient.js';
-import * as fs from 'fs/promises';
-import { parse } from '../../src/utils/json-bigint.js';
-import { withTempFile, writeObject } from '../../src/utils/file.js';
+import { readObject, withTempFile, writeObject } from '../../src/utils/file.js';
 
 const EXPECTED_CALLS = [
   {
@@ -51,8 +49,7 @@ describe('recordingClient', () => {
       });
       await writeObject(await client.getCalls(), tempFilePath);
 
-      const fileContent = await fs.readFile(tempFilePath, 'utf8');
-      const savedCalls = parse(fileContent) as Call[];
+      const savedCalls = await readObject(tempFilePath);
       expect(savedCalls).toMatchObject(EXPECTED_CALLS);
     });
   });
