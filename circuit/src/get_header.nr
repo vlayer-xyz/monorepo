@@ -1,7 +1,8 @@
 use dep::proof::rlp::{decode1, RLP_List};
 use dep::std::test::OracleMock;
 use dep::std::hash::keccak256;
-use crate::arrays::{sub_array_equals, alter_array};
+use dep::std::wrapping_add;
+use crate::arrays::{sub_array_equals};
 
 global MAX_HEADER_RLP_SIZE = 708;
 global HEADER_FIELDS_COUNT = 17;
@@ -23,7 +24,7 @@ struct BlockHeaderPartial {
 #[oracle(get_header)]
 unconstrained fn get_header_oracle(_block_no: Field) -> BlockHeaderPartial {}
 
-unconstrained fn get_header(block_no: Field) -> BlockHeaderPartial {
+unconstrained pub(crate) fn get_header(block_no: Field) -> BlockHeaderPartial {
     let header = get_header_oracle(block_no);
     let rlp_list:RLP_List<HEADER_FIELDS_COUNT> = decode1(header.encoded);
     assert(
@@ -86,9 +87,15 @@ global encoded_len: Field = 515;
 
 global blockPartial = BlockHeaderPartial { stateRoot, transactionsRoot, receiptsRoot, number, hash, encoded_len, encoded };
 
+fn alter_array<N>(array: [u8; N]) -> [u8; N] {
+    let mut copy = array.map(|x| x);
+    copy[0] = wrapping_add(copy[0], 1);
+    copy
+}
+
 #[test]
 fn test_get_header_success() {
-    OracleMock::mock("get_header").returns(blockPartial);
+    let _ = OracleMock::mock("get_header").returns(blockPartial);
     assert(get_header(0).stateRoot == stateRoot);
 }
 
@@ -96,7 +103,7 @@ fn test_get_header_success() {
 fn test_get_header_invalid_state_root() {
     let stateRoot = alter_array(stateRoot);
     let blockPartial = BlockHeaderPartial { stateRoot, transactionsRoot, receiptsRoot, number, hash, encoded_len, encoded };
-    OracleMock::mock("get_header").returns(blockPartial);
+    let _ = OracleMock::mock("get_header").returns(blockPartial);
     assert(get_header(0).stateRoot == stateRoot);
 }
 
@@ -104,7 +111,7 @@ fn test_get_header_invalid_state_root() {
 fn test_get_header_invalid_transactions_root() {
     let transactionsRoot = alter_array(transactionsRoot);
     let blockPartial = BlockHeaderPartial { stateRoot, transactionsRoot, receiptsRoot, number, hash, encoded_len, encoded };
-    OracleMock::mock("get_header").returns(blockPartial);
+    let _ = OracleMock::mock("get_header").returns(blockPartial);
     assert(get_header(0).stateRoot == stateRoot);
 }
 
@@ -112,7 +119,7 @@ fn test_get_header_invalid_transactions_root() {
 fn test_get_header_invalid_receipt_root() {
     let receiptsRoot = alter_array(receiptsRoot);
     let blockPartial = BlockHeaderPartial { stateRoot, transactionsRoot, receiptsRoot, number, hash, encoded_len, encoded };
-    OracleMock::mock("get_header").returns(blockPartial);
+    let _ = OracleMock::mock("get_header").returns(blockPartial);
     assert(get_header(0).stateRoot == stateRoot);
 }
 
@@ -120,6 +127,6 @@ fn test_get_header_invalid_receipt_root() {
 fn test_get_header_invalid_hash() {
     let hash = alter_array(hash);
     let blockPartial = BlockHeaderPartial { stateRoot, transactionsRoot, receiptsRoot, number, hash, encoded_len, encoded };
-    OracleMock::mock("get_header").returns(blockPartial);
+    let _ = OracleMock::mock("get_header").returns(blockPartial);
     assert(get_header(0).stateRoot == stateRoot);
 }
