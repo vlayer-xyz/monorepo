@@ -3,16 +3,7 @@ import { assert } from '../assert.js';
 
 export const MODULUS = 21888242871839275222246405745257275088696311157297823662689037894645226208583n;
 
-export function hexToString(hex: string): string {
-  return String.fromCharCode(parseInt(hex, 16));
-}
-
-export function decodeHexAddress(arg: string[]): Address {
-  const result = arg.map((e) => hexToString(e.slice(2))).join('');
-  assert(isAddress(result), `Invalid address: ${result}`);
-  return result;
-}
-
+// ENCODERS
 export function encodeField(arg: number | bigint): string {
   assert(arg < MODULUS, 'Field overflow');
   assert(arg >= 0, 'Field underflow');
@@ -46,4 +37,24 @@ export function encodeHex(hexString: string): string[] {
   return chunks;
 }
 
-export const decodeField = (arg: string): bigint => BigInt(arg);
+// DECODERS
+export function decodeHexAddress(arg: string[]): Address {
+  const result = arg.map((element) => hexToString(element.slice(2))).join('');
+  assert(isAddress(result), `Invalid address: ${result}`);
+  return result;
+}
+
+export function decodeField(arg: string): bigint {
+  return BigInt(arg);
+}
+
+export function decodeHexString(proof: Uint8Array): string {
+  return Array.from(proof)
+    .map((byte) => byte.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+// MISC
+function hexToString(hex: string): string {
+  return String.fromCharCode(parseInt(hex, 16));
+}
