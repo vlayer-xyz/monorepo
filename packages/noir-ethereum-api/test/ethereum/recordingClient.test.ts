@@ -9,24 +9,19 @@ import { writeObject } from '../../src/utils/file.js';
 
 describe('recordingClient', () => {
   it('record JSON-RPC API calls', async () => {
-    // given
     const client = createRecordingClient(createDefaultClient());
 
-    // when
     client.getBlock({ blockNumber: 14194126n });
     client.getProof({ blockNumber: 14194126n, storageKeys: [], address: '0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbb' });
     const callResults: Call[] = await client.getCalls();
 
-    // then
     validateResults(callResults);
   });
 
   it('save recorded JSON-RPC API calls to file', async () => {
     await withTempFile(async (tempFilePath) => {
-      // given
       const client = createRecordingClient(createDefaultClient());
 
-      // when
       client.getBlock({ blockNumber: 14194126n });
       client.getProof({
         blockNumber: 14194126n,
@@ -35,7 +30,6 @@ describe('recordingClient', () => {
       });
       await writeObject(await client.getCalls(), tempFilePath);
 
-      // then
       const fileContent = await fs.readFile(tempFilePath, 'utf8');
       const savedCalls = parse(fileContent) as Call[];
       validateResults(savedCalls);
