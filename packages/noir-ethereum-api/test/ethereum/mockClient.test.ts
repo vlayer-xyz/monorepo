@@ -10,7 +10,7 @@ describe('mockingClient', () => {
     const getBlock: GetBlockReturnType = (await mockingClient.getBlock({
       blockNumber: 14194126n
     })) as GetBlockReturnType;
-    const getProof = (await mockingClient.getProof({
+    const getProof: GetProofReturnType = (await mockingClient.getProof({
       blockNumber: 14194126n,
       storageKeys: [],
       address: '0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbb'
