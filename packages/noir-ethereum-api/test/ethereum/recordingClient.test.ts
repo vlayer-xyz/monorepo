@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { createDefaultClient } from '../../src/ethereum/client.js';
-import { Call, createRecordingClient, saveCallsToFile } from '../../src/ethereum/recordingClient.js';
+import { Call, createRecordingClient } from '../../src/ethereum/recordingClient.js';
 import { GetBlockReturnType, GetProofReturnType } from 'viem';
 import * as fs from 'fs/promises';
 import { parse } from '../../src/utils/json-bigint.js';
 import { withTempFile } from '../helpers.js';
+import { writeObject } from '../../src/utils/file.js';
 
 describe('recordingClient', () => {
   it('record JSON-RPC API calls', async () => {
@@ -32,7 +33,7 @@ describe('recordingClient', () => {
         storageKeys: [],
         address: '0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbb'
       });
-      await saveCallsToFile(client, tempFilePath);
+      await writeObject(await client.getCalls(), tempFilePath);
 
       // then
       const fileContent = await fs.readFile(tempFilePath, 'utf8');
