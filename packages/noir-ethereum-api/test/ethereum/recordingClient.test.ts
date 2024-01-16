@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createDefaultClient } from '../../src/ethereum/client.js';
 import { Call, createRecordingClient } from '../../src/ethereum/recordingClient.js';
-import { GetBlockReturnType, GetProofReturnType } from 'viem';
 import * as fs from 'fs/promises';
 import { parse } from '../../src/utils/json-bigint.js';
 import { withTempFile } from '../helpers.js';
@@ -15,7 +14,7 @@ describe('recordingClient', () => {
     client.getProof({ blockNumber: 14194126n, storageKeys: [], address: '0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbb' });
     const callResults: Call[] = await client.getCalls();
 
-    validateResults(callResults);
+    expectCalls(callResults);
   });
 
   it('save recorded JSON-RPC API calls to file', async () => {
@@ -32,29 +31,32 @@ describe('recordingClient', () => {
 
       const fileContent = await fs.readFile(tempFilePath, 'utf8');
       const savedCalls = parse(fileContent) as Call[];
-      validateResults(savedCalls);
+      expectCalls(savedCalls);
     });
   });
 });
 
-function validateResults(calls: Call[]) {
-  expect(calls.length).toStrictEqual(2);
-
-  expect(calls[0].method).toStrictEqual('getBlock');
-  expect(calls[0].arguments).toEqual([{ blockNumber: 14194126n }]);
-  expect((calls[0].result as GetBlockReturnType).hash).toStrictEqual(
-    '0xbe8aa5945d3377e65ed06757555d0d4babe269097574c210133e59cf6bc17d18'
-  );
-
-  expect(calls[1].method).toStrictEqual('getProof');
-  expect(calls[1].arguments).toEqual([
+function expectCalls(calls: Call[]) {
+  expect(calls).toMatchObject([
     {
-      blockNumber: 14194126n,
-      storageKeys: [],
-      address: '0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbb'
+      method: 'getBlock',
+      arguments: [{ blockNumber: 14194126n }],
+      result: {
+        hash: '0xbe8aa5945d3377e65ed06757555d0d4babe269097574c210133e59cf6bc17d18'
+      }
+    },
+    {
+      method: 'getProof',
+      arguments: [
+        {
+          blockNumber: 14194126n,
+          storageKeys: [],
+          address: '0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbb'
+        }
+      ],
+      result: {
+        storageHash: '0xae2792244417bc1749b9cd9a0bdc1c4a6cf32f147b37202c8cb3590777659aec'
+      }
     }
   ]);
-  expect((calls[1].result as GetProofReturnType).storageHash).toStrictEqual(
-    '0xae2792244417bc1749b9cd9a0bdc1c4a6cf32f147b37202c8cb3590777659aec'
-  );
 }
