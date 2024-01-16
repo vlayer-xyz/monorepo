@@ -31,14 +31,3 @@ export interface AccountWithProof {
 export function serializeAccountWithProof(account: AccountWithProof): ForeignCallOutput[] {
   return [account.balance, account.codeHash, account.nonce, account.key, account.value, account.proof, account.depth];
 }
-
-export async function withTempFile<T>(callback: (path: string) => Promise<T>): Promise<T> {
-  const testTempDir = await fs.mkdtemp(`${os.tmpdir()}/${packgeJson.name}-temp-dir-`);
-  const tempFilePath = `${testTempDir}/temp-${Date.now()}.json`;
-  try {
-    return await callback(tempFilePath);
-  } finally {
-    await fs.unlink(tempFilePath);
-    await fs.rmdir(testTempDir);
-  }
-}
