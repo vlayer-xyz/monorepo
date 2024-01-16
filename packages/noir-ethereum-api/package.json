@@ -1,5 +1,5 @@
 {
-  "name": "noir-ethereum-history-api",
+  "name": "noir-ethereum-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -47,6 +47,5 @@
     "typescript": "^5.3.3",
     "vite": "^4.5.0",
     "vitest": "^1.0.4"
-  },
-  "packageManager": "yarn@4.0.2"
+  }
 }
