@@ -3,7 +3,7 @@ import { type InputMap, Noir } from '@noir-lang/noir_js';
 import { promises as fs } from 'fs';
 import noir_ethereum_history_api from '../../../circuit/target/noir_ethereum_history_api.json';
 import { type Oracles, defaultOracles } from './noir/oracles/oracles.js';
-import { decodeProof } from './noir/encode.js';
+import { decodeHexString } from './noir/encode.js';
 
 export interface MainInputs extends InputMap {
   block_no: number;
@@ -33,7 +33,7 @@ export async function recordStorageProof(
   const noir = new Noir(circuit, backend);
   const proof = await noir.generateFinalProof(input, oracles);
 
-  const proofHex = decodeProof(proof.proof);
+  const proofHex = decodeHexString(proof.proof);
   await fs.writeFile(`${name}.proof`, proofHex);
 
   const publicInputsData = Array.from(proof.publicInputs.values()).join('\n');
