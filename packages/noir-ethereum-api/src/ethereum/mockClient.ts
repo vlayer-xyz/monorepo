@@ -15,9 +15,11 @@ export function createMockingClient(filePath: string): PublicClient {
 }
 
 export function createMock<T>(methodHandler: (method: string, args: object) => object): T {
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   const handler: ProxyHandler<any> = {
     get(target, prop: string, receiver) {
       if (!(prop in target)) {
+        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
         target[prop] = (...args: any[]) => {
           return methodHandler(prop, args);
         };
