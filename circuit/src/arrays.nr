@@ -9,12 +9,6 @@ pub fn sub_array_equals<T, N, M>(subarray: [T; N], array: [T; M], start_index: F
     result
 }
 
-fn alter_array<N>(array: [u8; N]) -> [u8; N] {
-    let mut copy = array.map(|x| x);
-    copy[0] = std::wrapping_add(copy[0], 1);
-    copy
-}
-
 #[test]
 fn test_sub_array_equals() {
     let a: [Field; 3] = [2, 3, 4];
