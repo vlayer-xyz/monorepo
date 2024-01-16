@@ -32,9 +32,9 @@ describe('recordingClient', () => {
 
     client.getBlock({ blockNumber: 14194126n });
     client.getProof({ blockNumber: 14194126n, storageKeys: [], address: '0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbb' });
-    const callResults: Call[] = await client.getCalls();
+    const calls: Call[] = await client.getCalls();
 
-    expect(callResults).toMatchObject(EXPECTED_CALLS);
+    expect(calls).toMatchObject(EXPECTED_CALLS);
   });
 
   it('save recorded JSON-RPC API calls to file', async () => {
