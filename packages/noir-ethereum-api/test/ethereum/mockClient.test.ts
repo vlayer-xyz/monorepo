@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { GetBlockReturnType, GetProofReturnType } from 'viem';
-import { createMockingClient } from '../../src/ethereum/mockClient.js';
+import { GetBlockReturnType, GetProofReturnType, PublicClient } from 'viem';
+import { createMockClient } from '../../src/ethereum/mockClient.js';
 
 describe('mockingClient', () => {
   it('read recorded JSON-RPC API calls from file in mocking client', async () => {
     const filePath = './test/fixtures/mocClientData.json';
-    const mockingClient = createMockingClient(filePath);
+    const mockingClient: PublicClient = createMockClient(filePath);
 
     const getBlock: GetBlockReturnType = (await mockingClient.getBlock({
       blockNumber: 14194126n

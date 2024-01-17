@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { createDefaultClient } from '../../src/ethereum/client.js';
 import { Call, createRecordingClient } from '../../src/ethereum/recordingClient.js';
 import { readObject, withTempFile, writeObject } from '../../src/utils/file.js';
-import { createMockingClient } from '../../src/ethereum/mockClient.js';
-import { GetBlockReturnType, GetProofReturnType } from 'viem';
+import { createMockClient } from '../../src/ethereum/mockClient.js';
+import { GetBlockReturnType, GetProofReturnType, PublicClient } from 'viem';
 
 const EXPECTED_CALLS = [
   {
@@ -68,7 +68,7 @@ describe('recordingClient', () => {
       });
       await writeObject(await client.getCalls(), tempFilePath);
 
-      const mockingClient = createMockingClient(tempFilePath);
+      const mockingClient: PublicClient = createMockClient(tempFilePath);
 
       const getBlock: GetBlockReturnType = (await mockingClient.getBlock({
         blockNumber: 14194126n
