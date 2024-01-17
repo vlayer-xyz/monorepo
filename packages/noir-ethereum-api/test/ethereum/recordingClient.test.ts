@@ -3,12 +3,19 @@ import { createDefaultClient } from '../../src/ethereum/client.js';
 import { Call, createRecordingClient } from '../../src/ethereum/recordingClient.js';
 import { readObject, withTempFile, writeObject } from '../../src/utils/file.js';
 import { createMockClient } from '../../src/ethereum/mockClient.js';
-import { GetBlockReturnType, GetProofReturnType, PublicClient } from 'viem';
+import { PublicClient } from 'viem';
+import {
+  ADDRESS,
+  BLOCK_NUMBER,
+  expectPublicClientBehaviour,
+  GET_BLOCK_PARAMETERS,
+  GET_PROOF_PARAMETERS
+} from './client.test.js';
 
 const EXPECTED_CALLS = [
   {
     method: 'getBlock',
-    arguments: [{ blockNumber: 14194126n }],
+    arguments: [{ blockNumber: BLOCK_NUMBER }],
     result: {
       hash: '0xbe8aa5945d3377e65ed06757555d0d4babe269097574c210133e59cf6bc17d18'
     }
@@ -17,9 +24,9 @@ const EXPECTED_CALLS = [
     method: 'getProof',
     arguments: [
       {
-        blockNumber: 14194126n,
+        blockNumber: BLOCK_NUMBER,
         storageKeys: [],
-        address: '0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbb'
+        address: ADDRESS
       }
     ],
     result: {
@@ -32,8 +39,8 @@ describe('recordingClient', () => {
   it('record JSON-RPC API calls', async () => {
     const client = createRecordingClient(createDefaultClient());
 
-    client.getBlock({ blockNumber: 14194126n });
-    client.getProof({ blockNumber: 14194126n, storageKeys: [], address: '0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbb' });
+    client.getBlock(GET_BLOCK_PARAMETERS);
+    client.getProof(GET_PROOF_PARAMETERS);
     const calls: Call[] = await client.getCalls();
 
     expect(calls).toMatchObject(EXPECTED_CALLS);
@@ -43,12 +50,8 @@ describe('recordingClient', () => {
     await withTempFile(async (tempFilePath) => {
       const client = createRecordingClient(createDefaultClient());
 
-      client.getBlock({ blockNumber: 14194126n });
-      client.getProof({
-        blockNumber: 14194126n,
-        storageKeys: [],
-        address: '0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbb'
-      });
+      client.getBlock(GET_BLOCK_PARAMETERS);
+      client.getProof(GET_PROOF_PARAMETERS);
       await writeObject(await client.getCalls(), tempFilePath);
 
       const savedCalls = await readObject(tempFilePath);
@@ -56,33 +59,17 @@ describe('recordingClient', () => {
     });
   });
 
-  it('record and mock roundtrip', async () => {
+  it('record and mock', async () => {
     await withTempFile(async (tempFilePath) => {
       const client = createRecordingClient(createDefaultClient());
 
-      client.getBlock({ blockNumber: 14194126n });
-      client.getProof({
-        blockNumber: 14194126n,
-        storageKeys: [],
-        address: '0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbb'
-      });
+      client.getBlock(GET_BLOCK_PARAMETERS);
+      client.getProof(GET_PROOF_PARAMETERS);
       await writeObject(await client.getCalls(), tempFilePath);
 
       const mockingClient: PublicClient = await createMockClient(tempFilePath);
 
-      const getBlock: GetBlockReturnType = (await mockingClient.getBlock({
-        blockNumber: 14194126n
-      })) as GetBlockReturnType;
-      const getProof: GetProofReturnType = (await mockingClient.getProof({
-        blockNumber: 14194126n,
-        storageKeys: [],
-        address: '0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbb'
-      })) as GetProofReturnType;
-
-      expect(getBlock.number).toBe(14194126n);
-      expect(getBlock.hash).toBe('0xbe8aa5945d3377e65ed06757555d0d4babe269097574c210133e59cf6bc17d18');
-
-      expect(getProof.storageHash).toBe('0xae2792244417bc1749b9cd9a0bdc1c4a6cf32f147b37202c8cb3590777659aec');
+      await expectPublicClientBehaviour(mockingClient);
     });
   });
 });
