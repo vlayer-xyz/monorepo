@@ -1,8 +1,8 @@
 import { PublicClient } from 'viem';
 import { Call } from './recordingClient.js';
 import { assert } from '../assert.js';
-import { equals } from '../utils/object.js';
 import { readObjectSync } from '../utils/file.js';
+import { equals } from '../utils/object.js';
 
 export function createMockingClient(filePath: string): PublicClient {
   const savedCalls = readObjectSync<Call[]>(filePath);

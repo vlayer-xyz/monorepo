@@ -3,7 +3,7 @@ import { GetBlockReturnType, GetProofReturnType } from 'viem';
 import { createMockingClient } from '../../src/ethereum/mockClient.js';
 
 describe('mockingClient', () => {
-  it.only('read recorded JSON-RPC API calls from file in mocking client', async () => {
+  it('read recorded JSON-RPC API calls from file in mocking client', async () => {
     const filePath = './test/fixtures/mocClientData.json';
     const mockingClient = createMockingClient(filePath);
 
