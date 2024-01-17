@@ -1,6 +1,5 @@
 import { parse, stringify } from './json-bigint.js';
 import fs, { writeFile } from 'fs/promises';
-import { readFileSync } from 'fs';
 import os from 'os';
 import packgeJson from '../../package.json';
 
@@ -10,10 +9,6 @@ export function writeObject(object: object, filePath: string): Promise<void> {
 
 export async function readObject<T>(filePath: string): Promise<T> {
   return parse(await fs.readFile(filePath, 'utf8')) as T;
-}
-
-export function readObjectSync<T>(filePath: string): T {
-  return parse(readFileSync(filePath, 'utf8')) as T;
 }
 
 export async function withTempFile<T>(callback: (path: string) => Promise<T>): Promise<T> {

@@ -68,7 +68,7 @@ describe('recordingClient', () => {
       });
       await writeObject(await client.getCalls(), tempFilePath);
 
-      const mockingClient: PublicClient = createMockClient(tempFilePath);
+      const mockingClient: PublicClient = await createMockClient(tempFilePath);
 
       const getBlock: GetBlockReturnType = (await mockingClient.getBlock({
         blockNumber: 14194126n
