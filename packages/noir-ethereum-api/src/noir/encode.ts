@@ -37,7 +37,11 @@ export function encodeHex(hexString: string): string[] {
 
 // DECODERS
 export function decodeHexAddress(arg: string[]): Address {
-  const result = arg.map((element) => hexToString(element.slice(2))).join('');
+  const result = '0x' + arg
+    .map((e) => parseInt(e, 16))
+    .map((e) => e.toString(16).padStart(2, '0'))
+    .join('')
+
   assert(isAddress(result), `Invalid address: ${result}`);
   return result;
 }
