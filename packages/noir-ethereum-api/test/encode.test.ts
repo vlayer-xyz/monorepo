@@ -45,12 +45,25 @@ describe('encodeBytes32', () => {
 });
 
 describe('encodeAddress', () => {
-  it.skip('success', () => {
+  it('simple', () => {
     // prettier-ignore
-    expect(encodeAddress('0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbb')).toStrictEqual([
+    expect(encodeAddress('0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb')).toStrictEqual([
       '0xb4', '0x7e', '0x3c', '0xd8', '0x37', '0xdd', '0xf8', '0xe4', '0xc5', '0x7f', '0x5', '0xd7', '0xa', '0xb8',
       '0x65', '0xde', '0x6e', '0x19', '0x3b', '0xbb'
     ]);
+  });
+
+  it('mixcase', () => {
+    // prettier-ignore
+    expect(encodeAddress('0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbb')).toStrictEqual([
+      '0xb4', '0x7e', '0x3c', '0xd8', '0x37', '0xdD', '0xF8', '0xe4', '0xc5', '0x7f', '0x5', '0xd7', '0xa', '0xb8',
+      '0x65', '0xde', '0x6e', '0x19', '0x3b', '0xbb'
+    ]);
+  });
+
+  it('invalid address', () => {
+    // prettier-ignore
+    expect(() => encodeAddress('0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbbaa')).toThrow('Invalid address: 0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbbaa');
   });
 });
 

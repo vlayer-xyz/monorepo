@@ -14,7 +14,10 @@ export function encodeBytes32(value: bigint): string[] {
   return encodeBytes(value, 32);
 }
 
-export const encodeAddress = encodeHex;
+export function encodeAddress(value: Address): string[] {
+  assert(isAddress(value), `Invalid address: ${value}`);
+  return encodeHex(value);
+}
 
 export function encodeBytes(value: bigint, length: number): string[] {
   assert(value >= 0n, 'Invalid Bytes32: Negative');
