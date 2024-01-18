@@ -11,7 +11,7 @@ import { type BlockHeader } from '../src/ethereum/blockHeader.js';
 import { alterArray } from '../src/arrays.js';
 
 const defaultTestCircuitInputParams: MainInputs = {
-  block_no: 0,
+  block_no: 14194126,
   address: encodeAddress(0n),
   state_root: [
     '0xd7',
@@ -21,7 +21,7 @@ const defaultTestCircuitInputParams: MainInputs = {
     '0x2e',
     '0xbd',
     '0x7f',
-    '0xd',
+    '0x0d',
     '0xc8',
     '0x6c',
     '0x5b',
@@ -45,7 +45,7 @@ const defaultTestCircuitInputParams: MainInputs = {
     '0xc4',
     '0x8e',
     '0x2b',
-    '0x4'
+    '0x04'
   ]
 };
 
@@ -55,7 +55,7 @@ describe(
     function oracles(accountWithProof: AccountWithProof = accountWithProofJSON): Oracles {
       return createOracles(createDefaultClient())({
         get_account: async () => serializeAccountWithProof(accountWithProof),
-        get_header: async () => encodeBlockHeaderPartial(blockHeaders[1].header as BlockHeader)
+        get_header: async () => encodeBlockHeaderPartial(blockHeaders[2].header as BlockHeader)
       });
     }
 
