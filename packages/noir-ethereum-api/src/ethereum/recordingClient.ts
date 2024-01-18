@@ -13,7 +13,7 @@ export type Call = {
 };
 
 export type GetCalls = { getCalls: () => Promise<Call[]> };
-type RecordingClient = PublicClient & GetCalls;
+export type RecordingClient = PublicClient & GetCalls;
 
 export const isEthereumApiMethod = (methodName: string) => methodName.startsWith('get');
 
