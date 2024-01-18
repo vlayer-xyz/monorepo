@@ -13,10 +13,12 @@ export type Call = {
 };
 
 export type GetCalls = { getCalls: () => Promise<Call[]> };
-type RecordingClient = PublicClient & GetCalls;
+export type RecordingClient = PublicClient & GetCalls;
+
+export const isEthereumApiMethod = (methodName: string) => methodName.startsWith('get');
 
 export const createRecordingClient = (client: PublicClient): RecordingClient =>
-  createLoggingProxy(client, (prop) => prop.startsWith('get'));
+  createLoggingProxy(client, isEthereumApiMethod);
 
 function createLoggingProxy<Method, Target extends { [key: string]: Method }>(
   target: Target,
