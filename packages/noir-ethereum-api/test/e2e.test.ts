@@ -9,10 +9,11 @@ import { encodeBlockHeaderPartial } from '../src/noir/oracles/headerOracle.js';
 import { type BlockHeader } from '../src/ethereum/blockHeader.js';
 import { alterArray } from '../src/arrays.js';
 import { createMockClient } from '../src/ethereum/mockClient.js';
+import { ADDRESS } from "./ethereum/recordingClient.test.js";
 
 const defaultTestCircuitInputParams: MainInputs = {
-  block_no: 0,
-  address: encodeAddress(0n),
+  block_no: 14194126,
+  address: encodeAddress(ADDRESS),
   // prettier-ignore
   state_root: ['0xd7', '0x8d', '0x4f', '0x18', '0x2e', '0xbd', '0x7f', '0xd', '0xc8', '0x6c', '0x5b', '0x32', '0x8b',
     '0x73', '0xf9', '0xea', '0x3d', '0xfe', '0x17', '0xee', '0x56', '0xfb', '0xb4', '0x90', '0xd9', '0xb6', '0x7e',
