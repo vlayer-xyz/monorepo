@@ -4,7 +4,7 @@ use dep::std::hash::keccak256;
 use dep::std::wrapping_add;
 use crate::arrays::{sub_array_equals};
 
-global MAX_HEADER_RLP_SIZE = 540;
+global MAX_HEADER_RLP_SIZE = 708;
 global HEADER_FIELDS_COUNT = 17;
 global STATE_ROOT_INDEX = 3;
 global TRANSACTIONS_ROOT_INDEX = 4;
