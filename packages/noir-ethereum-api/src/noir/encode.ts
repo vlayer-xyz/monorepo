@@ -37,6 +37,12 @@ export function encodeHex(hexString: string): string[] {
 
 // DECODERS
 export function decodeHexAddress(arg: string[]): Address {
+  assert(arg.length === 20, `Invalid address length: ${arg.length}`);
+  for (const e of arg) {
+    const d = parseInt(e, 16);
+    assert(0 <= d && d <= 255 && isHex(e), `Invalid address, with byte: ${e}`);
+  }
+
   const result =
     '0x' +
     arg
