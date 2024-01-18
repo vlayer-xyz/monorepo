@@ -1,14 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { getBlock, getHeaderOracle } from '../../../src/noir/oracles/headerOracle.js';
-import { createDefaultClient } from '../../../src/ethereum/client.js';
 import { type BlockHeader } from '../../../src/ethereum/blockHeader.js';
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
+import { createMockClient } from '../../../src/ethereum/mockClient.js';
 
 describe(
   'headerOracle',
   async () => {
+    const client = await createMockClient('./test/fixtures/mockClientData.json');
+
     it('getBlock', async () => {
-      const blockHeader: BlockHeader = await getBlock(createDefaultClient(), 0n);
+      const blockHeader: BlockHeader = await getBlock(client, 0n);
       expect(blockHeader.number).toStrictEqual('0x0');
       expect(blockHeader.parentHash).toStrictEqual(
         '0x0000000000000000000000000000000000000000000000000000000000000000'
@@ -17,7 +19,7 @@ describe(
     });
 
     it('getHeaderOracle', async () => {
-      const blockHeader: ForeignCallOutput[] = await getHeaderOracle(createDefaultClient(), [['0x0']]);
+      const blockHeader: ForeignCallOutput[] = await getHeaderOracle(client, [['0x0']]);
       expect(blockHeader.length === 7);
       // prettier-ignore
       const encodedStateRootOfBlock0 = [
