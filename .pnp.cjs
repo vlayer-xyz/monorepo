@@ -953,6 +953,25 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@types/lodash", [\
+      ["npm:4.14.202", {\
+        "packageLocation": "../../../.yarn/berry/cache/@types-lodash-npm-4.14.202-76de3e302b-10c0.zip/node_modules/@types/lodash/",\
+        "packageDependencies": [\
+          ["@types/lodash", "npm:4.14.202"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/lodash.isequal", [\
+      ["npm:4.5.8", {\
+        "packageLocation": "../../../.yarn/berry/cache/@types-lodash.isequal-npm-4.5.8-8cd6da51fa-10c0.zip/node_modules/@types/lodash.isequal/",\
+        "packageDependencies": [\
+          ["@types/lodash.isequal", "npm:4.5.8"],\
+          ["@types/lodash", "npm:4.14.202"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["@types/minimatch", [\
       ["npm:5.1.2", {\
         "packageLocation": "../../../.yarn/berry/cache/@types-minimatch-npm-5.1.2-aab9c394d3-10c0.zip/node_modules/@types/minimatch/",\
@@ -3580,6 +3599,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["lodash.isequal", [\
+      ["npm:4.5.0", {\
+        "packageLocation": "../../../.yarn/berry/cache/lodash.isequal-npm-4.5.0-f8b0f64d63-10c0.zip/node_modules/lodash.isequal/",\
+        "packageDependencies": [\
+          ["lodash.isequal", "npm:4.5.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["lodash.merge", [\
       ["npm:4.6.2", {\
         "packageLocation": "../../../.yarn/berry/cache/lodash.merge-npm-4.6.2-77cb4416bf-10c0.zip/node_modules/lodash.merge/",\
@@ -3892,6 +3920,7 @@ const RAW_RUNTIME_STATE =
           ["@noir-lang/noir_js", "npm:0.22.0"],\
           ["@types/eslint", "npm:8.56.2"],\
           ["@types/json-bigint", "npm:1.0.4"],\
+          ["@types/lodash.isequal", "npm:4.5.8"],\
           ["@types/node", "npm:20.11.4"],\
           ["@typescript-eslint/eslint-plugin", "virtual:5033ebb5dc1f2629eaba696b2206507e59f49dbf82e69d5d872abdda89de237fc96321eb971ae2e35f0b5e3fd99e25ce1687b75d2861915a58240edb4e6e61c8#npm:6.19.0"],\
           ["@typescript-eslint/parser", "virtual:5033ebb5dc1f2629eaba696b2206507e59f49dbf82e69d5d872abdda89de237fc96321eb971ae2e35f0b5e3fd99e25ce1687b75d2861915a58240edb4e6e61c8#npm:6.19.0"],\
@@ -3904,6 +3933,7 @@ const RAW_RUNTIME_STATE =
           ["eslint-plugin-prettier", "virtual:5033ebb5dc1f2629eaba696b2206507e59f49dbf82e69d5d872abdda89de237fc96321eb971ae2e35f0b5e3fd99e25ce1687b75d2861915a58240edb4e6e61c8#npm:5.1.3"],\
           ["eslint-plugin-promise", "virtual:5033ebb5dc1f2629eaba696b2206507e59f49dbf82e69d5d872abdda89de237fc96321eb971ae2e35f0b5e3fd99e25ce1687b75d2861915a58240edb4e6e61c8#npm:6.1.1"],\
           ["json-bigint", "npm:1.0.0"],\
+          ["lodash.isequal", "npm:4.5.0"],\
           ["prettier", "npm:3.2.2"],\
           ["rollup-plugin-copy", "npm:3.5.0"],\
           ["tsx", "npm:4.7.0"],\
