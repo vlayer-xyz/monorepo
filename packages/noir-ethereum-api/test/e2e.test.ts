@@ -9,7 +9,7 @@ import { encodeBlockHeaderPartial } from '../src/noir/oracles/headerOracle.js';
 import { type BlockHeader } from '../src/ethereum/blockHeader.js';
 import { alterArray } from '../src/arrays.js';
 import { createMockClient } from '../src/ethereum/mockClient.js';
-import { ADDRESS } from "./ethereum/recordingClient.test.js";
+import { ADDRESS } from './ethereum/recordingClient.test.js';
 
 const defaultTestCircuitInputParams: MainInputs = {
   block_no: 14194126,

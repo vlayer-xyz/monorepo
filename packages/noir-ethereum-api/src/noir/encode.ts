@@ -37,10 +37,12 @@ export function encodeHex(hexString: string): string[] {
 
 // DECODERS
 export function decodeHexAddress(arg: string[]): Address {
-  const result = '0x' + arg
-    .map((e) => parseInt(e, 16))
-    .map((e) => e.toString(16).padStart(2, '0'))
-    .join('')
+  const result =
+    '0x' +
+    arg
+      .map((e) => parseInt(e, 16))
+      .map((e) => e.toString(16).padStart(2, '0'))
+      .join('');
 
   assert(isAddress(result), `Invalid address: ${result}`);
   return result;
@@ -54,9 +56,4 @@ export function decodeHexString(proof: Uint8Array): string {
   return Array.from(proof)
     .map((byte) => byte.toString(16).padStart(2, '0'))
     .join('');
-}
-
-// MISC
-function hexToString(hex: string): string {
-  return String.fromCharCode(parseInt(hex, 16));
 }
