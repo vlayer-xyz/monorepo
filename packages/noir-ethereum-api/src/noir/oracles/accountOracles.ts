@@ -30,7 +30,7 @@ export function parseNoirGetAccountArguments(args: string[][]): {
   assert(noirBlockNumber.length === 1, 'get_account first argument must be an array of length 1');
   assert(isHex(noirBlockNumber[0]), 'get_account first argument must be a hex value');
 
-  assert(noirAddress.length === 42, 'get_account second argument must be an address');
+  assert(noirAddress.length === 20, 'get_account second argument must be an address');
   assert(
     noirAddress.every((it) => isHex(it)),
     'get_account second argument must be an array of hex string values'

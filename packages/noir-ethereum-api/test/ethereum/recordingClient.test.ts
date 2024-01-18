@@ -5,7 +5,7 @@ import { createMockClient } from '../../src/ethereum/mockClient.js';
 import { GetBlockParameters, GetProofParameters, Hex, PublicClient } from 'viem';
 
 export const BLOCK_NUMBER = 14194126n;
-export const ADDRESS: Hex = '0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbb';
+export const ADDRESS: Hex = '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb';
 const BLOCK_HASH: Hex = '0xbe8aa5945d3377e65ed06757555d0d4babe269097574c210133e59cf6bc17d18';
 const STORAGE_HASH: Hex = '0xae2792244417bc1749b9cd9a0bdc1c4a6cf32f147b37202c8cb3590777659aec';
 

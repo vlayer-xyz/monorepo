@@ -14,8 +14,9 @@ export function encodeBytes32(value: bigint): string[] {
   return encodeBytes(value, 32);
 }
 
-export function encodeAddress(value: bigint): string[] {
-  return encodeBytes(value, 20);
+export function encodeAddress(value: Address): string[] {
+  assert(isAddress(value), `Invalid address: ${value}`);
+  return encodeHex(value);
 }
 
 export function encodeBytes(value: bigint, length: number): string[] {
@@ -39,7 +40,19 @@ export function encodeHex(hexString: string): string[] {
 
 // DECODERS
 export function decodeHexAddress(arg: string[]): Address {
-  const result = arg.map((element) => hexToString(element.slice(2))).join('');
+  assert(arg.length === 20, `Invalid address length: ${arg.length}`);
+  for (const e of arg) {
+    const d = parseInt(e, 16);
+    assert(0 <= d && d <= 255 && isHex(e), `Invalid address, with byte: ${e}`);
+  }
+
+  const result =
+    '0x' +
+    arg
+      .map((e) => parseInt(e, 16))
+      .map((e) => e.toString(16).padStart(2, '0'))
+      .join('');
+
   assert(isAddress(result), `Invalid address: ${result}`);
   return result;
 }
@@ -52,9 +65,4 @@ export function decodeHexString(proof: Uint8Array): string {
   return Array.from(proof)
     .map((byte) => byte.toString(16).padStart(2, '0'))
     .join('');
-}
-
-// MISC
-function hexToString(hex: string): string {
-  return String.fromCharCode(parseInt(hex, 16));
 }
