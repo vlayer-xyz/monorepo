@@ -1,6 +1,6 @@
 use dep::std;
 
-pub fn sub_array_equals<T, N, M>(subarray: [T; N], array: [T; M], start_index: Field) -> bool {
+pub fn sub_array_equals<T, N, M>(subarray: [T; N], array: [T; M], start_index: Field) -> bool where T: Eq {
     assert(start_index as u64 + N <= M, "Invalid range");
     let mut result = true;
     for i in 0..N {
