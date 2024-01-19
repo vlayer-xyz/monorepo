@@ -1,13 +1,14 @@
-import { describe, expect, it } from 'vitest';
+import { PublicClient } from 'viem';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { alterArray } from '../src/arrays.js';
+import { incHexStr } from '../src/utils/string.js';
+import { createMockClient } from '../src/ethereum/mockClient.js';
+import { Call } from '../src/ethereum/recordingClient.js';
 import { generateAndVerifyStorageProof, type MainInputs } from '../src/main.js';
 import { encodeAddress } from '../src/noir/encode.js';
-import { createOracles, type Oracles } from '../src/noir/oracles/oracles.js';
-import { AccountWithProof, expectCircuitFail, type FieldsOfType } from './helpers.js';
-import { getHeaderOracle } from '../src/noir/oracles/headerOracle.js';
-import { alterArray } from '../src/arrays.js';
-import { createMockClient } from '../src/ethereum/mockClient.js';
+import { createOracles, defaultOraclesMap, type Oracles } from '../src/noir/oracles/oracles.js';
 import { ADDRESS } from './ethereum/recordingClient.test.js';
-import { getAccountOracle } from '../src/noir/oracles/accountOracles.js';
+import { expectCircuitFail } from './helpers.js';
 
 const defaultTestCircuitInputParams: MainInputs = {
   block_no: 14194126,
@@ -20,31 +21,37 @@ const defaultTestCircuitInputParams: MainInputs = {
 
 describe(
   'e2e',
-  async () => {
-    async function oracles(): Promise<Oracles> {
-      return createOracles(await createMockClient('./test/fixtures/mockClientData.json'))({
-        get_account: getAccountOracle,
-        get_header: getHeaderOracle
-      });
-    }
+  () => {
+    let client: PublicClient;
+    let oracles: Oracles;
 
-    it('proof successes', async () => {
-      expect(await generateAndVerifyStorageProof(defaultTestCircuitInputParams, await oracles())).toEqual(true);
+    beforeAll(async () => {
+      client = await createMockClient('./test/fixtures/mockClientData.json');
+      oracles = createOracles(client)(defaultOraclesMap);
     });
 
-    const arrayKeys: Array<FieldsOfType<AccountWithProof, readonly string[]>> = ['key', 'value', 'proof'];
-    arrayKeys.forEach((arrayField) => {
-      it.skip(`proof fails: invalid field: ${arrayField}`, async () => {
-        await expectCircuitFail(
-          generateAndVerifyStorageProof(
-            defaultTestCircuitInputParams
-            // await oracles({
-            //   ...accountWithProofJSON,
-            //   [arrayField]: alterArray(accountWithProofJSON[arrayField])
-            // })
-          )
-        );
-      });
+    it('proof successes', async () => {
+      expect(await generateAndVerifyStorageProof(defaultTestCircuitInputParams, oracles)).toEqual(true);
+    });
+
+    it('proof fails: invalid proof', async () => {
+      const resultModifier = (call: Call): Call => {
+        if (call.method === 'getProof') {
+          const accountProof = (call.result as { [key: string]: object }).accountProof as string[];
+          return {
+            ...call,
+            result: {
+              ...call.result,
+              accountProof: [incHexStr(accountProof[0]), ...accountProof.slice(1)]
+            }
+          };
+        }
+        return call;
+      };
+      const oracles = createOracles(await createMockClient('./test/fixtures/mockClientData.json', resultModifier))(
+        defaultOraclesMap
+      );
+      await expectCircuitFail(generateAndVerifyStorageProof(defaultTestCircuitInputParams, oracles));
     });
 
     it('proof fails: invalid state root', async () => {
@@ -52,7 +59,7 @@ describe(
         ...defaultTestCircuitInputParams,
         state_root: alterArray(defaultTestCircuitInputParams.state_root)
       };
-      await expectCircuitFail(generateAndVerifyStorageProof(inputParams, await oracles()));
+      await expectCircuitFail(generateAndVerifyStorageProof(inputParams, oracles));
     });
   },
   {
