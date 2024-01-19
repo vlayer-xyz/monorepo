@@ -25,7 +25,7 @@ jobs:
       - name: Install Nargo
         uses: noir-lang/noirup@v0.1.3
         with:
-          toolchain: nightly # Pin at 0.23.0 when it's released. We need nightly now as 0.22.0 doesn't have the oracles
+          toolchain: nightly-2024-01-11 # Pin at 0.23.0 when it's released. We need nightly now as 0.22.0 doesn't have the oracles
 
       - name: Run nargo codegen-verifier
         run: |
