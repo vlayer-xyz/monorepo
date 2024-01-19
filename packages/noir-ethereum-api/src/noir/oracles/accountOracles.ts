@@ -3,13 +3,14 @@ import { fromRlp, type GetProofReturnType, type Hex, isHex, type PublicClient } 
 import { assert } from '../../assert.js';
 import { decodeField, decodeHexAddress, encodeField, encodeHex } from '../encode.js';
 import { padArray } from '../../arrays.js';
+import { NoirArguments } from './oracles.js';
 
 const PROOF_ONE_LEVEL_LENGTH = 532;
 const MAX_ACCOUNT_STATE_LENGTH = 134;
 const ZERO_PAD_VALUE = '0x0';
 const RLP_VALUE_INDEX = 1;
 
-export const getAccountOracle = async (client: PublicClient, args: string[][]): Promise<ForeignCallOutput[]> => {
+export const getAccountOracle = async (client: PublicClient, args: NoirArguments): Promise<ForeignCallOutput[]> => {
   const { blockNumber, address } = parseNoirGetAccountArguments(args);
   const accountProof = await client.getProof({
     address,
@@ -19,7 +20,7 @@ export const getAccountOracle = async (client: PublicClient, args: string[][]): 
   return encodeAccount(accountProof);
 };
 
-export function parseNoirGetAccountArguments(args: string[][]): {
+export function parseNoirGetAccountArguments(args: NoirArguments): {
   blockNumber: bigint;
   address: Hex;
 } {
