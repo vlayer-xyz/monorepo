@@ -1,9 +1,0 @@
-[workspace]
-members = [
-    "lib",
-    "tests/depth_8_state_proof",
-    "tests/depth_8_storage_proof",
-    "tests/one_level",
-    "tests/rlp_decode"
-]
-default-member = "lib"
