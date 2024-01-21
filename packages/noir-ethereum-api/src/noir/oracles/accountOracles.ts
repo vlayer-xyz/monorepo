@@ -65,7 +65,6 @@ function encodeProof(proof: string[]): string[] {
     .map((it) => padArray(it, PROOF_ONE_LEVEL_LENGTH, ZERO_PAD_VALUE))
     .reduce((accumulator, current) => accumulator.concat(current), []);
   const encodedProof = padArray(encodedUnpaddedProof, PROOF_LENGTH, ZERO_PAD_VALUE);
-  // NOTE(Leo): We need to pad the proof to the length it has in the circuit.
   return encodedProof;
 }
 
