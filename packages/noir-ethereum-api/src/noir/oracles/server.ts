@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import { getHeaderHandler, getAccountHandler, JSONRPCServerMethods, ServerParams } from './server/handlers.js';
 import { createDefaultClient } from '../../ethereum/client.js';
 
-const PORT = 5555; // Suggested bo nargo docs: https://noir-lang.org/docs/how_to/how-to-oracles#step-3---usage-with-nargo
+const PORT = 5555; // Suggested by nargo docs: https://noir-lang.org/docs/how_to/how-to-oracles#step-3---usage-with-nargo
 const client = createDefaultClient();
 
 const server: TypedJSONRPCServer<JSONRPCServerMethods, ServerParams> = new JSONRPCServer();
