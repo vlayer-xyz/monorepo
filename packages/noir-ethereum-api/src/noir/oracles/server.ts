@@ -6,10 +6,10 @@ import { createDefaultClient } from '../../ethereum/client.js';
 const PORT = 5555;
 const client = createDefaultClient();
 
-const server: TypedJSONRPCServer<JSONRPCServerMethods, ServerParams> = new JSONRPCServer();
+const jsonRPCServer: TypedJSONRPCServer<JSONRPCServerMethods, ServerParams> = new JSONRPCServer();
 const serverParams = { client };
-server.addMethod('get_header', getHeaderHandler);
-server.addMethod('get_account', getAccountHandler);
+jsonRPCServer.addMethod('get_header', getHeaderHandler);
+jsonRPCServer.addMethod('get_account', getAccountHandler);
 
 const app = Fastify({
   logger: {
@@ -27,7 +27,7 @@ app.post('/', (request, reply) => {
   const jsonRPCRequest = request.body as JSONRPCRequest;
   request.log.info({ jsonRPCRequest }, 'Received request');
 
-  server.receive(jsonRPCRequest, serverParams).then((jsonRPCResponse) => {
+  jsonRPCServer.receive(jsonRPCRequest, serverParams).then((jsonRPCResponse) => {
     if (jsonRPCResponse) {
       reply.send(jsonRPCResponse);
     } else {
