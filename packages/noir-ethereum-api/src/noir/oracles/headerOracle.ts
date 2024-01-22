@@ -4,16 +4,17 @@ import { decodeField, encodeField, encodeHex } from '../encode.js';
 import { padArray } from '../../arrays.js';
 import { type GetBlockReturnType, hexToBytes, isHex, keccak256, type PublicClient } from 'viem';
 import { assert } from '../../assert.js';
+import { NoirArguments } from './oracles.js';
 
 export const MAX_HEADER_RLP_SIZE = 708;
 
-export const getHeaderOracle = async (client: PublicClient, args: string[][]): Promise<ForeignCallOutput[]> => {
+export const getHeaderOracle = async (client: PublicClient, args: NoirArguments): Promise<ForeignCallOutput[]> => {
   const blockNumber: bigint = parseNoirGetHeaderArguments(args);
   const blockHeader: BlockHeader = await getBlock(client, blockNumber);
   return encodeBlockHeaderPartial(blockHeader);
 };
 
-export function parseNoirGetHeaderArguments(args: string[][]): bigint {
+export function parseNoirGetHeaderArguments(args: NoirArguments): bigint {
   assert(args.length === 1, 'get_header requires 1 argument');
   assert(args[0].length === 1, 'get_account first argument must be an array of length 1');
   assert(isHex(args[0][0]), 'get_account first argument must be a hex value');

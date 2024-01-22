@@ -3,13 +3,19 @@ import { fromRlp, type GetProofReturnType, type Hex, isHex, type PublicClient } 
 import { assert } from '../../assert.js';
 import { decodeField, decodeHexAddress, encodeField, encodeHex } from '../encode.js';
 import { padArray } from '../../arrays.js';
+import { NoirArguments } from './oracles.js';
 
 const PROOF_ONE_LEVEL_LENGTH = 532;
+// NOTE(Leo): Proofs can have different lengths depending on the depth of the tree.
+// Unfortunately now we have proof len hardcoded in a circuit as 4256 which is 532 * 8.
+// So before it's fixed - we hardcode it here too.
+const PROOF_LEVELS = 8;
+const PROOF_LENGTH = PROOF_ONE_LEVEL_LENGTH * PROOF_LEVELS;
 const MAX_ACCOUNT_STATE_LENGTH = 134;
 const ZERO_PAD_VALUE = '0x0';
 const RLP_VALUE_INDEX = 1;
 
-export const getAccountOracle = async (client: PublicClient, args: string[][]): Promise<ForeignCallOutput[]> => {
+export const getAccountOracle = async (client: PublicClient, args: NoirArguments): Promise<ForeignCallOutput[]> => {
   const { blockNumber, address } = parseNoirGetAccountArguments(args);
   const accountProof = await client.getProof({
     address,
@@ -19,7 +25,7 @@ export const getAccountOracle = async (client: PublicClient, args: string[][]): 
   return encodeAccount(accountProof);
 };
 
-export function parseNoirGetAccountArguments(args: string[][]): {
+export function parseNoirGetAccountArguments(args: NoirArguments): {
   blockNumber: bigint;
   address: Hex;
 } {
@@ -54,10 +60,12 @@ export function encodeAccount(ethProof: GetProofReturnType): ForeignCallOutput[]
 }
 
 function encodeProof(proof: string[]): string[] {
-  return proof
+  const encodedUnpaddedProof = proof
     .map((it) => encodeHex(it))
     .map((it) => padArray(it, PROOF_ONE_LEVEL_LENGTH, ZERO_PAD_VALUE))
     .reduce((accumulator, current) => accumulator.concat(current), []);
+  const encodedProof = padArray(encodedUnpaddedProof, PROOF_LENGTH, ZERO_PAD_VALUE);
+  return encodedProof;
 }
 
 function encodeValue(proof: Hex[]): string[] {
