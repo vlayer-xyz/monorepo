@@ -1,7 +1,7 @@
 import { PublicClient } from 'viem';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { alterArray } from '../src/arrays.js';
-import { incHexStr } from '../src/utils/string.js';
+import { alterArray } from '../src/util/array.js';
+import { incHexStr } from '../src/util/string.js';
 import { createMockClient } from '../src/ethereum/mockClient.js';
 import { Call } from '../src/ethereum/recordingClient.js';
 import { generateAndVerifyStorageProof, type MainInputs } from '../src/main.js';
@@ -9,7 +9,7 @@ import { encodeAddress } from '../src/noir/encode.js';
 import { createOracles, defaultOraclesMap, type Oracles } from '../src/noir/oracles/oracles.js';
 import { ADDRESS } from './ethereum/recordingClient.test.js';
 import { expectCircuitFail } from './helpers.js';
-import { updateNestedField } from '../src/utils/object.js';
+import { updateNestedField } from '../src/util/object.js';
 
 const defaultTestCircuitInputParams: MainInputs = {
   block_no: 14194126,

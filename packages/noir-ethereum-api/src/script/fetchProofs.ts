@@ -1,6 +1,6 @@
 import { createDefaultClient } from '../ethereum/client.js';
 import { writeFile } from 'fs/promises';
-import { stringify } from '../utils/json-bigint.js';
+import { stringify } from '../util/json-bigint.js';
 import { type GetProofParameters, type GetProofReturnType } from 'viem';
 
 const filePath = './result.json';

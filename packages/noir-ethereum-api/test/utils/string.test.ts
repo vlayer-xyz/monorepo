@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { incHexByte, incHexStr } from '../../src/utils/string.js';
+import { incHexByte, incHexStr } from '../../src/util/string.js';
 
 describe('incHexStr', () => {
   it('zero', () => {

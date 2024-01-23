@@ -1,5 +1,5 @@
 import { readFile } from 'fs/promises';
-import { parse } from '../src/utils/json-bigint.js';
+import { parse } from '../src/util/json-bigint.js';
 import { describe, expect, it } from 'vitest';
 import { type GetBlockReturnType } from 'viem';
 import {

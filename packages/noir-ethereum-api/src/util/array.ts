@@ -1,5 +1,5 @@
 import { assert } from './assert.js';
-import { incHexByte } from './utils/string.js';
+import { incHexByte } from './string.js';
 
 type PaddingDirection = 'left' | 'right';
 

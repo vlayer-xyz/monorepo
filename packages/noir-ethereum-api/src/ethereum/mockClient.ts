@@ -1,10 +1,10 @@
 import { PublicClient } from 'viem';
 import { Call, isEthereumApiMethod } from './recordingClient.js';
-import { assert } from '../assert.js';
-import { readObject } from '../utils/file.js';
-import { mock } from '../utils/mock.js';
+import { assert } from '../util/assert.js';
+import { readObject } from '../util/file.js';
+import { mock } from '../util/mock.js';
 import isEqual from 'lodash.isequal';
-import { identity } from '../utils/function.js';
+import { identity } from '../util/function.js';
 
 export async function createMockClient(
   filePath: string,

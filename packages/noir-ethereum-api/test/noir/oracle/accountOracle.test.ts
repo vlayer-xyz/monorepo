@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { encodeAccount, parseNoirGetAccountArguments } from '../../../src/noir/oracles/accountOracles.js';
 import { type GetProofReturnType } from 'viem';
 import { readFile } from 'fs/promises';
-import { parse } from '../../../src/utils/json-bigint.js';
+import { parse } from '../../../src/util/json-bigint.js';
 import accountWithProof from '../../fixtures/accountWithProof.json';
 import { serializeAccountWithProof } from '../../helpers.js';
 import { ADDRESS } from '../../ethereum/recordingClient.test.js';
