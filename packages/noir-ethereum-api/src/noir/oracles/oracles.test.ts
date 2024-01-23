@@ -1,6 +1,6 @@
 import { type PublicClient } from 'viem';
 import { describe, expect, it } from 'vitest';
-import { createOracles } from '../src/noir/oracles/oracles.js';
+import { createOracles } from './oracles.js';
 
 describe('importOracles', () => {
   it('success', async () => {

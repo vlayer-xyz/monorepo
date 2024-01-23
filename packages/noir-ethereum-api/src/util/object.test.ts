@@ -1,4 +1,4 @@
-import { updateNestedField } from '../../src/utils/object.js';
+import { updateNestedField } from './object.js';
 import { describe, it, expect } from 'vitest';
 
 describe('updateNestedField', () => {

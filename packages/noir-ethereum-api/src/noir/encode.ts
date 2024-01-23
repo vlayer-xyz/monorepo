@@ -1,5 +1,5 @@
 import { type Address, isAddress, isHex } from 'viem';
-import { assert } from '../assert.js';
+import { assert } from '../util/assert.js';
 
 export const MODULUS = 21888242871839275222246405745257275088696311157297823662689037894645226208583n;
 

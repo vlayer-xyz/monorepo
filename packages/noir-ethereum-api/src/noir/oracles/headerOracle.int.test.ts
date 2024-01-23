@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { getBlock, getHeaderOracle } from '../../../src/noir/oracles/headerOracle.js';
-import { type BlockHeader } from '../../../src/ethereum/blockHeader.js';
+import { getBlock, getHeaderOracle } from './headerOracle.js';
+import { type BlockHeader } from '../../ethereum/blockHeader.js';
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
-import { createMockClient } from '../../../src/ethereum/mockClient.js';
+import { createMockClient } from '../../ethereum/mockClient.js';
 
 describe(
   'headerOracle',

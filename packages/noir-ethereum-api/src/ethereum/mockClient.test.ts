@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { PublicClient } from 'viem';
-import { createMockClient } from '../../src/ethereum/mockClient.js';
+import { createMockClient } from './mockClient.js';
 import { GET_BLOCK_PARAMETERS, GET_PROOF_PARAMETERS } from './recordingClient.test.js';
-import { readObject } from '../../src/utils/file.js';
+import { readObject } from '../util/file.js';
 
 describe('mockingClient', () => {
   it('read recorded JSON-RPC API calls from file in mocking client', async () => {

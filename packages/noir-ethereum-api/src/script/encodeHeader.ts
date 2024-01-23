@@ -1,5 +1,5 @@
 import { blockHeaders } from '../../test/fixtures/blockHeader.json';
-import { assert } from '../assert.js';
+import { assert } from '../util/assert.js';
 import { type BlockHeader } from '../ethereum/blockHeader.js';
 import { encodeBlockHeaderPartial } from '../noir/oracles/headerOracle.js';
 

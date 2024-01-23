@@ -1,14 +1,9 @@
 import { readFile } from 'fs/promises';
-import { parse } from '../src/utils/json-bigint.js';
+import { parse } from '../util/json-bigint.js';
 import { describe, expect, it } from 'vitest';
 import { type GetBlockReturnType } from 'viem';
-import {
-  type BlockHeader,
-  calculateBlockHash,
-  calculateBlockHeaderHash,
-  headerToRlp
-} from '../src/ethereum/blockHeader.js';
-import { blockHeaders } from './fixtures/blockHeader.json';
+import { type BlockHeader, calculateBlockHash, calculateBlockHeaderHash, headerToRlp } from './blockHeader.js';
+import { blockHeaders } from '../../test/fixtures/blockHeader.json';
 
 for (const header of blockHeaders) {
   describe('encodeBlockHeader', () => {

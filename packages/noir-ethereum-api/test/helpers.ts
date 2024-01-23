@@ -7,10 +7,6 @@ export async function expectCircuitFail(p: Promise<boolean>): Promise<void> {
   );
 }
 
-export function clone<T>(obj: T): T {
-  return JSON.parse(JSON.stringify(obj));
-}
-
 export type FieldsOfType<ObjectType, FieldType> = {
   [K in keyof ObjectType]: ObjectType[K] extends FieldType ? K : never;
 }[keyof ObjectType];
