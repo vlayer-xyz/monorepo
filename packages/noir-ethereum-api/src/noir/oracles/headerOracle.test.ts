@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseNoirGetHeaderArguments } from '../../../src/noir/oracles/headerOracle.js';
+import { parseNoirGetHeaderArguments } from './headerOracle.js';
 
 describe('headerOracle', () => {
   it('parseNoirGetHeaderArguments success', () => {

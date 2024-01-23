@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { decodeNoirArguments, encodeForeignCallResult } from '../../../../src/noir/oracles/server/encode.js';
-import { ForeignCallParams, ForeignCallResult } from '../../../../src/noir/oracles/server/types.js';
-import { NoirArguments } from '../../../../src/noir/oracles/oracles.js';
+import { decodeNoirArguments, encodeForeignCallResult } from './encode.js';
+import { ForeignCallParams, ForeignCallResult } from './types.js';
+import { NoirArguments } from '../oracles.js';
 
 describe('decodeNoirArguments', () => {
   it('should decode a single foreign call param correctly', () => {

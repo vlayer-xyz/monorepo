@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { encodeAccount, parseNoirGetAccountArguments } from '../../../src/noir/oracles/accountOracles.js';
+import { encodeAccount, parseNoirGetAccountArguments } from './accountOracles.js';
 import { type GetProofReturnType } from 'viem';
 import { readFile } from 'fs/promises';
-import { parse } from '../../../src/util/json-bigint.js';
-import accountWithProof from '../../fixtures/accountWithProof.json';
-import { serializeAccountWithProof } from '../../helpers.js';
-import { ADDRESS } from '../../../src/ethereum/recordingClient.test.js';
+import { parse } from '../../util/json-bigint.js';
+import accountWithProof from '../../../test/fixtures/accountWithProof.json';
+import { serializeAccountWithProof } from '../../../test/helpers.js';
+import { ADDRESS } from '../../ethereum/recordingClient.test.js';
 
 describe('encodeAccount', async () => {
   it('encode account', async () => {

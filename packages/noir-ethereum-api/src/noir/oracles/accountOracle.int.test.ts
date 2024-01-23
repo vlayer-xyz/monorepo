@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { getAccountOracle } from '../../../src/noir/oracles/accountOracles.js';
-import { createMockClient } from '../../../src/ethereum/mockClient.js';
+import { getAccountOracle } from './accountOracles.js';
+import { createMockClient } from '../../ethereum/mockClient.js';
 
 describe(
   'accountOracle',
