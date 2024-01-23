@@ -9,6 +9,7 @@ import { encodeAddress } from '../src/noir/encode.js';
 import { createOracles, defaultOraclesMap, type Oracles } from '../src/noir/oracles/oracles.js';
 import { ADDRESS } from './ethereum/recordingClient.test.js';
 import { expectCircuitFail } from './helpers.js';
+import { updateNestedField } from '../src/utils/object.js';
 
 const defaultTestCircuitInputParams: MainInputs = {
   block_no: 14194126,
@@ -19,6 +20,14 @@ const defaultTestCircuitInputParams: MainInputs = {
     '0xda', '0xc4', '0x8e', '0x2b', '0x4']
 };
 
+function alterCall(callName: string, path: string[]) {
+  return (call: Call): Call => {
+    if (call.method === callName) {
+      updateNestedField(call, path, incHexStr);
+    }
+    return call;
+  };
+}
 describe(
   'e2e',
   () => {
@@ -35,19 +44,7 @@ describe(
     });
 
     it('proof fails: invalid proof', async () => {
-      const resultModifier = (call: Call): Call => {
-        if (call.method === 'getProof') {
-          const accountProof = (call.result as { [key: string]: object }).accountProof as string[];
-          return {
-            ...call,
-            result: {
-              ...call.result,
-              accountProof: [incHexStr(accountProof[0]), ...accountProof.slice(1)]
-            }
-          };
-        }
-        return call;
-      };
+      const resultModifier = alterCall('getProof', ['result', 'accountProof', '0']);
       const oracles = createOracles(await createMockClient('./test/fixtures/mockClientData.json', resultModifier))(
         defaultOraclesMap
       );

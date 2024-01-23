@@ -1,4 +1,5 @@
 import { assert } from './assert.js';
+import { incHexByte } from './utils/string.js';
 
 type PaddingDirection = 'left' | 'right';
 
@@ -18,8 +19,3 @@ export const alterArray = function (array: readonly string[]): string[] {
   assert(array.length > 0, 'Array should not be empty');
   return [incHexByte(array[0]), ...array.slice(1)];
 };
-
-function incHexByte(hexByte: string): string {
-  const newByte = ((parseInt(hexByte) + 1) % 256).toString(16);
-  return '0x' + newByte;
-}
