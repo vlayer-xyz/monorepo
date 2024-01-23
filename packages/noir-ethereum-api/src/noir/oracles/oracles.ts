@@ -2,6 +2,7 @@ import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { createDefaultClient } from '../../ethereum/client.js';
 import { getAccountOracle } from './accountOracles.js';
 import { type PublicClient } from 'viem';
+import { getHeaderOracle } from './headerOracle.js';
 
 export type NoirArguments = string[][];
 
@@ -22,4 +23,9 @@ export const createOracles =
     return await fn(client, args);
   };
 
-export const defaultOracles = createOracles(createDefaultClient())({ getAccountOracle });
+export const defaultOraclesMap = {
+  get_account: getAccountOracle,
+  get_header: getHeaderOracle
+};
+
+export const defaultOracles = createOracles(createDefaultClient())(defaultOraclesMap);

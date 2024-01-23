@@ -1,15 +1,15 @@
-import { describe, expect, it } from 'vitest';
+import { PublicClient } from 'viem';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { alterArray } from '../src/arrays.js';
+import { incHexStr } from '../src/utils/string.js';
+import { createMockClient } from '../src/ethereum/mockClient.js';
+import { Call } from '../src/ethereum/recordingClient.js';
 import { generateAndVerifyStorageProof, type MainInputs } from '../src/main.js';
 import { encodeAddress } from '../src/noir/encode.js';
-import { createOracles, type Oracles } from '../src/noir/oracles/oracles.js';
-import accountWithProofJSON from './fixtures/accountWithProof.json';
-import { AccountWithProof, expectCircuitFail, type FieldsOfType, serializeAccountWithProof } from './helpers.js';
-import { blockHeaders } from './fixtures/blockHeader.json';
-import { encodeBlockHeaderPartial } from '../src/noir/oracles/headerOracle.js';
-import { type BlockHeader } from '../src/ethereum/blockHeader.js';
-import { alterArray } from '../src/arrays.js';
-import { createMockClient } from '../src/ethereum/mockClient.js';
+import { createOracles, defaultOraclesMap, type Oracles } from '../src/noir/oracles/oracles.js';
 import { ADDRESS } from './ethereum/recordingClient.test.js';
+import { expectCircuitFail } from './helpers.js';
+import { updateNestedField } from '../src/utils/object.js';
 
 const defaultTestCircuitInputParams: MainInputs = {
   block_no: 14194126,
@@ -20,33 +20,35 @@ const defaultTestCircuitInputParams: MainInputs = {
     '0xda', '0xc4', '0x8e', '0x2b', '0x4']
 };
 
+function alterCall(callName: string, path: string[]) {
+  return (call: Call): Call => {
+    if (call.method === callName) {
+      updateNestedField(call, path, incHexStr);
+    }
+    return call;
+  };
+}
 describe(
   'e2e',
-  async () => {
-    async function oracles(accountWithProof: AccountWithProof = accountWithProofJSON): Promise<Oracles> {
-      return createOracles(await createMockClient('./test/fixtures/mockClientData.json'))({
-        get_account: async () => serializeAccountWithProof(accountWithProof),
-        get_header: async () => encodeBlockHeaderPartial(blockHeaders[1].header as BlockHeader)
-      });
-    }
+  () => {
+    let client: PublicClient;
+    let oracles: Oracles;
 
-    it('proof successes', async () => {
-      expect(await generateAndVerifyStorageProof(defaultTestCircuitInputParams, await oracles())).toEqual(true);
+    beforeAll(async () => {
+      client = await createMockClient('./test/fixtures/mockClientData.json');
+      oracles = createOracles(client)(defaultOraclesMap);
     });
 
-    const arrayKeys: Array<FieldsOfType<AccountWithProof, readonly string[]>> = ['key', 'value', 'proof'];
-    arrayKeys.forEach((arrayField) => {
-      it(`proof fails: invalid field: ${arrayField}`, async () => {
-        await expectCircuitFail(
-          generateAndVerifyStorageProof(
-            defaultTestCircuitInputParams,
-            await oracles({
-              ...accountWithProofJSON,
-              [arrayField]: alterArray(accountWithProofJSON[arrayField])
-            })
-          )
-        );
-      });
+    it('proof successes', async () => {
+      expect(await generateAndVerifyStorageProof(defaultTestCircuitInputParams, oracles)).toEqual(true);
+    });
+
+    it('proof fails: invalid proof', async () => {
+      const resultModifier = alterCall('getProof', ['result', 'accountProof', '0']);
+      const oracles = createOracles(await createMockClient('./test/fixtures/mockClientData.json', resultModifier))(
+        defaultOraclesMap
+      );
+      await expectCircuitFail(generateAndVerifyStorageProof(defaultTestCircuitInputParams, oracles));
     });
 
     it('proof fails: invalid state root', async () => {
@@ -54,7 +56,7 @@ describe(
         ...defaultTestCircuitInputParams,
         state_root: alterArray(defaultTestCircuitInputParams.state_root)
       };
-      await expectCircuitFail(generateAndVerifyStorageProof(inputParams, await oracles()));
+      await expectCircuitFail(generateAndVerifyStorageProof(inputParams, oracles));
     });
   },
   {
