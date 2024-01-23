@@ -1,7 +1,7 @@
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { fromRlp, type GetProofReturnType, type Hex, isHex, type PublicClient } from 'viem';
 import { assert } from '../../util/assert.js';
-import { decodeField, decodeHexAddress, encodeField, encodeHex } from '../encode.js';
+import { decodeField, decodeHexAddress, encodeField, encodeHex } from './encode.js';
 import { padArray } from '../../util/array.js';
 import { NoirArguments } from './oracles.js';
 

@@ -4,7 +4,7 @@ import { promises as fs } from 'fs';
 import toml from 'toml';
 import noir_ethereum_history_api from '../../../circuit/target/noir_ethereum_history_api.json';
 import { type Oracles, defaultOracles } from './noir/oracles/oracles.js';
-import { decodeHexString, encodeHexString } from './noir/encode.js';
+import { decodeHexString, encodeHexString } from './noir/noir_js/encode.js';
 
 export interface MainInputs extends InputMap {
   block_no: number;
@@ -53,7 +53,7 @@ export async function verifyStorageProof(proof: ProofData): Promise<boolean> {
 
 export async function readProof(path: string): Promise<Uint8Array> {
   const proofHex = await fs.readFile(path, 'utf-8');
-  return encodeHexString(proofHex);
+  return encodeHexString('0x' + proofHex);
 }
 
 export async function readPublicInputs(path: string): Promise<string[]> {

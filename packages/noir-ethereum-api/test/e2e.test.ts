@@ -11,7 +11,7 @@ import {
   readProof,
   readPublicInputs
 } from '../src/main.js';
-import { encodeAddress } from '../src/noir/encode.js';
+import { encodeAddress } from '../src/noir/oracles/encode.js';
 import { createOracles, defaultOraclesMap, type Oracles } from '../src/noir/oracles/oracles.js';
 import { ADDRESS } from '../src/ethereum/recordingClient.test.js';
 import { expectCircuitFail } from './helpers.js';
