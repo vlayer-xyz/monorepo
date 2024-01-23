@@ -38,6 +38,14 @@ export function encodeHex(hexString: string): string[] {
   return chunks;
 }
 
+export function encodeHexString(value: string): Uint8Array {
+  const arr = [];
+  for (let i = 0; i < value.length; i += 2) {
+    arr.push(parseInt(value.substr(i, 2), 16));
+  }
+  return new Uint8Array(arr);
+}
+
 // DECODERS
 export function decodeHexAddress(arg: string[]): Address {
   assert(arg.length === 20, `Invalid address length: ${arg.length}`);

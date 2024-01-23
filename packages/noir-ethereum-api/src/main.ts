@@ -1,9 +1,10 @@
-import { BarretenbergBackend, type CompiledCircuit } from '@noir-lang/backend_barretenberg';
+import { BarretenbergBackend, ProofData, type CompiledCircuit } from '@noir-lang/backend_barretenberg';
 import { type InputMap, Noir } from '@noir-lang/noir_js';
 import { promises as fs } from 'fs';
+import toml from 'toml';
 import noir_ethereum_history_api from '../../../circuit/target/noir_ethereum_history_api.json';
 import { type Oracles, defaultOracles } from './noir/oracles/oracles.js';
-import { decodeHexString } from './noir/encode.js';
+import { decodeHexString, encodeHexString } from './noir/encode.js';
 
 export interface MainInputs extends InputMap {
   block_no: number;
@@ -41,4 +42,37 @@ export async function recordStorageProof(
 
   const isCorrect = await noir.verifyFinalProof(proof);
   return isCorrect;
+}
+
+export async function verifyStorageProof(proof: ProofData): Promise<boolean> {
+  const circuit = noir_ethereum_history_api as unknown as CompiledCircuit;
+  const backend = new BarretenbergBackend(circuit);
+  const noir = new Noir(circuit, backend);
+  return await noir.verifyFinalProof(proof);
+}
+
+export async function readProof(path: string): Promise<Uint8Array> {
+  const proofHex = await fs.readFile(path, 'utf-8');
+  return encodeHexString(proofHex);
+}
+
+export async function readPublicInputs(path: string): Promise<string[]> {
+  const verifierData = await fs.readFile(path, 'utf-8');
+  const publicInputs = toml.parse(verifierData);
+  const { block_no, address, state_root } = publicInputs;
+  const { balance, codeHash, nonce, key, value, proof, depth } = publicInputs.return;
+  const flatPublicInputs = [
+    block_no,
+    ...address,
+    ...state_root,
+    balance,
+    ...codeHash,
+    nonce,
+    ...key,
+    ...value,
+    ...proof,
+    depth
+  ];
+
+  return flatPublicInputs;
 }

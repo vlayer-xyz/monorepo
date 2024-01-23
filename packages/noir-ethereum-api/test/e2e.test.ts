@@ -4,7 +4,13 @@ import { alterArray } from '../src/util/array.js';
 import { incHexStr } from '../src/util/string.js';
 import { createMockClient } from '../src/ethereum/mockClient.js';
 import { Call } from '../src/ethereum/recordingClient.js';
-import { generateAndVerifyStorageProof, type MainInputs } from '../src/main.js';
+import {
+  generateAndVerifyStorageProof,
+  verifyStorageProof,
+  type MainInputs,
+  readProof,
+  readPublicInputs
+} from '../src/main.js';
 import { encodeAddress } from '../src/noir/encode.js';
 import { createOracles, defaultOraclesMap, type Oracles } from '../src/noir/oracles/oracles.js';
 import { ADDRESS } from '../src/ethereum/recordingClient.test.js';
@@ -37,6 +43,16 @@ describe(
     beforeAll(async () => {
       client = await createMockClient('./test/fixtures/mockClientData.json');
       oracles = createOracles(client)(defaultOraclesMap);
+    });
+
+    it('proof verification successes', async () => {
+      const proof = await readProof('test/fixtures/proof/noir_ethereum_history_api.proof');
+      const publicInputs = await readPublicInputs('test/fixtures/proof/Verifier.toml');
+      const proofData = {
+        proof,
+        publicInputs
+      };
+      expect(await verifyStorageProof(proofData)).toEqual(true);
     });
 
     it('proof successes', async () => {
