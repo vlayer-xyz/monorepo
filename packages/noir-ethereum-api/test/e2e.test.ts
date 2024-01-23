@@ -7,7 +7,7 @@ import { Call } from '../src/ethereum/recordingClient.js';
 import { generateAndVerifyStorageProof, type MainInputs } from '../src/main.js';
 import { encodeAddress } from '../src/noir/encode.js';
 import { createOracles, defaultOraclesMap, type Oracles } from '../src/noir/oracles/oracles.js';
-import { ADDRESS } from './ethereum/recordingClient.test.js';
+import { ADDRESS } from '../src/ethereum/recordingClient.test.js';
 import { expectCircuitFail } from './helpers.js';
 import { updateNestedField } from '../src/util/object.js';
 

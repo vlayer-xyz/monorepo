@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { alterArray, padArray } from '../src/util/array.js';
+import { alterArray, padArray } from './array.js';
 
 describe('arrays', () => {
   it('padArray right', () => {

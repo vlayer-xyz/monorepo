@@ -5,7 +5,7 @@ import { readFile } from 'fs/promises';
 import { parse } from '../../../src/util/json-bigint.js';
 import accountWithProof from '../../fixtures/accountWithProof.json';
 import { serializeAccountWithProof } from '../../helpers.js';
-import { ADDRESS } from '../../ethereum/recordingClient.test.js';
+import { ADDRESS } from '../../../src/ethereum/recordingClient.test.js';
 
 describe('encodeAccount', async () => {
   it('encode account', async () => {

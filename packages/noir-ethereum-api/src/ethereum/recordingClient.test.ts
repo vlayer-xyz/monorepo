@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { Call, createRecordingClient } from '../../src/ethereum/recordingClient.js';
-import { withTempFile, writeObject } from '../../src/util/file.js';
-import { createMockClient } from '../../src/ethereum/mockClient.js';
+import { Call, createRecordingClient } from './recordingClient.js';
+import { withTempFile, writeObject } from '../util/file.js';
+import { createMockClient } from './mockClient.js';
 import { GetBlockParameters, GetProofParameters, Hex, PublicClient } from 'viem';
 
 export const BLOCK_NUMBER = 14194126n;
