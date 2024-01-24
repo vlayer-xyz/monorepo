@@ -15,12 +15,12 @@ struct AccountWithProof {
 #[oracle(get_account)]
 unconstrained fn get_account_oracle(_block_no: Field, _address: [u8; 20]) -> AccountWithProof {}
 
-unconstrained pub(crate) fn get_account(
-    block_no: Field,
-    address: [u8; 20],
-    state_root: [u8; proof::KEY_LENGTH]
-) -> AccountWithProof {
-    let account = get_account_oracle(block_no, address);
+unconstrained fn get_account_unconstrained(block_no: Field, address: [u8; 20]) -> AccountWithProof {
+    get_account_oracle(block_no, address)
+}
+
+pub(crate) fn get_account(block_no: Field, address: [u8; 20], state_root: [u8; proof::KEY_LENGTH]) -> AccountWithProof {
+    let account = get_account_unconstrained(block_no, address);
     let trie_proof = proof::TrieProof { key: account.key, proof: account.proof, depth: account.depth, value: account.value };
     assert(trie_proof.verify_state_root(state_root));
 
