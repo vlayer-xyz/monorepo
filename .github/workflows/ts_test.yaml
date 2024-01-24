@@ -41,6 +41,15 @@ jobs:
         run: nargo compile
         working-directory: circuit
 
+      - name: Start Oracle Server
+        run: |
+          yarn oracle-server &
+        working-directory: packages/noir-ethereum-api
+
+      - name: Generate Proof
+        run: nargo prove --oracle-resolver=http://localhost:5555
+        working-directory: circuit
+
       - name: Run e2e Tests
         run: yarn test:e2e
         working-directory: packages/noir-ethereum-api
