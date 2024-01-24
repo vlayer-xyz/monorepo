@@ -14,7 +14,10 @@ export function encodeHexString(value: string): Uint8Array {
 
 // DECODERS
 export function decodeHexString(proof: Uint8Array): string {
-  return Array.from(proof)
-    .map((byte) => byte.toString(16).padStart(2, '0'))
-    .join('');
+  return (
+    '0x' +
+    Array.from(proof)
+      .map((byte) => byte.toString(16).padStart(2, '0'))
+      .join('')
+  );
 }
