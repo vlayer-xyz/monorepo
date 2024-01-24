@@ -24,36 +24,40 @@ struct BlockHeaderPartial {
 #[oracle(get_header)]
 unconstrained fn get_header_oracle(_block_no: Field) -> BlockHeaderPartial {}
 
-unconstrained pub(crate) fn get_header(block_no: Field) -> BlockHeaderPartial {
-    let header = get_header_oracle(block_no);
+unconstrained fn get_header_unconstrained(block_no: Field) -> BlockHeaderPartial {
+    get_header_oracle(block_no)
+}
+
+pub(crate) fn get_header(block_no: Field) -> BlockHeaderPartial {
+    let header = get_header_unconstrained(block_no);
     let rlp_list:RLP_List<HEADER_FIELDS_COUNT> = decode1(header.encoded);
     assert(
         sub_array_equals(
             header.stateRoot,
             header.encoded,
             rlp_list.offset[STATE_ROOT_INDEX]
-        )
+        ), "stateRoot does not match"
     );
     assert(
         sub_array_equals(
             header.transactionsRoot,
             header.encoded,
             rlp_list.offset[TRANSACTIONS_ROOT_INDEX]
-        )
+        ), "transactionsRoot does not match"
     );
     assert(
         sub_array_equals(
             header.receiptsRoot,
             header.encoded,
             rlp_list.offset[RECEIPTS_ROOT_INDEX]
-        )
+        ), "receiptsRoot does not match"
     );
     assert(
         sub_array_equals(
             keccak256(header.encoded, header.encoded_len as u32),
             header.hash,
             0
-        )
+        ), "hash does not match"
     );
     header
 }
@@ -99,7 +103,7 @@ fn test_get_header_success() {
     assert(get_header(0).stateRoot == stateRoot);
 }
 
-#[test(should_fail_with = "explicit trap hit in brillig")]
+#[test(should_fail_with = "stateRoot does not match")]
 fn test_get_header_invalid_state_root() {
     let stateRoot = alter_array(stateRoot);
     let blockPartial = BlockHeaderPartial { stateRoot, transactionsRoot, receiptsRoot, number, hash, encoded_len, encoded };
@@ -107,7 +111,7 @@ fn test_get_header_invalid_state_root() {
     assert(get_header(0).stateRoot == stateRoot);
 }
 
-#[test(should_fail_with = "explicit trap hit in brillig")]
+#[test(should_fail_with = "transactionsRoot does not match")]
 fn test_get_header_invalid_transactions_root() {
     let transactionsRoot = alter_array(transactionsRoot);
     let blockPartial = BlockHeaderPartial { stateRoot, transactionsRoot, receiptsRoot, number, hash, encoded_len, encoded };
@@ -115,7 +119,7 @@ fn test_get_header_invalid_transactions_root() {
     assert(get_header(0).stateRoot == stateRoot);
 }
 
-#[test(should_fail_with = "explicit trap hit in brillig")]
+#[test(should_fail_with = "receiptsRoot does not match")]
 fn test_get_header_invalid_receipt_root() {
     let receiptsRoot = alter_array(receiptsRoot);
     let blockPartial = BlockHeaderPartial { stateRoot, transactionsRoot, receiptsRoot, number, hash, encoded_len, encoded };
@@ -123,7 +127,7 @@ fn test_get_header_invalid_receipt_root() {
     assert(get_header(0).stateRoot == stateRoot);
 }
 
-#[test(should_fail_with = "explicit trap hit in brillig")]
+#[test(should_fail_with = "hash does not match")]
 fn test_get_header_invalid_hash() {
     let hash = alter_array(hash);
     let blockPartial = BlockHeaderPartial { stateRoot, transactionsRoot, receiptsRoot, number, hash, encoded_len, encoded };
