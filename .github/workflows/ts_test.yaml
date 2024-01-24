@@ -37,6 +37,10 @@ jobs:
         run: yarn install
         working-directory: packages/noir-ethereum-api
 
-      - name: Run Tests
-        run: yarn test
+      - name: Run Unit Tests
+        run: yarn test:unit
+        working-directory: packages/noir-ethereum-api
+
+      - name: Run e2e Tests
+        run: yarn test:e2e
         working-directory: packages/noir-ethereum-api

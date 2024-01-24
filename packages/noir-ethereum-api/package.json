@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "vitest run",
+    "test:e2e": "vitest run --config vitest.e2e.config.ts",
+    "test:unit": "vitest run --config vitest.unit.config.ts",
     "test:watch": "npx vitest watch",
     "start": "vite --open",
     "build": "vite build",
