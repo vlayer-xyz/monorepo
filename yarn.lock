@@ -565,6 +565,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@noir-lang/noirc_abi@npm:^0.22.0":
+  version: 0.22.0
+  resolution: "@noir-lang/noirc_abi@npm:0.22.0"
+  checksum: cc8b32a588f07c7c023290498aecbc3fc239d657ba54720058332181b176d3048fe523d63ff66c4cebce933a791e9b14708433f8bfc6de7192a2f048bfe94c04
+  languageName: node
+  linkType: hard
+
 "@noir-lang/types@npm:0.22.0-179c90d.nightly":
   version: 0.22.0-179c90d.nightly
   resolution: "@noir-lang/types@npm:0.22.0-179c90d.nightly"
@@ -3808,6 +3815,7 @@ __metadata:
   dependencies:
     "@noir-lang/backend_barretenberg": "npm:0.22.0-179c90d.nightly"
     "@noir-lang/noir_js": "npm:0.22.0-179c90d.nightly"
+    "@noir-lang/noirc_abi": "npm:^0.22.0"
     "@types/body-parser": "npm:^1"
     "@types/eslint": "npm:^8"
     "@types/express": "npm:^4"
@@ -3832,6 +3840,7 @@ __metadata:
     pino-pretty: "npm:^10.3.1"
     prettier: "npm:^3.1.1"
     rollup-plugin-copy: "npm:^3.5.0"
+    toml: "npm:^3.0.0"
     tsx: "npm:^4.7.0"
     typescript: "npm:^5.3.3"
     viem: "npm:^2.0.0"
@@ -4993,6 +5002,13 @@ __metadata:
   version: 1.0.1
   resolution: "toidentifier@npm:1.0.1"
   checksum: 93937279934bd66cc3270016dd8d0afec14fb7c94a05c72dc57321f8bd1fa97e5bea6d1f7c89e728d077ca31ea125b78320a616a6c6cd0e6b9cb94cb864381c1
+  languageName: node
+  linkType: hard
+
+"toml@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "toml@npm:3.0.0"
+  checksum: 8d7ed3e700ca602e5419fca343e1c595eb7aa177745141f0761a5b20874b58ee5c878cd045c408da9d130cb2b611c639912210ba96ce2f78e443569aa8060c18
   languageName: node
   linkType: hard
 

@@ -1,5 +1,5 @@
 import { type Address, isAddress, isHex } from 'viem';
-import { assert } from '../util/assert.js';
+import { assert } from '../../util/assert.js';
 
 export const MODULUS = 21888242871839275222246405745257275088696311157297823662689037894645226208583n;
 
@@ -59,10 +59,4 @@ export function decodeHexAddress(arg: string[]): Address {
 
 export function decodeField(arg: string): bigint {
   return BigInt(arg);
-}
-
-export function decodeHexString(proof: Uint8Array): string {
-  return Array.from(proof)
-    .map((byte) => byte.toString(16).padStart(2, '0'))
-    .join('');
 }
