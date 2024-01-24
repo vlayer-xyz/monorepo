@@ -707,6 +707,13 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@noir-lang/noirc_abi", [\
+      ["npm:0.22.0", {\
+        "packageLocation": "../../../.yarn/berry/cache/@noir-lang-noirc_abi-npm-0.22.0-71107c6de3-10c0.zip/node_modules/@noir-lang/noirc_abi/",\
+        "packageDependencies": [\
+          ["@noir-lang/noirc_abi", "npm:0.22.0"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
       ["npm:0.22.0-179c90d.nightly", {\
         "packageLocation": "../../../.yarn/berry/cache/@noir-lang-noirc_abi-npm-0.22.0-179c90d.nightly-fa95e1bf4b-10c0.zip/node_modules/@noir-lang/noirc_abi/",\
         "packageDependencies": [\
@@ -4570,6 +4577,7 @@ const RAW_RUNTIME_STATE =
           ["noir-ethereum-api", "workspace:packages/noir-ethereum-api"],\
           ["@noir-lang/backend_barretenberg", "npm:0.22.0-179c90d.nightly"],\
           ["@noir-lang/noir_js", "npm:0.22.0-179c90d.nightly"],\
+          ["@noir-lang/noirc_abi", "npm:0.22.0"],\
           ["@types/body-parser", "npm:1.19.5"],\
           ["@types/eslint", "npm:8.56.2"],\
           ["@types/express", "npm:4.17.21"],\

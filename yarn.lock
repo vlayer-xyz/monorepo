@@ -565,6 +565,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@noir-lang/noirc_abi@npm:^0.22.0":
+  version: 0.22.0
+  resolution: "@noir-lang/noirc_abi@npm:0.22.0"
+  checksum: cc8b32a588f07c7c023290498aecbc3fc239d657ba54720058332181b176d3048fe523d63ff66c4cebce933a791e9b14708433f8bfc6de7192a2f048bfe94c04
+  languageName: node
+  linkType: hard
+
 "@noir-lang/types@npm:0.22.0-179c90d.nightly":
   version: 0.22.0-179c90d.nightly
   resolution: "@noir-lang/types@npm:0.22.0-179c90d.nightly"
@@ -3808,6 +3815,7 @@ __metadata:
   dependencies:
     "@noir-lang/backend_barretenberg": "npm:0.22.0-179c90d.nightly"
     "@noir-lang/noir_js": "npm:0.22.0-179c90d.nightly"
+    "@noir-lang/noirc_abi": "npm:^0.22.0"
     "@types/body-parser": "npm:^1"
     "@types/eslint": "npm:^8"
     "@types/express": "npm:^4"
