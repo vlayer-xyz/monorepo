@@ -7,7 +7,7 @@ import { InputMap, WitnessMap, abiEncode } from '@noir-lang/noirc_abi';
 const PROOF_PATH = '../../circuit/proofs/noir_ethereum_history_api.proof';
 const INPUT_MAP_PATH = '../../circuit/Verifier.toml';
 
-describe(
+describe.concurrent(
   'e2e',
   () => {
     let proof: Uint8Array;
