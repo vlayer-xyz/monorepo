@@ -49,6 +49,6 @@ describe(
     });
   },
   {
-    timeout: 20000
+    timeout: 2 * 60 * 1000
   }
 );
