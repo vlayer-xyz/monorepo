@@ -9,6 +9,8 @@ import { decodeHexString, encodeHexString } from './noir/noir_js/encode.js';
 import { abiEncode, type InputMap } from '@noir-lang/noirc_abi';
 
 export const circuit = noir_ethereum_history_api as unknown as CompiledCircuit;
+const backend = new BarretenbergBackend(circuit, { threads: os.cpus().length });
+const noir = new Noir(circuit, backend);
 
 export interface MainInputs extends InputMap {
   block_no: number;
@@ -22,8 +24,6 @@ export async function recordStorageProof(
   oracles: Oracles = defaultOracles,
   name: string
 ): Promise<boolean> {
-  const backend = new BarretenbergBackend(circuit, { threads: os.cpus().length });
-  const noir = new Noir(circuit, backend);
   const proof = await noir.generateFinalProof(input, oracles);
 
   const proofHex = decodeHexString(proof.proof);
@@ -37,8 +37,6 @@ export async function recordStorageProof(
 }
 
 export async function verifyStorageProof(proof: ProofData): Promise<boolean> {
-  const backend = new BarretenbergBackend(circuit);
-  const noir = new Noir(circuit, backend);
   return await noir.verifyFinalProof(proof);
 }
 
