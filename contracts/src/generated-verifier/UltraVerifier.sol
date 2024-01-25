@@ -1,1 +1,0 @@
-../../../circuit/contract/noir_ethereum_history_api/plonk_vk.sol
