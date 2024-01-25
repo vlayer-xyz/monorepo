@@ -18,7 +18,7 @@
   "dependencies": {
     "@noir-lang/backend_barretenberg": "0.22.0-179c90d.nightly",
     "@noir-lang/noir_js": "0.22.0-179c90d.nightly",
-    "@noir-lang/noirc_abi": "^0.22.0",
+    "@noir-lang/noirc_abi": "0.22.0-179c90d.nightly",
     "toml": "^3.0.0",
     "viem": "^2.0.0"
   },
