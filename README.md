@@ -32,7 +32,7 @@ fn main(x: pub [u8; 1000]) {
 
 ```
 
-The summing is added so that noir does not eliminate dead code
+The summing is added so that noir does not eliminate dead code.
 
 The interesting part is that if you compute 3 hashes instead of 4 - it works. This corresponds to ~453k gates.
 
