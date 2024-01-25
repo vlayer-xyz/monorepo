@@ -13,5 +13,6 @@ fn main(x: pub [u8; 1000]) {
         sum = std::wrapping_add(x4[i], sum);
     }
     std::println(sum);
-    assert(sum == 136);
+    // assert(sum == 68); // 3 hashes
+    assert(sum == 136); // 4 hashes
 }
