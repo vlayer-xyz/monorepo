@@ -2,6 +2,7 @@ import { BarretenbergBackend, ProofData, type CompiledCircuit } from '@noir-lang
 import { Noir, WitnessMap } from '@noir-lang/noir_js';
 import { promises as fs } from 'fs';
 import toml from 'toml';
+import os from 'os';
 import noir_ethereum_history_api from '../../../circuit/target/noir_ethereum_history_api.json';
 import { type Oracles, defaultOracles } from './noir/oracles/oracles.js';
 import { decodeHexString, encodeHexString } from './noir/noir_js/encode.js';
@@ -21,7 +22,7 @@ export async function recordStorageProof(
   oracles: Oracles = defaultOracles,
   name: string
 ): Promise<boolean> {
-  const backend = new BarretenbergBackend(circuit);
+  const backend = new BarretenbergBackend(circuit, { threads: os.cpus().length });
   const noir = new Noir(circuit, backend);
   const proof = await noir.generateFinalProof(input, oracles);
 
