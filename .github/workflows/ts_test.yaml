@@ -39,16 +39,14 @@ jobs:
           toolchain: nightly-2024-01-11 # Pin at 0.23.0 when it's released. We need nightly now as 0.22.0 doesn't have the oracles
 
       - name: Compile Circuit
-        run: nargo compile
-        working-directory: circuit
+        run: nargo compile --package main
 
       - name: Start Oracle Server
         run: |
           yarn oracle-server &
 
       - name: Generate Proof
-        run: nargo prove --oracle-resolver=http://localhost:5555
-        working-directory: circuit
+        run: nargo prove --package main --oracle-resolver=http://localhost:5555
 
       - name: Run e2e Tests
         run: yarn test:e2e

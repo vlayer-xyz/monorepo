@@ -1,5 +1,5 @@
 [package]
-name = "noir_ethereum_history_api"
+name = "main"
 type = "bin"
 authors = ["Arkadiusz Konior, Marek Kirejczyk"]
 compiler_version = "0.22.0"
