@@ -2,6 +2,7 @@ import { BarretenbergBackend, ProofData, type CompiledCircuit } from '@noir-lang
 import { Noir, WitnessMap } from '@noir-lang/noir_js';
 import { promises as fs } from 'fs';
 import toml from 'toml';
+import os from 'os';
 import noir_ethereum_history_api from '../../../circuit/target/noir_ethereum_history_api.json';
 import { abiEncode, type InputMap } from '@noir-lang/noirc_abi';
 import { isHex } from 'viem';
@@ -9,7 +10,7 @@ import { isHex } from 'viem';
 export const circuit = noir_ethereum_history_api as unknown as CompiledCircuit;
 
 export async function verifyStorageProof(proof: ProofData): Promise<boolean> {
-  const backend = new BarretenbergBackend(circuit);
+  const backend = new BarretenbergBackend(circuit, { threads: os.cpus().length });
   const noir = new Noir(circuit, backend);
   return await noir.verifyFinalProof(proof);
 }

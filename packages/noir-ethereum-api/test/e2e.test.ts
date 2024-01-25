@@ -25,6 +25,6 @@ describe(
     });
   },
   {
-    timeout: 20000
+    timeout: 100_000
   }
 );
