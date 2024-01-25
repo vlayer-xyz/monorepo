@@ -1,6 +1,6 @@
 use dep::std;
 
-fn main(x: [u8; 1000]) {
+fn main(x: pub [u8; 1000]) {
     let x1 = std::hash::keccak256(x, 1000);
     let x2 = std::hash::keccak256(x, 999);
     let x3 = std::hash::keccak256(x, 998);
