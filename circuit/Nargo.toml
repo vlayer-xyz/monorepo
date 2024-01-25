@@ -3,6 +3,3 @@ name = "noir_ethereum_history_api"
 type = "bin"
 authors = ["Arkadiusz Konior, Marek Kirejczyk"]
 compiler_version = "0.22.0"
-
-[dependencies]
-proof = { tag = "v0.1.0", git = "https://github.com/aragonzkresearch/noir-trie-proofs", directory = "lib" }

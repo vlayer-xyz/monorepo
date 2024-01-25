@@ -1,18 +1,17 @@
-mod get_account;
-mod get_header;
-mod arrays;
+use dep::std;
 
-use dep::proof;
-use crate::get_account::{get_account, AccountWithProof};
-use crate::get_header::{get_header, BlockHeaderPartial};
-
-fn main(
-    block_no: pub Field,
-    address: pub [u8; 20],
-    // This is marked pub due to an issue in noir JS library. For details - see README.md `Private arguments` section.
-    state_root: pub [u8; proof::KEY_LENGTH]
-) -> pub AccountWithProof {
-    let account = get_account(block_no, address, state_root);
-    get_header(block_no);
-    account
+fn main(x: [u8; 1000]) {
+    let x1 = std::hash::keccak256(x, 1000);
+    let x2 = std::hash::keccak256(x, 999);
+    let x3 = std::hash::keccak256(x, 998);
+    let x4 = std::hash::keccak256(x, 997);
+    let mut sum: u8 = 0;
+    for i in 0..32 {
+        sum = std::wrapping_add(x1[i], sum);
+        sum = std::wrapping_add(x2[i], sum);
+        sum = std::wrapping_add(x3[i], sum);
+        sum = std::wrapping_add(x4[i], sum);
+    }
+    std::println(sum);
+    assert(sum == 136);
 }
