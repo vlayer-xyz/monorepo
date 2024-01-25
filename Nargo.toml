@@ -1,0 +1,9 @@
+[workspace]
+members = [
+    "circuits/main",
+    "circuits/profiling/poseidon",
+    "circuits/profiling/keccak",
+    "circuits/profiling/keccak_2x",
+    "circuits/profiling/rlp"
+]
+default-member = "circuits/main"
