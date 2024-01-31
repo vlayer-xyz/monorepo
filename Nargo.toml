@@ -1,0 +1,5 @@
+[workspace]
+members = [
+    "circuits/main"
+]
+default-member = "circuits/main"

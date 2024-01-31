@@ -4,8 +4,8 @@ import { verifyStorageProof, readProof, readWitnessMap, readInputMap, circuit } 
 import { updateNestedField } from '../src/util/object.js';
 import { InputMap, WitnessMap, abiEncode } from '@noir-lang/noirc_abi';
 
-const PROOF_PATH = '../../circuit/proofs/noir_ethereum_history_api.proof';
-const INPUT_MAP_PATH = '../../circuit/Verifier.toml';
+const PROOF_PATH = '../../proofs/main.proof';
+const INPUT_MAP_PATH = '../../circuits/main/Verifier.toml';
 
 describe.concurrent(
   'e2e',
