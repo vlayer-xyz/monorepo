@@ -2,7 +2,7 @@ use crate::get_account::{Account, assert_account_equals, MAX_ACCOUNT_STATE_LENGT
 use crate::HASH_LENGTH;
 use crate::arrays::alter_array;
 
-global encoded_account: [u8; MAX_ACCOUNT_STATE_LENGTH] = [
+global rlp_encoded_left_padded_account: [u8; MAX_ACCOUNT_STATE_LENGTH] = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     248,
         78,
@@ -39,47 +39,47 @@ global code_hash: [u8; HASH_LENGTH] = [
 #[test]
 fn test_assert_account_equals() {
     let account = Account { nonce, balance, state_root, code_hash };
-    assert_account_equals(encoded_account, account);
+    assert_account_equals(rlp_encoded_left_padded_account, account);
 }
 
 #[test(should_fail_with = "Nonce length mismatch")]
 fn test_assert_account_equals_nonce_with_wrong_length() {
     let nonce_with_wrong_length = 0;
     let account = Account { nonce: nonce_with_wrong_length, balance, state_root, code_hash };
-    assert_account_equals(encoded_account, account);
+    assert_account_equals(rlp_encoded_left_padded_account, account);
 }
 
 #[test(should_fail_with = "subarray not equals")]
 fn test_assert_account_equals_nonce_with_wrong_value() {
     let nonce_with_wrong_value = nonce + 1;
     let account = Account { nonce: nonce_with_wrong_value, balance, state_root, code_hash };
-    assert_account_equals(encoded_account, account);
+    assert_account_equals(rlp_encoded_left_padded_account, account);
 }
 
 #[test(should_fail_with = "Balance length mismatch")]
 fn test_assert_account_equals_balance_with_wrong_length() {
     let balance_with_wrong_length = 0;
     let account = Account { nonce, balance: balance_with_wrong_length, state_root, code_hash };
-    assert_account_equals(encoded_account, account);
+    assert_account_equals(rlp_encoded_left_padded_account, account);
 }
 
 #[test(should_fail_with = "subarray not equals")]
 fn test_assert_account_equals_balance_with_wrong_value() {
     let balance_with_wrong_value = balance + 1;
     let account = Account { nonce, balance: balance_with_wrong_value, state_root, code_hash };
-    assert_account_equals(encoded_account, account);
+    assert_account_equals(rlp_encoded_left_padded_account, account);
 }
 
 #[test(should_fail_with = "subarray not equals")]
 fn test_assert_account_equals_state_root_with_wrong_value() {
     let state_root_with_wrong_value = alter_array(state_root);
     let account = Account { nonce, balance, state_root: state_root_with_wrong_value, code_hash };
-    assert_account_equals(encoded_account, account);
+    assert_account_equals(rlp_encoded_left_padded_account, account);
 }
 
 #[test(should_fail_with = "subarray not equals")]
 fn test_assert_account_equals_code_hash_with_wrong_value() {
     let code_hash_with_wrong_value = alter_array(code_hash);
     let account = Account { nonce, balance, state_root, code_hash: code_hash_with_wrong_value };
-    assert_account_equals(encoded_account, account);
+    assert_account_equals(rlp_encoded_left_padded_account, account);
 }

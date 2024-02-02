@@ -39,9 +39,9 @@ global BALANCE_INDEX = 1;
 global STATE_ROOT_INDEX = 2;
 global CODE_HASH_INDEX = 3;
 
-pub(crate) fn assert_account_equals(encoded: [u8; MAX_ACCOUNT_STATE_LENGTH], account: Account) {
-    let account_value = byte_value(encoded).0;
-    let account_rlp: RLP_List<ACCOUNT_FIELDS_COUNT> = decode1_small_lis(account_value);
+pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_STATE_LENGTH], account: Account) {
+    let account_rlp_rifht_padded = byte_value(account_rlp_left_padded).0;
+    let account_rlp: RLP_List<ACCOUNT_FIELDS_COUNT> = decode1_small_lis(account_rlp_rifht_padded);
     let nonce = u64_to_u8(account.nonce);
     let (nonce, nonce_length) = byte_value(nonce);
     let balance = u120_to_u8(account.balance);
@@ -50,7 +50,7 @@ pub(crate) fn assert_account_equals(encoded: [u8; MAX_ACCOUNT_STATE_LENGTH], acc
     assert(account_rlp.length[NONCE_INDEX] == nonce_length, "Nonce length mismatch");
     assert_sub_array_equals(
         nonce,
-        account_value,
+        account_rlp_rifht_padded,
         account_rlp.offset[NONCE_INDEX],
         nonce_length as u64
     );
@@ -58,7 +58,7 @@ pub(crate) fn assert_account_equals(encoded: [u8; MAX_ACCOUNT_STATE_LENGTH], acc
     assert(account_rlp.length[BALANCE_INDEX] == balance_length, "Balance length mismatch");
     assert_sub_array_equals(
         balance,
-        account_value,
+        account_rlp_rifht_padded,
         account_rlp.offset[BALANCE_INDEX],
         balance_length as u64
     );
@@ -66,7 +66,7 @@ pub(crate) fn assert_account_equals(encoded: [u8; MAX_ACCOUNT_STATE_LENGTH], acc
     assert(account_rlp.length[STATE_ROOT_INDEX] == HASH_LENGTH, "State root length mismatch");
     assert_sub_array_equals(
         account.state_root,
-        account_value,
+        account_rlp_rifht_padded,
         account_rlp.offset[STATE_ROOT_INDEX],
         HASH_LENGTH as u64
     );
@@ -74,7 +74,7 @@ pub(crate) fn assert_account_equals(encoded: [u8; MAX_ACCOUNT_STATE_LENGTH], acc
     assert(account_rlp.length[CODE_HASH_INDEX] == HASH_LENGTH, "Code hash length mismatch");
     assert_sub_array_equals(
         account.code_hash,
-        account_value,
+        account_rlp_rifht_padded,
         account_rlp.offset[CODE_HASH_INDEX],
         HASH_LENGTH as u64
     );
