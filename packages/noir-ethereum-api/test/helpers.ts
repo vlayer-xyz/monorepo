@@ -12,9 +12,10 @@ export type FieldsOfType<ObjectType, FieldType> = {
 }[keyof ObjectType];
 
 export interface AccountWithProof {
+  nonce: string;
   balance: string;
   codeHash: string[];
-  nonce: string;
+  storageHash: string[];
   key: string[];
   value: string[];
   proof: string[];
@@ -22,5 +23,14 @@ export interface AccountWithProof {
 }
 
 export function serializeAccountWithProof(account: AccountWithProof): ForeignCallOutput[] {
-  return [account.balance, account.codeHash, account.nonce, account.key, account.value, account.proof, account.depth];
+  return [
+    account.nonce,
+    account.balance,
+    account.storageHash,
+    account.codeHash,
+    account.key,
+    account.value,
+    account.proof,
+    account.depth
+  ];
 }
