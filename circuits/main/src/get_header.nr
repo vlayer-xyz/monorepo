@@ -29,7 +29,7 @@ unconstrained fn get_header_unconstrained(block_no: Field) -> BlockHeaderPartial
     get_header_oracle(block_no)
 }
 
-pub(crate) fn get_header(block_no: Field) -> BlockHeaderPartial {
+pub(crate) fn verify_header(block_no: Field) -> BlockHeaderPartial {
     let header = get_header_unconstrained(block_no);
     let rlp_list:RLP_List<HEADER_FIELDS_COUNT> = decode1(header.encoded);
     assert(

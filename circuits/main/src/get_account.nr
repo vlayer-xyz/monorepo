@@ -93,7 +93,7 @@ unconstrained fn assert_account_proof(
     assert(trie_proof.verify_state_root(state_root), "TrieProof: Invalid state root");
 }
 
-pub(crate) fn get_account(block_no: Field, address: [u8; 20], state_root: [u8; KEY_LENGTH]) -> Account {
+pub(crate) fn verify_account(block_no: Field, address: [u8; 20], state_root: [u8; KEY_LENGTH]) -> Account {
     let account_with_proof = get_account_unconstrained(block_no, address);
 
     let account = Account {

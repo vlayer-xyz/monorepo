@@ -1,5 +1,5 @@
 use dep::std::test::OracleMock;
-use crate::get_header::{get_header, BlockHeaderPartial};
+use crate::get_header::{verify_header, BlockHeaderPartial};
 use crate::arrays::alter_array;
 
 global state_root = [
@@ -34,7 +34,7 @@ global blockPartial = BlockHeaderPartial { state_root, transactions_root, receip
 #[test]
 fn test_get_header_success() {
     let _ = OracleMock::mock("get_header").returns(blockPartial);
-    assert(get_header(0).state_root == state_root);
+    assert(verify_header(0).state_root == state_root);
 }
 
 #[test(should_fail_with = "state_root does not match")]
@@ -42,7 +42,7 @@ fn test_get_header_invalid_state_root() {
     let state_root = alter_array(state_root);
     let blockPartial = BlockHeaderPartial { state_root, transactions_root, receipts_root, number, hash, encoded_len, encoded };
     let _ = OracleMock::mock("get_header").returns(blockPartial);
-    assert(get_header(0).state_root == state_root);
+    assert(verify_header(0).state_root == state_root);
 }
 
 #[test(should_fail_with = "transactions_root does not match")]
@@ -50,7 +50,7 @@ fn test_get_header_invalid_transactions_root() {
     let transactions_root = alter_array(transactions_root);
     let blockPartial = BlockHeaderPartial { state_root, transactions_root, receipts_root, number, hash, encoded_len, encoded };
     let _ = OracleMock::mock("get_header").returns(blockPartial);
-    assert(get_header(0).state_root == state_root);
+    assert(verify_header(0).state_root == state_root);
 }
 
 #[test(should_fail_with = "receipts_root does not match")]
@@ -58,7 +58,7 @@ fn test_get_header_invalid_receipt_root() {
     let receipts_root = alter_array(receipts_root);
     let blockPartial = BlockHeaderPartial { state_root, transactions_root, receipts_root, number, hash, encoded_len, encoded };
     let _ = OracleMock::mock("get_header").returns(blockPartial);
-    assert(get_header(0).state_root == state_root);
+    assert(verify_header(0).state_root == state_root);
 }
 
 #[test(should_fail_with = "hash does not match")]
@@ -66,5 +66,5 @@ fn test_get_header_invalid_hash() {
     let hash = alter_array(hash);
     let blockPartial = BlockHeaderPartial { state_root, transactions_root, receipts_root, number, hash, encoded_len, encoded };
     let _ = OracleMock::mock("get_header").returns(blockPartial);
-    assert(get_header(0).state_root == state_root);
+    assert(verify_header(0).state_root == state_root);
 }
