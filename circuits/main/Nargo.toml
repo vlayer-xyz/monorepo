@@ -5,4 +5,5 @@ authors = ["Arkadiusz Konior, Marek Kirejczyk"]
 compiler_version = "0.22.0"
 
 [dependencies]
+u2b = { tag = "v0.3.1", git = "https://github.com/vlayer-xyz/noir-u2b" }
 proof = { tag = "v0.1.0", git = "https://github.com/aragonzkresearch/noir-trie-proofs", directory = "lib" }
