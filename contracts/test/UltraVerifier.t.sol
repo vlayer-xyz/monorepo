@@ -17,7 +17,10 @@ contract EthereumHistoryVerifierTest is Test {
         string memory proofString = vm.readLine("./test/fixtures/example.proof");
         bytes memory proof = vm.parseBytes(proofString);
 
-        uint numberOfPublicInputs = 4498;
+
+        uint numberOfPublicArgValues = 1 + 20 + 32;
+        uint numberOfPublicReturnValues = 1 + 1 + 32 + 32;
+        uint numberOfPublicInputs = numberOfPublicArgValues + numberOfPublicReturnValues;
         bytes32[] memory publicInputs = this.loadPublicInputs("example", numberOfPublicInputs);
 
         verifier.verify(proof, publicInputs);
