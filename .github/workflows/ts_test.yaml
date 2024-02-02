@@ -48,5 +48,20 @@ jobs:
       - name: Generate Proof
         run: nargo prove --package main --oracle-resolver=http://localhost:5555
 
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Start Anvil
+        run: |
+          anvil &
+          ANVIL_PID=$!
+          echo "ANVIL_PID=$ANVIL_PID" >> $GITHUB_ENV
+
       - name: Run e2e Tests
         run: yarn test:e2e
+
+      - name: Stop Anvil
+        if: always()
+        run: kill $ANVIL_PID
