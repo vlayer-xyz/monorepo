@@ -68,10 +68,10 @@ jobs:
 
       - name: Deploy Smart Contract
         working-directory: contracts
-        run: forge create --rpc-url $ETH_RPC_URL --private-key $PRIVATE_KEY UltraVerifier
+        run: forge create --rpc-url $ETH_RPC_URL --private-key $ANVIL_TEST_ACCOUNT_PRIVATE_KEY UltraVerifier
         env:
           ETH_RPC_URL: '127.0.0.1:8545'
-          PRIVATE_KEY: '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
+          ANVIL_TEST_ACCOUNT_PRIVATE_KEY: '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
 
       - name: Run e2e Tests
         run: yarn test:e2e
