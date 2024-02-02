@@ -48,6 +48,9 @@ jobs:
       - name: Generate Proof
         run: nargo prove --package main --oracle-resolver=http://localhost:5555
 
+      - name: Run nargo codegen-verifier
+        run: nargo codegen-verifier --package main
+
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
         with:
