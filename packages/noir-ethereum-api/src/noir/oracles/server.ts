@@ -1,17 +1,8 @@
-import { JSONRPCRequest, JSONRPCServer, TypedJSONRPCServer } from 'json-rpc-2.0';
-import Fastify from 'fastify';
-import { getHeaderHandler, getAccountHandler, JSONRPCServerMethods, ServerParams } from './server/handlers.js';
-import { createDefaultClient } from '../../ethereum/client.js';
+import { buildOracleServer } from './server/app.js';
 
 const PORT = 5555;
-const client = createDefaultClient();
 
-const jsonRPCServer: TypedJSONRPCServer<JSONRPCServerMethods, ServerParams> = new JSONRPCServer();
-const serverParams = { client };
-jsonRPCServer.addMethod('get_header', getHeaderHandler);
-jsonRPCServer.addMethod('get_account', getAccountHandler);
-
-const app = Fastify({
+const app = buildOracleServer({
   logger: {
     transport: {
       target: 'pino-pretty',
@@ -21,19 +12,6 @@ const app = Fastify({
       }
     }
   }
-});
-
-app.post('/', (request, reply) => {
-  const jsonRPCRequest = request.body as JSONRPCRequest;
-  request.log.info({ jsonRPCRequest }, 'Received request');
-
-  jsonRPCServer.receive(jsonRPCRequest, serverParams).then((jsonRPCResponse) => {
-    if (jsonRPCResponse) {
-      reply.send(jsonRPCResponse);
-    } else {
-      reply.status(204).send();
-    }
-  });
 });
 
 app.listen({ port: PORT }, (err) => {
