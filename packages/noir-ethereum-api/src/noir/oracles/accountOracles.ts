@@ -1,16 +1,13 @@
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { fromRlp, type GetProofReturnType, type Hex, isHex, type PublicClient } from 'viem';
 import { assert } from '../../util/assert.js';
-import { decodeField, decodeHexAddress, encodeField, encodeHex } from './encode.js';
+import { decodeField, decodeHexAddress, encodeField, encodeHex, encodeU120, encodeU64 } from './encode.js';
 import { padArray } from '../../util/array.js';
 import { NoirArguments } from './oracles.js';
 
 const PROOF_ONE_LEVEL_LENGTH = 532;
-// NOTE(Leo): Proofs can have different lengths depending on the depth of the tree.
-// Unfortunately now we have proof len hardcoded in a circuit as 4256 which is 532 * 8.
-// So before it's fixed - we hardcode it here too.
-const PROOF_LEVELS = 8;
-const PROOF_LENGTH = PROOF_ONE_LEVEL_LENGTH * PROOF_LEVELS;
+const MAX_PROOF_LEVELS = 8;
+const PROOF_LENGTH = PROOF_ONE_LEVEL_LENGTH * MAX_PROOF_LEVELS;
 const MAX_ACCOUNT_STATE_LENGTH = 134;
 const ZERO_PAD_VALUE = '0x0';
 const RLP_VALUE_INDEX = 1;
@@ -49,14 +46,16 @@ export function parseNoirGetAccountArguments(args: NoirArguments): {
 }
 
 export function encodeAccount(ethProof: GetProofReturnType): ForeignCallOutput[] {
-  const balance = encodeField(ethProof.balance);
+  const nonce = encodeU64(ethProof.nonce);
+  const balance = encodeU120(ethProof.balance);
+  const storageHash = encodeHex(ethProof.storageHash);
   const codeHash = encodeHex(ethProof.codeHash);
-  const nonce = encodeField(ethProof.nonce);
+
   const key = encodeHex(ethProof.address);
   const value = encodeValue(ethProof.accountProof);
   const proof = encodeProof(ethProof.accountProof);
   const depth = encodeField(ethProof.accountProof.length);
-  return [balance, codeHash, nonce, key, value, proof, depth];
+  return [nonce, balance, storageHash, codeHash, key, value, proof, depth];
 }
 
 function encodeProof(proof: string[]): string[] {

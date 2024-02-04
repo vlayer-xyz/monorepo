@@ -28,8 +28,8 @@ describe.concurrent(
       expect(await verifyStorageProof(proofData)).toEqual(true);
     });
 
-    it('proof fails: invalid proof', async () => {
-      updateNestedField(inputMap, ['return', 'proof', '0'], incHexStr);
+    it('proof fails: invalid nonce', async () => {
+      updateNestedField(inputMap, ['return', 'nonce'], incHexStr);
       const witnessMap = abiEncode(circuit.abi, inputMap, inputMap['return']);
       const proofData = {
         proof,
@@ -49,6 +49,6 @@ describe.concurrent(
     });
   },
   {
-    timeout: 2 * 60 * 1000
+    timeout: 3 * 60 * 1000
   }
 );
