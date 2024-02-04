@@ -1,9 +1,9 @@
-import { buildFastifyApp } from './app.js';
+import { buildOracleServer } from './app.js';
 
 import { describe, it, expect, afterAll } from 'vitest';
 
 describe('Oracle Server', () => {
-  const app = buildFastifyApp();
+  const app = buildOracleServer();
   afterAll(() => {
     app.close();
   });

@@ -1,8 +1,8 @@
-import { buildFastifyApp } from './server/app.js';
+import { buildOracleServer } from './server/app.js';
 
 const PORT = 5555;
 
-const app = buildFastifyApp({
+const app = buildOracleServer({
   logger: {
     transport: {
       target: 'pino-pretty',

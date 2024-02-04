@@ -11,7 +11,7 @@ const serverParams = { client };
 jsonRPCServer.addMethod('get_header', getHeaderHandler);
 jsonRPCServer.addMethod('get_account', getAccountHandler);
 
-export function buildFastifyApp(opts: Fastify.FastifyHttpOptions<http.Server> = {}): Fastify.FastifyInstance {
+export function buildOracleServer(opts: Fastify.FastifyHttpOptions<http.Server> = {}): Fastify.FastifyInstance {
   const app = Fastify(opts);
 
   app.post('/', (request, reply) => {
