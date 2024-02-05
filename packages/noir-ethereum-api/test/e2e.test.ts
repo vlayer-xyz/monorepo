@@ -1,11 +1,18 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import { incHexStr } from '../src/util/string.js';
-import { verifyStorageProof, readProof, readWitnessMap, readInputMap, circuit } from '../src/main.js';
+import { circuit, readInputMap, readProof, readWitnessMap, verifyStorageProof } from '../src/main.js';
 import { updateNestedField } from '../src/util/object.js';
-import { InputMap, WitnessMap, abiEncode } from '@noir-lang/noirc_abi';
+import { abiEncode, InputMap, WitnessMap } from '@noir-lang/noirc_abi';
+
+import { Account, PrivateKeyAccount, privateKeyToAccount } from "viem/accounts";
+import { createAnvilClient } from "../src/ethereum/client.js";
+import ultraVerifier from '../../../contracts/out/UltraVerifier.sol/UltraVerifier.json';
+import { decodeHexString } from "../src/noir/noir_js/encode.js";
+import { Hex, isHex, TransactionReceipt } from "viem";
 
 const PROOF_PATH = '../../proofs/main.proof';
 const INPUT_MAP_PATH = '../../circuits/main/Verifier.toml';
+const ANVIL_TEST_ACCOUNT_PRIVATE_KEY: Hex = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
 
 describe.concurrent(
   'e2e',
@@ -26,6 +33,35 @@ describe.concurrent(
         publicInputs: Array.from(witnessMap.values())
       };
       expect(await verifyStorageProof(proofData)).toEqual(true);
+    });
+
+    it('anvil smart contract proof verification successes', async () => {
+      const client = createAnvilClient();
+
+      const account: Account = privateKeyToAccount(ANVIL_TEST_ACCOUNT_PRIVATE_KEY);
+
+      const contract: Hex = await client.deployContract({
+        abi: ultraVerifier.abi,
+        account,
+        bytecode: ultraVerifier.bytecode.object as Hex,
+      });
+
+      const transaction: TransactionReceipt = await client.waitForTransactionReceipt({ hash: contract });
+      expect(transaction.status).toEqual('success');
+
+      const contractAddress = transaction.contractAddress as Hex;
+
+      const { request } = await client.simulateContract({
+        account,
+        address: contractAddress,
+        abi: ultraVerifier.abi,
+        functionName: 'verify',
+        args: [
+          decodeHexString(proof),
+          Array.from(witnessMap.values())
+        ]
+      })
+      expect(await client.writeContract(request)).toSatisfy(isHex);
     });
 
     it('proof fails: invalid nonce', async () => {
