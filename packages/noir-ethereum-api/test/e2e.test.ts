@@ -52,17 +52,14 @@ describe.concurrent(
 
       assert(!!deploymentTxReceipt.contractAddress, "Deployed contract address should not be empty");
 
-      const contractAddress = deploymentTxReceipt.contractAddress;
-
-      const { request: verifyProofRequest } = await client.simulateContract({
-        account,
-        address: contractAddress,
-        abi: ultraVerifier.abi,
-        functionName: 'verify',
-        args: [decodeHexString(proof), Array.from(witnessMap.values())]
-      });
-
-      const proofVerificationTxHash = await client.writeContract(verifyProofRequest);
+      const proofVerificationTxHash = await client.writeContract({
+          account,
+          address: deploymentTxReceipt.contractAddress,
+          abi: ultraVerifier.abi,
+          functionName: 'verify',
+          args: [decodeHexString(proof), Array.from(witnessMap.values())]
+        }
+      );
       const proofVerificationTxReceipt = await client.waitForTransactionReceipt({ hash: proofVerificationTxHash });
       expect(proofVerificationTxReceipt.status).toEqual('success');
     });
