@@ -4,11 +4,11 @@ import { circuit, readInputMap, readProof, readWitnessMap, verifyStorageProof } 
 import { updateNestedField } from '../src/util/object.js';
 import { abiEncode, InputMap, WitnessMap } from '@noir-lang/noirc_abi';
 
-import { privateKeyToAccount } from 'viem/accounts';
+import { Account, privateKeyToAccount } from 'viem/accounts';
 import { createAnvilClient } from '../src/ethereum/client.js';
 import ultraVerifier from '../../../contracts/out/UltraVerifier.sol/UltraVerifier.json';
 import { decodeHexString } from '../src/noir/noir_js/encode.js';
-import { Hex } from 'viem';
+import { Address, Hex } from 'viem';
 import { assert } from '../src/util/assert.js';
 
 const PROOF_PATH = '../../proofs/main.proof';
@@ -21,26 +21,20 @@ describe.concurrent(
     let proof: Uint8Array;
     let inputMap: InputMap;
     let witnessMap: WitnessMap;
+    let account: Account;
+    let client: any;
+    let contractAddress: Address;
 
     beforeAll(async () => {
       proof = await readProof(PROOF_PATH);
       inputMap = await readInputMap(INPUT_MAP_PATH);
       witnessMap = await readWitnessMap(INPUT_MAP_PATH);
+      account = privateKeyToAccount(ANVIL_TEST_ACCOUNT_PRIVATE_KEY);
+      client = createAnvilClient()
+      await deployVerificationContract();
     });
 
-    it('proof verification successes', async () => {
-      const proofData = {
-        proof,
-        publicInputs: Array.from(witnessMap.values())
-      };
-      expect(await verifyStorageProof(proofData)).toEqual(true);
-    });
-
-    it('anvil smart contract proof verification successes', async () => {
-      const client = createAnvilClient();
-
-      const account = privateKeyToAccount(ANVIL_TEST_ACCOUNT_PRIVATE_KEY);
-
+    async function deployVerificationContract() {
       const deploymentTxHash = await client.deployContract({
         abi: ultraVerifier.abi,
         account,
@@ -51,10 +45,21 @@ describe.concurrent(
       expect(deploymentTxReceipt.status).toEqual('success');
 
       assert(!!deploymentTxReceipt.contractAddress, "Deployed contract address should not be empty");
+      contractAddress = deploymentTxReceipt.contractAddress;
+    }
 
+    it('proof verification successes', async () => {
+      const proofData = {
+        proof,
+        publicInputs: Array.from(witnessMap.values())
+      };
+      expect(await verifyStorageProof(proofData)).toEqual(true);
+    });
+
+    it('anvil smart contract proof verification successes', async () => {
       const proofVerificationTxHash = await client.writeContract({
           account,
-          address: deploymentTxReceipt.contractAddress,
+          address: contractAddress,
           abi: ultraVerifier.abi,
           functionName: 'verify',
           args: [decodeHexString(proof), Array.from(witnessMap.values())]
