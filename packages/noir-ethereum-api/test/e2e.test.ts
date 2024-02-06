@@ -51,14 +51,15 @@ describe.concurrent(
 
       const contractAddress = transaction.contractAddress as Hex;
 
-      const { request } = await client.simulateContract({
+      const { request: verifyProofRequest } = await client.simulateContract({
         account,
         address: contractAddress,
         abi: ultraVerifier.abi,
         functionName: 'verify',
         args: [decodeHexString(proof), Array.from(witnessMap.values())]
       });
-      expect(await client.writeContract(request)).toSatisfy(isHex);
+      const proofVerificationTransactionHash = await client.writeContract(verifyProofRequest);
+      expect(proofVerificationTransactionHash).toSatisfy(isHex);
     });
 
     it('proof fails: invalid nonce', async () => {
