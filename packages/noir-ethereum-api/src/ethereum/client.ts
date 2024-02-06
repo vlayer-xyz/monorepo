@@ -15,8 +15,8 @@ export function createAnvilClient() {
   return createTestClient({
     chain: foundry,
     mode: 'anvil',
-    transport: http(),
+    transport: http()
   })
     .extend(publicActions)
-    .extend(walletActions)
+    .extend(walletActions);
 }

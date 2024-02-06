@@ -4,11 +4,11 @@ import { circuit, readInputMap, readProof, readWitnessMap, verifyStorageProof } 
 import { updateNestedField } from '../src/util/object.js';
 import { abiEncode, InputMap, WitnessMap } from '@noir-lang/noirc_abi';
 
-import { Account, PrivateKeyAccount, privateKeyToAccount } from "viem/accounts";
-import { createAnvilClient } from "../src/ethereum/client.js";
+import { Account, privateKeyToAccount } from 'viem/accounts';
+import { createAnvilClient } from '../src/ethereum/client.js';
 import ultraVerifier from '../../../contracts/out/UltraVerifier.sol/UltraVerifier.json';
-import { decodeHexString } from "../src/noir/noir_js/encode.js";
-import { Hex, isHex, TransactionReceipt } from "viem";
+import { decodeHexString } from '../src/noir/noir_js/encode.js';
+import { Hex, isHex, TransactionReceipt } from 'viem';
 
 const PROOF_PATH = '../../proofs/main.proof';
 const INPUT_MAP_PATH = '../../circuits/main/Verifier.toml';
@@ -43,7 +43,7 @@ describe.concurrent(
       const contract: Hex = await client.deployContract({
         abi: ultraVerifier.abi,
         account,
-        bytecode: ultraVerifier.bytecode.object as Hex,
+        bytecode: ultraVerifier.bytecode.object as Hex
       });
 
       const transaction: TransactionReceipt = await client.waitForTransactionReceipt({ hash: contract });
@@ -56,11 +56,8 @@ describe.concurrent(
         address: contractAddress,
         abi: ultraVerifier.abi,
         functionName: 'verify',
-        args: [
-          decodeHexString(proof),
-          Array.from(witnessMap.values())
-        ]
-      })
+        args: [decodeHexString(proof), Array.from(witnessMap.values())]
+      });
       expect(await client.writeContract(request)).toSatisfy(isHex);
     });
 
