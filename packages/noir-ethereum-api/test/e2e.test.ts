@@ -13,7 +13,8 @@ import { assert } from '../src/util/assert.js';
 
 const PROOF_PATH = '../../proofs/main.proof';
 const INPUT_MAP_PATH = '../../circuits/main/Verifier.toml';
-const ANVIL_TEST_ACCOUNT_PRIVATE_KEY: Hex = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
+const ANVIL_TEST_ACCOUNT_PRIVATE_KEY = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
+const VERIFICATION_GAS_LIMIT = 475455n;
 
 describe.concurrent(
   'e2e',
@@ -22,6 +23,7 @@ describe.concurrent(
     let inputMap: InputMap;
     let witnessMap: WitnessMap;
     let account: Account;
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     let client: any;
     let contractAddress: Address;
 
@@ -30,7 +32,7 @@ describe.concurrent(
       inputMap = await readInputMap(INPUT_MAP_PATH);
       witnessMap = await readWitnessMap(INPUT_MAP_PATH);
       account = privateKeyToAccount(ANVIL_TEST_ACCOUNT_PRIVATE_KEY);
-      client = createAnvilClient()
+      client = createAnvilClient();
       await deployVerificationContract();
     });
 
@@ -44,7 +46,7 @@ describe.concurrent(
       const deploymentTxReceipt = await client.waitForTransactionReceipt({ hash: deploymentTxHash });
       expect(deploymentTxReceipt.status).toEqual('success');
 
-      assert(!!deploymentTxReceipt.contractAddress, "Deployed contract address should not be empty");
+      assert(!!deploymentTxReceipt.contractAddress, 'Deployed contract address should not be empty');
       contractAddress = deploymentTxReceipt.contractAddress;
     }
 
@@ -58,15 +60,15 @@ describe.concurrent(
 
     it('anvil smart contract proof verification successes', async () => {
       const proofVerificationTxHash = await client.writeContract({
-          account,
-          address: contractAddress,
-          abi: ultraVerifier.abi,
-          functionName: 'verify',
-          args: [decodeHexString(proof), Array.from(witnessMap.values())]
-        }
-      );
+        account,
+        address: contractAddress,
+        abi: ultraVerifier.abi,
+        functionName: 'verify',
+        args: [decodeHexString(proof), Array.from(witnessMap.values())]
+      });
       const proofVerificationTxReceipt = await client.waitForTransactionReceipt({ hash: proofVerificationTxHash });
       expect(proofVerificationTxReceipt.status).toEqual('success');
+      expect(proofVerificationTxReceipt.gasUsed).toBeLessThanOrEqual(VERIFICATION_GAS_LIMIT);
     });
 
     it('proof fails: invalid nonce', async () => {
