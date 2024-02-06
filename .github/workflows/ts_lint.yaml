@@ -27,16 +27,23 @@ jobs:
       - name: Install Dependencies
         run: yarn install
 
+
       - name: Run TypeScript Linter
         run: yarn lint
 
-      # We don't store circuit compilation artefacts in the repo,
-      # but typecheck fails on import without them so we just create a fake file here
+      # We don't store circuit and smart contract compilation artefacts in the repo,
+      # but typecheck fails on import without them so we just create a fake files here
       - name: Create fake circuit compilation artefacts
         working-directory: .
         run: |
-          mkdir target
+          mkdir -p target
           touch target/main.json
+
+      - name: Create fake smart contract build artefacts
+        working-directory: .
+        run: |
+          mkdir -p contracts/out/UltraVerifier.sol
+          echo '{ "abi": [], "bytecode": { "object": "" } }' > contracts/out/UltraVerifier.sol/UltraVerifier.json
 
       - name: Run TypeScript Typecheck
         run: yarn typecheck
