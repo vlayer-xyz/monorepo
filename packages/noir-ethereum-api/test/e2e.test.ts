@@ -4,11 +4,12 @@ import { circuit, readInputMap, readProof, readWitnessMap, verifyStorageProof } 
 import { updateNestedField } from '../src/util/object.js';
 import { abiEncode, InputMap, WitnessMap } from '@noir-lang/noirc_abi';
 
-import { Account, privateKeyToAccount } from 'viem/accounts';
+import { privateKeyToAccount } from 'viem/accounts';
 import { createAnvilClient } from '../src/ethereum/client.js';
 import ultraVerifier from '../../../contracts/out/UltraVerifier.sol/UltraVerifier.json';
 import { decodeHexString } from '../src/noir/noir_js/encode.js';
-import { Hex, isHex, TransactionReceipt } from 'viem';
+import { Hex } from 'viem';
+import { assert } from '../src/util/assert.js';
 
 const PROOF_PATH = '../../proofs/main.proof';
 const INPUT_MAP_PATH = '../../circuits/main/Verifier.toml';
@@ -38,18 +39,20 @@ describe.concurrent(
     it('anvil smart contract proof verification successes', async () => {
       const client = createAnvilClient();
 
-      const account: Account = privateKeyToAccount(ANVIL_TEST_ACCOUNT_PRIVATE_KEY);
+      const account = privateKeyToAccount(ANVIL_TEST_ACCOUNT_PRIVATE_KEY);
 
-      const contract: Hex = await client.deployContract({
+      const deploymentTxHash = await client.deployContract({
         abi: ultraVerifier.abi,
         account,
         bytecode: ultraVerifier.bytecode.object as Hex
       });
 
-      const transaction: TransactionReceipt = await client.waitForTransactionReceipt({ hash: contract });
-      expect(transaction.status).toEqual('success');
+      const deploymentTxReceipt = await client.waitForTransactionReceipt({ hash: deploymentTxHash });
+      expect(deploymentTxReceipt.status).toEqual('success');
 
-      const contractAddress = transaction.contractAddress as Hex;
+      assert(!!deploymentTxReceipt.contractAddress, "Deployed contract address should not be empty");
+
+      const contractAddress = deploymentTxReceipt.contractAddress;
 
       const { request: verifyProofRequest } = await client.simulateContract({
         account,
@@ -58,8 +61,10 @@ describe.concurrent(
         functionName: 'verify',
         args: [decodeHexString(proof), Array.from(witnessMap.values())]
       });
-      const proofVerificationTransactionHash = await client.writeContract(verifyProofRequest);
-      expect(proofVerificationTransactionHash).toSatisfy(isHex);
+
+      const proofVerificationTxHash = await client.writeContract(verifyProofRequest);
+      const proofVerificationTxReceipt = await client.waitForTransactionReceipt({ hash: proofVerificationTxHash });
+      expect(proofVerificationTxReceipt.status).toEqual('success');
     });
 
     it('proof fails: invalid nonce', async () => {
