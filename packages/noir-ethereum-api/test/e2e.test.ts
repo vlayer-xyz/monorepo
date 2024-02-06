@@ -5,11 +5,11 @@ import { copy, updateNestedField } from '../src/util/object.js';
 import { abiEncode, InputMap, WitnessMap } from '@noir-lang/noirc_abi';
 
 import { Account, privateKeyToAccount } from 'viem/accounts';
-import { createAnvilClient } from '../src/ethereum/client.js';
 import ultraVerifier from '../../../contracts/out/UltraVerifier.sol/UltraVerifier.json';
 import { Address, Hex } from 'viem';
 import { assert } from '../src/util/assert.js';
 import { verifyStorageProofInSolidity } from '../src/ethereum/verifier.js';
+import { AnvilClient, createAnvilClient } from './ethereum/anvilClient.js';
 
 const PROOF_PATH = '../../proofs/main.proof';
 const INPUT_MAP_PATH = '../../circuits/main/Verifier.toml';
@@ -23,8 +23,7 @@ describe.concurrent(
     let inputMap: InputMap;
     let witnessMap: WitnessMap;
     let account: Account;
-    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    let client: any;
+    let client: AnvilClient;
     let contractAddress: Address;
 
     beforeAll(async () => {
@@ -40,7 +39,8 @@ describe.concurrent(
       const deploymentTxHash = await client.deployContract({
         abi: ultraVerifier.abi,
         account,
-        bytecode: ultraVerifier.bytecode.object as Hex
+        bytecode: ultraVerifier.bytecode.object as Hex,
+        chain: client.chain
       });
 
       const deploymentTxReceipt = await client.waitForTransactionReceipt({ hash: deploymentTxHash });
