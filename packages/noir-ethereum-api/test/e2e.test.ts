@@ -1,15 +1,15 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import { incHexStr } from '../src/util/string.js';
-import { circuit, readInputMap, readProof, readWitnessMap, verifyStorageProof } from '../src/main.js';
-import { updateNestedField } from '../src/util/object.js';
+import { circuit, readInputMap, readProof, readWitnessMap } from '../src/main.js';
+import { copy, updateNestedField } from '../src/util/object.js';
 import { abiEncode, InputMap, WitnessMap } from '@noir-lang/noirc_abi';
 
 import { Account, privateKeyToAccount } from 'viem/accounts';
 import { createAnvilClient } from '../src/ethereum/client.js';
 import ultraVerifier from '../../../contracts/out/UltraVerifier.sol/UltraVerifier.json';
-import { decodeHexString } from '../src/noir/noir_js/encode.js';
 import { Address, Hex } from 'viem';
 import { assert } from '../src/util/assert.js';
+import { verifyStorageProofInSolidity } from '../src/ethereum/verifier.js';
 
 const PROOF_PATH = '../../proofs/main.proof';
 const INPUT_MAP_PATH = '../../circuits/main/Verifier.toml';
@@ -50,45 +50,36 @@ describe.concurrent(
       contractAddress = deploymentTxReceipt.contractAddress;
     }
 
-    it('proof verification successes', async () => {
-      const proofData = {
-        proof,
-        publicInputs: Array.from(witnessMap.values())
-      };
-      expect(await verifyStorageProof(proofData)).toEqual(true);
-    });
-
     it('anvil smart contract proof verification successes', async () => {
-      const proofVerificationTxHash = await client.writeContract({
+      const proofVerificationTxHash = await verifyStorageProofInSolidity(
+        client,
         account,
-        address: contractAddress,
-        abi: ultraVerifier.abi,
-        functionName: 'verify',
-        args: [decodeHexString(proof), Array.from(witnessMap.values())]
-      });
+        contractAddress,
+        proof,
+        witnessMap
+      );
       const proofVerificationTxReceipt = await client.waitForTransactionReceipt({ hash: proofVerificationTxHash });
       expect(proofVerificationTxReceipt.status).toEqual('success');
       expect(proofVerificationTxReceipt.gasUsed).toBeLessThanOrEqual(VERIFICATION_GAS_LIMIT);
     });
 
     it('proof fails: invalid nonce', async () => {
-      updateNestedField(inputMap, ['return', 'nonce'], incHexStr);
-      const witnessMap = abiEncode(circuit.abi, inputMap, inputMap['return']);
-      const proofData = {
-        proof,
-        publicInputs: Array.from(witnessMap.values())
-      };
-      expect(await verifyStorageProof(proofData)).toEqual(false);
+      const inputMapCopy = copy(inputMap);
+      updateNestedField(inputMapCopy, ['return', 'nonce'], incHexStr);
+      const witnessMapInvalidNonce = abiEncode(circuit.abi, inputMapCopy, inputMapCopy['return']);
+      expect(
+        async () => await verifyStorageProofInSolidity(client, account, contractAddress, proof, witnessMapInvalidNonce)
+      ).rejects.toThrowError('Execution reverted');
     });
 
     it('proof fails: invalid state root', async () => {
-      updateNestedField(inputMap, ['state_root', '0'], incHexStr);
-      const witnessMap = abiEncode(circuit.abi, inputMap, inputMap['return']);
-      const proofData = {
-        proof,
-        publicInputs: Array.from(witnessMap.values())
-      };
-      expect(await verifyStorageProof(proofData)).toEqual(false);
+      const inputMapCopy = copy(inputMap);
+      updateNestedField(inputMapCopy, ['state_root', '0'], incHexStr);
+      const witnessMapInvalidStateRoot = abiEncode(circuit.abi, inputMapCopy, inputMapCopy['return']);
+      expect(
+        async () =>
+          await verifyStorageProofInSolidity(client, account, contractAddress, proof, witnessMapInvalidStateRoot)
+      ).rejects.toThrowError('Execution reverted');
     });
   },
   {
