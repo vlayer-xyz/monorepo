@@ -80,12 +80,7 @@ pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_ST
     );
 }
 
-// We can't make this function constrained for now because it will blow up the circuit size and break JS tests
-// We will do it after migrating tests to anvil
-unconstrained fn HACK_unconstrained_assert_account_proof(
-    account_with_proof: AccountWithProof,
-    state_root: [u8; KEY_LENGTH]
-) {
+fn assert_account_proof(account_with_proof: AccountWithProof, state_root: [u8; KEY_LENGTH]) {
     let trie_proof = TrieProof {
         key: account_with_proof.key,
         proof: account_with_proof.proof,
@@ -105,7 +100,7 @@ pub(crate) fn verify_account(block_no: Field, address: [u8; 20], state_root: [u8
         code_hash: account_with_proof.code_hash
     };
     assert_account_equals(account_with_proof.value, account);
-    HACK_unconstrained_assert_account_proof(account_with_proof, state_root);
+    assert_account_proof(account_with_proof, state_root);
 
     account
 }
