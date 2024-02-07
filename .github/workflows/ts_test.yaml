@@ -44,6 +44,8 @@ jobs:
       - name: Start Oracle Server
         run: |
           yarn oracle-server &
+          ORACLE_SERVER_PID=$!
+          echo "ORACLE_SERVER_PID=$ORACLE_SERVER_PID" >> $GITHUB_ENV
 
       - name: Generate Proof
         run: nargo prove --package main --oracle-resolver=http://localhost:5555
@@ -66,16 +68,13 @@ jobs:
         working-directory: contracts
         run: forge build
 
-      - name: Deploy Smart Contract
-        working-directory: contracts
-        run: forge create --rpc-url $ETH_RPC_URL --private-key $ANVIL_TEST_ACCOUNT_PRIVATE_KEY UltraVerifier
-        env:
-          ETH_RPC_URL: '127.0.0.1:8545'
-          ANVIL_TEST_ACCOUNT_PRIVATE_KEY: '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
-
       - name: Run e2e Tests
         run: yarn test:e2e
 
       - name: Stop Anvil
         if: always()
         run: kill $ANVIL_PID
+
+      - name: Stop Oracle Server
+        if: always()
+        run: kill $ORACLE_SERVER_PID

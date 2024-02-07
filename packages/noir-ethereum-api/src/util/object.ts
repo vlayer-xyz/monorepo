@@ -6,3 +6,5 @@ export function updateNestedField<T, V>(obj: T, pathArray: string[], updater: (v
     return acc[key];
   }, obj);
 }
+
+export const copy = <T>(obj: T): T => JSON.parse(JSON.stringify(obj));

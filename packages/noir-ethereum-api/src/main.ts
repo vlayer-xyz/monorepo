@@ -36,6 +36,7 @@ export async function recordStorageProof(
   return isCorrect;
 }
 
+/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 export async function verifyStorageProof(proof: ProofData): Promise<boolean> {
   return await noir.verifyFinalProof(proof);
 }
