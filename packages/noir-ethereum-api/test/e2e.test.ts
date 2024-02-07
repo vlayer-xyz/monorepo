@@ -14,7 +14,7 @@ import { AnvilClient, createAnvilClient } from './ethereum/anvilClient.js';
 const PROOF_PATH = '../../proofs/main.proof';
 const INPUT_MAP_PATH = '../../circuits/main/Verifier.toml';
 const ANVIL_TEST_ACCOUNT_PRIVATE_KEY = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
-const VERIFICATION_GAS_LIMIT = 475455n;
+const VERIFICATION_GAS_LIMIT = 475_455n;
 
 describe.concurrent(
   'e2e',
@@ -32,10 +32,10 @@ describe.concurrent(
       witnessMap = await readWitnessMap(INPUT_MAP_PATH);
       account = privateKeyToAccount(ANVIL_TEST_ACCOUNT_PRIVATE_KEY);
       client = createAnvilClient();
-      await deployVerificationContract();
+      contractAddress = await deployVerificationContract();
     });
 
-    async function deployVerificationContract() {
+    async function deployVerificationContract(): Promise<Address> {
       const deploymentTxHash = await client.deployContract({
         abi: ultraVerifier.abi,
         account,
@@ -47,10 +47,10 @@ describe.concurrent(
       expect(deploymentTxReceipt.status).toEqual('success');
 
       assert(!!deploymentTxReceipt.contractAddress, 'Deployed contract address should not be empty');
-      contractAddress = deploymentTxReceipt.contractAddress;
+      return deploymentTxReceipt.contractAddress;
     }
 
-    it('anvil smart contract proof verification successes', async () => {
+    it('smart contract proof verification successes', async () => {
       const proofVerificationTxHash = await verifyStorageProofInSolidity(
         client,
         account,

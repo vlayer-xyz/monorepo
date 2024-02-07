@@ -21,4 +21,11 @@ describe('copy', () => {
     const obj = { a: 1, b: [{ c: 'x' }] };
     expect(copy(obj)).toStrictEqual(obj);
   });
+
+  it('modify initial object', () => {
+    const obj = { a: 1, b: [{ c: 'x' }] };
+    const objCopy = copy(obj);
+    obj.a = 2;
+    expect(objCopy.a).toStrictEqual(1);
+  });
 });

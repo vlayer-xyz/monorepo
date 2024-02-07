@@ -32,7 +32,7 @@ jobs:
         run: yarn lint
 
       # We don't store circuit and smart contract compilation artefacts in the repo,
-      # but typecheck fails on import without them so we just create a fake files here
+      # but typecheck fails on import without them so we just create fake files here
       - name: Create fake circuit compilation artefacts
         working-directory: .
         run: |
