@@ -2,7 +2,7 @@ import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { fromRlp, type GetProofReturnType, type Hex, isHex, type PublicClient } from 'viem';
 import { assert } from '../../util/assert.js';
 import { decodeField, decodeHexAddress, encodeField, encodeHex, encodeU120, encodeU64 } from './encode.js';
-import { padArray } from '../../util/array.js';
+import { alterArray, padArray } from '../../util/array.js';
 import { NoirArguments } from './oracles.js';
 
 const PROOF_ONE_LEVEL_LENGTH = 532;
@@ -53,8 +53,11 @@ export function encodeAccount(ethProof: GetProofReturnType): ForeignCallOutput[]
 
   const key = encodeHex(ethProof.address);
   const value = encodeValue(ethProof.accountProof);
-  const proof = encodeProof(ethProof.accountProof);
+  const correctProof = encodeProof(ethProof.accountProof);
   const depth = encodeField(ethProof.accountProof.length);
+
+  const proof = process.env.RETURN_INVALID_PROOF === 'true' ? alterArray(correctProof) : correctProof;
+
   return [nonce, balance, storageHash, codeHash, key, value, proof, depth];
 }
 
