@@ -2,7 +2,7 @@
 name = "main"
 type = "bin"
 authors = ["Arkadiusz Konior, Marek Kirejczyk"]
-compiler_version = "0.22.0"
+compiler_version = "0.23.0"
 
 [dependencies]
 u2b = { tag = "v0.3.1", git = "https://github.com/vlayer-xyz/noir-u2b" }
