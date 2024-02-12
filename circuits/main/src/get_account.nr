@@ -14,22 +14,22 @@ struct Account {
     code_hash: [u8; HASH_LENGTH],
 }
 
-struct AccountWithProof {
-    nonce: u64,
-    balance: u120,
-    state_root: [u8; HASH_LENGTH],
-    code_hash: [u8; HASH_LENGTH],
-    
+struct StateProof {
     key: [u8; 20],
     value: [u8; MAX_ACCOUNT_STATE_LENGTH],
     proof: [u8; PROOF_LEN],
     depth: Field,
 }
 
-#[oracle(get_account)]
-unconstrained fn get_account_oracle(_block_no: Field, _address: [u8; 20]) -> AccountWithProof {}
+type AccountWithStateProof = (Account, StateProof);
 
-unconstrained fn get_account_unconstrained(block_no: Field, address: [u8; 20]) -> AccountWithProof {
+#[oracle(get_account)]
+unconstrained fn get_account_oracle(_block_no: Field, _address: [u8; 20]) -> AccountWithStateProof {}
+
+unconstrained fn get_account_unconstrained(
+    block_no: Field,
+    address: [u8; 20]
+) -> AccountWithStateProof {
     get_account_oracle(block_no, address)
 }
 
@@ -80,27 +80,21 @@ pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_ST
     );
 }
 
-fn assert_account_proof(account_with_proof: AccountWithProof, state_root: [u8; KEY_LENGTH]) {
+fn assert_account_proof(account_state_proof: StateProof, state_root: [u8; KEY_LENGTH]) {
     let trie_proof = TrieProof {
-        key: account_with_proof.key,
-        proof: account_with_proof.proof,
-        depth: account_with_proof.depth,
-        value: account_with_proof.value
+        key: account_state_proof.key,
+        proof: account_state_proof.proof,
+        depth: account_state_proof.depth,
+        value: account_state_proof.value
     };
     assert(trie_proof.verify_state_root(state_root), "TrieProof: Invalid state root");
 }
 
 pub(crate) fn verify_account(block_no: Field, address: [u8; 20], state_root: [u8; KEY_LENGTH]) -> Account {
-    let account_with_proof = get_account_unconstrained(block_no, address);
+    let (account, state_proof) = get_account_unconstrained(block_no, address);
 
-    let account = Account {
-        nonce: account_with_proof.nonce,
-        balance: account_with_proof.balance,
-        state_root: account_with_proof.state_root,
-        code_hash: account_with_proof.code_hash
-    };
-    assert_account_equals(account_with_proof.value, account);
-    assert_account_proof(account_with_proof, state_root);
+    assert_account_equals(state_proof.value, account);
+    assert_account_proof(state_proof, state_root);
 
     account
 }

@@ -19,7 +19,9 @@ export const getAccountOracle = async (client: PublicClient, args: NoirArguments
     storageKeys: [],
     blockNumber
   });
-  return encodeAccount(accountProof);
+  const encodedAccount = encodeAccount(accountProof);
+  const encodedProof = encodeStateProof(accountProof);
+  return encodedAccount.concat(encodedProof);
 };
 
 export function parseNoirGetAccountArguments(args: NoirArguments): {
@@ -51,11 +53,16 @@ export function encodeAccount(ethProof: GetProofReturnType): ForeignCallOutput[]
   const storageHash = encodeHex(ethProof.storageHash);
   const codeHash = encodeHex(ethProof.codeHash);
 
+  return [nonce, balance, storageHash, codeHash];
+}
+
+export function encodeStateProof(ethProof: GetProofReturnType): ForeignCallOutput[] {
   const key = encodeHex(ethProof.address);
   const value = encodeValue(ethProof.accountProof);
   const proof = encodeProof(ethProof.accountProof);
   const depth = encodeField(ethProof.accountProof.length);
-  return [nonce, balance, storageHash, codeHash, key, value, proof, depth];
+
+  return [key, value, proof, depth];
 }
 
 function encodeProof(proof: string[]): string[] {

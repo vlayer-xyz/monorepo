@@ -11,26 +11,24 @@ export type FieldsOfType<ObjectType, FieldType> = {
   [K in keyof ObjectType]: ObjectType[K] extends FieldType ? K : never;
 }[keyof ObjectType];
 
-export interface AccountWithProof {
+export interface Account {
   nonce: string;
   balance: string;
   codeHash: string[];
   storageHash: string[];
+}
+
+export interface AccountStateProof {
   key: string[];
   value: string[];
   proof: string[];
   depth: string;
 }
 
-export function serializeAccountWithProof(account: AccountWithProof): ForeignCallOutput[] {
-  return [
-    account.nonce,
-    account.balance,
-    account.storageHash,
-    account.codeHash,
-    account.key,
-    account.value,
-    account.proof,
-    account.depth
-  ];
+export function serializeAccount(account: Account): ForeignCallOutput[] {
+  return [account.nonce, account.balance, account.storageHash, account.codeHash];
+}
+
+export function serializeStateProof(account: AccountStateProof): ForeignCallOutput[] {
+  return [account.key, account.value, account.proof, account.depth];
 }
