@@ -8,7 +8,6 @@ import { Address, Hex } from 'viem';
 import { createAnvilClient, AnvilClient } from './ethereum/anvilClient.js';
 import { circuit, readInputMap, readProof, readWitnessMap } from './main.js';
 
-console.log(process.cwd());
 const PROOF_PATH = '../../proofs/ethereum_history_api.proof';
 const INPUT_MAP_PATH = '../circuits/lib/Verifier.toml';
 const ANVIL_TEST_ACCOUNT_PRIVATE_KEY = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
