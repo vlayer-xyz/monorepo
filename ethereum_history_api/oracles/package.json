@@ -1,16 +1,12 @@
 {
-  "name": "noir-ethereum-api",
+  "name": "noir-ethereum-api-oracles",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "main": "dist/oracles/src/main.js",
+  "types": "dist/oracles/src/main.d.ts",
   "type": "module",
   "scripts": {
-    "test:e2e": "vitest run --config vitest.e2e.config.ts",
     "test:unit": "vitest run --config vitest.unit.config.ts",
-    "test:watch": "npx vitest watch",
-    "start": "vite --open",
-    "build": "vite build",
-    "preview": "vite preview",
+    "build": "tsc",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
@@ -57,7 +53,6 @@
     "rollup-plugin-copy": "^3.5.0",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3",
-    "vite": "^4.5.0",
     "vitest": "^1.0.4"
   }
 }

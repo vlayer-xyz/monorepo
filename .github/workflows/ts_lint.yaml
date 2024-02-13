@@ -7,9 +7,6 @@ jobs:
     name: Lint and Typecheck
     runs-on: ubuntu-latest
     environment: CI
-    defaults:
-      run:
-        working-directory: packages/noir-ethereum-api # TODO
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -28,7 +25,7 @@ jobs:
         run: yarn install
 
       - name: Run TypeScript Linter
-        run: yarn lint
+        run: yarn lint:all
 
       # We don't store circuit and smart contract compilation artefacts in the repo,
       # but typecheck fails on import without them so we just create fake files here
@@ -41,11 +38,11 @@ jobs:
       - name: Create fake smart contract build artefacts
         working-directory: .
         run: |
-          mkdir -p contracts/out/UltraVerifier.sol
-          echo '{ "abi": [], "bytecode": { "object": "" } }' > contracts/out/UltraVerifier.sol/UltraVerifier.json
+          mkdir -p ethereum_history_api/contracts/out/UltraVerifier.sol
+          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum_history_api/contracts/out/UltraVerifier.sol/UltraVerifier.json
 
       - name: Run TypeScript Typecheck
-        run: yarn typecheck
+        run: yarn typecheck:all
 
       - name: Run TypeScript format check
-        run: yarn format:ci
+        run: yarn format:all:ci

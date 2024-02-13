@@ -1,18 +1,16 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { incHexStr } from '../src/util/string.js';
-import { circuit, readInputMap, readProof, readWitnessMap } from '../src/main.js';
-import { copy, updateNestedField } from '../src/util/object.js';
+import { copy, updateNestedField, incHexStr, assert, verifyStorageProofInSolidity } from 'noir-ethereum-api-oracles';
 import { abiEncode, InputMap, WitnessMap } from '@noir-lang/noirc_abi';
 
 import { Account, privateKeyToAccount } from 'viem/accounts';
-import ultraVerifier from '../../../contracts/out/UltraVerifier.sol/UltraVerifier.json';
+import ultraVerifier from '../../contracts/out/UltraVerifier.sol/UltraVerifier.json';
 import { Address, Hex } from 'viem';
-import { assert } from '../src/util/assert.js';
-import { verifyStorageProofInSolidity } from '../src/ethereum/verifier.js';
-import { AnvilClient, createAnvilClient } from './ethereum/anvilClient.js';
+import { createAnvilClient, AnvilClient } from './ethereum/anvilClient.js';
+import { circuit, readInputMap, readProof, readWitnessMap } from './main.js';
 
-const PROOF_PATH = '../../proofs/main.proof';
-const INPUT_MAP_PATH = '../../circuits/main/Verifier.toml';
+console.log(process.cwd());
+const PROOF_PATH = '../../proofs/ethereum_history_api.proof';
+const INPUT_MAP_PATH = '../circuits/lib/Verifier.toml';
 const ANVIL_TEST_ACCOUNT_PRIVATE_KEY = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
 const VERIFICATION_GAS_LIMIT = 500_000n;
 

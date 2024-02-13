@@ -23,7 +23,9 @@ export const createOracles =
     return await fn(client, args);
   };
 
-export const defaultOraclesMap = {
+export type { PublicClient };
+
+export const defaultOraclesMap: OracleMap = {
   get_account: getAccountOracle,
   get_header: getHeaderOracle
 };
