@@ -42,7 +42,7 @@ jobs:
           echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum_history_api/contracts/out/UltraVerifier.sol/UltraVerifier.json
 
       - name: Run TypeScript Typecheck
-        run: yarn typecheck:all
+        run: yarn build:all
 
       - name: Run TypeScript format check
         run: yarn format:all:ci
