@@ -21,7 +21,7 @@ export const getAccountOracle = async (client: PublicClient, args: NoirArguments
   });
   const encodedAccount = encodeAccount(accountProof);
   const encodedProof = encodeStateProof(accountProof);
-  return encodedAccount.concat(encodedProof);
+  return [...encodedAccount, ...encodedProof];
 };
 
 export function parseNoirGetAccountArguments(args: NoirArguments): {
