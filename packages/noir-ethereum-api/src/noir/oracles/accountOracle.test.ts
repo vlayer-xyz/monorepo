@@ -1,17 +1,19 @@
 import { describe, expect, it } from 'vitest';
-import { encodeAccount, parseNoirGetAccountArguments } from './accountOracles.js';
+import { encodeAccount, encodeStateProof, parseNoirGetAccountArguments } from './accountOracles.js';
 import { type GetProofReturnType } from 'viem';
 import { readFile } from 'fs/promises';
 import { parse } from '../../util/json-bigint.js';
-import accountWithProof from '../../../test/fixtures/accountWithProof.json';
-import { serializeAccountWithProof } from '../../../test/helpers.js';
+import account from '../../../test/fixtures/account.json';
+import stateProof from '../../../test/fixtures/stateProof.json';
+import { serializeAccount, serializeStateProof } from '../../../test/helpers.js';
 import { ADDRESS } from '../../ethereum/recordingClient.test.js';
 
 describe('encodeAccount', async () => {
   it('encode account', async () => {
     const proof: GetProofReturnType = parse(await readFile('./test/fixtures/eth_getProof_response.json', 'utf-8'));
 
-    expect(encodeAccount(proof)).toStrictEqual(serializeAccountWithProof(accountWithProof));
+    expect(encodeAccount(proof)).toStrictEqual(serializeAccount(account));
+    expect(encodeStateProof(proof)).toStrictEqual(serializeStateProof(stateProof));
   });
 
   it('parseNoirGetAccountArguments success', () => {
