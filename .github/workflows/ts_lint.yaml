@@ -33,7 +33,7 @@ jobs:
         working-directory: .
         run: |
           mkdir -p target
-          touch target/main.json
+          touch target/ethereum_history_api.json
 
       - name: Create fake smart contract build artefacts
         working-directory: .

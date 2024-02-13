@@ -2,7 +2,7 @@ import { type CompiledCircuit } from '@noir-lang/backend_barretenberg';
 import { WitnessMap } from '@noir-lang/noir_js';
 import { promises as fs } from 'fs';
 import toml from 'toml';
-import noir_ethereum_history_api from '../../../target/main.json';
+import noir_ethereum_history_api from '../../../target/ethereum_history_api.json';
 import { encodeHexString } from 'noir-ethereum-api-oracles';
 import { abiEncode, type InputMap } from '@noir-lang/noirc_abi';
 
