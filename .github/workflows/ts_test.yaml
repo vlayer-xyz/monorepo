@@ -9,9 +9,6 @@ jobs:
     environment: CI
     env:
       ETHEREUM_JSON_RPC_API_URL: ${{ secrets.ETHEREUM_JSON_RPC_API_URL }}
-    defaults:
-      run:
-        working-directory: packages/noir-ethereum-api # TODO
 
     steps:
       - name: Checkout
@@ -31,6 +28,7 @@ jobs:
         run: yarn install
 
       - name: Run Unit Tests
+        working-directory: ethereum_history_api/oracles
         run: yarn test:unit
 
       - name: Install Nargo
@@ -42,6 +40,7 @@ jobs:
         run: nargo compile --package ethereum_history_api
 
       - name: Start Oracle Server
+        working-directory: ethereum_history_api/oracles
         run: |
           yarn oracle-server &
           ORACLE_SERVER_PID=$!
@@ -69,6 +68,7 @@ jobs:
         run: forge build
 
       - name: Run e2e Tests
+        working-directory: ethereum_history_api/tests
         run: yarn test:e2e
 
       - name: Stop Anvil
