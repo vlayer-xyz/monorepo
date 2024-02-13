@@ -9,7 +9,7 @@ jobs:
     environment: CI
     defaults:
       run:
-        working-directory: packages/noir-ethereum-api
+        working-directory: packages/noir-ethereum-api # TODO
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -26,7 +26,6 @@ jobs:
 
       - name: Install Dependencies
         run: yarn install
-
 
       - name: Run TypeScript Linter
         run: yarn lint

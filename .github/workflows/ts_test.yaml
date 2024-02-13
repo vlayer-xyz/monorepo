@@ -11,7 +11,7 @@ jobs:
       ETHEREUM_JSON_RPC_API_URL: ${{ secrets.ETHEREUM_JSON_RPC_API_URL }}
     defaults:
       run:
-        working-directory: packages/noir-ethereum-api
+        working-directory: packages/noir-ethereum-api # TODO
 
     steps:
       - name: Checkout

@@ -1,5 +1,5 @@
 [package]
-name = "main"
+name = "ethereum_history_api"
 type = "bin"
 authors = ["Arkadiusz Konior, Marek Kirejczyk"]
 compiler_version = "0.23.0"
