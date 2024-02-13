@@ -39,7 +39,7 @@ jobs:
           toolchain: 0.23.0
 
       - name: Compile Circuit
-        run: nargo compile --package main
+        run: nargo compile --package ethereum_history_api
 
       - name: Start Oracle Server
         run: |
@@ -48,10 +48,10 @@ jobs:
           echo "ORACLE_SERVER_PID=$ORACLE_SERVER_PID" >> $GITHUB_ENV
 
       - name: Generate Proof
-        run: nargo prove --package main --oracle-resolver=http://localhost:5555
+        run: nargo prove --package ethereum_history_api --oracle-resolver=http://localhost:5555
 
       - name: Run nargo codegen-verifier
-        run: nargo codegen-verifier --package main
+        run: nargo codegen-verifier --package ethereum_history_api
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
@@ -65,7 +65,7 @@ jobs:
           echo "ANVIL_PID=$ANVIL_PID" >> $GITHUB_ENV
 
       - name: Compile Smart Contract
-        working-directory: contracts
+        working-directory: ethereum_history_api/contracts
         run: forge build
 
       - name: Run e2e Tests
