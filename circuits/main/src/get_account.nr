@@ -1,4 +1,4 @@
-use dep::proof::{rlp::{RLP_List, decode1_small_lis}, MAX_ACCOUNT_STATE_LENGTH, KEY_LENGTH, TrieProof, byte_value};
+use dep::proof::{rlp::{RLP_List, decode1_small_lis}, MAX_ACCOUNT_STATE_LENGTH, KEY_LENGTH, TrieProof, StateProof, byte_value};
 use dep::std::println;
 use crate::arrays::{assert_sub_array_equals};
 use dep::u2b::{u64_to_u8, u120_to_u8};
@@ -14,14 +14,7 @@ struct Account {
     code_hash: [u8; HASH_LENGTH],
 }
 
-struct StateProof {
-    key: [u8; 20],
-    value: [u8; MAX_ACCOUNT_STATE_LENGTH],
-    proof: [u8; PROOF_LEN],
-    depth: Field,
-}
-
-type AccountWithStateProof = (Account, StateProof);
+type AccountWithStateProof = (Account, StateProof<PROOF_LEN>);
 
 #[oracle(get_account)]
 unconstrained fn get_account_oracle(_block_no: Field, _address: [u8; 20]) -> AccountWithStateProof {}
@@ -80,14 +73,8 @@ pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_ST
     );
 }
 
-fn assert_account_proof(account_state_proof: StateProof, state_root: [u8; KEY_LENGTH]) {
-    let trie_proof = TrieProof {
-        key: account_state_proof.key,
-        proof: account_state_proof.proof,
-        depth: account_state_proof.depth,
-        value: account_state_proof.value
-    };
-    assert(trie_proof.verify_state_root(state_root), "TrieProof: Invalid state root");
+fn assert_account_proof(account_state_proof: StateProof<PROOF_LEN>, state_root: [u8; KEY_LENGTH]) {
+    assert(account_state_proof.verify_state_root(state_root), "TrieProof: Invalid state root");
 }
 
 pub(crate) fn verify_account(block_no: Field, address: [u8; 20], state_root: [u8; KEY_LENGTH]) -> Account {
