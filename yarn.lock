@@ -757,17 +757,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/eslint@npm:^8":
-  version: 8.56.2
-  resolution: "@types/eslint@npm:8.56.2"
-  dependencies:
-    "@types/estree": "npm:*"
-    "@types/json-schema": "npm:*"
-  checksum: 10c0/e33ca87a30a9454ba9943e1270ac759996f5fe598a1c1afbaec1d1e7346a339e20bf2a9d81f177067116bbaa6cfa4f748993cb338f57978ae862ad38ffae56fe
-  languageName: node
-  linkType: hard
-
-"@types/estree@npm:*, @types/estree@npm:1.0.5, @types/estree@npm:^1.0.0":
+"@types/estree@npm:1.0.5, @types/estree@npm:^1.0.0":
   version: 1.0.5
   resolution: "@types/estree@npm:1.0.5"
   checksum: 10c0/b3b0e334288ddb407c7b3357ca67dbee75ee22db242ca7c56fe27db4e1a31989cb8af48a84dd401deb787fe10cc6b2ab1ee82dc4783be87ededbe3d53c79c70d
@@ -831,7 +821,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/json-schema@npm:*, @types/json-schema@npm:^7.0.12":
+"@types/json-schema@npm:^7.0.12":
   version: 7.0.15
   resolution: "@types/json-schema@npm:7.0.15"
   checksum: 10c0/a996a745e6c5d60292f36731dd41341339d4eeed8180bb09226e5c8d23759067692b1d88e5d91d72ee83dfc00d3aca8e7bd43ea120516c17922cbcb7c3e252db
@@ -3873,22 +3863,13 @@ __metadata:
     "@noir-lang/noir_js": "npm:0.23.0"
     "@noir-lang/noirc_abi": "npm:^0.23.0"
     "@types/body-parser": "npm:^1"
-    "@types/eslint": "npm:^8"
     "@types/express": "npm:^4"
     "@types/json-bigint": "npm:^1"
     "@types/lodash.isequal": "npm:^4"
     "@types/node": "npm:^20.10.5"
-    "@typescript-eslint/eslint-plugin": "npm:^6.18.0"
-    "@typescript-eslint/parser": "npm:^6.18.0"
     body-parser: "npm:^1.20.2"
     dotenv: "npm:^16.3.1"
     eslint: "npm:^8.56.0"
-    eslint-config-prettier: "npm:^9.1.0"
-    eslint-config-standard-with-typescript: "npm:^43.0.0"
-    eslint-plugin-import: "npm:^2.25.2"
-    eslint-plugin-n: "npm:^15.0.0 || ^16.0.0 "
-    eslint-plugin-prettier: "npm:^5.1.2"
-    eslint-plugin-promise: "npm:^6.0.0"
     fastify: "npm:^4.25.2"
     json-bigint: "npm:^1.0.0"
     json-rpc-2.0: "npm:^1.7.0"
@@ -3914,22 +3895,13 @@ __metadata:
     "@noir-lang/noir_js": "npm:0.23.0"
     "@noir-lang/noirc_abi": "npm:^0.23.0"
     "@types/body-parser": "npm:^1"
-    "@types/eslint": "npm:^8"
     "@types/express": "npm:^4"
     "@types/json-bigint": "npm:^1"
     "@types/lodash.isequal": "npm:^4"
     "@types/node": "npm:^20.10.5"
-    "@typescript-eslint/eslint-plugin": "npm:^6.18.0"
-    "@typescript-eslint/parser": "npm:^6.18.0"
     body-parser: "npm:^1.20.2"
     dotenv: "npm:^16.3.1"
     eslint: "npm:^8.56.0"
-    eslint-config-prettier: "npm:^9.1.0"
-    eslint-config-standard-with-typescript: "npm:^43.0.0"
-    eslint-plugin-import: "npm:^2.25.2"
-    eslint-plugin-n: "npm:^15.0.0 || ^16.0.0 "
-    eslint-plugin-prettier: "npm:^5.1.2"
-    eslint-plugin-promise: "npm:^6.0.0"
     fastify: "npm:^4.25.2"
     json-bigint: "npm:^1.0.0"
     json-rpc-2.0: "npm:^1.7.0"
@@ -3949,7 +3921,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "noir-ethereum-history-api@workspace:."
   dependencies:
+    "@typescript-eslint/eslint-plugin": "npm:^6.18.0"
+    "@typescript-eslint/parser": "npm:^6.18.0"
     eslint: "npm:^8.56.0"
+    eslint-config-prettier: "npm:^9.1.0"
+    eslint-config-standard-with-typescript: "npm:^43.0.0"
+    eslint-plugin-import: "npm:^2.25.2"
+    eslint-plugin-n: "npm:^15.0.0 || ^16.0.0 "
+    eslint-plugin-prettier: "npm:^5.1.2"
+    eslint-plugin-promise: "npm:^6.0.0"
     prettier: "npm:^3.2.2"
     typescript: "npm:^5.3.3"
   languageName: unknown
