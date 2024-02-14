@@ -15,7 +15,7 @@ export interface Account {
   nonce: string;
   balance: string;
   codeHash: string[];
-  storageHash: string[];
+  storageRoot: string[];
 }
 
 export interface AccountStateProof {
@@ -26,7 +26,7 @@ export interface AccountStateProof {
 }
 
 export function serializeAccount(account: Account): ForeignCallOutput[] {
-  return [account.nonce, account.balance, account.storageHash, account.codeHash];
+  return [account.nonce, account.balance, account.storageRoot, account.codeHash];
 }
 
 export function serializeStateProof(account: AccountStateProof): ForeignCallOutput[] {
