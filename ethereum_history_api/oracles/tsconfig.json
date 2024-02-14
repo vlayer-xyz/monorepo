@@ -1,5 +1,6 @@
 {
   "extends": "../../tsconfig.json",
+  "include": ["src/**/*.ts", "fixtures/*.json", "package.json"],
   "compilerOptions": {
     "outDir": "dist"
   }
