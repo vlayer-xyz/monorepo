@@ -30,3 +30,25 @@ describe('encodeAccount', async () => {
     });
   });
 });
+
+export interface Account {
+  nonce: string;
+  balance: string;
+  codeHash: string[];
+  storageHash: string[];
+}
+
+export interface AccountStateProof {
+  key: string[];
+  value: string[];
+  proof: string[];
+  depth: string;
+}
+
+export function serializeAccount(account: Account): ForeignCallOutput[] {
+  return [account.nonce, account.balance, account.storageHash, account.codeHash];
+}
+
+export function serializeStateProof(account: AccountStateProof): ForeignCallOutput[] {
+  return [account.key, account.value, account.proof, account.depth];
+}
