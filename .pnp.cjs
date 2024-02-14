@@ -70,6 +70,19 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@aztec/bb.js", [\
+      ["npm:0.19.0", {\
+        "packageLocation": "../../../.yarn/berry/cache/@aztec-bb.js-npm-0.19.0-f79c8f9743-10c0.zip/node_modules/@aztec/bb.js/",\
+        "packageDependencies": [\
+          ["@aztec/bb.js", "npm:0.19.0"],\
+          ["comlink", "npm:4.4.1"],\
+          ["commander", "npm:10.0.1"],\
+          ["debug", "virtual:1ff4b5f90832ba0a9c93ba1223af226e44ba70c1126a3740d93562b97bc36544e896a5e95908196f7458713e6a6089a34bfc67362fc6df7fa093bd06c878be47#npm:4.3.4"],\
+          ["tslib", "npm:2.6.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["@esbuild/aix-ppc64", [\
       ["npm:0.19.12", {\
         "packageLocation": "./.yarn/unplugged/@esbuild-aix-ppc64-npm-0.19.12-20acbc4c27/node_modules/@esbuild/aix-ppc64/",\
@@ -526,6 +539,18 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../../../.yarn/berry/cache/@noir-lang-acvm_js-npm-0.39.0-42d52ba4f4-10c0.zip/node_modules/@noir-lang/acvm_js/",\
         "packageDependencies": [\
           ["@noir-lang/acvm_js", "npm:0.39.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@noir-lang/backend_barretenberg", [\
+      ["npm:0.23.0", {\
+        "packageLocation": "../../../.yarn/berry/cache/@noir-lang-backend_barretenberg-npm-0.23.0-3ca716994c-10c0.zip/node_modules/@noir-lang/backend_barretenberg/",\
+        "packageDependencies": [\
+          ["@noir-lang/backend_barretenberg", "npm:0.23.0"],\
+          ["@aztec/bb.js", "npm:0.19.0"],\
+          ["@noir-lang/types", "npm:0.23.0"],\
+          ["fflate", "npm:0.8.2"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -1713,6 +1738,24 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["comlink", [\
+      ["npm:4.4.1", {\
+        "packageLocation": "../../../.yarn/berry/cache/comlink-npm-4.4.1-b05bb2527d-10c0.zip/node_modules/comlink/",\
+        "packageDependencies": [\
+          ["comlink", "npm:4.4.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["commander", [\
+      ["npm:10.0.1", {\
+        "packageLocation": "../../../.yarn/berry/cache/commander-npm-10.0.1-f17613b72b-10c0.zip/node_modules/commander/",\
+        "packageDependencies": [\
+          ["commander", "npm:10.0.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["concat-map", [\
       ["npm:0.0.1", {\
         "packageLocation": "../../../.yarn/berry/cache/concat-map-npm-0.0.1-85a921b7ee-10c0.zip/node_modules/concat-map/",\
@@ -2769,6 +2812,15 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["fastq", "npm:1.17.1"],\
           ["reusify", "npm:1.0.4"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["fflate", [\
+      ["npm:0.8.2", {\
+        "packageLocation": "../../../.yarn/berry/cache/fflate-npm-0.8.2-5129f303f0-10c0.zip/node_modules/fflate/",\
+        "packageDependencies": [\
+          ["fflate", "npm:0.8.2"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -4075,6 +4127,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./ethereum_history_api/tests/",\
         "packageDependencies": [\
           ["noir-ethereum-api-e2e-tests", "workspace:ethereum_history_api/tests"],\
+          ["@noir-lang/backend_barretenberg", "npm:0.23.0"],\
           ["@noir-lang/noirc_abi", "npm:0.23.0"],\
           ["@types/node", "npm:20.11.17"],\
           ["eslint", "npm:8.56.0"],\

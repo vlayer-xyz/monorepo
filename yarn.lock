@@ -19,6 +19,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@aztec/bb.js@npm:0.19.0":
+  version: 0.19.0
+  resolution: "@aztec/bb.js@npm:0.19.0"
+  dependencies:
+    comlink: "npm:^4.4.1"
+    commander: "npm:^10.0.1"
+    debug: "npm:^4.3.4"
+    tslib: "npm:^2.4.0"
+  bin:
+    bb.js: dest/node/main.js
+  checksum: 10c0/7f0df00d5fcc9c7a027c8fa4d02aa9ad36cfeb69dcee91770f207816fa00c1f9744113cbdc0921c43b48793ae56f1269b8300a081aa336b5971b0337af459bcf
+  languageName: node
+  linkType: hard
+
 "@esbuild/aix-ppc64@npm:0.19.12":
   version: 0.19.12
   resolution: "@esbuild/aix-ppc64@npm:0.19.12"
@@ -367,6 +381,17 @@ __metadata:
   version: 0.39.0
   resolution: "@noir-lang/acvm_js@npm:0.39.0"
   checksum: 10c0/0780b8abe6ab6d0c83b095877adfe9080f0cd4bedb97f709f146b26a53d5b8be2bce065c8f710b59e0a6e23506ade6cdf73aaf58868da5863d75bca5c40783ba
+  languageName: node
+  linkType: hard
+
+"@noir-lang/backend_barretenberg@npm:0.23.0":
+  version: 0.23.0
+  resolution: "@noir-lang/backend_barretenberg@npm:0.23.0"
+  dependencies:
+    "@aztec/bb.js": "npm:0.19.0"
+    "@noir-lang/types": "npm:0.23.0"
+    fflate: "npm:^0.8.0"
+  checksum: 10c0/52170513bae7e09df4bc88d6c020cddab47b91ab3c56c4dcb2183d2b091bcb95c557606e338daf22ee415fe61b8b218cdf6ec7971a5548804d11f83cd7795086
   languageName: node
   linkType: hard
 
@@ -1306,6 +1331,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"comlink@npm:^4.4.1":
+  version: 4.4.1
+  resolution: "comlink@npm:4.4.1"
+  checksum: 10c0/a7a2004030768d13ec9373f780aa0edae57616095cb453ec8950d9f97e5fa654c0e84030ac87173b818843a04a5fa9ce9749d48b6bd453cfbfb5e6a9ebb6b2ff
+  languageName: node
+  linkType: hard
+
+"commander@npm:^10.0.1":
+  version: 10.0.1
+  resolution: "commander@npm:10.0.1"
+  checksum: 10c0/53f33d8927758a911094adadda4b2cbac111a5b377d8706700587650fd8f45b0bbe336de4b5c3fe47fd61f420a3d9bd452b6e0e6e5600a7e74d7bf0174f6efe3
+  languageName: node
+  linkType: hard
+
 "concat-map@npm:0.0.1":
   version: 0.0.1
   resolution: "concat-map@npm:0.0.1"
@@ -2143,6 +2182,13 @@ __metadata:
   dependencies:
     reusify: "npm:^1.0.4"
   checksum: 10c0/0a90ed46ccd6a858a32e297bd35f4249ba6544899b905d08f33a6ba36459041639161fa15bc85a38afa98dd44fb2fa2969419a879721a1395d3e24668a7732c7
+  languageName: node
+  linkType: hard
+
+"fflate@npm:^0.8.0":
+  version: 0.8.2
+  resolution: "fflate@npm:0.8.2"
+  checksum: 10c0/03448d630c0a583abea594835a9fdb2aaf7d67787055a761515bf4ed862913cfd693b4c4ffd5c3f3b355a70cf1e19033e9ae5aedcca103188aaff91b8bd6e293
   languageName: node
   linkType: hard
 
@@ -3298,6 +3344,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "noir-ethereum-api-e2e-tests@workspace:ethereum_history_api/tests"
   dependencies:
+    "@noir-lang/backend_barretenberg": "npm:0.23.0"
     "@noir-lang/noirc_abi": "npm:^0.23.0"
     "@types/node": "npm:^20.10.5"
     eslint: "npm:^8.56.0"
@@ -4470,7 +4517,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.6.2":
+"tslib@npm:^2.4.0, tslib@npm:^2.6.2":
   version: 2.6.2
   resolution: "tslib@npm:2.6.2"
   checksum: 10c0/e03a8a4271152c8b26604ed45535954c0a45296e32445b4b87f8a5abdb2421f40b59b4ca437c4346af0f28179780d604094eb64546bee2019d903d01c6c19bdb
