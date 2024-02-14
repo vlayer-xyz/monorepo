@@ -4,6 +4,7 @@ use dep::std::hash::keccak256;
 use dep::std::wrapping_add;
 use crate::arrays::{sub_array_equals, alter_array};
 use crate::HASH_LENGTH;
+use crate::types::{Address, Bytes32};
 
 global MAX_HEADER_RLP_SIZE = 708;
 global HEADER_FIELDS_COUNT = 17;
@@ -18,11 +19,11 @@ struct BlockHeaderFromOracle {
 }
 
 struct BlockHeaderPartial {
-    state_root: [u8; HASH_LENGTH],
-    transactions_root: [u8; HASH_LENGTH],
-    receipts_root: [u8; HASH_LENGTH],
+    state_root: Bytes32,
+    transactions_root: Bytes32,
+    receipts_root: Bytes32,
     number: Field,
-    hash: [u8; HASH_LENGTH]
+    hash: Bytes32
 }
 
 struct BlockHeaderEncoded {

@@ -4,6 +4,7 @@ mod get_header;
 mod get_header_test;
 mod arrays;
 mod arrays_test;
+mod types;
 
 use dep::proof;
 use crate::get_account::{verify_account, Account};
