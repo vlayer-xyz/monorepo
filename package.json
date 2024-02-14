@@ -5,9 +5,10 @@
     "ethereum_history_api/tests"
   ],
   "scripts": {
-    "check": "yarn format:all && yarn lint:all && yarn typecheck:all",
+    "build": "tsc --build --verbose",
+    "watch": "tsc --build --verbose --watch",
+    "check": "yarn format:all && yarn lint:all",
     "lint:all": "yarn workspaces foreach --all --parallel --verbose run lint",
-    "build:all": "yarn workspaces foreach --all --topological --verbose run build",
     "format:all": "yarn workspaces foreach --all --parallel --verbose run format",
     "format:all:ci": "yarn workspaces foreach --all --parallel --verbose run format:ci"
   },

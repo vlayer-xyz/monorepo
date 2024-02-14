@@ -58,7 +58,7 @@ jobs:
         run: forge build
 
       - name: Run TypeScript Build
-        run: yarn build:all
+        run: yarn build
 
       - name: Run Unit Tests
         working-directory: ethereum_history_api/oracles
