@@ -41,7 +41,7 @@ jobs:
           mkdir -p ethereum_history_api/contracts/out/UltraVerifier.sol
           echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum_history_api/contracts/out/UltraVerifier.sol/UltraVerifier.json
 
-      - name: Run TypeScript Typecheck
+      - name: Run TypeScript Build
         run: yarn build:all
 
       - name: Run TypeScript format check
