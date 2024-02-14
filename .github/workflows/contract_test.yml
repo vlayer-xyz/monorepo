@@ -1,4 +1,4 @@
-name: contract tests
+name: ethereum_history_api contract tests
 
 on: [push]
 
@@ -28,17 +28,17 @@ jobs:
           toolchain: 0.23.0
 
       - name: Run nargo codegen-verifier
-        run: nargo codegen-verifier --package main
+        run: nargo codegen-verifier --package ethereum_history_api
 
       - name: Run Forge build
         run: |
-          cd contracts
+          cd ethereum_history_api/contracts
           forge --version
           forge build --sizes
         id: build
 
       - name: Run Forge tests
         run: |
-          cd contracts
+          cd ethereum_history_api/contracts
           forge test -vvv
         id: test

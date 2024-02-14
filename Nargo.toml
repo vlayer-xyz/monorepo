@@ -1,5 +1,3 @@
 [workspace]
-members = [
-    "circuits/main"
-]
-default-member = "circuits/main"
+members = ["ethereum_history_api/circuits/lib"]
+default-member = "ethereum_history_api/circuits/lib"

@@ -1,0 +1,1 @@
+../../../../contract/ethereum_history_api/plonk_vk.sol
