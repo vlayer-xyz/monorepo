@@ -6,7 +6,7 @@ import { readObject } from '../util/file.js';
 
 describe('mockingClient', () => {
   it('read recorded JSON-RPC API calls from file in mocking client', async () => {
-    const filePath = './test/fixtures/mockClientData.json';
+    const filePath = './fixtures/mockClientData.json';
     const mockingClient: PublicClient = await createMockClient(filePath);
 
     const block = await mockingClient.getBlock(GET_BLOCK_PARAMETERS);

@@ -3,7 +3,7 @@ import { parse } from '../util/json-bigint.js';
 import { describe, expect, it } from 'vitest';
 import { type GetBlockReturnType } from 'viem';
 import { type BlockHeader, calculateBlockHash, calculateBlockHeaderHash, headerToRlp } from './blockHeader.js';
-import { blockHeaders } from '../../test/fixtures/blockHeader.json';
+import { blockHeaders } from '../../fixtures/blockHeader.json';
 
 for (const header of blockHeaders) {
   describe('encodeBlockHeader', () => {
@@ -20,7 +20,7 @@ for (const header of blockHeaders) {
 }
 
 describe('calculateBlockHash', async () => {
-  const blocks = parse(await readFile('./test/fixtures/blocks.json', 'utf-8'));
+  const blocks = parse(await readFile('./fixtures/blocks.json', 'utf-8'));
   for (const block of blocks) {
     it(`block #${block.number}`, async () => {
       expect(calculateBlockHash(block as GetBlockReturnType)).toBe(block.hash);
