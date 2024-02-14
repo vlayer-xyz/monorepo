@@ -1,21 +1,4 @@
 {
-  "compilerOptions": {
-    "target": "es2020",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "resolveJsonModule": true,
-    "allowJs": false,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "noImplicitAny": true,
-    "declaration": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "skipLibCheck": true,
-    "composite": true,
-    "incremental": true
-  },
   "files": [],
   "references": [
     { "path": "ethereum_history_api/oracles/tsconfig.json" },

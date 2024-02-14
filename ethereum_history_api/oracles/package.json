@@ -1,12 +1,12 @@
 {
   "name": "noir-ethereum-api-oracles",
   "version": "1.0.0",
-  "main": "dist/src/main.js",
-  "types": "dist/src/main.d.ts",
+  "main": "dist/main.js",
+  "types": "dist/main.d.ts",
   "type": "module",
   "scripts": {
     "test:unit": "vitest run --config vitest.unit.config.ts",
-    "build": "tsc",
+    "build": "tsc --build --verbose",
     "typecheck": "tsc --noEmit",
     "lint": "eslint --ext .ts",
     "lint:fix": "eslint --ext .ts --fix",

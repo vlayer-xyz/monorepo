@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "test:e2e": "vitest run --config vitest.e2e.config.ts",
-    "build": "tsc",
+    "build": "tsc --build --verbose",
     "typecheck": "tsc --noEmit",
     "lint": "eslint --ext .ts",
     "lint:fix": "eslint --ext .ts --fix",
