@@ -1,7 +1,0 @@
-.pnp.cjs
-.pnp.loader.mjs
-.yarn
-index.html
-.eslintrc.cjs
-tsconfig.json
-vite.config.js
