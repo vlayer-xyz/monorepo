@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { encodeAccount, encodeStateProof, parseNoirGetAccountArguments } from './accountOracles.js';
 import { type GetProofReturnType } from 'viem';
+import { ForeignCallOutput } from '@noir-lang/noir_js';
 import { readFile } from 'fs/promises';
 import { parse } from '../../util/json-bigint.js';
 import account from '../../../fixtures/account.json';
 import stateProof from '../../../fixtures/stateProof.json';
-import { serializeAccount, serializeStateProof } from '../../../test/helpers.js';
 import { ADDRESS } from '../../ethereum/recordingClient.test.js';
 
 describe('encodeAccount', async () => {
@@ -30,3 +30,25 @@ describe('encodeAccount', async () => {
     });
   });
 });
+
+interface Account {
+  nonce: string;
+  balance: string;
+  codeHash: string[];
+  storageRoot: string[];
+}
+
+interface AccountStateProof {
+  key: string[];
+  value: string[];
+  proof: string[];
+  depth: string;
+}
+
+function serializeAccount(account: Account): ForeignCallOutput[] {
+  return [account.nonce, account.balance, account.storageRoot, account.codeHash];
+}
+
+function serializeStateProof(account: AccountStateProof): ForeignCallOutput[] {
+  return [account.key, account.value, account.proof, account.depth];
+}

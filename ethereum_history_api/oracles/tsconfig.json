@@ -1,8 +1,8 @@
 {
   "extends": "../../tsconfig.common.json",
-  "include": ["src/**/*", "fixtures/*.json", "test/helpers.ts", "package.json"],
+  "include": ["src/**/*", "fixtures/*.json", "package.json"],
   "compilerOptions": {
-    "rootDirs": ["src", "test"],
+    "rootDirs": ["src"],
     "outDir": "dist"
   }
 }
