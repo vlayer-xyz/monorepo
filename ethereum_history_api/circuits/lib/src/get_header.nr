@@ -12,53 +12,61 @@ global TRANSACTIONS_ROOT_INDEX = 4;
 global RECEIPTS_ROOT_INDEX = 5;
 global BLOCK_NUMBER_INDEX = 8;
 
+struct BlockHeaderFromOracle {
+    partial: BlockHeaderPartial,
+    encoded: BlockHeaderEncoded
+}
+
 struct BlockHeaderPartial {
     state_root: [u8; HASH_LENGTH],
     transactions_root: [u8; HASH_LENGTH],
     receipts_root: [u8; HASH_LENGTH],
     number: Field,
-    hash: [u8; HASH_LENGTH],
+    hash: [u8; HASH_LENGTH]
+}
+
+struct BlockHeaderEncoded {
     encoded_len: Field,
     encoded: [u8; MAX_HEADER_RLP_SIZE]
 }
 
 #[oracle(get_header)]
-unconstrained fn get_header_oracle(_block_no: Field) -> BlockHeaderPartial {}
+unconstrained fn get_header_oracle(_block_no: Field) -> BlockHeaderFromOracle {}
 
-unconstrained fn get_header_unconstrained(block_no: Field) -> BlockHeaderPartial {
+unconstrained fn get_header_unconstrained(block_no: Field) -> BlockHeaderFromOracle {
     get_header_oracle(block_no)
 }
 
 pub(crate) fn verify_header(block_no: Field) -> BlockHeaderPartial {
     let header = get_header_unconstrained(block_no);
-    let rlp_list:RLP_List<HEADER_FIELDS_COUNT> = decode1(header.encoded);
+    let rlp_list:RLP_List<HEADER_FIELDS_COUNT> = decode1(header.encoded.encoded);
     assert(
         sub_array_equals(
-            header.state_root,
-            header.encoded,
+            header.partial.state_root,
+            header.encoded.encoded,
             rlp_list.offset[STATE_ROOT_INDEX]
         ), "state_root does not match"
     );
     assert(
         sub_array_equals(
-            header.transactions_root,
-            header.encoded,
+            header.partial.transactions_root,
+            header.encoded.encoded,
             rlp_list.offset[TRANSACTIONS_ROOT_INDEX]
         ), "transactions_root does not match"
     );
     assert(
         sub_array_equals(
-            header.receipts_root,
-            header.encoded,
+            header.partial.receipts_root,
+            header.encoded.encoded,
             rlp_list.offset[RECEIPTS_ROOT_INDEX]
         ), "receipts_root does not match"
     );
     assert(
         sub_array_equals(
-            keccak256(header.encoded, header.encoded_len as u32),
-            header.hash,
+            keccak256(header.encoded.encoded, header.encoded.encoded_len as u32),
+            header.partial.hash,
             0
         ), "hash does not match"
     );
-    header
+    header.partial
 }
