@@ -3352,9 +3352,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "noir-ethereum-api-oracles@workspace:ethereum_history_api/oracles"
   dependencies:
-    "@noir-lang/backend_barretenberg": "npm:0.23.0"
     "@noir-lang/noir_js": "npm:0.23.0"
-    "@noir-lang/noirc_abi": "npm:^0.23.0"
     "@types/json-bigint": "npm:^1"
     "@types/lodash.isequal": "npm:^4"
     "@types/node": "npm:^20.10.5"
