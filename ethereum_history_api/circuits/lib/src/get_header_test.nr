@@ -29,7 +29,7 @@ global hash = [
 
 global encoded_len: Field = 515;
 
-global blockPartial = BlockHeaderPartial { state_root, transactions_root, receipts_root, number, hash };
+global blockPartial = BlockHeaderPartial { number, hash, state_root, transactions_root, receipts_root };
 global blockEncoded = BlockHeaderEncoded { encoded, encoded_len };
 
 #[test]

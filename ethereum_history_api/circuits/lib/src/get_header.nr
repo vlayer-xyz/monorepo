@@ -19,11 +19,11 @@ struct BlockHeaderFromOracle {
 }
 
 struct BlockHeaderPartial {
+    number: Field,
+    hash: Bytes32,
     state_root: Bytes32,
     transactions_root: Bytes32,
     receipts_root: Bytes32,
-    number: Field,
-    hash: Bytes32
 }
 
 struct BlockHeaderEncoded {
