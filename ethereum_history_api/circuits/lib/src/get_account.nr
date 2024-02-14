@@ -10,7 +10,7 @@ global PROOF_LEN = 4256;
 struct Account {
     nonce: u64,
     balance: u120,
-    state_root: [u8; HASH_LENGTH],
+    storage_root: [u8; HASH_LENGTH],
     code_hash: [u8; HASH_LENGTH],
 }
 
@@ -36,7 +36,7 @@ unconstrained fn get_account_unconstrained(
 global ACCOUNT_FIELDS_COUNT = 4;
 global NONCE_INDEX  = 0;
 global BALANCE_INDEX = 1;
-global STATE_ROOT_INDEX = 2;
+global STORAGE_ROOT_INDEX = 2;
 global CODE_HASH_INDEX = 3;
 
 pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_STATE_LENGTH], account: Account) {
@@ -63,11 +63,11 @@ pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_ST
         balance_length as u64
     );
 
-    assert(account_rlp.length[STATE_ROOT_INDEX] == HASH_LENGTH, "State root length mismatch");
+    assert(account_rlp.length[STORAGE_ROOT_INDEX] == HASH_LENGTH, "Storage root length mismatch");
     assert_sub_array_equals(
-        account.state_root,
+        account.storage_root,
         account_rlp_rifht_padded,
-        account_rlp.offset[STATE_ROOT_INDEX],
+        account_rlp.offset[STORAGE_ROOT_INDEX],
         HASH_LENGTH as u64
     );
 

@@ -50,10 +50,10 @@ export function parseNoirGetAccountArguments(args: NoirArguments): {
 export function encodeAccount(ethProof: GetProofReturnType): ForeignCallOutput[] {
   const nonce = encodeU64(ethProof.nonce);
   const balance = encodeU120(ethProof.balance);
-  const storageHash = encodeHex(ethProof.storageHash);
+  const storageRoot = encodeHex(ethProof.storageHash);
   const codeHash = encodeHex(ethProof.codeHash);
 
-  return [nonce, balance, storageHash, codeHash];
+  return [nonce, balance, storageRoot, codeHash];
 }
 
 export function encodeStateProof(ethProof: GetProofReturnType): ForeignCallOutput[] {
