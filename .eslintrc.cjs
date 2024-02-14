@@ -1,12 +1,13 @@
 module.exports = {
+  root: true,
+  ignorePatterns: ['**/.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
-    project: 'ethereum_history_api/tests/tsconfig.json'
+    project: 'ethereum_history_api/oracles/tsconfig.json'
   },
   env: {
-    browser: true,
     es2021: true
   },
   extends: ['plugin:@typescript-eslint/recommended', 'prettier', 'plugin:prettier/recommended'],
