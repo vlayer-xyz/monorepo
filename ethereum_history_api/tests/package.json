@@ -6,8 +6,8 @@
     "test:e2e": "vitest run --config vitest.e2e.config.ts",
     "build": "tsc",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint src --ext .ts",
-    "lint:fix": "eslint src --ext .ts --fix",
+    "lint": "eslint --ext .ts",
+    "lint:fix": "eslint --ext .ts --fix",
     "format": "prettier --write src",
     "format:ci": "prettier --check src"
   },

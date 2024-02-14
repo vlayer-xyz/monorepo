@@ -3,7 +3,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
-    project: './tsconfig.json'
+    project: 'ethereum_history_api/tests/tsconfig.json'
   },
   env: {
     browser: true,
@@ -17,17 +17,6 @@ module.exports = {
       {
         assertionStyle: 'as',
         objectLiteralTypeAssertions: 'allow'
-      }
-    ],
-    'no-restricted-imports': [
-      'error',
-      {
-        paths: [
-          {
-            name: 'json-bigint',
-            message: 'Use  ./src/utils/json-bigint instead'
-          }
-        ]
       }
     ]
   },
