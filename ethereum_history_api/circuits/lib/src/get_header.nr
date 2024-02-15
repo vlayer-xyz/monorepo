@@ -13,11 +13,6 @@ global TRANSACTIONS_ROOT_INDEX = 4;
 global RECEIPTS_ROOT_INDEX = 5;
 global BLOCK_NUMBER_INDEX = 8;
 
-struct BlockHeaderFromOracle {
-    partial: BlockHeaderPartial,
-    encoded: BlockHeaderEncoded
-}
-
 struct BlockHeaderPartial {
     number: Field,
     hash: Bytes32,
@@ -32,42 +27,42 @@ struct BlockHeaderEncoded {
 }
 
 #[oracle(get_header)]
-unconstrained fn get_header_oracle(_block_no: Field) -> BlockHeaderFromOracle {}
+unconstrained fn get_header_oracle(_block_no: Field) -> (BlockHeaderPartial, BlockHeaderEncoded) {}
 
-unconstrained fn get_header_unconstrained(block_no: Field) -> BlockHeaderFromOracle {
+unconstrained fn get_header_unconstrained(block_no: Field) -> (BlockHeaderPartial, BlockHeaderEncoded) {
     get_header_oracle(block_no)
 }
 
 pub(crate) fn verify_header(block_no: Field) -> BlockHeaderPartial {
-    let header = get_header_unconstrained(block_no);
-    let rlp_list:RLP_List<HEADER_FIELDS_COUNT> = decode1(header.encoded.data);
+    let (headerPartial, headerEncoded) = get_header_unconstrained(block_no);
+    let rlp_list:RLP_List<HEADER_FIELDS_COUNT> = decode1(headerEncoded.data);
     assert(
         sub_array_equals(
-            header.partial.state_root,
-            header.encoded.data,
+            headerPartial.state_root,
+            headerEncoded.data,
             rlp_list.offset[STATE_ROOT_INDEX]
         ), "state_root does not match"
     );
     assert(
         sub_array_equals(
-            header.partial.transactions_root,
-            header.encoded.data,
+            headerPartial.transactions_root,
+            headerEncoded.data,
             rlp_list.offset[TRANSACTIONS_ROOT_INDEX]
         ), "transactions_root does not match"
     );
     assert(
         sub_array_equals(
-            header.partial.receipts_root,
-            header.encoded.data,
+            headerPartial.receipts_root,
+            headerEncoded.data,
             rlp_list.offset[RECEIPTS_ROOT_INDEX]
         ), "receipts_root does not match"
     );
     assert(
         sub_array_equals(
-            keccak256(header.encoded.data, header.encoded.length as u32),
-            header.partial.hash,
+            keccak256(headerEncoded.data, headerEncoded.length as u32),
+            headerPartial.hash,
             0
         ), "block hash does not match"
     );
-    header.partial
+    headerPartial
 }
