@@ -27,8 +27,8 @@ struct BlockHeaderPartial {
 }
 
 struct BlockHeaderEncoded {
-    encoded_len: Field,
-    encoded: [u8; MAX_HEADER_RLP_SIZE]
+    length: Field,
+    data: [u8; MAX_HEADER_RLP_SIZE]
 }
 
 #[oracle(get_header)]
@@ -40,34 +40,34 @@ unconstrained fn get_header_unconstrained(block_no: Field) -> BlockHeaderFromOra
 
 pub(crate) fn verify_header(block_no: Field) -> BlockHeaderPartial {
     let header = get_header_unconstrained(block_no);
-    let rlp_list:RLP_List<HEADER_FIELDS_COUNT> = decode1(header.encoded.encoded);
+    let rlp_list:RLP_List<HEADER_FIELDS_COUNT> = decode1(header.encoded.data);
     assert(
         sub_array_equals(
             header.partial.state_root,
-            header.encoded.encoded,
+            header.encoded.data,
             rlp_list.offset[STATE_ROOT_INDEX]
         ), "state_root does not match"
     );
     assert(
         sub_array_equals(
             header.partial.transactions_root,
-            header.encoded.encoded,
+            header.encoded.data,
             rlp_list.offset[TRANSACTIONS_ROOT_INDEX]
         ), "transactions_root does not match"
     );
     assert(
         sub_array_equals(
             header.partial.receipts_root,
-            header.encoded.encoded,
+            header.encoded.data,
             rlp_list.offset[RECEIPTS_ROOT_INDEX]
         ), "receipts_root does not match"
     );
     assert(
         sub_array_equals(
-            keccak256(header.encoded.encoded, header.encoded.encoded_len as u32),
+            keccak256(header.encoded.data, header.encoded.length as u32),
             header.partial.hash,
             0
-        ), "hash does not match"
+        ), "block hash does not match"
     );
     header.partial
 }
