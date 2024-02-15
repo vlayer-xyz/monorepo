@@ -21,45 +21,45 @@ struct BlockHeaderPartial {
     receipts_root: Bytes32,
 }
 
-struct BlockHeaderEncoded {
+struct BlockHeaderRlp {
     length: Field,
     data: [u8; MAX_HEADER_RLP_SIZE]
 }
 
 #[oracle(get_header)]
-unconstrained fn get_header_oracle(_block_no: Field) -> (BlockHeaderPartial, BlockHeaderEncoded) {}
+unconstrained fn get_header_oracle(_block_no: Field) -> (BlockHeaderPartial, BlockHeaderRlp) {}
 
-unconstrained fn get_header_unconstrained(block_no: Field) -> (BlockHeaderPartial, BlockHeaderEncoded) {
+unconstrained fn get_header_unconstrained(block_no: Field) -> (BlockHeaderPartial, BlockHeaderRlp) {
     get_header_oracle(block_no)
 }
 
 pub(crate) fn verify_header(block_no: Field) -> BlockHeaderPartial {
-    let (block_header_partial, block_header_encoded) = get_header_unconstrained(block_no);
-    let rlp_list:RLP_List<HEADER_FIELDS_COUNT> = decode1(block_header_encoded.data);
+    let (block_header_partial, block_header_rlp) = get_header_unconstrained(block_no);
+    let rlp_list:RLP_List<HEADER_FIELDS_COUNT> = decode1(block_header_rlp.data);
     assert(
         sub_array_equals(
             block_header_partial.state_root,
-            block_header_encoded.data,
+            block_header_rlp.data,
             rlp_list.offset[STATE_ROOT_INDEX]
         ), "state_root does not match"
     );
     assert(
         sub_array_equals(
             block_header_partial.transactions_root,
-            block_header_encoded.data,
+            block_header_rlp.data,
             rlp_list.offset[TRANSACTIONS_ROOT_INDEX]
         ), "transactions_root does not match"
     );
     assert(
         sub_array_equals(
             block_header_partial.receipts_root,
-            block_header_encoded.data,
+            block_header_rlp.data,
             rlp_list.offset[RECEIPTS_ROOT_INDEX]
         ), "receipts_root does not match"
     );
     assert(
         sub_array_equals(
-            keccak256(block_header_encoded.data, block_header_encoded.length as u32),
+            keccak256(block_header_rlp.data, block_header_rlp.length as u32),
             block_header_partial.hash,
             0
         ), "block hash does not match"

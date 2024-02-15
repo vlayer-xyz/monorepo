@@ -13,9 +13,9 @@ export const getHeaderOracle = async (client: PublicClient, args: NoirArguments)
   const blockHeader: BlockHeader = await getBlock(client, blockNumber);
 
   const partial = encodeBlockHeaderPartial(blockHeader);
-  const encoded = encodeBlockHeaderEncoded(blockHeader);
+  const rlp = encodeBlockHeaderRlp(blockHeader);
 
-  return [...partial, ...encoded];
+  return [...partial, ...rlp];
 };
 
 export function parseNoirGetHeaderArguments(args: NoirArguments): bigint {
@@ -31,7 +31,7 @@ export async function getBlock(client: PublicClient, blockNumber: bigint): Promi
 }
 
 export function encodeBlockHeader(header: BlockHeader): ForeignCallOutput[] {
-  return [...encodeBlockHeaderPartial(header), ...encodeBlockHeaderEncoded(header)];
+  return [...encodeBlockHeaderPartial(header), ...encodeBlockHeaderRlp(header)];
 }
 
 function encodeBlockHeaderPartial(header: BlockHeader): ForeignCallOutput[] {
@@ -45,11 +45,11 @@ function encodeBlockHeaderPartial(header: BlockHeader): ForeignCallOutput[] {
   return [number, hash, stateRoot, transactionsRoot, receiptsRoot];
 }
 
-function encodeBlockHeaderEncoded(header: BlockHeader): ForeignCallOutput[] {
+function encodeBlockHeaderRlp(header: BlockHeader): ForeignCallOutput[] {
   const rlpHex = headerToRlp(header);
   const rlpBytes = encodeHex(rlpHex);
 
-  const encodedLen = encodeField(rlpBytes.length);
-  const encoded = padArray(rlpBytes, MAX_HEADER_RLP_SIZE, '0x');
-  return [encodedLen, encoded];
+  const encodedRlpLen = encodeField(rlpBytes.length);
+  const encodedRlp = padArray(rlpBytes, MAX_HEADER_RLP_SIZE, '0x');
+  return [encodedRlpLen, encodedRlp];
 }
