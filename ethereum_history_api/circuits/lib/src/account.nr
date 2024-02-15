@@ -1,9 +1,8 @@
 use dep::proof::{rlp::{RLP_List, decode1_small_lis}, MAX_ACCOUNT_STATE_LENGTH, KEY_LENGTH, TrieProof, byte_value};
 use dep::std::println;
-use crate::arrays::{assert_sub_array_equals};
 use dep::u2b::{u64_to_u8, u120_to_u8};
+use crate::misc::arrays::{alter_array,assert_sub_array_equals};
 use crate::HASH_LENGTH;
-use crate::arrays::alter_array;
 
 global PROOF_LEN = 4256;
 

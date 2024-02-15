@@ -1,6 +1,6 @@
-use crate::get_account::{Account, assert_account_equals, MAX_ACCOUNT_STATE_LENGTH};
+use crate::account::{Account, assert_account_equals, MAX_ACCOUNT_STATE_LENGTH};
 use crate::HASH_LENGTH;
-use crate::arrays::alter_array;
+use crate::misc::arrays::alter_array;
 
 global rlp_encoded_left_padded_account: [u8; MAX_ACCOUNT_STATE_LENGTH] = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

@@ -1,14 +1,12 @@
-mod get_account;
-mod get_account_test;
-mod get_header;
-mod get_header_test;
-mod arrays;
-mod arrays_test;
-mod types;
+mod account;
+mod account_test;
+mod header;
+mod header_test;
+mod misc;
 
 use dep::proof;
-use crate::get_account::{verify_account, Account};
-use crate::get_header::{get_header, BlockHeaderPartial};
+use crate::account::{verify_account, Account};
+use crate::header::{get_header, BlockHeaderPartial};
 
 global HASH_LENGTH = 32;
 

@@ -1,4 +1,4 @@
-use crate::arrays::{assert_sub_array_equals, sub_array_equals};
+use crate::misc::arrays::{assert_sub_array_equals, sub_array_equals};
 
 #[test]
 fn test_assert_sub_array_equals() {
@@ -34,7 +34,6 @@ fn test_assert_sub_array_equals_array_out_of_bound() {
     let array: [Field; 5] = [0, 0, 1, 2, 0];
     assert_sub_array_equals(value, array, 2, 3);
 }
-
 
 #[test]
 fn test_sub_array_equals() {
