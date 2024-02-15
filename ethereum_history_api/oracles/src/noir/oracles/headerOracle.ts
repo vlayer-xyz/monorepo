@@ -11,7 +11,11 @@ export const MAX_HEADER_RLP_SIZE = 708;
 export const getHeaderOracle = async (client: PublicClient, args: NoirArguments): Promise<ForeignCallOutput[]> => {
   const blockNumber: bigint = parseNoirGetHeaderArguments(args);
   const blockHeader: BlockHeader = await getBlock(client, blockNumber);
-  return encodeBlockHeaderPartial(blockHeader);
+
+  const partial = encodeBlockHeaderPartial(blockHeader);
+  const rlp = encodeBlockHeaderRlp(blockHeader);
+
+  return [...partial, ...rlp];
 };
 
 export function parseNoirGetHeaderArguments(args: NoirArguments): bigint {
@@ -26,15 +30,26 @@ export async function getBlock(client: PublicClient, blockNumber: bigint): Promi
   return blockToHeader(block);
 }
 
-export function encodeBlockHeaderPartial(header: BlockHeader): ForeignCallOutput[] {
+export function encodeBlockHeader(header: BlockHeader): ForeignCallOutput[] {
+  return [...encodeBlockHeaderPartial(header), ...encodeBlockHeaderRlp(header)];
+}
+
+function encodeBlockHeaderPartial(header: BlockHeader): ForeignCallOutput[] {
+  const rlpHex = headerToRlp(header);
+
+  const number = header.number;
+  const hash = encodeHex(keccak256(hexToBytes(rlpHex)));
   const stateRoot = encodeHex(header.stateRoot);
   const transactionsRoot = encodeHex(header.transactionsRoot);
   const receiptsRoot = encodeHex(header.receiptsRoot);
-  const number = header.number;
+  return [number, hash, stateRoot, transactionsRoot, receiptsRoot];
+}
+
+function encodeBlockHeaderRlp(header: BlockHeader): ForeignCallOutput[] {
   const rlpHex = headerToRlp(header);
   const rlpBytes = encodeHex(rlpHex);
-  const encodedLen = encodeField(rlpBytes.length);
-  const encoded = padArray(rlpBytes, MAX_HEADER_RLP_SIZE, '0x');
-  const hash = encodeHex(keccak256(hexToBytes(rlpHex)));
-  return [stateRoot, transactionsRoot, receiptsRoot, number, hash, encodedLen, encoded];
+
+  const encodedRlpLen = encodeField(rlpBytes.length);
+  const encodedRlp = padArray(rlpBytes, MAX_HEADER_RLP_SIZE, '0x');
+  return [encodedRlpLen, encodedRlp];
 }
