@@ -1,4 +1,5 @@
-use crate::get_header::{verify_header, BlockHeaderPartial, BlockHeaderRlp};
+use dep::std::test::OracleMock;
+use crate::get_header::{get_header, verify_header, BlockHeaderPartial, BlockHeaderRlp};
 use crate::arrays::alter_array;
 
 global number: Field = 7;
@@ -30,6 +31,17 @@ global encoded_data = [
 
 global block_header_partial = BlockHeaderPartial { number, hash, state_root, transactions_root, receipts_root };
 global block_header_rlp = BlockHeaderRlp { length: encoded_length, data: encoded_data};
+
+#[test]
+fn test_get_header_success() {
+    let _ = OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp));
+    let header = get_header(0);
+    assert_eq(block_header_partial.number, header.number);
+    assert_eq(block_header_partial.hash, header.hash);
+    assert_eq(block_header_partial.state_root, header.state_root);
+    assert_eq(block_header_partial.transactions_root, header.transactions_root);
+    assert_eq(block_header_partial.receipts_root, header.receipts_root);
+}
 
 #[test]
 fn test_verify_header_success() {
