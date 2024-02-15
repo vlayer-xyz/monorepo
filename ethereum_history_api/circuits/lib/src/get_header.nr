@@ -34,35 +34,35 @@ unconstrained fn get_header_unconstrained(block_no: Field) -> (BlockHeaderPartia
 }
 
 pub(crate) fn verify_header(block_no: Field) -> BlockHeaderPartial {
-    let (headerPartial, headerEncoded) = get_header_unconstrained(block_no);
-    let rlp_list:RLP_List<HEADER_FIELDS_COUNT> = decode1(headerEncoded.data);
+    let (block_header_partial, block_header_encoded) = get_header_unconstrained(block_no);
+    let rlp_list:RLP_List<HEADER_FIELDS_COUNT> = decode1(block_header_encoded.data);
     assert(
         sub_array_equals(
-            headerPartial.state_root,
-            headerEncoded.data,
+            block_header_partial.state_root,
+            block_header_encoded.data,
             rlp_list.offset[STATE_ROOT_INDEX]
         ), "state_root does not match"
     );
     assert(
         sub_array_equals(
-            headerPartial.transactions_root,
-            headerEncoded.data,
+            block_header_partial.transactions_root,
+            block_header_encoded.data,
             rlp_list.offset[TRANSACTIONS_ROOT_INDEX]
         ), "transactions_root does not match"
     );
     assert(
         sub_array_equals(
-            headerPartial.receipts_root,
-            headerEncoded.data,
+            block_header_partial.receipts_root,
+            block_header_encoded.data,
             rlp_list.offset[RECEIPTS_ROOT_INDEX]
         ), "receipts_root does not match"
     );
     assert(
         sub_array_equals(
-            keccak256(headerEncoded.data, headerEncoded.length as u32),
-            headerPartial.hash,
+            keccak256(block_header_encoded.data, block_header_encoded.length as u32),
+            block_header_partial.hash,
             0
         ), "block hash does not match"
     );
-    headerPartial
+    block_header_partial
 }
