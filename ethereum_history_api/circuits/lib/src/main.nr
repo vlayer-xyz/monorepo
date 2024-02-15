@@ -8,7 +8,7 @@ mod types;
 
 use dep::proof;
 use crate::get_account::{verify_account, Account};
-use crate::get_header::{verify_header, BlockHeaderPartial};
+use crate::get_header::{get_header, BlockHeaderPartial};
 
 global HASH_LENGTH = 32;
 
@@ -19,6 +19,6 @@ fn main(
     state_root: pub [u8; HASH_LENGTH]
 ) -> pub Account {
     let account = verify_account(block_no, address, state_root);
-    verify_header(block_no);
+    let _ = get_header(block_no);
     account
 }
