@@ -1,6 +1,7 @@
 module.exports = {
   parserOptions: {
     sourceType: 'module',
-    project: './tsconfig.json'
+    project: './tsconfig.json',
+    tsconfigRootDir: __dirname
   }
 };

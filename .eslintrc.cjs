@@ -2,11 +2,6 @@ module.exports = {
   root: true,
   ignorePatterns: ['**/.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: './tsconfig.json'
-  },
   env: {
     es2021: true
   },
@@ -18,17 +13,6 @@ module.exports = {
       {
         assertionStyle: 'as',
         objectLiteralTypeAssertions: 'allow'
-      }
-    ],
-    'no-restricted-imports': [
-      'error',
-      {
-        paths: [
-          {
-            name: 'json-bigint',
-            message: 'Use  ./src/utils/json-bigint instead'
-          }
-        ]
       }
     ]
   },
