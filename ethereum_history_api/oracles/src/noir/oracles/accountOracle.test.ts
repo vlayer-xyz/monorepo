@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { encodeAccount, encodeStateProof, parseNoirGetAccountArguments } from './accountOracles.js';
 import { type GetProofReturnType } from 'viem';
+import { ForeignCallOutput } from '@noir-lang/noir_js';
 import { readFile } from 'fs/promises';
 import { parse } from '../../util/json-bigint.js';
-import account from '../../../test/fixtures/account.json';
-import stateProof from '../../../test/fixtures/stateProof.json';
-import { serializeAccount, serializeStateProof } from '../../../test/helpers.js';
+import account from '../../../fixtures/account.json';
+import stateProof from '../../../fixtures/stateProof.json';
 import { ADDRESS } from '../../ethereum/recordingClient.test.js';
 
 describe('encodeAccount', async () => {
   it('encode account', async () => {
-    const proof: GetProofReturnType = parse(await readFile('./test/fixtures/eth_getProof_response.json', 'utf-8'));
+    const proof: GetProofReturnType = parse(await readFile('./fixtures/eth_getProof_response.json', 'utf-8'));
 
     expect(encodeAccount(proof)).toStrictEqual(serializeAccount(account));
     expect(encodeStateProof(proof)).toStrictEqual(serializeStateProof(stateProof));
@@ -30,3 +30,25 @@ describe('encodeAccount', async () => {
     });
   });
 });
+
+interface Account {
+  nonce: string;
+  balance: string;
+  codeHash: string[];
+  storageRoot: string[];
+}
+
+interface AccountStateProof {
+  key: string[];
+  value: string[];
+  proof: string[];
+  depth: string;
+}
+
+function serializeAccount(account: Account): ForeignCallOutput[] {
+  return [account.nonce, account.balance, account.storageRoot, account.codeHash];
+}
+
+function serializeStateProof(account: AccountStateProof): ForeignCallOutput[] {
+  return [account.key, account.value, account.proof, account.depth];
+}

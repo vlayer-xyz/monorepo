@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { copy, updateNestedField, incHexStr, assert, verifyStorageProofInSolidity } from 'noir-ethereum-api-oracles';
+import { copy, updateNestedField, incHexStr, assert } from 'noir-ethereum-api-oracles';
 import { abiEncode, InputMap, WitnessMap } from '@noir-lang/noirc_abi';
 
 import { Account, privateKeyToAccount } from 'viem/accounts';
@@ -7,6 +7,7 @@ import ultraVerifier from '../../contracts/out/UltraVerifier.sol/UltraVerifier.j
 import { Address, Hex } from 'viem';
 import { createAnvilClient, AnvilClient } from './ethereum/anvilClient.js';
 import { circuit, readInputMap, readProof, readWitnessMap } from './main.js';
+import { verifyStorageProofInSolidity } from './verifier.js';
 
 const PROOF_PATH = '../../proofs/ethereum_history_api.proof';
 const INPUT_MAP_PATH = '../circuits/lib/Verifier.toml';
