@@ -4,7 +4,7 @@ use dep::std::hash::keccak256;
 use dep::std::wrapping_add;
 use crate::arrays::{sub_array_equals, alter_array};
 use crate::HASH_LENGTH;
-use crate::types::{Address, Bytes32};
+use crate::types::Bytes32;
 
 global MAX_HEADER_RLP_SIZE = 708;
 global HEADER_FIELDS_COUNT = 17;
