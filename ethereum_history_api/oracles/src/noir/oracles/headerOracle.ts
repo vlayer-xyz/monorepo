@@ -27,14 +27,15 @@ export async function getBlock(client: PublicClient, blockNumber: bigint): Promi
 }
 
 export function encodeBlockHeaderPartial(header: BlockHeader): ForeignCallOutput[] {
+  const rlpHex = headerToRlp(header);
+  const rlpBytes = encodeHex(rlpHex);
+
+  const number = header.number;
+  const hash = encodeHex(keccak256(hexToBytes(rlpHex)));
   const stateRoot = encodeHex(header.stateRoot);
   const transactionsRoot = encodeHex(header.transactionsRoot);
   const receiptsRoot = encodeHex(header.receiptsRoot);
-  const number = header.number;
-  const rlpHex = headerToRlp(header);
-  const rlpBytes = encodeHex(rlpHex);
   const encodedLen = encodeField(rlpBytes.length);
   const encoded = padArray(rlpBytes, MAX_HEADER_RLP_SIZE, '0x');
-  const hash = encodeHex(keccak256(hexToBytes(rlpHex)));
   return [number, hash, stateRoot, transactionsRoot, receiptsRoot, encodedLen, encoded];
 }
