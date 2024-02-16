@@ -21,6 +21,12 @@ struct BlockHeaderPartial {
     receipts_root: Bytes32,
 }
 
+pub fn get_header(block_number: Field) -> BlockHeaderPartial {
+    let (block_header_partial, block_header_rlp) = get_header_unconstrained(block_number);
+    verify_header(block_header_partial, block_header_rlp);
+    block_header_partial
+}
+
 struct BlockHeaderRlp {
     length: Field,
     data: [u8; MAX_HEADER_RLP_SIZE]
@@ -33,9 +39,15 @@ unconstrained fn get_header_unconstrained(block_no: Field) -> (BlockHeaderPartia
     get_header_oracle(block_no)
 }
 
-pub(crate) fn verify_header(block_no: Field) -> BlockHeaderPartial {
-    let (block_header_partial, block_header_rlp) = get_header_unconstrained(block_no);
+pub(crate) fn verify_header(block_header_partial: BlockHeaderPartial, block_header_rlp: BlockHeaderRlp) {
     let rlp_list:RLP_List<HEADER_FIELDS_COUNT> = decode1(block_header_rlp.data);
+    assert(
+        sub_array_equals(
+            keccak256(block_header_rlp.data, block_header_rlp.length as u32),
+            block_header_partial.hash,
+            0
+        ), "block hash does not match"
+    );
     assert(
         sub_array_equals(
             block_header_partial.state_root,
@@ -57,12 +69,4 @@ pub(crate) fn verify_header(block_no: Field) -> BlockHeaderPartial {
             rlp_list.offset[RECEIPTS_ROOT_INDEX]
         ), "receipts_root does not match"
     );
-    assert(
-        sub_array_equals(
-            keccak256(block_header_rlp.data, block_header_rlp.length as u32),
-            block_header_partial.hash,
-            0
-        ), "block hash does not match"
-    );
-    block_header_partial
 }
