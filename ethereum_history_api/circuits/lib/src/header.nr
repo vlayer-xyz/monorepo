@@ -1,8 +1,9 @@
-use dep::proof::rlp::{decode1, RLP_List};
+use dep::proof::{rlp::{decode1, RLP_List}, byte_value};
 use dep::std::test::OracleMock;
 use dep::std::hash::keccak256;
 use dep::std::wrapping_add;
-use crate::misc::arrays::{sub_array_equals, alter_array};
+use crate::misc::arrays::{sub_array_equals, alter_array, sub_array_equals_up_to_length};
+use dep::u2b::{u64_to_u8};
 use crate::HASH_LENGTH;
 use crate::misc::types::Bytes32;
 
