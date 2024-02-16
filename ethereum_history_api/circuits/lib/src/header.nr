@@ -3,7 +3,7 @@ use dep::std::test::OracleMock;
 use dep::std::hash::keccak256;
 use dep::std::wrapping_add;
 use crate::misc::arrays::{sub_array_equals, alter_array, sub_array_equals_up_to_length};
-use dep::u2b::{u32_to_u8};
+use dep::u2b::{u40_to_u8};
 use crate::HASH_LENGTH;
 use crate::misc::types::Bytes32;
 
@@ -43,7 +43,8 @@ unconstrained fn get_header_unconstrained(block_no: Field) -> (BlockHeaderPartia
 pub(crate) fn verify_header(block_header_partial: BlockHeaderPartial, block_header_rlp: BlockHeaderRlp) {
     let rlp_list:RLP_List<HEADER_FIELDS_COUNT> = decode1(block_header_rlp.data);
 
-    let block_number = u32_to_u8(block_header_partial.number as u32);
+    // We use u40 for block number because even if block time is 1s - it would take 34865 years to reach u40
+    let block_number = u40_to_u8(block_header_partial.number as u40);
     let (block_number, block_number_length) = byte_value(block_number);
 
     assert(rlp_list.length[BLOCK_NUMBER_INDEX] == block_number_length, "block number length does not match");
