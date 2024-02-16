@@ -28,7 +28,7 @@ jobs:
           toolchain: 0.23.0
 
       - name: Run nargo codegen-verifier
-        run: nargo codegen-verifier --package ethereum_history_api
+        run: nargo codegen-verifier --package get_account
 
       - name: Run Forge build
         run: |
