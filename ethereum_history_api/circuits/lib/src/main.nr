@@ -3,6 +3,7 @@ mod account_test;
 mod header;
 mod header_test;
 mod misc;
+mod fixtures;
 
 use dep::proof;
 use crate::account::{verify_account, Account};
@@ -17,6 +18,6 @@ fn main(
     state_root: pub [u8; HASH_LENGTH]
 ) -> pub Account {
     let account = verify_account(block_no, address, state_root);
-    get_header(block_no);
+    assert(get_header(block_no).state_root == state_root, "State root does not match");
     account
 }
