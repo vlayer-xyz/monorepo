@@ -19,6 +19,6 @@ fn main(
     state_root: pub [u8; HASH_LENGTH]
 ) -> pub Account {
     let account = verify_account(block_no, address, state_root);
-    let _ = get_header(block_no);
+    get_header(block_no);
     account
 }
