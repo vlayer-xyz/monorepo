@@ -2,9 +2,9 @@ use dep::proof::rlp::{decode1, RLP_List};
 use dep::std::test::OracleMock;
 use dep::std::hash::keccak256;
 use dep::std::wrapping_add;
-use crate::arrays::{sub_array_equals, alter_array};
+use crate::misc::arrays::{sub_array_equals, alter_array};
 use crate::HASH_LENGTH;
-use crate::types::Bytes32;
+use crate::misc::types::Bytes32;
 
 global MAX_HEADER_RLP_SIZE = 708;
 global HEADER_FIELDS_COUNT = 17;

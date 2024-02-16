@@ -1,6 +1,6 @@
 use dep::std::test::OracleMock;
-use crate::get_header::{get_header, verify_header, BlockHeaderPartial, BlockHeaderRlp};
-use crate::arrays::alter_array;
+use crate::header::{get_header, verify_header, BlockHeaderPartial, BlockHeaderRlp};
+use crate::misc::arrays::alter_array;
 
 global number: Field = 7;
 
