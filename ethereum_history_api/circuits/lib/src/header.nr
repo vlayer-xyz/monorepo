@@ -42,6 +42,19 @@ unconstrained fn get_header_unconstrained(block_no: Field) -> (BlockHeaderPartia
 
 pub(crate) fn verify_header(block_header_partial: BlockHeaderPartial, block_header_rlp: BlockHeaderRlp) {
     let rlp_list:RLP_List<HEADER_FIELDS_COUNT> = decode1(block_header_rlp.data);
+
+    let block_number = u64_to_u8(block_header_partial.number as u64);
+    let (block_number, block_number_length) = byte_value(block_number);
+
+    assert(rlp_list.length[BLOCK_NUMBER_INDEX] == block_number_length, "block number length does not match");
+    assert(
+        sub_array_equals_up_to_length(
+            block_number,
+            block_header_rlp.data,
+            rlp_list.offset[BLOCK_NUMBER_INDEX],
+            block_number_length as u64
+        ), "block number does not match"
+    );
     assert(
         sub_array_equals(
             keccak256(block_header_rlp.data, block_header_rlp.length as u32),
