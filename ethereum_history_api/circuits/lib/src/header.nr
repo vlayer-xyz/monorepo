@@ -4,7 +4,6 @@ use dep::std::hash::keccak256;
 use dep::std::wrapping_add;
 use crate::misc::arrays::{sub_array_equals, alter_array, sub_array_equals_up_to_length};
 use dep::u2b::{u40_to_u8};
-use crate::HASH_LENGTH;
 use crate::misc::types::Bytes32;
 
 global MAX_HEADER_RLP_SIZE = 708;

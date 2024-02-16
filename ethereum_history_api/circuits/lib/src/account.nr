@@ -3,14 +3,15 @@ use dep::std::println;
 use dep::u2b::{u64_to_u8, u120_to_u8};
 use crate::misc::arrays::{alter_array, sub_array_equals_up_to_length};
 use crate::HASH_LENGTH;
+use crate::misc::types::Bytes32;
 
 global PROOF_LEN = 4256;
 
 struct Account {
     nonce: u64,
     balance: u120,
-    storage_root: [u8; HASH_LENGTH],
-    code_hash: [u8; HASH_LENGTH],
+    storage_root: Bytes32,
+    code_hash: Bytes32,
 }
 
 struct StateProof {
@@ -97,7 +98,7 @@ fn assert_account_proof(account_state_proof: StateProof, state_root: [u8; KEY_LE
     assert(trie_proof.verify_state_root(state_root), "TrieProof: Invalid state root");
 }
 
-pub(crate) fn verify_account(block_no: Field, address: [u8; 20], state_root: [u8; KEY_LENGTH]) -> Account {
+pub fn verify_account(block_no: Field, address: [u8; 20], state_root: [u8; KEY_LENGTH]) -> Account {
     let (account, state_proof) = get_account_unconstrained(block_no, address);
 
     assert_account_equals(state_proof.value, account);
