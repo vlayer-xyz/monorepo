@@ -17,6 +17,6 @@ fn main(
     state_root: pub [u8; HASH_LENGTH]
 ) -> pub Account {
     let account = verify_account(block_no, address, state_root);
-    get_header(block_no);
+    assert(get_header(block_no).state_root == state_root, "State root does not match");
     account
 }
