@@ -3,6 +3,7 @@ mod account_test;
 mod header;
 mod header_test;
 mod misc;
+mod fixtures;
 
 use dep::proof;
 use crate::account::{verify_account, Account};
