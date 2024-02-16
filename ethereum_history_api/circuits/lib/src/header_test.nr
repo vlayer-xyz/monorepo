@@ -2,7 +2,7 @@ use dep::std::test::OracleMock;
 use crate::header::{get_header, verify_header, BlockHeaderPartial, BlockHeaderRlp};
 use crate::misc::arrays::alter_array;
 
-global number: Field = 7;
+global number: Field = 1;
 
 global hash = [
     106, 37, 28, 124, 60, 93, 202, 123,
@@ -45,6 +45,20 @@ fn test_get_header_success() {
 
 #[test]
 fn test_verify_header_success() {
+    verify_header(block_header_partial, block_header_rlp);
+}
+
+#[test(should_fail_with = "block number does not match")]
+fn test_verify_header_invalid_block_number() {
+    let wrong_number = 2;
+    let block_header_partial = BlockHeaderPartial { number: wrong_number, hash, state_root, transactions_root, receipts_root };
+    verify_header(block_header_partial, block_header_rlp);
+}
+
+#[test(should_fail_with = "block number length does not match")]
+fn test_verify_header_invalid_block_number_length() {
+    let wrong_number_length = 0;
+    let block_header_partial = BlockHeaderPartial { number: wrong_number_length, hash, state_root, transactions_root, receipts_root };
     verify_header(block_header_partial, block_header_rlp);
 }
 
