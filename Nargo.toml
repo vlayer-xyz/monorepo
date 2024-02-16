@@ -3,4 +3,4 @@ members = [
   "ethereum_history_api/circuits/lib",
   "ethereum_history_api/circuits/get_account"
 ]
-default-member = "ethereum_history_api/circuits/get_account"
+default-member = "ethereum_history_api/circuits/lib"
