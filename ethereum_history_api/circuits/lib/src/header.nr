@@ -21,15 +21,15 @@ struct BlockHeaderPartial {
     receipts_root: Bytes32,
 }
 
+struct BlockHeaderRlp {
+    length: Field,
+    data: [u8; MAX_HEADER_RLP_SIZE]
+}
+
 pub fn get_header(block_number: Field) -> BlockHeaderPartial {
     let (block_header_partial, block_header_rlp) = get_header_unconstrained(block_number);
     verify_header(block_header_partial, block_header_rlp);
     block_header_partial
-}
-
-struct BlockHeaderRlp {
-    length: Field,
-    data: [u8; MAX_HEADER_RLP_SIZE]
 }
 
 #[oracle(get_header)]
