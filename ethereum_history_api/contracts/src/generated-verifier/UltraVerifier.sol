@@ -1,1 +1,1 @@
-../../../../contract/ethereum_history_api/plonk_vk.sol
+../../../../contract/get_account/plonk_vk.sol

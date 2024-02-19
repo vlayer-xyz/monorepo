@@ -3,14 +3,16 @@ use dep::std::println;
 use dep::u2b::{u64_to_u8, u120_to_u8};
 use crate::misc::arrays::{alter_array, sub_array_equals_up_to_length};
 use crate::HASH_LENGTH;
+use crate::header::get_header;
+use crate::misc::types::{Address, Bytes8, Bytes15, Bytes32};
 
 global PROOF_LEN = 4256;
 
 struct Account {
-    nonce: u64,
-    balance: u120,
-    storage_root: [u8; HASH_LENGTH],
-    code_hash: [u8; HASH_LENGTH],
+    nonce: Bytes8,
+    balance: Bytes15,
+    storage_root: Bytes32,
+    code_hash: Bytes32,
 }
 
 struct StateProof {
@@ -22,12 +24,18 @@ struct StateProof {
 
 type AccountWithStateProof = (Account, StateProof);
 
+pub fn get_account(block_no: Field, address: Address, state_root: Bytes32) -> Account {
+    let (account, state_proof) = get_account_unconstrained(block_no, address);
+    verify_account(block_no, account, state_proof, state_root);
+    account
+}
+
 #[oracle(get_account)]
 unconstrained fn get_account_oracle(_block_no: Field, _address: [u8; 20]) -> AccountWithStateProof {}
 
 unconstrained fn get_account_unconstrained(
     block_no: Field,
-    address: [u8; 20]
+    address: Address
 ) -> AccountWithStateProof {
     get_account_oracle(block_no, address)
 }
@@ -97,11 +105,13 @@ fn assert_account_proof(account_state_proof: StateProof, state_root: [u8; KEY_LE
     assert(trie_proof.verify_state_root(state_root), "TrieProof: Invalid state root");
 }
 
-pub(crate) fn verify_account(block_no: Field, address: [u8; 20], state_root: [u8; KEY_LENGTH]) -> Account {
-    let (account, state_proof) = get_account_unconstrained(block_no, address);
-
+pub fn verify_account(
+    block_no: Field,
+    account: Account,
+    state_proof: StateProof,
+    state_root: [u8; KEY_LENGTH]
+) {
     assert_account_equals(state_proof.value, account);
     assert_account_proof(state_proof, state_root);
-
-    account
+    assert(get_header(block_no).state_root == state_root, "State root does not match");
 }

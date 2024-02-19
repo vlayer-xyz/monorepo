@@ -1,5 +1,4 @@
 use crate::account::{Account, assert_account_equals, MAX_ACCOUNT_STATE_LENGTH};
-use crate::HASH_LENGTH;
 use crate::misc::arrays::alter_array;
 use crate::fixtures::account::{rlp_encoded_left_padded_account, account, balance, storage_root, code_hash, nonce};
 

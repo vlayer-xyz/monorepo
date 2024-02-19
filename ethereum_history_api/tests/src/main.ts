@@ -1,11 +1,11 @@
 import { type CompiledCircuit } from '@noir-lang/backend_barretenberg';
 import { promises as fs } from 'fs';
 import toml from 'toml';
-import noir_ethereum_history_api from '../../../target/ethereum_history_api.json';
+import get_account from '../../../target/get_account.json';
 import { encodeHexString } from 'noir-ethereum-api-oracles';
 import { abiEncode, type InputMap, type WitnessMap } from '@noir-lang/noirc_abi';
 
-export const circuit = noir_ethereum_history_api as unknown as CompiledCircuit;
+export const circuit = get_account as unknown as CompiledCircuit;
 
 export interface MainInputs extends InputMap {
   block_no: number;

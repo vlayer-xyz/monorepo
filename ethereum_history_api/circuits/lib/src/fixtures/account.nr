@@ -1,5 +1,5 @@
-use crate::HASH_LENGTH;
 use crate::account::Account;
+use crate::misc::types::Bytes32;
 use dep::proof::{MAX_ACCOUNT_STATE_LENGTH};
 
 global rlp_encoded_left_padded_account: [u8; MAX_ACCOUNT_STATE_LENGTH] = [
@@ -23,13 +23,13 @@ global rlp_encoded_left_padded_account: [u8; MAX_ACCOUNT_STATE_LENGTH] = [
 
 global nonce: u64 = 1;
 global balance: u120 = 0x0313570a84bf378efd25;
-global storage_root: [u8; HASH_LENGTH] = [
+global storage_root: Bytes32 = [
     174, 39, 146, 36, 68, 23, 188, 23,
     73, 185, 205, 154, 11, 220, 28, 74,
     108, 243, 47, 20, 123, 55, 32, 44,
     140, 179, 89, 7, 119, 101, 154, 236
 ];
-global code_hash: [u8; HASH_LENGTH] = [
+global code_hash: Bytes32 = [
     226, 231, 167, 82, 74, 152, 206, 98,
     158, 228, 6, 193, 92, 81, 166, 131,
     228, 22, 127, 11, 116, 234, 35, 5,
