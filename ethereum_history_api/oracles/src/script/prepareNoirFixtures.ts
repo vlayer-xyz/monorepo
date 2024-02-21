@@ -6,8 +6,8 @@ import { createAccountFixture } from './noir_fixtures/account.js';
 
 const FIXTURES = {
   frontier: {
-    premine: {
-      blockNumber: 0n,
+    first: {
+      blockNumber: 1n,
       address: '0x40d45d9d7625d15156c932b771ca7b0527130958'
     }
   },
@@ -19,6 +19,12 @@ const FIXTURES = {
     vitalik_balance: {
       blockNumber: 12_965_000n,
       address: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
+    }
+  },
+  paris: {
+    one_inch: {
+      blockNumber: 19_000_000n,
+      address: '0x1111111254EEB25477B68fb85Ed929f73A960582'
     }
   }
 } as { [fork: string]: { [fixtureName: string]: { blockNumber: bigint; address: `0x${string}` } } };
