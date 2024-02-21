@@ -1,4 +1,4 @@
-use crate::header::{verify_header, BlockHeaderPartial, BlockHeaderRlp, MAX_HEADER_RLP_SIZE};
+use crate::header::{get_header_fields_count, verify_header, BlockHeaderPartial, BlockHeaderRlp, MAX_HEADER_RLP_SIZE, LONDON_BLOCK_NUMBER, PARIS_BLOCK_NUMBER};
 use crate::misc::arrays::alter_array;
 use crate::fixtures::{
     london::crypto_punks::header::{
@@ -82,4 +82,23 @@ fn test_verify_header_invalid_rlp() {
     let malformed_block_header_rlp = BlockHeaderRlp { data: rlp_empty_string_encoding, length: 1 };
     let paris_block_header_partial = BlockHeaderPartial { number, hash, state_root, transactions_root, receipts_root };
     verify_header(paris_block_header_partial, malformed_block_header_rlp);
+}
+
+#[test(should_fail)] // TODO: Add correct assertion message when we migrate to Noir >=0.24.0 which fixes assertions order
+fn test_verify_header_invalid_rlp_fields_count() {
+    let paris_block_header_partial = BlockHeaderPartial { number, hash, state_root, transactions_root, receipts_root };
+    verify_header(paris_block_header_partial, frontier_block_header_rlp);
+}
+
+#[test]
+fn test_get_header_fields_count() {
+    let frontier_block_number = 1_920_000;
+    let london_block_number = 13_000_000;
+    let paris_block_number = 20_000_000;
+
+    assert_eq(get_header_fields_count(frontier_block_number), 15);
+    assert_eq(get_header_fields_count(LONDON_BLOCK_NUMBER), 16);
+    assert_eq(get_header_fields_count(london_block_number), 16);
+    assert_eq(get_header_fields_count(PARIS_BLOCK_NUMBER), 17);
+    assert_eq(get_header_fields_count(paris_block_number), 17);
 }
