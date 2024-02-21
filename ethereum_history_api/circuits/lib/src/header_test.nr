@@ -19,17 +19,17 @@ use crate::fixtures::{
 };
 
 #[test]
-    fn test_verify_frontier_header_success() {
+fn test_verify_frontier_header_success() {
     verify_header(frontier_block_header_partial, frontier_block_header_rlp);
 }
 
 #[test]
-    fn test_verify_london_header_success() {
+fn test_verify_london_header_success() {
     verify_header(london_block_header_partial, london_block_header_rlp);
 }
 
 #[test]
-    fn test_verify_paris_header_success() {
+fn test_verify_paris_header_success() {
     verify_header(paris_block_header_partial, paris_block_header_rlp);
 }
 
