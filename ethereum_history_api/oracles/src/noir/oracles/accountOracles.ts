@@ -6,7 +6,7 @@ import { padArray } from '../../util/array.js';
 import { NoirArguments } from './oracles.js';
 
 const PROOF_ONE_LEVEL_LENGTH = 532;
-const MAX_PROOF_LEVELS = 8;
+const MAX_PROOF_LEVELS = 9;
 const PROOF_LENGTH = PROOF_ONE_LEVEL_LENGTH * MAX_PROOF_LEVELS;
 const MAX_ACCOUNT_STATE_LENGTH = 134;
 const ZERO_PAD_VALUE = '0x0';
@@ -65,7 +65,7 @@ export function encodeStateProof(ethProof: GetProofReturnType): ForeignCallOutpu
   return [key, value, proof, depth];
 }
 
-function encodeProof(proof: string[]): string[] {
+export function encodeProof(proof: string[]): string[] {
   const encodedUnpaddedProof = proof
     .map((it) => encodeHex(it))
     .map((it) => padArray(it, PROOF_ONE_LEVEL_LENGTH, ZERO_PAD_VALUE))
@@ -74,7 +74,7 @@ function encodeProof(proof: string[]): string[] {
   return encodedProof;
 }
 
-function encodeValue(proof: Hex[]): string[] {
+export function encodeValue(proof: Hex[]): string[] {
   const lastProofEntry = fromRlp(proof[proof.length - 1], 'hex');
   const value = lastProofEntry[RLP_VALUE_INDEX];
   assert(isHex(value), 'value should be of type Hex');

@@ -1,7 +1,7 @@
 use dep::std::test::OracleMock;
 use crate::header::{get_header, verify_header, BlockHeaderPartial, BlockHeaderRlp};
 use crate::misc::arrays::alter_array;
-use crate::fixtures::header::{block_header_partial, block_header_rlp, hash, number, state_root, transactions_root, receipts_root};
+use crate::fixtures::london::crypto_punks::header::{block_header_partial, block_header_rlp, hash, number, state_root, transactions_root, receipts_root};
 
 #[test]
 fn test_get_header_success() {

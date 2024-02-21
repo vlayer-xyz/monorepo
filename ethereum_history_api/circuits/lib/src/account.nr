@@ -6,7 +6,7 @@ use crate::HASH_LENGTH;
 use crate::header::get_header;
 use crate::misc::types::{Address, Bytes8, Bytes15, Bytes32};
 
-global PROOF_LEN = 4256;
+global PROOF_LEN = 4788;
 
 struct Account {
     nonce: Bytes8,

@@ -13,6 +13,7 @@
     "format": "prettier --write src",
     "format:ci": "prettier --check src",
     "oracle-server": "tsx src/noir/oracles/server",
+    "prepare-noir-fixtures": "tsx src/script/prepareNoirFixtures",
     "fetch-blocks": "tsx src/script/fetchBlocks",
     "fetch-proofs": "tsx src/script/fetchProofs",
     "encode-header": "tsx src/script/encodeHeader"

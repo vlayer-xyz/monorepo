@@ -1,6 +1,19 @@
-use crate::account::{Account, assert_account_equals, MAX_ACCOUNT_STATE_LENGTH};
+use crate::account::{Account, assert_account_equals, MAX_ACCOUNT_STATE_LENGTH, verify_account};
 use crate::misc::arrays::alter_array;
-use crate::fixtures::account::{rlp_encoded_left_padded_account, account, balance, storage_root, code_hash, nonce};
+use crate::fixtures::{
+    london::{
+        crypto_punks::{
+            header::{number, state_root, block_header_partial, block_header_rlp},
+            account::{rlp_encoded_left_padded_account, account, balance, storage_root, code_hash, nonce},
+            state_proof::{state_proof, key}
+        },
+        vitalik_balance::header::{
+            block_header_partial as block_header_partial_vitalik,
+            block_header_rlp as block_header_rlp_vitalik
+        },
+    }
+};
+use dep::std::test::OracleMock;
 
 #[test]
 fn test_assert_account_equals() {
@@ -47,4 +60,18 @@ fn test_assert_account_equals_code_hash_with_wrong_value() {
     let code_hash_with_wrong_value = alter_array(code_hash);
     let account = Account { nonce, balance, storage_root, code_hash: code_hash_with_wrong_value };
     assert_account_equals(rlp_encoded_left_padded_account, account);
+}
+
+#[test]
+fn test_verify_account() {
+    let _ = OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp));
+
+    let _ = verify_account(number, account, state_proof, state_root);
+}
+
+#[test(should_fail_with = "State root does not match")]
+fn test_verify_account_wrong_state_root() {
+    let _ = OracleMock::mock("get_header").returns((block_header_partial_vitalik, block_header_rlp_vitalik));
+
+    let _ = verify_account(number, account, state_proof, state_root);
 }
