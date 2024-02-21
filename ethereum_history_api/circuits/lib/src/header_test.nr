@@ -1,5 +1,5 @@
 use dep::std::test::OracleMock;
-use crate::header::{get_header, verify_header, BlockHeaderPartial, BlockHeaderRlp};
+use crate::header::{get_header, verify_header, BlockHeaderPartial, BlockHeaderRlp, MAX_HEADER_RLP_SIZE};
 use crate::misc::arrays::alter_array;
 use crate::fixtures::london::crypto_punks::header::{block_header_partial, block_header_rlp, hash, number, state_root, transactions_root, receipts_root};
 
@@ -21,7 +21,7 @@ fn test_verify_header_success() {
 
 #[test(should_fail_with = "block number does not match")]
 fn test_verify_header_invalid_block_number() {
-    let wrong_number = 2;
+    let wrong_number = number + 1;
     let block_header_partial = BlockHeaderPartial { number: wrong_number, hash, state_root, transactions_root, receipts_root };
     verify_header(block_header_partial, block_header_rlp);
 }
@@ -59,4 +59,13 @@ fn test_verify_header_invalid_receipt_root() {
     let receipts_root = alter_array(receipts_root);
     let block_header_partial = BlockHeaderPartial { number, hash, state_root, transactions_root, receipts_root };
     verify_header(block_header_partial, block_header_rlp);
+}
+
+#[test(should_fail)] // TODO: Add correct assertion message when we migrate to Noir >=0.24.0 which fixes assertions order
+fn test_verify_header_invalid_rlp() {
+    let mut rlp_empty_string_encoding = [0; MAX_HEADER_RLP_SIZE];
+    rlp_empty_string_encoding[0] = 0x80;
+    let malformed_block_header_rlp = BlockHeaderRlp { data: rlp_empty_string_encoding, length: 1 };
+    let block_header_partial = BlockHeaderPartial { number, hash, state_root, transactions_root, receipts_root };
+    verify_header(block_header_partial, malformed_block_header_rlp);
 }
