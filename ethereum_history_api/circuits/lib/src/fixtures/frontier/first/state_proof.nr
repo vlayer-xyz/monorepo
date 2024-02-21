@@ -12,4 +12,3 @@ global proof = [
 global depth = 5;
 
 global state_proof = StateProof {key, value, proof, depth};
-  
