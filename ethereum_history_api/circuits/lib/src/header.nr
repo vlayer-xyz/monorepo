@@ -29,6 +29,7 @@ struct BlockHeaderRlp {
 pub fn get_header(block_number: Field) -> BlockHeaderPartial {
     let (block_header_partial, block_header_rlp) = get_header_unconstrained(block_number);
     verify_header(block_header_partial, block_header_rlp);
+    assert(block_header_partial.number == block_number, "block number does not match the argument");
     block_header_partial
 }
 

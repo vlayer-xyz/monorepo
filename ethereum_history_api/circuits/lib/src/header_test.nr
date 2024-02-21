@@ -30,6 +30,13 @@ fn test_get_header_success() {
     assert_eq(paris_block_header_partial.receipts_root, header.receipts_root);
 }
 
+#[test(should_fail_with = "block number does not match the argument")]
+fn test_get_header_invalid_block_number() {
+    let wrong_block_number = number + 1;
+    let _ = OracleMock::mock("get_header").returns((paris_block_header_partial, paris_block_header_rlp));
+    let _ = get_header(wrong_block_number);
+}
+
 #[test]
     fn test_verify_frontier_header_success() {
     verify_header(frontier_block_header_partial, frontier_block_header_rlp);
