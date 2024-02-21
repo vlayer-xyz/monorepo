@@ -6,7 +6,7 @@ import { padArray } from '../../util/array.js';
 import { NoirArguments } from './oracles.js';
 
 const PROOF_ONE_LEVEL_LENGTH = 532;
-const MAX_PROOF_LEVELS = 8;
+const MAX_PROOF_LEVELS = 9;
 const PROOF_LENGTH = PROOF_ONE_LEVEL_LENGTH * MAX_PROOF_LEVELS;
 const MAX_ACCOUNT_STATE_LENGTH = 134;
 const ZERO_PAD_VALUE = '0x0';
