@@ -3,7 +3,7 @@ import { copy, updateNestedField, incHexStr, assert } from 'noir-ethereum-api-or
 import { abiEncode, InputMap, WitnessMap } from '@noir-lang/noirc_abi';
 
 import { Account, privateKeyToAccount } from 'viem/accounts';
-import ultraVerifier from '../../contracts/out/UltraVerifier.sol/UltraVerifier.json';
+import getAccountVerifier from '../../contracts/out/GetAccountUltraPLONKVerifier.sol/UltraVerifier.json';
 import { Address, Hex } from 'viem';
 import { createAnvilClient, AnvilClient } from './ethereum/anvilClient.js';
 import { circuit, readInputMap, readProof, readWitnessMap } from './main.js';
@@ -35,9 +35,9 @@ describe(
 
     async function deployVerificationContract(): Promise<Address> {
       const deploymentTxHash = await client.deployContract({
-        abi: ultraVerifier.abi,
+        abi: getAccountVerifier.abi,
         account,
-        bytecode: ultraVerifier.bytecode.object as Hex,
+        bytecode: getAccountVerifier.bytecode.object as Hex,
         chain: client.chain
       });
 

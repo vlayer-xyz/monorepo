@@ -1,4 +1,4 @@
-import ultraVerifier from '../../contracts/out/UltraVerifier.sol/UltraVerifier.json';
+import getAccountVerifier from '../../contracts/out/GetAccountUltraPLONKVerifier.sol/UltraVerifier.json';
 import { decodeHexString } from 'noir-ethereum-api-oracles/src/noir/noir_js/encode.js';
 import { Account } from 'viem/accounts';
 import { Address, Hash, WalletClient } from 'viem';
@@ -14,7 +14,7 @@ export async function verifyStorageProofInSolidity(
   return await client.writeContract({
     account,
     address: contractAddress,
-    abi: ultraVerifier.abi,
+    abi: getAccountVerifier.abi,
     functionName: 'verify',
     args: [decodeHexString(proof), Array.from(witnessMap.values())],
     chain: client.chain
