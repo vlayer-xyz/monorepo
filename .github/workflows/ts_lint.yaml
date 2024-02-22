@@ -34,12 +34,15 @@ jobs:
         run: |
           mkdir -p target
           touch target/get_account.json
+          touch target/get_header.json
 
       - name: Create fake smart contract build artefacts
         working-directory: .
         run: |
-          mkdir -p ethereum_history_api/contracts/out/UltraVerifier.sol
-          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum_history_api/contracts/out/UltraVerifier.sol/UltraVerifier.json
+          mkdir -p ethereum_history_api/contracts/out/GetAccountUltraPLONKVerifier.sol
+          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum_history_api/contracts/out/GetAccountUltraPLONKVerifier.sol/UltraVerifier.json
+          mkdir -p ethereum_history_api/contracts/out/GetHeaderUltraPLONKVerifier.sol
+          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum_history_api/contracts/out/GetHeaderUltraPLONKVerifier.sol/UltraVerifier.json
 
       - name: Run TypeScript Build
         run: yarn build

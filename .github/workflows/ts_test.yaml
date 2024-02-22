@@ -33,7 +33,7 @@ jobs:
           toolchain: 0.23.0
 
       - name: Compile Circuit
-        run: nargo compile --package get_account
+        run: nargo compile --workspace
 
       - name: Start Oracle Server
         working-directory: ethereum_history_api/oracles
@@ -43,10 +43,14 @@ jobs:
           echo "ORACLE_SERVER_PID=$ORACLE_SERVER_PID" >> $GITHUB_ENV
 
       - name: Generate Proof
-        run: nargo prove --package get_account --oracle-resolver=http://localhost:5555
+        run: |
+          nargo prove --package get_header --oracle-resolver=http://localhost:5555
+          nargo prove --package get_account --oracle-resolver=http://localhost:5555
 
       - name: Run nargo codegen-verifier
-        run: nargo codegen-verifier --package get_account
+        run: |
+          nargo codegen-verifier --package get_header
+          nargo codegen-verifier --package get_account
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
