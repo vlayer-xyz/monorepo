@@ -2,14 +2,14 @@
 pragma solidity ^0.8.13;
 
 import {Test, console2} from "forge-std/Test.sol";
-import {UltraVerifier} from "../src/generated-verifier/UltraVerifier.sol";
+import {UltraVerifier as GetAccountUltraPLONKVerifier} from "../src/generated-verifier/GetAccountUltraPLONKVerifier.sol";
 
 
-contract EthereumHistoryVerifierTest is Test {
-    UltraVerifier public verifier;
+contract GetAccountUltraPLONKVerifierTest is Test {
+    GetAccountUltraPLONKVerifier public verifier;
 
     function setUp() public {
-        verifier = new UltraVerifier();
+        verifier = new GetAccountUltraPLONKVerifier();
         vm.roll(1024);
     }
 
