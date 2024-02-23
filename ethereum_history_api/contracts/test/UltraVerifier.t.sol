@@ -13,15 +13,15 @@ contract EthereumHistoryVerifierTest is Test {
         vm.roll(1024);
     }
 
-    function test_CorrectProof() public view {
-        string memory proofString = vm.readLine("./test/fixtures/example.proof");
+    function test_CorrectGetAccountProof() public view {
+        string memory proofString = vm.readLine("./test/fixtures/get_account.proof");
         bytes memory proof = vm.parseBytes(proofString);
 
 
         uint numberOfPublicArgValues = 1 + 20 + 32;
         uint numberOfPublicReturnValues = 1 + 1 + 32 + 32;
         uint numberOfPublicInputs = numberOfPublicArgValues + numberOfPublicReturnValues;
-        bytes32[] memory publicInputs = this.loadPublicInputs("example", numberOfPublicInputs);
+        bytes32[] memory publicInputs = this.loadPublicInputs("get_account", numberOfPublicInputs);
 
         verifier.verify(proof, publicInputs);
     }

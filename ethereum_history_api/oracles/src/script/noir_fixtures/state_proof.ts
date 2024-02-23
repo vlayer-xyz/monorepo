@@ -21,6 +21,6 @@ global proof = [
 global depth = ${depth};
 
 global state_proof = StateProof {key, value, proof, depth};
-  `;
+`;
   return stateProofFixture;
 }

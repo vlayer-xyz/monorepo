@@ -7,7 +7,7 @@ use dep::u2b::{u40_to_u8};
 use crate::misc::types::Bytes32;
 
 global MAX_HEADER_RLP_SIZE = 708;
-global HEADER_FIELDS_COUNT = 17;
+global MAX_HEADER_FIELDS_COUNT = 17;
 global STATE_ROOT_INDEX = 3;
 global TRANSACTIONS_ROOT_INDEX = 4;
 global RECEIPTS_ROOT_INDEX = 5;
@@ -29,6 +29,7 @@ struct BlockHeaderRlp {
 pub fn get_header(block_number: Field) -> BlockHeaderPartial {
     let (block_header_partial, block_header_rlp) = get_header_unconstrained(block_number);
     verify_header(block_header_partial, block_header_rlp);
+    assert(block_header_partial.number == block_number, "block number does not match the argument");
     block_header_partial
 }
 
@@ -39,8 +40,27 @@ unconstrained fn get_header_unconstrained(block_no: Field) -> (BlockHeaderPartia
     get_header_oracle(block_no)
 }
 
+global LONDON_BLOCK_NUMBER: u64 = 12_965_000;
+global PARIS_BLOCK_NUMBER: u64 = 15_537_394;
+
+pub(crate) fn get_header_fields_count(block_number: u64) -> Field {
+    let mut frontier_fields_count = 15;
+    if block_number >= LONDON_BLOCK_NUMBER {
+        frontier_fields_count += 1;
+    }
+    if block_number >= PARIS_BLOCK_NUMBER {
+        frontier_fields_count += 1;
+    }
+    frontier_fields_count
+}
+
 pub(crate) fn verify_header(block_header_partial: BlockHeaderPartial, block_header_rlp: BlockHeaderRlp) {
-    let rlp_list:RLP_List<HEADER_FIELDS_COUNT> = decode1(block_header_rlp.data);
+    let rlp_list: RLP_List<MAX_HEADER_FIELDS_COUNT> = decode1(block_header_rlp.data);
+    let expected_header_fields_count = get_header_fields_count(block_header_partial.number as u64);
+
+    assert(
+        expected_header_fields_count == rlp_list.num_fields, "number of header RLP fields does not match"
+    );
 
     // We use u40 for block number because even if block time is 1s - it would take 34865 years to reach u40
     let block_number = u40_to_u8(block_header_partial.number as u40);
