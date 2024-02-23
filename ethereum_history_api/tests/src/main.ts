@@ -10,9 +10,6 @@ import { abiEncode, type InputMap, type WitnessMap, type Abi } from '@noir-lang/
 export const get_header_circuit = get_header as unknown as CompiledCircuit;
 export const get_account_circuit = get_account as unknown as CompiledCircuit;
 
-export const ANVIL_TEST_ACCOUNT_PRIVATE_KEY = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
-export const VERIFICATION_GAS_LIMIT = 500_000n;
-
 export async function readProof(path: string): Promise<Uint8Array> {
   const proofHex = await fs.readFile(path, 'utf-8');
   return encodeHexString('0x' + proofHex);

@@ -6,15 +6,14 @@ import { privateKeyToAccount } from 'viem/accounts';
 import getAccountVerifier from '../../contracts/out/GetAccountUltraPLONKVerifier.sol/UltraVerifier.json';
 import { Hash } from 'viem';
 import { createAnvilClient } from './ethereum/anvilClient.js';
+import { get_account_circuit, readInputMap, readProof, readWitnessMap } from './main.js';
 import {
   ANVIL_TEST_ACCOUNT_PRIVATE_KEY,
+  FoundryArtefact,
   VERIFICATION_GAS_LIMIT,
-  get_account_circuit,
-  readInputMap,
-  readProof,
-  readWitnessMap
-} from './main.js';
-import { FoundryArtefact, deployVerificationContract, verifyStorageProofInSolidity } from './verifier.js';
+  deployVerificationContract,
+  verifyStorageProofInSolidity
+} from './verifier.js';
 
 describe('get_account', async () => {
   const account = privateKeyToAccount(ANVIL_TEST_ACCOUNT_PRIVATE_KEY);
