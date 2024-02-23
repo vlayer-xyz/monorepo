@@ -75,10 +75,12 @@ fn test_verify_header_invalid_receipt_root() {
     verify_header(paris_block_header_partial, paris_block_header_rlp);
 }
 
+global RLP_SHORT_STRING_TYPE = 0x80;
+
 #[test(should_fail)] // TODO: Add correct assertion message when we migrate to Noir >=0.24.0 which fixes assertions order
 fn test_verify_header_invalid_rlp() {
     let mut rlp_empty_string_encoding = [0; MAX_HEADER_RLP_SIZE];
-    rlp_empty_string_encoding[0] = 0x80;
+    rlp_empty_string_encoding[0] = RLP_SHORT_STRING_TYPE;
     let malformed_block_header_rlp = BlockHeaderRlp { data: rlp_empty_string_encoding, length: 1 };
     let paris_block_header_partial = BlockHeaderPartial { number, hash, state_root, transactions_root, receipts_root };
     verify_header(paris_block_header_partial, malformed_block_header_rlp);
