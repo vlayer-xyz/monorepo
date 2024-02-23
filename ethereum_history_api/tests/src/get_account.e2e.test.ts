@@ -13,7 +13,7 @@ import {
   VERIFICATION_GAS_LIMIT,
   deployVerificationContract,
   verifyStorageProofInSolidity
-} from './verifier.js';
+} from './solidityVerifier.js';
 
 describe('get_account', async () => {
   const account = privateKeyToAccount(ANVIL_TEST_ACCOUNT_PRIVATE_KEY);
