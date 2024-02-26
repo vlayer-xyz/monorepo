@@ -1,47 +1,32 @@
-## Noir-Ethereum-History-Api solidity lib
+## Noir Ethereum history api Solidity smart contracts
+
+Noir Ethereum history api Solidity smart contracts. It consists of:
+- `EthereumHistoryVerifier` which ensures block belongs to the chain 
+- `UltraVerifier` (auto-generated from [noir circuits](ethereum_history_api/circuits)) with tests
 
 ## Usage
 
+Note: all the commands below must be run from `ethereum_history_api/contracts` folder.
+
 ### Build
 
+To compile Solidity files, run:
 ```shell
 $ forge build
 ```
 
 ### Test
 
+To test the files, run:
 ```shell
 $ forge test
 ```
 
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
 ### Anvil
 
+To start anvil run:
 ```shell
 $ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/EthereumHistoryVerifier.s.sol:EthereumHistoryVerifierScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
 ```
 
 ### Help
@@ -49,5 +34,4 @@ $ cast <subcommand>
 ```shell
 $ forge --help
 $ anvil --help
-$ cast --help
 ```
