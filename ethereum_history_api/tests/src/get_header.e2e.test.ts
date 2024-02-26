@@ -1,15 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { copy, updateNestedField, incHexStr } from 'noir-ethereum-api-oracles';
-import { abiEncode } from '@noir-lang/noirc_abi';
-import { CompiledCircuit } from '@noir-lang/backend_barretenberg';
+import { Abi, abiEncode } from '@noir-lang/noirc_abi';
 
 import getHeaderVerifier from '../../contracts/out/GetHeaderUltraPLONKVerifier.sol/UltraVerifier.json';
-import get_header from '../../../target/get_header.json';
+import getHeader from '../../../target/get_header.json';
 
 import { readProofData } from './proofDataReader.js';
 import { FoundryArtefact, deploySolidityProofVerifier } from './solidityVerifier.js';
 
-export const get_header_circuit = get_header as unknown as CompiledCircuit;
+export const abi = getHeader.abi as unknown as Abi;
 const PACKAGE_NAME = 'get_header';
 
 describe(PACKAGE_NAME, async () => {
@@ -17,7 +16,7 @@ describe(PACKAGE_NAME, async () => {
   const proofVerifier = await deploySolidityProofVerifier(getHeaderVerifier as FoundryArtefact);
 
   it('proof verification successes', async () => {
-    const witnessMap = abiEncode(get_header_circuit.abi, inputMap, inputMap['return']);
+    const witnessMap = abiEncode(abi, inputMap, inputMap['return']);
 
     const isCorrect = await proofVerifier.verify(proof, witnessMap);
 
@@ -27,7 +26,7 @@ describe(PACKAGE_NAME, async () => {
   it('proof fails: invalid number', async () => {
     const inputMapCopy = copy(inputMap);
     updateNestedField(inputMapCopy, ['return', 'number'], incHexStr);
-    const witnessMapInvalidNumber = abiEncode(get_header_circuit.abi, inputMapCopy, inputMapCopy['return']);
+    const witnessMapInvalidNumber = abiEncode(abi, inputMapCopy, inputMapCopy['return']);
 
     const isCorrect = await proofVerifier.verify(proof, witnessMapInvalidNumber);
 
@@ -37,7 +36,7 @@ describe(PACKAGE_NAME, async () => {
   it('proof fails: invalid state_root', async () => {
     const inputMapCopy = copy(inputMap);
     updateNestedField(inputMapCopy, ['return', 'state_root', '0'], incHexStr);
-    const witnessMapInvalidStateRoot = abiEncode(get_header_circuit.abi, inputMapCopy, inputMapCopy['return']);
+    const witnessMapInvalidStateRoot = abiEncode(abi, inputMapCopy, inputMapCopy['return']);
 
     const isCorrect = await proofVerifier.verify(proof, witnessMapInvalidStateRoot);
 
