@@ -1,6 +1,6 @@
 # noir-ethereum-history-api
 
-_noir-ethereum-history-api_ is an [noir]() library for proving and verifying  account balances and smart contracts storage slots in historical blocks in the Ethereum blockchain and other EVMs. 
+_noir-ethereum-history-api_ is a [Noir](https://noir-lang.org) library for proving and verifying  account balances and smart contracts storage slots in historical blocks in the Ethereum blockchain and other EVMs. 
 
 As for now, it allows for proving and verifying last 256 blocks.
 
