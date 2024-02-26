@@ -15,11 +15,12 @@ import {
   verifyStorageProofInSolidity
 } from './solidityVerifier.js';
 
+const PROOF_PATH = '../../proofs/get_account.proof';
+const INPUT_MAP_PATH = '../circuits/get_account/Verifier.toml';
+
 describe('get_account', async () => {
   const account = privateKeyToAccount(ANVIL_TEST_ACCOUNT_PRIVATE_KEY);
   const client = createAnvilClient();
-  const PROOF_PATH = '../../proofs/get_account.proof';
-  const INPUT_MAP_PATH = '../circuits/get_account/Verifier.toml';
   const proof = await readProof(PROOF_PATH);
   const inputMap = await readInputMap(INPUT_MAP_PATH);
   const witnessMap = await readWitnessMap(INPUT_MAP_PATH, get_account_circuit.abi);
