@@ -40,14 +40,14 @@ describe('get_header', async () => {
   it('proof fails: invalid number', async () => {
     const inputMapCopy = copy(inputMap);
     updateNestedField(inputMapCopy, ['return', 'number'], incHexStr);
-    const witnessMapInvalidNonce = abiEncode(get_header_circuit.abi, inputMapCopy, inputMapCopy['return']);
-    expect(async () => verifyProof(witnessMapInvalidNonce)).rejects.toThrowError('Execution reverted');
+    const witnessMapInvalidNumber = abiEncode(get_header_circuit.abi, inputMapCopy, inputMapCopy['return']);
+    expect(async () => verifyProof(witnessMapInvalidNumber)).rejects.toThrowError('Execution reverted');
   });
 
   it('proof fails: invalid state_root', async () => {
     const inputMapCopy = copy(inputMap);
     updateNestedField(inputMapCopy, ['return', 'state_root', '0'], incHexStr);
-    const witnessMapInvalidNonce = abiEncode(get_header_circuit.abi, inputMapCopy, inputMapCopy['return']);
-    expect(async () => verifyProof(witnessMapInvalidNonce)).rejects.toThrowError('Execution reverted');
+    const witnessMapInvalidStateRoot = abiEncode(get_header_circuit.abi, inputMapCopy, inputMapCopy['return']);
+    expect(async () => verifyProof(witnessMapInvalidStateRoot)).rejects.toThrowError('Execution reverted');
   });
 });
