@@ -17,34 +17,37 @@ const GET_HEADER_POST_DATA = {
 
 const ORACLE_SERVER_PORT = 5556;
 
+type LocalhostOracleStatus = 'OK' | 'NOT_AVAILABLE';
+
+async function localhostOracleStatus() {
+  let statusText: LocalhostOracleStatus;
+  try {
+    const response = await fetch(`http://localhost:${ORACLE_SERVER_PORT}`, GET_HEADER_POST_DATA);
+    statusText = response.status == 200 ? 'OK' : 'NOT_AVAILABLE';
+  } catch (e) {
+    statusText = 'NOT_AVAILABLE';
+  }
+  return statusText;
+}
+
 describe('oracle server', async () => {
   const mockClient = await createMockClient('./fixtures/mockClientData.json');
-  const getHeaderRpcCall = async () => await fetch(`http://localhost:${ORACLE_SERVER_PORT}`, GET_HEADER_POST_DATA);
-  const getHeaderRpcCallStatus = async () => {
-    let statusText: string;
-    try {
-      statusText = (await getHeaderRpcCall()).statusText;
-    } catch (e) {
-      statusText = 'get header rpc call failed';
-    }
-    return statusText;
-  };
 
   it('withOracleServer should start server', async () => {
-    const rpcCallStatus = await withOracleServer(
+    const oracleStatus = await withOracleServer(
       async () => {
-        return await getHeaderRpcCallStatus();
+        return await localhostOracleStatus();
       },
       mockClient,
       ORACLE_SERVER_PORT
     );
-    expect(rpcCallStatus).toStrictEqual('OK');
+    expect(oracleStatus).toStrictEqual('OK');
   });
 
   it('withOracleServer should close server after callback finish', async () => {
     await withOracleServer(async () => {}, mockClient, ORACLE_SERVER_PORT);
 
-    expect(async () => await getHeaderRpcCall()).rejects.toThrow('fetch failed');
+    expect(await localhostOracleStatus()).toStrictEqual('NOT_AVAILABLE');
   });
 
   it('withOracleServer should close server when callback throws an exception', async () => {
@@ -56,6 +59,6 @@ describe('oracle server', async () => {
       async () => await withOracleServer(async () => throwsError(), mockClient, ORACLE_SERVER_PORT)
     ).rejects.toThrow('error');
 
-    expect(async () => await getHeaderRpcCall()).rejects.toThrow('fetch failed');
+    expect(await localhostOracleStatus()).toStrictEqual('NOT_AVAILABLE');
   });
 });
