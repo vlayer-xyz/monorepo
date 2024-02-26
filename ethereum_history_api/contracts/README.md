@@ -2,7 +2,7 @@
 
 ## Usage
 
-All the commands below must be run from `ethereum_history_api/contracts` folder.
+Note: all the commands below must be run from `ethereum_history_api/contracts` folder.
 
 ### Build
 

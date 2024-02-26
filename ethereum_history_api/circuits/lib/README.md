@@ -7,7 +7,11 @@ To compile circuit files and install dependencies run:
 ```sh
 nargo compile --workspace
 ```
-(or run `nargo compile --package package_name` to compile a single package)
+
+To compile a single package run
+```sh
+nargo compile --package package_name
+``` 
 
 ## Generating proofs
 
@@ -18,7 +22,7 @@ Oracle server is located in [packages/noir-ethereum-api](../packages/noir-ethere
 yarn oracle-server
 ```
 
-After that you can generate proofs by running nargo with `--oracle-resolver` arg:
+Then, to generate proofs, run:
 
 ```sh
 nargo prove --oracle-resolver http://localhost:5555
@@ -33,11 +37,15 @@ To generate a Solidity verifier for a package run:
 ```sh
 nargo codegen-verifier --package package_name
 ``` 
-(try `package_name=get_account`).
 
-Be aware that this step may take several minutes when run for the first time. It is not recommended to use VSCode terminal for this command as it seems to run slowly.
+For example, for `get_account` package run:
+```sh
+nargo codegen-verifier --package get_account
+```
 
-After you generated a verifier (`contract/package_name/plonk_vk.sol`) you're ready to use its `verify` function to verify proofs.
+Note: When run for the first time this step may take several minutes. Furthermore, it is not recommended to use VSCode terminal for this command as it seems to run slowly.
+
+After generating a verifier (`contract/package_name/plonk_vk.sol`) its `verify` function can be used to verify proofs.
 
 ## Testing
 
