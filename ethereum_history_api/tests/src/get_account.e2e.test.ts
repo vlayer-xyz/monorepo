@@ -6,18 +6,15 @@ import { CompiledCircuit } from '@noir-lang/backend_barretenberg';
 import getAccountVerifier from '../../contracts/out/GetAccountUltraPLONKVerifier.sol/UltraVerifier.json';
 import get_account from '../../../target/get_account.json';
 
-import { readInputMap, readProof } from './main.js';
+import { readProofData } from './proofDataReader.js';
 import { FoundryArtefact, deploySolidityProofVerifier } from './solidityVerifier.js';
 
 export const get_account_circuit = get_account as unknown as CompiledCircuit;
-const PROOF_PATH = '../../proofs/get_account.proof';
-const INPUT_MAP_PATH = '../circuits/get_account/Verifier.toml';
+const PACKAGE_NAME = 'get_account';
 
-describe('get_account', async () => {
+describe(PACKAGE_NAME, async () => {
+  const { proof, inputMap } = await readProofData(PACKAGE_NAME);
   const proofVerifier = await deploySolidityProofVerifier(getAccountVerifier as FoundryArtefact);
-
-  const proof = await readProof(PROOF_PATH);
-  const inputMap = await readInputMap(INPUT_MAP_PATH);
 
   it('proof verification successes', async () => {
     const witnessMap = abiEncode(get_account_circuit.abi, inputMap, inputMap['return']);
