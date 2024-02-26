@@ -1,14 +1,9 @@
 import { promises as fs } from 'fs';
-import { type CompiledCircuit } from '@noir-lang/backend_barretenberg';
-import get_header from '../../../target/get_header.json';
-import get_account from '../../../target/get_account.json';
+
 import toml from 'toml';
 
 import { encodeHexString } from 'noir-ethereum-api-oracles';
 import { abiEncode, type InputMap, type WitnessMap, type Abi } from '@noir-lang/noirc_abi';
-
-export const get_header_circuit = get_header as unknown as CompiledCircuit;
-export const get_account_circuit = get_account as unknown as CompiledCircuit;
 
 export async function readProof(path: string): Promise<Uint8Array> {
   const proofHex = await fs.readFile(path, 'utf-8');

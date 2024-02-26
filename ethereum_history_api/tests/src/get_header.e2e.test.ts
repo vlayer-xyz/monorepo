@@ -1,11 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import { copy, updateNestedField, incHexStr } from 'noir-ethereum-api-oracles';
 import { abiEncode } from '@noir-lang/noirc_abi';
-import getHeaderVerifier from '../../contracts/out/GetHeaderUltraPLONKVerifier.sol/UltraVerifier.json';
+import { CompiledCircuit } from '@noir-lang/backend_barretenberg';
 
-import { get_header_circuit, readInputMap, readProof } from './main.js';
+import getHeaderVerifier from '../../contracts/out/GetHeaderUltraPLONKVerifier.sol/UltraVerifier.json';
+import get_header from '../../../target/get_header.json';
+
+import { readInputMap, readProof } from './main.js';
 import { FoundryArtefact, deploySolidityProofVerifier } from './solidityVerifier.js';
 
+export const get_header_circuit = get_header as unknown as CompiledCircuit;
 const PROOF_PATH = '../../proofs/get_header.proof';
 const INPUT_MAP_PATH = '../circuits/get_header/Verifier.toml';
 
