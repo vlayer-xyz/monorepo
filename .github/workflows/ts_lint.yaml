@@ -33,8 +33,8 @@ jobs:
         working-directory: .
         run: |
           mkdir -p target
-          touch target/get_account.json
-          touch target/get_header.json
+          echo '{ "abi": [] }' > target/get_account.json
+          echo '{ "abi": [] }' >  target/get_header.json
 
       - name: Create fake smart contract build artefacts
         working-directory: .
