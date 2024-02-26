@@ -3,7 +3,7 @@ import { buildOracleServer } from './server/app.js';
 
 const PORT = 5555;
 
-export const startOracleServer = async (client: PublicClient) => {
+export const startOracleServer = async (client: PublicClient, port: number = PORT) => {
   const app = buildOracleServer(
     {
       logger: {
@@ -19,12 +19,12 @@ export const startOracleServer = async (client: PublicClient) => {
     client
   );
 
-  await app.listen({ port: PORT });
+  await app.listen({ port });
   return app;
 };
 
-export async function withOracleServer<T>(fn: () => Promise<T>, client: PublicClient): Promise<T> {
-  const app = await startOracleServer(client);
+export async function withOracleServer<T>(fn: () => Promise<T>, client: PublicClient, port: number): Promise<T> {
+  const app = await startOracleServer(client, port);
   try {
     return await fn();
   } catch (e) {

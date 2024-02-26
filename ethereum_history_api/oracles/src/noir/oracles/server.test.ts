@@ -15,9 +15,11 @@ const GET_HEADER_POST_DATA = {
   body: JSON.stringify(JSON_RPC_PAYLOAD)
 };
 
+const ORACLE_SERVER_PORT = 5556;
+
 describe('oracle server', async () => {
   const mockClient = await createMockClient('./fixtures/mockClientData.json');
-  const getHeaderRpcCall = async () => await fetch('http://localhost:5555', GET_HEADER_POST_DATA);
+  const getHeaderRpcCall = async () => await fetch(`http://localhost:${ORACLE_SERVER_PORT}`, GET_HEADER_POST_DATA);
   const getHeaderRpcCallStatus = async () => {
     let response: Response | string;
     try {
@@ -29,14 +31,18 @@ describe('oracle server', async () => {
   };
 
   it('withOracleServer should start server', async () => {
-    const rpcCallStatus = await withOracleServer(async () => {
-      return await getHeaderRpcCallStatus();
-    }, mockClient);
+    const rpcCallStatus = await withOracleServer(
+      async () => {
+        return await getHeaderRpcCallStatus();
+      },
+      mockClient,
+      ORACLE_SERVER_PORT
+    );
     expect(rpcCallStatus).toStrictEqual('OK');
   });
 
   it('withOracleServer should close server after callback finish', async () => {
-    await withOracleServer(async () => {}, mockClient);
+    await withOracleServer(async () => {}, mockClient, ORACLE_SERVER_PORT);
 
     expect(async () => await getHeaderRpcCall()).rejects.toThrow('fetch failed');
   });
@@ -46,7 +52,9 @@ describe('oracle server', async () => {
       throw new Error('error');
     };
 
-    expect(async () => await withOracleServer(async () => throwsError(), mockClient)).rejects.toThrow('error');
+    expect(
+      async () => await withOracleServer(async () => throwsError(), mockClient, ORACLE_SERVER_PORT)
+    ).rejects.toThrow('error');
 
     expect(async () => await getHeaderRpcCall()).rejects.toThrow('fetch failed');
   });
