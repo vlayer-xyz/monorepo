@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { withOracleServer } from './server.js';
 
 describe('oracle server', async () => {
-  it('withOracleServer should start server', async () => {
+  it('withOracleServer should start and close server', async () => {
     const jsonRpcPayload = {
       jsonrpc: '2.0',
       method: 'get_header',
@@ -22,5 +22,7 @@ describe('oracle server', async () => {
       const response = await getHeaderRpcCall();
       expect(response.status).toBe(200);
     });
+
+    expect(async () => await getHeaderRpcCall()).rejects.toThrow('fetch failed');
   });
 });

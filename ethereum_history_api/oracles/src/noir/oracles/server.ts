@@ -1,4 +1,3 @@
-import Fastify from 'fastify';
 import { buildOracleServer } from './server/app.js';
 
 const PORT = 5555;
