@@ -1,4 +1,4 @@
-# Circuits
+# Noir Ethereum history api circuits
 
 Noir circuits to generate account proofs and historical blocks data.
 

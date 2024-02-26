@@ -1,4 +1,4 @@
-## Contracts
+## Noir Ethereum history api Solidity smart contracts
 
 Solidity verifier contracts with tests.
 
