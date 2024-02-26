@@ -10,7 +10,7 @@ It is currently in a development stage.
 This monorepo consists of four sub-projects:
 * [Circuits](ethereum_history_api/circuits/lib/README.md) - Noir circuits to generate account proofs and historical blocks data
 * [Contracts](ethereum_history_api/contracts/README.md) - Solidity verifier contracts with tests
-* [Oracles](ethereum_history_api/oracles/README.md) - TypeScript oracle server which provides data for circuits
+* [Oracles](ethereum_history_api/oracles/README.md) - TypeScript oracle server that provides data for circuits
 * [Tests](ethereum_history_api/tests/README.md) - e2e tests in TypeScript
 
 ## Prerequisites

@@ -1,4 +1,6 @@
-# Noir circuit
+# Circuits
+
+Noir circuits to generate account proofs and historical blocks data.
 
 ## Compilation
 

@@ -1,4 +1,6 @@
-## Noir-Ethereum-History-Api solidity lib
+## Contracts
+
+Solidity verifier contracts with tests.
 
 ## Usage
 
