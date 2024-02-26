@@ -1,6 +1,6 @@
 import { decodeHexString } from 'noir-ethereum-api-oracles/src/noir/noir_js/encode.js';
 import { privateKeyToAccount } from 'viem/accounts';
-import { Abi, Address, Hex } from 'viem';
+import { Abi, Address, Hex, TransactionExecutionError } from 'viem';
 import { WitnessMap } from '@noir-lang/noirc_abi';
 import { assert } from 'noir-ethereum-api-oracles';
 import { createAnvilClient } from './ethereum/anvilClient.js';
@@ -27,6 +27,7 @@ export async function deploySolidityProofVerifier(artefact: FoundryArtefact): Pr
   });
 
   const txReceipt = await client.waitForTransactionReceipt({ hash });
+
   if (txReceipt.status !== 'success') {
     throw new Error('Contract deployment failed');
   }
@@ -38,20 +39,33 @@ export async function deploySolidityProofVerifier(artefact: FoundryArtefact): Pr
 }
 
 export class SolidityProofVerifier {
+  private contractParams = {
+    account,
+    abi: this.abi,
+    chain: client.chain,
+    address: this.contractAddress
+  };
+
   constructor(
     private readonly contractAddress: Address,
     private readonly abi: Abi
   ) {}
 
   async verify(proof: Uint8Array, witnessMap: WitnessMap): Promise<boolean> {
-    const hash = await client.writeContract({
-      account,
-      address: this.contractAddress,
-      abi: this.abi,
-      functionName: 'verify',
-      args: [decodeHexString(proof), Array.from(witnessMap.values())],
-      chain: client.chain
-    });
+    let hash;
+    try {
+      hash = await client.writeContract({
+        ...this.contractParams,
+        functionName: 'verify',
+        args: [decodeHexString(proof), Array.from(witnessMap.values())]
+      });
+    } catch (e: unknown) {
+      if (SolidityProofVerifier.isProofFailureRevert(e)) {
+        return false;
+      }
+      throw e;
+    }
+
     const txReceipt = await client.waitForTransactionReceipt({ hash });
 
     if (txReceipt.status !== 'success') {
@@ -63,5 +77,12 @@ export class SolidityProofVerifier {
     }
 
     return true;
+  }
+
+  private static isProofFailureRevert(e: unknown): boolean {
+    return (
+      e instanceof TransactionExecutionError &&
+      e.shortMessage === 'Execution reverted with reason: custom error 0711fcec:.'
+    );
   }
 }
