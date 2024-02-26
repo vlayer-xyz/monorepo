@@ -2,20 +2,25 @@
 
 ## Usage
 
+All the commands below must be run from `ethereum_history_api/contracts` folder.
+
 ### Build
 
+To compile Solidity files, run:
 ```shell
 $ forge build
 ```
 
 ### Test
 
+To test the files, run:
 ```shell
 $ forge test
 ```
 
 ### Format
 
+To format the files, run:
 ```shell
 $ forge fmt
 ```
