@@ -8,10 +8,10 @@ It is currently in a development stage.
 
 ### Repository structure
 This monorepo consists of four sub-projects:
-* [Circuits](ethereum_history_api/circuits/lib/README.md) - Noir circuits to generate account proofs and historical blocks data
-* [Contracts](ethereum_history_api/contracts/README.md) - Solidity verifier contracts with tests
-* [Oracles](ethereum_history_api/oracles/README.md) - TypeScript oracle server that provides data for circuits
-* [Tests](ethereum_history_api/tests/README.md) - e2e tests in TypeScript
+* [Circuits](ethereum_history_api/circuits/lib/) - Noir circuits to generate account and storage proofs for historical blocks data
+* [Contracts](ethereum_history_api/contracts/) - related Solidity contracts with tests
+* [Oracles](ethereum_history_api/oracles/) - TypeScript oracle server that provides data for circuits
+* [Tests](ethereum_history_api/tests/) - e2e tests in TypeScript
 
 ## Prerequisites
 
@@ -19,6 +19,7 @@ _nargo_ and _foundry_ must be installed in order to compile and test code in thi
 
 * [nargo installation](https://noir-lang.org/docs/getting_started/installation/)
 * [foundry installation](https://book.getfoundry.sh/getting-started/installation)
+* [yarn](https://yarnpkg.com) >= 4.1.0
 
 
 ## Getting started

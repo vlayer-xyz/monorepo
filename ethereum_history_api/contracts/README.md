@@ -1,6 +1,8 @@
 ## Noir Ethereum history api Solidity smart contracts
 
-Solidity verifier contracts with tests.
+Noir Ethereum history api Solidity smart contracts. It consists of:
+- EthereumHistoryVerifier which ensures block belongs to the chain 
+- UltraVerifier (auto-generated from [noir circuits](ethereum_history_api/circuits)) with tests
 
 ## Usage
 

@@ -1,6 +1,6 @@
 # Noir Ethereum history api circuits
 
-Noir circuits to generate account proofs and historical blocks data.
+Noir circuits to generate account and storage proofs for historical blocks.
 
 ## Compilation
 
@@ -20,9 +20,9 @@ nargo compile --package package_name
 This circuit uses oracles and therefore you need to run the oracle server before generating proofs.
 Oracle server is located in [packages/noir-ethereum-api](../packages/noir-ethereum-api) and can be run by:
 
-```sh
 yarn oracle-server
 ```
+```sh
 
 Then, to generate proofs, run:
 
@@ -30,7 +30,7 @@ Then, to generate proofs, run:
 nargo prove --oracle-resolver http://localhost:5555
 ```
 
-More details [here](https://noir-lang.org/docs/how_to/how-to-oracles/#step-3---usage-with-nargo)
+More details on Noir Ethereum history api oracles in [project directory](ethereum_history_api/oracles/) and oracle feature in [noir docs](https://noir-lang.org/docs/how_to/how-to-oracles/#step-3---usage-with-nargo).
 
 ## Generating verifiers
 
