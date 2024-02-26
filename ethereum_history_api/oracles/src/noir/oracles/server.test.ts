@@ -21,13 +21,13 @@ describe('oracle server', async () => {
   const mockClient = await createMockClient('./fixtures/mockClientData.json');
   const getHeaderRpcCall = async () => await fetch(`http://localhost:${ORACLE_SERVER_PORT}`, GET_HEADER_POST_DATA);
   const getHeaderRpcCallStatus = async () => {
-    let response: Response | string;
+    let statusText: string;
     try {
-      response = (await getHeaderRpcCall()).statusText;
+      statusText = (await getHeaderRpcCall()).statusText;
     } catch (e) {
-      response = 'fetch failed';
+      statusText = 'get header rpc call failed';
     }
-    return response;
+    return statusText;
   };
 
   it('withOracleServer should start server', async () => {

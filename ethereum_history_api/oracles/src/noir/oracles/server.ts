@@ -27,9 +27,6 @@ export async function withOracleServer<T>(fn: () => Promise<T>, client: PublicCl
   const app = await startOracleServer(client, port);
   try {
     return await fn();
-  } catch (e) {
-    console.error(e);
-    throw e;
   } finally {
     await app.close();
   }
