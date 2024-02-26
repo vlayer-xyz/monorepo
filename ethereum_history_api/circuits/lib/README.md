@@ -8,7 +8,7 @@ To compile circuit files and install dependencies run:
 nargo compile --workspace
 ```
 
-To compile a single package run
+To compile a single package run:
 ```sh
 nargo compile --package package_name
 ``` 
@@ -43,7 +43,7 @@ For example, for `get_account` package run:
 nargo codegen-verifier --package get_account
 ```
 
-Note: When run for the first time this step may take several minutes. Furthermore, it is not recommended to use VSCode terminal for this command as it seems to run slowly.
+Note: When run for the first time this step may take several minutes. Also, it is not recommended to use VSCode terminal for this command as it seems to run slowly.
 
 After generating a verifier (`contract/package_name/plonk_vk.sol`) its `verify` function can be used to verify proofs.
 

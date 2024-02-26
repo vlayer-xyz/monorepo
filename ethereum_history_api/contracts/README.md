@@ -33,6 +33,7 @@ $ forge snapshot
 
 ### Anvil
 
+To start anvil run:
 ```shell
 $ anvil
 ```
