@@ -13,7 +13,7 @@ contract GetHeaderUltraPLONKVerifierTest is Test {
         vm.roll(1024);
     }
 
-    function test_CorrectProof() public view {
+    function test_CorrectGetHeaderProof() public view {
         string memory proofString = vm.readLine("./test/fixtures/get_header.proof");
         bytes memory proof = vm.parseBytes(proofString);
 
