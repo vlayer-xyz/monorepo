@@ -45,6 +45,9 @@ jobs:
       - name: Generate Proof
         run: nargo prove --package get_account --oracle-resolver=http://localhost:5555
 
+      - name: Veirfy Proof
+        run: nargo verify --package get_account
+
       - name: Run nargo codegen-verifier
         run: nargo codegen-verifier --package get_account
 
