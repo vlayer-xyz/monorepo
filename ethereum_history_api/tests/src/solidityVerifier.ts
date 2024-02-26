@@ -1,31 +1,15 @@
 import { decodeHexString } from 'noir-ethereum-api-oracles/src/noir/noir_js/encode.js';
-import { Account } from 'viem/accounts';
-import { Abi, Address, Hash, Hex, WalletClient } from 'viem';
+import { privateKeyToAccount } from 'viem/accounts';
+import { Abi, Address, Hex } from 'viem';
 import { WitnessMap } from '@noir-lang/noirc_abi';
-import { AnvilClient } from './ethereum/anvilClient.js';
-import { expect } from 'vitest';
 import { assert } from 'noir-ethereum-api-oracles';
+import { createAnvilClient } from './ethereum/anvilClient.js';
 
-export const ANVIL_TEST_ACCOUNT_PRIVATE_KEY = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
 export const VERIFICATION_GAS_LIMIT = 500_000n;
 
-export async function verifyStorageProofInSolidity(
-  client: WalletClient,
-  account: Account,
-  contractAddress: Address,
-  abi: Abi,
-  proof: Uint8Array,
-  witnessMap: WitnessMap
-): Promise<Hash> {
-  return await client.writeContract({
-    account,
-    address: contractAddress,
-    abi,
-    functionName: 'verify',
-    args: [decodeHexString(proof), Array.from(witnessMap.values())],
-    chain: client.chain
-  });
-}
+const ANVIL_TEST_ACCOUNT_PRIVATE_KEY = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
+const account = privateKeyToAccount(ANVIL_TEST_ACCOUNT_PRIVATE_KEY);
+const client = createAnvilClient();
 
 export interface FoundryArtefact {
   abi: Abi;
@@ -34,21 +18,50 @@ export interface FoundryArtefact {
   };
 }
 
-export async function deployVerificationContract(
-  client: AnvilClient,
-  account: Account,
-  artefact: FoundryArtefact
-): Promise<Address> {
-  const deploymentTxHash = await client.deployContract({
+export async function deploySolidityProofVerifier(artefact: FoundryArtefact): Promise<SolidityProofVerifier> {
+  const hash = await client.deployContract({
     abi: artefact.abi,
     account,
     bytecode: artefact.bytecode.object,
     chain: client.chain
   });
 
-  const deploymentTxReceipt = await client.waitForTransactionReceipt({ hash: deploymentTxHash });
-  expect(deploymentTxReceipt.status).toEqual('success');
+  const txReceipt = await client.waitForTransactionReceipt({ hash });
+  if (txReceipt.status !== 'success') {
+    throw new Error('Contract deployment failed');
+  }
 
-  assert(!!deploymentTxReceipt.contractAddress, 'Deployed contract address should not be empty');
-  return deploymentTxReceipt.contractAddress!;
+  assert(!!txReceipt.contractAddress, 'Deployed contract address should not be empty');
+
+  const solidityProofVerifier = new SolidityProofVerifier(txReceipt.contractAddress!, artefact.abi);
+  return solidityProofVerifier;
+}
+
+export class SolidityProofVerifier {
+  constructor(
+    private readonly contractAddress: Address,
+    private readonly abi: Abi
+  ) {}
+
+  async verify(proof: Uint8Array, witnessMap: WitnessMap): Promise<boolean> {
+    const hash = await client.writeContract({
+      account,
+      address: this.contractAddress,
+      abi: this.abi,
+      functionName: 'verify',
+      args: [decodeHexString(proof), Array.from(witnessMap.values())],
+      chain: client.chain
+    });
+    const txReceipt = await client.waitForTransactionReceipt({ hash });
+
+    if (txReceipt.status !== 'success') {
+      throw new Error('Proof verification failed');
+    }
+
+    if (txReceipt.gasUsed > VERIFICATION_GAS_LIMIT) {
+      throw new Error('Proof verification exceeded gas limit');
+    }
+
+    return true;
+  }
 }
