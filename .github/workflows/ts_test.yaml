@@ -5,7 +5,7 @@ on: [push]
 jobs:
   test:
     name: yarn test
-    runs-on: nargo_runners
+    runs-on: 32-core-ubuntu-runner
     environment: CI
     env:
       ETHEREUM_JSON_RPC_API_URL: ${{ secrets.ETHEREUM_JSON_RPC_API_URL }}
