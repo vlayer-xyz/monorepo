@@ -1,7 +1,9 @@
 import { PublicClient } from 'viem';
 import { buildOracleServer } from './server/app.js';
+import { createMockClient } from '../../ethereum/mockClient.js';
 
 const PORT = 5555;
+const MOCK_ORACLE_SERVER_PORT = PORT + 1;
 
 export const startOracleServer = async (client: PublicClient, port: number = PORT) => {
   const app = buildOracleServer(
@@ -23,10 +25,12 @@ export const startOracleServer = async (client: PublicClient, port: number = POR
   return app;
 };
 
-export async function withOracleServer<T>(fn: () => Promise<T>, client: PublicClient, port: number): Promise<T> {
-  const app = await startOracleServer(client, port);
+export async function withMockOracleServer<T>(fn: (serverUrl: string) => Promise<T>): Promise<T> {
+  const mockClient = await createMockClient('./fixtures/mockClientData.json');
+  const app = await startOracleServer(mockClient, MOCK_ORACLE_SERVER_PORT);
+  const serverUrl = `http://localhost:${MOCK_ORACLE_SERVER_PORT}`;
   try {
-    return await fn();
+    return await fn(serverUrl);
   } finally {
     await app.close();
   }

@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { withOracleServer } from './server.js';
-import { createMockClient } from '../../ethereum/mockClient.js';
+import { withMockOracleServer } from './server.js';
 
 const JSON_RPC_PAYLOAD = {
   jsonrpc: '2.0',
@@ -15,50 +14,44 @@ const GET_HEADER_POST_DATA = {
   body: JSON.stringify(JSON_RPC_PAYLOAD)
 };
 
-const ORACLE_SERVER_PORT = 5556;
+const MOCK_ORACLE_SERVER_URL = `http://localhost:5556`;
 
-type LocalhostOracleStatus = 'OK' | 'NOT_AVAILABLE';
-
-async function localhostOracleStatus() {
-  let statusText: LocalhostOracleStatus;
-  try {
-    const response = await fetch(`http://localhost:${ORACLE_SERVER_PORT}`, GET_HEADER_POST_DATA);
-    statusText = response.status == 200 ? 'OK' : 'NOT_AVAILABLE';
-  } catch (e) {
-    statusText = 'NOT_AVAILABLE';
-  }
-  return statusText;
+async function expectServerUp(serverUrl: string) {
+  const response = await fetch(serverUrl, GET_HEADER_POST_DATA);
+  expect(response.status).toStrictEqual(200);
 }
 
-describe('oracle server', async () => {
-  const mockClient = await createMockClient('./fixtures/mockClientData.json');
+async function expectServerDown(serverUrl: string) {
+  await expect(async () => await fetch(serverUrl, GET_HEADER_POST_DATA)).rejects.toThrow('fetch failed');
+}
 
-  it('withOracleServer should start server', async () => {
-    const oracleStatus = await withOracleServer(
-      async () => {
-        return await localhostOracleStatus();
-      },
-      mockClient,
-      ORACLE_SERVER_PORT
-    );
-    expect(oracleStatus).toStrictEqual('OK');
+describe('mock oracle server', async () => {
+  it('start server', async () => {
+    await withMockOracleServer(async (serverUrl) => {
+      await expectServerUp(serverUrl);
+    });
   });
 
-  it('withOracleServer should close server after callback finish', async () => {
-    await withOracleServer(async () => {}, mockClient, ORACLE_SERVER_PORT);
+  it('return callback value', async () => {
+    const result = await withMockOracleServer(async () => 'callback return value');
 
-    expect(await localhostOracleStatus()).toStrictEqual('NOT_AVAILABLE');
+    expect(result).toStrictEqual('callback return value');
   });
 
-  it('withOracleServer should close server when callback throws an exception', async () => {
-    const throwsError = () => {
-      throw new Error('error');
-    };
+  it('close server after callback finish', async () => {
+    await withMockOracleServer(async () => {});
 
+    await expectServerDown(MOCK_ORACLE_SERVER_URL);
+  });
+
+  it('close server when callback throws an exception', async () => {
     expect(
-      async () => await withOracleServer(async () => throwsError(), mockClient, ORACLE_SERVER_PORT)
+      async () =>
+        await withMockOracleServer(async () => {
+          throw new Error('error');
+        })
     ).rejects.toThrow('error');
 
-    expect(await localhostOracleStatus()).toStrictEqual('NOT_AVAILABLE');
+    await expectServerDown(MOCK_ORACLE_SERVER_URL);
   });
 });
