@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { copy, updateNestedField, incHexStr } from 'noir-ethereum-api-oracles';
-import { Abi, abiEncode } from '@noir-lang/noirc_abi';
+import { Abi, InputMap, abiEncode } from '@noir-lang/noirc_abi';
 
 import getAccountVerifier from '../../contracts/out/GetAccountUltraPLONKVerifier.sol/UltraVerifier.json';
 import getAccount from '../../../target/get_account.json';
@@ -9,37 +9,30 @@ import { readProofData } from './proofDataReader.js';
 import { FoundryArtefact, deploySolidityProofVerifier } from './solidityVerifier.js';
 
 export const abi = getAccount.abi as unknown as Abi;
-const PACKAGE_NAME = 'get_account';
 
-describe(PACKAGE_NAME, async () => {
-  const { proof, inputMap } = await readProofData(PACKAGE_NAME);
+describe('get_account', async () => {
+  let proof: Uint8Array;
+  let inputMap: InputMap;
   const proofVerifier = await deploySolidityProofVerifier(getAccountVerifier as FoundryArtefact);
+
+  beforeEach(async () => {
+    ({ proof, inputMap } = await readProofData('get_account'));
+  });
 
   it('proof verification successes', async () => {
     const witnessMap = abiEncode(abi, inputMap, inputMap['return']);
-
-    const isCorrect = await proofVerifier.verify(proof, witnessMap);
-
-    expect(isCorrect).toEqual(true);
+    expect(await proofVerifier.verify(proof, witnessMap)).toEqual(true);
   });
 
   it('proof fails: invalid nonce', async () => {
-    const inputMapCopy = copy(inputMap);
-    updateNestedField(inputMapCopy, ['return', 'nonce'], incHexStr);
-    const witnessMapInvalidNonce = abiEncode(abi, inputMapCopy, inputMapCopy['return']);
-
-    const isCorrect = await proofVerifier.verify(proof, witnessMapInvalidNonce);
-
-    expect(isCorrect).toEqual(false);
+    updateNestedField(inputMap, ['return', 'nonce'], incHexStr);
+    const witnessMapInvalidNonce = abiEncode(abi, inputMap, inputMap['return']);
+    expect(await proofVerifier.verify(proof, witnessMapInvalidNonce)).toEqual(false);
   });
 
   it('proof fails: invalid state root', async () => {
-    const inputMapCopy = copy(inputMap);
-    updateNestedField(inputMapCopy, ['state_root', '0'], incHexStr);
-    const witnessMapInvalidStateRoot = abiEncode(abi, inputMapCopy, inputMapCopy['return']);
-
-    const isCorrect = await proofVerifier.verify(proof, witnessMapInvalidStateRoot);
-
-    expect(isCorrect).toEqual(false);
+    updateNestedField(inputMap, ['state_root', '0'], incHexStr);
+    const witnessMapInvalidStateRoot = abiEncode(abi, inputMap, inputMap['return']);
+    expect(await proofVerifier.verify(proof, witnessMapInvalidStateRoot)).toEqual(false);
   });
 });
