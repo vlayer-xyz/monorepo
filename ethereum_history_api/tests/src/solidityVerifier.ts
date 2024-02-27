@@ -39,17 +39,17 @@ export async function deploySolidityProofVerifier(artefact: FoundryArtefact): Pr
 }
 
 export class SolidityProofVerifier {
+  constructor(
+    private readonly contractAddress: Address,
+    private readonly abi: Abi
+  ) {}
+
   private contractParams = {
     account,
     abi: this.abi,
     chain: client.chain,
     address: this.contractAddress
   };
-
-  constructor(
-    private readonly contractAddress: Address,
-    private readonly abi: Abi
-  ) {}
 
   async verify(proof: Uint8Array, witnessMap: WitnessMap): Promise<boolean> {
     let hash;
