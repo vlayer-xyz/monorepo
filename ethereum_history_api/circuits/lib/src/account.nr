@@ -27,7 +27,7 @@ type AccountWithStateProof = (Account, StateProof);
 pub fn get_account(block_no: Field, address: Address) -> (Account, Bytes32) {
     let (account, state_proof) = get_account_unconstrained(block_no, address);
     let header = get_header(block_no);
-    verify_account(block_no, account, state_proof, header.state_root);
+    verify_account(account, state_proof, header.state_root);
     (account, header.hash)
 }
 
@@ -109,7 +109,6 @@ fn assert_account_proof(account_state_proof: StateProof, state_root: [u8; KEY_LE
 }
 
 pub fn verify_account(
-    block_no: Field,
     account: Account,
     state_proof: StateProof,
     state_root: [u8; KEY_LENGTH]
