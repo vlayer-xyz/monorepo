@@ -28,7 +28,9 @@ jobs:
           toolchain: 0.23.0
 
       - name: Run nargo codegen-verifier
-        run: nargo codegen-verifier --package get_account
+        run: |
+          nargo codegen-verifier --package get_account
+          nargo codegen-verifier --package get_header
 
       - name: Run Forge build
         run: |

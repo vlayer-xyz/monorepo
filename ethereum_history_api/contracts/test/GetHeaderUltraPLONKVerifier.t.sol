@@ -2,26 +2,26 @@
 pragma solidity ^0.8.13;
 
 import {Test, console2} from "forge-std/Test.sol";
-import {UltraVerifier} from "../src/generated-verifier/UltraVerifier.sol";
+import {UltraVerifier as GetHeaderUltraPLONKVerifier} from "../src/generated-verifier/GetHeaderUltraPLONKVerifier.sol";
 
 
-contract EthereumHistoryVerifierTest is Test {
-    UltraVerifier public verifier;
+contract GetHeaderUltraPLONKVerifierTest is Test {
+    GetHeaderUltraPLONKVerifier public verifier;
 
     function setUp() public {
-        verifier = new UltraVerifier();
+        verifier = new GetHeaderUltraPLONKVerifier();
         vm.roll(1024);
     }
 
-    function test_CorrectGetAccountProof() public view {
-        string memory proofString = vm.readLine("./test/fixtures/get_account.proof");
+    function test_CorrectGetHeaderProof() public view {
+        string memory proofString = vm.readLine("./test/fixtures/get_header.proof");
         bytes memory proof = vm.parseBytes(proofString);
 
 
-        uint numberOfPublicArgValues = 1 + 20 + 32;
-        uint numberOfPublicReturnValues = 1 + 1 + 32 + 32;
+        uint numberOfPublicArgValues = 1;
+        uint numberOfPublicReturnValues = 1 + 32 + 32 + 32 + 32;
         uint numberOfPublicInputs = numberOfPublicArgValues + numberOfPublicReturnValues;
-        bytes32[] memory publicInputs = this.loadPublicInputs("get_account", numberOfPublicInputs);
+        bytes32[] memory publicInputs = this.loadPublicInputs("get_header", numberOfPublicInputs);
 
         verifier.verify(proof, publicInputs);
     }
