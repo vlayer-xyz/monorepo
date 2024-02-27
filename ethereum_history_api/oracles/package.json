@@ -12,7 +12,7 @@
     "lint:fix": "eslint src --ext .ts --fix",
     "format": "prettier --write src",
     "format:ci": "prettier --check src",
-    "oracle-server": "tsx src/noir/oracles/server",
+    "oracle-server": "tsx src/script/startOracleServer",
     "prepare-noir-fixtures": "tsx src/script/prepareNoirFixtures",
     "fetch-blocks": "tsx src/script/fetchBlocks",
     "fetch-proofs": "tsx src/script/fetchProofs",
@@ -42,3 +42,4 @@
     "vitest": "^1.0.4"
   }
 }
+
