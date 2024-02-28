@@ -29,7 +29,9 @@ const FIXTURES = {
   }
 } as { [fork: string]: { [fixtureName: string]: { blockNumber: bigint; address: `0x${string}` } } };
 
-const OUT_DIR = './out';
+const OUT_DIR = '../circuits/lib/src/fixtures';
+await rm(OUT_DIR, { recursive: true, force: true });
+
 const client = createDefaultClient();
 for (const hardFork in FIXTURES) {
   let hardforkModule = ``;
