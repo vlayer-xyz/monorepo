@@ -1,10 +1,10 @@
-name: TS tests
+name: E2E Tests
 
 on: [push]
 
 jobs:
   test:
-    name: yarn test
+    name: E2E Tests
     runs-on: 32-core-ubuntu-runner
     environment: CI
     env:
