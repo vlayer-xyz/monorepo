@@ -29,4 +29,10 @@ describe('get_account', async () => {
     const witnessMapInvalidNonce = abiEncode(abi, inputMap, inputMap['return']);
     expect(await proofVerifier.verify(proof, witnessMapInvalidNonce)).toEqual(false);
   });
+
+  it('proof fails: invalid block hash', async () => {
+    updateNestedField(inputMap, ['return', 'block_hash', '0'], incHexStr);
+    const witnessMapInvalidBlockHash = abiEncode(abi, inputMap, inputMap['return']);
+    expect(await proofVerifier.verify(proof, witnessMapInvalidBlockHash)).toEqual(false);
+  });
 });
