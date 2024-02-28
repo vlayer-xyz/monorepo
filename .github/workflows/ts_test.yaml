@@ -71,19 +71,9 @@ jobs:
         working-directory: ethereum_history_api/oracles
         run: yarn test:unit
 
-      - name: Start Anvil
-        run: |
-          anvil &
-          ANVIL_PID=$!
-          echo "ANVIL_PID=$ANVIL_PID" >> $GITHUB_ENV
-
       - name: Run e2e Tests
         working-directory: ethereum_history_api/tests
         run: yarn test:e2e
-
-      - name: Stop Anvil
-        if: always()
-        run: kill $ANVIL_PID
 
       - name: Stop Oracle Server
         if: always()
