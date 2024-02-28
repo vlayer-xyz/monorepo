@@ -25,14 +25,14 @@ describe('get_account', async () => {
   });
 
   it('proof fails: invalid nonce', async () => {
-    updateNestedField(inputMap, ['return', 'nonce'], incHexStr);
+    updateNestedField(inputMap, ['return', 'account', 'nonce'], incHexStr);
     const witnessMapInvalidNonce = abiEncode(abi, inputMap, inputMap['return']);
     expect(await proofVerifier.verify(proof, witnessMapInvalidNonce)).toEqual(false);
   });
 
-  it('proof fails: invalid state root', async () => {
-    updateNestedField(inputMap, ['state_root', '0'], incHexStr);
-    const witnessMapInvalidStateRoot = abiEncode(abi, inputMap, inputMap['return']);
-    expect(await proofVerifier.verify(proof, witnessMapInvalidStateRoot)).toEqual(false);
+  it('proof fails: invalid block hash', async () => {
+    updateNestedField(inputMap, ['return', 'block_hash', '0'], incHexStr);
+    const witnessMapInvalidBlockHash = abiEncode(abi, inputMap, inputMap['return']);
+    expect(await proofVerifier.verify(proof, witnessMapInvalidBlockHash)).toEqual(false);
   });
 });

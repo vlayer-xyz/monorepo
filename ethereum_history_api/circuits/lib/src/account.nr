@@ -22,12 +22,21 @@ struct StateProof {
     depth: Field,
 }
 
+struct AccountWithinBlock {
+    account: Account,
+    block_hash: Bytes32,
+}
+
 type AccountWithStateProof = (Account, StateProof);
 
-pub fn get_account(block_no: Field, address: Address, state_root: Bytes32) -> Account {
+pub fn get_account(block_no: Field, address: Address) -> AccountWithinBlock {
     let (account, state_proof) = get_account_unconstrained(block_no, address);
-    verify_account(block_no, account, state_proof, state_root);
-    account
+    let header = get_header(block_no);
+    verify_account(account, state_proof, header.state_root);
+    AccountWithinBlock {
+        account,
+        block_hash: header.hash
+    }
 }
 
 #[oracle(get_account)]
@@ -108,12 +117,10 @@ fn assert_account_proof(account_state_proof: StateProof, state_root: [u8; KEY_LE
 }
 
 pub fn verify_account(
-    block_no: Field,
     account: Account,
     state_proof: StateProof,
     state_root: [u8; KEY_LENGTH]
 ) {
     assert_account_equals(state_proof.value, account);
     assert_account_proof(state_proof, state_root);
-    assert(get_header(block_no).state_root == state_root, "State root does not match");
 }
