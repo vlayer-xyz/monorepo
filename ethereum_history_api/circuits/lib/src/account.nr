@@ -22,18 +22,18 @@ struct StateProof {
     depth: Field,
 }
 
-struct ReturnData {
+struct AccountWithinBlock {
     account: Account,
     block_hash: Bytes32,
 }
 
 type AccountWithStateProof = (Account, StateProof);
 
-pub fn get_account(block_no: Field, address: Address) -> ReturnData {
+pub fn get_account(block_no: Field, address: Address) -> AccountWithinBlock {
     let (account, state_proof) = get_account_unconstrained(block_no, address);
     let header = get_header(block_no);
     verify_account(account, state_proof, header.state_root);
-    ReturnData {
+    AccountWithinBlock {
         account,
         block_hash: header.hash
     }
