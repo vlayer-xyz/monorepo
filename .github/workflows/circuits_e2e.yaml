@@ -1,10 +1,10 @@
-name: E2E Tests
+name: Circuits E2E Tests
 
 on: [push]
 
 jobs:
   test:
-    name: E2E Tests
+    name: Circuits E2E Tests
     runs-on: 32-core-ubuntu-runner
     environment: CI
     env:
@@ -47,30 +47,10 @@ jobs:
           nargo prove --package get_header --oracle-resolver=http://localhost:5555
           nargo prove --package get_account --oracle-resolver=http://localhost:5555
 
-      - name: Run nargo codegen-verifier
+      - name: Veirfy Proof
         run: |
-          nargo codegen-verifier --package get_header
-          nargo codegen-verifier --package get_account
-
-      - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
-        with:
-          version: nightly
-
-      - name: Compile Smart Contract
-        working-directory: ethereum_history_api/contracts
-        run: forge build
-
-      - name: Run TypeScript Build
-        run: yarn build
-
-      - name: Run Unit Tests
-        working-directory: ethereum_history_api/oracles
-        run: yarn test:unit
-
-      - name: Run e2e Tests
-        working-directory: ethereum_history_api/tests
-        run: yarn test:e2e
+          nargo verify --package get_header
+          nargo verify --package get_account
 
       - name: Stop Oracle Server
         if: always()
