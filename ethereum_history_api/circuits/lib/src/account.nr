@@ -22,13 +22,21 @@ struct StateProof {
     depth: Field,
 }
 
+struct ReturnData {
+    account: Account,
+    block_hash: Bytes32,
+}
+
 type AccountWithStateProof = (Account, StateProof);
 
-pub fn get_account(block_no: Field, address: Address) -> (Account, Bytes32) {
+pub fn get_account(block_no: Field, address: Address) -> ReturnData {
     let (account, state_proof) = get_account_unconstrained(block_no, address);
     let header = get_header(block_no);
     verify_account(account, state_proof, header.state_root);
-    (account, header.hash)
+    ReturnData {
+        account,
+        block_hash: header.hash
+    }
 }
 
 #[oracle(get_account)]
