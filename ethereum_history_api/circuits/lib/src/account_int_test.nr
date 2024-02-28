@@ -1,3 +1,4 @@
+use crate::account::get_account;
 use crate::account::verify_account;
 use crate::fixtures::{
     paris::{
@@ -22,4 +23,12 @@ fn test_verify_account() {
     let _ = OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp));
 
     let _ = verify_account(account, state_proof, state_root);
+}
+
+#[test(should_fail)]
+fn test_verify_account_wrong_state_root() {
+    let _ = OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp));
+    let _ = OracleMock::mock("get_account").returns((account_from_different_header, state_proof_from_different_header));
+
+    let _ = get_account(number, state_proof.key);
 }
