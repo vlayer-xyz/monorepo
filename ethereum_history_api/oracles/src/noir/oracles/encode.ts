@@ -10,18 +10,6 @@ export function encodeField(arg: number | bigint): string {
   return `0x${arg.toString(16)}`;
 }
 
-export function encodeU64(arg: number | bigint): string {
-  assert(arg < 2 ** 64, 'Field overflow');
-  assert(arg >= 0, 'Field underflow');
-  return `0x${arg.toString(16)}`;
-}
-
-export function encodeU120(arg: number | bigint): string {
-  assert(arg < 2 ** 120, 'Field overflow');
-  assert(arg >= 0, 'Field underflow');
-  return `0x${arg.toString(16)}`;
-}
-
 export function encodeBytes32(value: bigint): string[] {
   return encodeBytes(value, 32);
 }

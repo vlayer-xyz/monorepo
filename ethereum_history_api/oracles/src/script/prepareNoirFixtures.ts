@@ -1,5 +1,5 @@
 import { createDefaultClient } from '../ethereum/client.js';
-import { writeFile, mkdir } from 'fs/promises';
+import { writeFile, mkdir, rm } from 'fs/promises';
 import { createHeaderFixture } from './noir_fixtures/header.js';
 import { createStateProofFixture } from './noir_fixtures/state_proof.js';
 import { createAccountFixture } from './noir_fixtures/account.js';
@@ -29,7 +29,9 @@ const FIXTURES = {
   }
 } as { [fork: string]: { [fixtureName: string]: { blockNumber: bigint; address: `0x${string}` } } };
 
-const OUT_DIR = './out';
+const OUT_DIR = '../circuits/lib/src/fixtures';
+await rm(OUT_DIR, { recursive: true, force: true });
+
 const client = createDefaultClient();
 for (const hardFork in FIXTURES) {
   let hardforkModule = ``;
@@ -61,7 +63,8 @@ for (const hardFork in FIXTURES) {
 
     const fixtureModule = `mod header;
 mod account;
-mod state_proof;`;
+mod state_proof;
+`;
     const fixtureModuleFile = `${OUT_DIR}/${hardFork}/${fixtureName}.nr`;
     await writeFile(fixtureModuleFile, fixtureModule);
 

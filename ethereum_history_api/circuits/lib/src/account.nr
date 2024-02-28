@@ -4,13 +4,13 @@ use dep::u2b::{u64_to_u8, u120_to_u8};
 use crate::misc::arrays::{alter_array, sub_array_equals_up_to_length};
 use crate::HASH_LENGTH;
 use crate::header::get_header;
-use crate::misc::types::{Address, Bytes8, Bytes15, Bytes32};
+use crate::misc::types::{Address, Bytes32};
 
 global PROOF_LEN = 4788;
 
 struct Account {
-    nonce: Bytes8,
-    balance: Bytes15,
+    nonce: Field,
+    balance: Field,
     storage_root: Bytes32,
     code_hash: Bytes32,
 }
@@ -51,9 +51,9 @@ pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_ST
     let account_rlp: RLP_List<ACCOUNT_FIELDS_COUNT> = decode1_small_lis(account_rlp_rifht_padded);
     assert(account_rlp.num_fields == ACCOUNT_FIELDS_COUNT, "Invalid number of fields in account RLP");
 
-    let nonce = u64_to_u8(account.nonce);
+    let nonce = u64_to_u8(account.nonce as u64);
     let (nonce, nonce_length) = byte_value(nonce);
-    let balance = u120_to_u8(account.balance);
+    let balance = u120_to_u8(account.balance as u120);
     let (balance, balance_length) = byte_value(balance);
 
     assert(account_rlp.length[NONCE_INDEX] == nonce_length, "Nonce length mismatch");
