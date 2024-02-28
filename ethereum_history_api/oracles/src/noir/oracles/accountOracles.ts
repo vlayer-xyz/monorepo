@@ -1,7 +1,7 @@
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { fromRlp, type GetProofReturnType, type Hex, isHex, type PublicClient } from 'viem';
 import { assert } from '../../util/assert.js';
-import { decodeField, decodeHexAddress, encodeField, encodeHex, encodeU120, encodeU64 } from './encode.js';
+import { decodeField, decodeHexAddress, encodeField, encodeHex } from './encode.js';
 import { padArray } from '../../util/array.js';
 import { NoirArguments } from './oracles.js';
 
@@ -48,8 +48,8 @@ export function parseNoirGetAccountArguments(args: NoirArguments): {
 }
 
 export function encodeAccount(ethProof: GetProofReturnType): ForeignCallOutput[] {
-  const nonce = encodeU64(ethProof.nonce);
-  const balance = encodeU120(ethProof.balance);
+  const nonce = encodeField(ethProof.nonce);
+  const balance = encodeField(ethProof.balance);
   const storageRoot = encodeHex(ethProof.storageHash);
   const codeHash = encodeHex(ethProof.codeHash);
 
