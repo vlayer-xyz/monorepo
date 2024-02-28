@@ -13,8 +13,8 @@ global rlp_encoded_left_padded_account = [
   ${value}
 ];
 
-global nonce: u64 = ${stateProof.nonce};
-global balance: u120 = ${balance};
+global nonce = ${stateProof.nonce};
+global balance = ${balance};
 global storage_root = [
     ${storageHash}
 ];

@@ -1,5 +1,5 @@
 import { createDefaultClient } from '../ethereum/client.js';
-import { writeFile, mkdir } from 'fs/promises';
+import { writeFile, mkdir, rm } from 'fs/promises';
 import { createHeaderFixture } from './noir_fixtures/header.js';
 import { createStateProofFixture } from './noir_fixtures/state_proof.js';
 import { createAccountFixture } from './noir_fixtures/account.js';
@@ -61,7 +61,8 @@ for (const hardFork in FIXTURES) {
 
     const fixtureModule = `mod header;
 mod account;
-mod state_proof;`;
+mod state_proof;
+`;
     const fixtureModuleFile = `${OUT_DIR}/${hardFork}/${fixtureName}.nr`;
     await writeFile(fixtureModuleFile, fixtureModule);
 
