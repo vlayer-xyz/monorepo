@@ -29,7 +29,7 @@ const FIXTURES = {
     usdc: {
       blockNumber: 19_000_000n,
       address: USDC_TOKEN_CONTRACT_ADDRESS,
-      storageKey: CIRCLE_USDC_BALANCE_STORAGE_KEY
+      storageKeys: [CIRCLE_USDC_BALANCE_STORAGE_KEY]
     }
   }
 } as {
@@ -37,7 +37,7 @@ const FIXTURES = {
     [fixtureName: string]: {
       blockNumber: bigint;
       address: `0x${string}`;
-      storageKey?: `0x${string}`;
+      storageKeys?: `0x${string}`[];
     };
   };
 };
@@ -51,12 +51,12 @@ for (const hardFork in FIXTURES) {
   const hardforkModuleFile = `${OUT_DIR}/${hardFork}.nr`;
 
   for (const fixtureName in FIXTURES[hardFork]) {
-    const { blockNumber, address, storageKey } = FIXTURES[hardFork][fixtureName];
+    const { blockNumber, address, storageKeys } = FIXTURES[hardFork][fixtureName];
 
     const block = await client.getBlock({ blockNumber });
     const stateProof = await client.getProof({
       address,
-      storageKeys: storageKey ? [storageKey] : [],
+      storageKeys: storageKeys || [],
       blockNumber
     });
 
@@ -68,7 +68,7 @@ for (const hardFork in FIXTURES) {
     await writeFile(fixtureFile('header'), createHeaderFixture(block));
     await writeFile(fixtureFile('account'), createAccountFixture(stateProof));
     await writeFile(fixtureFile('state_proof'), createStateProofFixture(stateProof));
-    if (storageKey) {
+    if (storageKeys) {
       await writeFile(
         fixtureFile('storage_proof'),
         createStorageProofFixture(stateProof.storageHash, stateProof.storageProof)
@@ -76,7 +76,7 @@ for (const hardFork in FIXTURES) {
     }
 
     const fixtureModules = ['header', 'account', 'state_proof'];
-    if (storageKey) {
+    if (storageKeys) {
       fixtureModules.push('storage_proof');
     }
 
