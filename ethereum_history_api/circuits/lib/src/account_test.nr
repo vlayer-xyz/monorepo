@@ -3,7 +3,9 @@ use crate::misc::arrays::alter_array;
 use crate::fixtures::{
     london::{
         crypto_punks::{
-            account::{rlp_encoded_left_padded_account, account, balance, storage_root, code_hash, nonce}
+            account::{rlp_encoded_left_padded_account, account, balance, storage_root, code_hash, nonce},
+            header::state_root,
+            state_proof::state_proof
         }
     }
 };
@@ -54,4 +56,23 @@ fn test_assert_account_equals_code_hash_with_wrong_value() {
     let code_hash_with_wrong_value = alter_array(code_hash);
     let account = Account { nonce, balance, storage_root, code_hash: code_hash_with_wrong_value };
     assert_account_equals(rlp_encoded_left_padded_account, account);
+}
+
+#[test]
+fn test_verify_account() {
+    let _ = verify_account(state_proof.key, account, state_proof, state_root);
+}
+
+#[test(should_fail_with="Address mismatch")]
+fn test_verify_account_wrong_address() {
+    let mut wrong_address = state_proof.key;
+    wrong_address[0] += 1;
+    let _ = verify_account(wrong_address, account, state_proof, state_root);
+}
+
+#[test(should_fail)]
+fn test_verify_account_wrong_state_proof() {
+    let mut wrong_proof = state_proof;
+    wrong_proof.proof[0] += 1;
+    let _ = verify_account(state_proof.key, account, wrong_proof, state_root);
 }
