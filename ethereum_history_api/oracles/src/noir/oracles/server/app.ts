@@ -1,10 +1,11 @@
 import { JSONRPCRequest, JSONRPCServer, TypedJSONRPCServer } from 'json-rpc-2.0';
 import Fastify from 'fastify';
-import { StatusCodes } from 'http-status-codes';
 import http from 'http';
 import { getHeaderHandler, getAccountHandler, JSONRPCServerMethods, ServerParams } from './handlers.js';
 import { createDefaultClient } from '../../../ethereum/client.js';
 import { PublicClient } from 'viem';
+
+const HTTP_STATUS_NO_CONTENT = 204;
 
 const jsonRPCServer: TypedJSONRPCServer<JSONRPCServerMethods, ServerParams> = new JSONRPCServer();
 jsonRPCServer.addMethod('get_header', getHeaderHandler);
@@ -25,7 +26,7 @@ export function buildOracleServer(
       if (jsonRPCResponse) {
         reply.send(jsonRPCResponse);
       } else {
-        reply.status(StatusCodes.NO_CONTENT).send();
+        reply.status(HTTP_STATUS_NO_CONTENT).send();
       }
     });
   });

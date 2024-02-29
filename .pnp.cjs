@@ -3218,15 +3218,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["http-status-codes", [\
-      ["npm:2.3.0", {\
-        "packageLocation": "../../../.yarn/berry/cache/http-status-codes-npm-2.3.0-2ae4a17e36-10c0.zip/node_modules/http-status-codes/",\
-        "packageDependencies": [\
-          ["http-status-codes", "npm:2.3.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["https-proxy-agent", [\
       ["npm:7.0.3", {\
         "packageLocation": "../../../.yarn/berry/cache/https-proxy-agent-npm-7.0.3-18bbc861ac-10c0.zip/node_modules/https-proxy-agent/",\
@@ -4137,7 +4128,6 @@ const RAW_RUNTIME_STATE =
           ["dotenv", "npm:16.4.3"],\
           ["eslint", "npm:8.56.0"],\
           ["fastify", "npm:4.26.1"],\
-          ["http-status-codes", "npm:2.3.0"],\
           ["json-bigint", "npm:1.0.0"],\
           ["json-rpc-2.0", "npm:1.7.0"],\
           ["lodash.isequal", "npm:4.5.0"],\
