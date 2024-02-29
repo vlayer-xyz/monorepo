@@ -69,13 +69,8 @@ for (const hardFork in FIXTURES) {
     await writeFile(fixtureFile('header'), createHeaderFixture(block));
     await writeFile(fixtureFile('account'), createAccountFixture(stateProof));
     await writeFile(fixtureFile('state_proof'), createStateProofFixture(stateProof));
-
-    assert(
-      stateProof.storageProof.length == (storageKey ? 1 : 0),
-      `Expected ${storageKey ? 1 : 0} storage proofs, got ${stateProof.storageProof.length}`
-    );
-    if (stateProof.storageProof.length == 1) {
-      await writeFile(fixtureFile('storage_proof'), createStorageProofFixture(stateProof.storageProof[0]));
+    if (storageKey) {
+      await writeFile(fixtureFile('storage_proof'), createStorageProofFixture(stateProof.storageProof));
     }
 
     const fixtureModules = ['header', 'account', 'state_proof'];
