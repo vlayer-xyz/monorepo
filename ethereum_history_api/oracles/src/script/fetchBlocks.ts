@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 import { createDefaultClient } from '../ethereum/client.js';
 import { writeFile } from 'fs/promises';
 import { stringify } from '../util/json-bigint.js';

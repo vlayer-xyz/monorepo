@@ -1,7 +1,7 @@
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { fromRlp, type GetProofReturnType, type Hex, isHex, type PublicClient } from 'viem';
 import { assert } from '../../util/assert.js';
-import { decodeField, decodeHexAddress, encodeField, encodeHex } from './encode.js';
+import { ADDRESS_LENGTH, decodeField, decodeHexAddress, encodeField, encodeHex } from './encode.js';
 import { padArray } from '../../util/array.js';
 import { NoirArguments } from './oracles.js';
 
@@ -11,6 +11,7 @@ const PROOF_LENGTH = PROOF_ONE_LEVEL_LENGTH * MAX_PROOF_LEVELS;
 const MAX_ACCOUNT_STATE_LENGTH = 134;
 const ZERO_PAD_VALUE = '0x0';
 const RLP_VALUE_INDEX = 1;
+const GET_ACCOUNT_ARGS_COUNT = 2;
 
 export const getAccountOracle = async (client: PublicClient, args: NoirArguments): Promise<ForeignCallOutput[]> => {
   const { blockNumber, address } = parseNoirGetAccountArguments(args);
@@ -28,14 +29,14 @@ export function parseNoirGetAccountArguments(args: NoirArguments): {
   blockNumber: bigint;
   address: Hex;
 } {
-  assert(args.length === 2, 'get_account requires 2 arguments');
+  assert(args.length === GET_ACCOUNT_ARGS_COUNT, 'get_account requires 2 arguments');
 
   const [noirBlockNumber, noirAddress] = args;
 
   assert(noirBlockNumber.length === 1, 'get_account first argument must be an array of length 1');
   assert(isHex(noirBlockNumber[0]), 'get_account first argument must be a hex value');
 
-  assert(noirAddress.length === 20, 'get_account second argument must be an address');
+  assert(noirAddress.length === ADDRESS_LENGTH, 'get_account second argument must be an address');
   assert(
     noirAddress.every((it) => isHex(it)),
     'get_account second argument must be an array of hex string values'

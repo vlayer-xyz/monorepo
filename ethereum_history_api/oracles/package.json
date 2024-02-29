@@ -24,6 +24,7 @@
     "@noir-lang/noir_js": "0.23.0",
     "dotenv": "^16.3.1",
     "fastify": "^4.25.2",
+    "http-status-codes": "^2.3.0",
     "json-bigint": "^1.0.0",
     "json-rpc-2.0": "^1.7.0",
     "lodash.isequal": "^4.5.0",

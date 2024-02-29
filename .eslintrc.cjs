@@ -14,7 +14,8 @@ module.exports = {
         assertionStyle: 'as',
         objectLiteralTypeAssertions: 'allow'
       }
-    ]
+    ],
+    'no-magic-numbers': ['error', { ignore: [0, 1, 16, 256, '0n', '1n'] }]
   },
   overrides: [
     {
@@ -24,6 +25,12 @@ module.exports = {
       files: ['.eslintrc.{js,cjs}'],
       parserOptions: {
         sourceType: 'script'
+      }
+    },
+    {
+      files: ['*.test.ts'],
+      rules: {
+        'no-magic-numbers': 'off'
       }
     }
   ]
