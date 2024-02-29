@@ -22,7 +22,7 @@ use dep::std::test::OracleMock;
 fn test_verify_account() {
     let _ = OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp));
 
-    let _ = verify_account(account, state_proof, state_root);
+    let _ = verify_account(state_proof.key, account, state_proof, state_root);
 }
 
 #[test(should_fail)]
