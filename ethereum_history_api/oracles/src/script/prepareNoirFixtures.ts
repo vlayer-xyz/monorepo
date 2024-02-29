@@ -72,7 +72,7 @@ for (const hardFork in FIXTURES) {
 
     assert(
       stateProof.storageProof.length == (storageKey ? 1 : 0),
-      `Expected ${storageKey ? 1 : 0} storage proof, got ${stateProof.storageProof.length}`
+      `Expected ${storageKey ? 1 : 0} storage proofs, got ${stateProof.storageProof.length}`
     );
     if (stateProof.storageProof.length == 1) {
       await writeFile(fixtureFile('storage_proof'), createStorageProofFixture(stateProof.storageProof[0]));
