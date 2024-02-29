@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "test:unit": "vitest run --config vitest.unit.config.ts",
+    "test:unit:coverage": "vitest run --config vitest.unit.config.ts --coverage",
     "build": "tsc",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts",
