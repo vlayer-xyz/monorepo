@@ -61,19 +61,14 @@ for (const hardFork in FIXTURES) {
       blockNumber
     });
 
-    await mkdir(`${OUT_DIR}/${hardFork}/${fixtureName}`, { recursive: true });
+    const fixtureDirectory = `${OUT_DIR}/${hardFork}/${fixtureName}`;
+    const fixtureFile = (name: string) => `${fixtureDirectory}/${name}.nr`;
 
-    const headerFixture = await createHeaderFixture(block);
-    const headerFile = `${OUT_DIR}/${hardFork}/${fixtureName}/header.nr`;
-    await writeFile(headerFile, headerFixture);
+    await mkdir(fixtureDirectory, { recursive: true });
 
-    const accountFixture = await createAccountFixture(stateProof);
-    const accountFile = `${OUT_DIR}/${hardFork}/${fixtureName}/account.nr`;
-    await writeFile(accountFile, accountFixture);
-
-    const stateProofFixture = await createStateProofFixture(stateProof);
-    const stateProofFile = `${OUT_DIR}/${hardFork}/${fixtureName}/state_proof.nr`;
-    await writeFile(stateProofFile, stateProofFixture);
+    await writeFile(fixtureFile('header'), createHeaderFixture(block));
+    await writeFile(fixtureFile('account'), createAccountFixture(stateProof));
+    await writeFile(fixtureFile('state_proof'), createStateProofFixture(stateProof));
 
     const storageProofLength = stateProof.storageProof.length;
 
@@ -82,9 +77,7 @@ for (const hardFork in FIXTURES) {
       `Number of storage proofs must be 0 or 1, but was ${storageProofLength}`
     );
     if (stateProof.storageProof.length == 1) {
-      const storageProofFixture = await createStorageProofFixture(stateProof.storageProof[0]);
-      const storageProofFile = `${OUT_DIR}/${hardFork}/${fixtureName}/storage_proof.nr`;
-      await writeFile(storageProofFile, storageProofFixture);
+      await writeFile(fixtureFile('storage_proof'), createStorageProofFixture(stateProof.storageProof[0]));
     }
 
     const fixtureModule = `mod header;
