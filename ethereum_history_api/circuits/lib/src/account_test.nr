@@ -16,6 +16,13 @@ fn test_assert_account_equals() {
     assert_account_equals(rlp_encoded_left_padded_account, account);
 }
 
+// TODO: Add correct assertion message when we migrate to Noir >=0.24.0 which fixes assertions order
+#[test(should_fail)]
+fn test_invalid_rlp_field_count() {
+    let rlp_encoded_left_padded_account_with_invalid_field_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 237, 1, 138, 3, 19, 87, 10, 132, 191, 55, 142, 253, 37, 160, 174, 39, 146, 36, 68, 17, 188, 174, 73, 185, 205, 154, 11, 220, 28, 74, 108, 243, 47, 20, 123, 67, 32, 44, 140, 179, 89, 7, 118, 89, 174, 202];
+    assert_account_equals(rlp_encoded_left_padded_account_with_invalid_field_count, account)
+}
+
 #[test(should_fail_with = "Nonce length mismatch")]
 fn test_assert_account_equals_nonce_with_wrong_length() {
     let nonce_with_wrong_length = 0;
@@ -70,6 +77,7 @@ fn test_verify_account_wrong_address() {
     let _ = verify_account(wrong_address, account, state_proof, state_root);
 }
 
+// TODO: Add correct assertion message when we migrate to Noir >=0.24.0 which fixes assertions order
 #[test(should_fail)]
 fn test_verify_account_wrong_state_proof() {
     let mut wrong_proof = state_proof;
