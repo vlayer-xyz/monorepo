@@ -16,9 +16,19 @@ fn test_assert_account_equals() {
     assert_account_equals(rlp_encoded_left_padded_account, account);
 }
 
+global RLP_SHORT_STRING_TYPE = 0x80;
+
 // TODO: Add correct assertion message when we migrate to Noir >=0.24.0 which fixes assertions order
 #[test(should_fail)]
-fn test_invalid_rlp_field_count() {
+fn test_account_rlp_invalid_type() {
+    let mut rlp_empty_string_encoding = [0; MAX_ACCOUNT_STATE_LENGTH];
+    rlp_empty_string_encoding[MAX_ACCOUNT_STATE_LENGTH - 1] = RLP_SHORT_STRING_TYPE;
+    assert_account_equals(rlp_empty_string_encoding, account)
+}
+
+// TODO: Add correct assertion message when we migrate to Noir >=0.24.0 which fixes assertions order
+#[test(should_fail)]
+fn test_account_rlp_invalid_field_count() {
     let rlp_encoded_left_padded_account_with_invalid_field_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 237, 1, 138, 3, 19, 87, 10, 132, 191, 55, 142, 253, 37, 160, 174, 39, 146, 36, 68, 17, 188, 174, 73, 185, 205, 154, 11, 220, 28, 74, 108, 243, 47, 20, 123, 67, 32, 44, 140, 179, 89, 7, 118, 89, 174, 202];
     assert_account_equals(rlp_encoded_left_padded_account_with_invalid_field_count, account)
 }
