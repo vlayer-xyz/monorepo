@@ -61,10 +61,10 @@ for (const hardFork in FIXTURES) {
       blockNumber
     });
 
-    const fixtureDirectory = `${OUT_DIR}/${hardFork}/${fixtureName}`;
-    const fixtureFile = (name: string) => `${fixtureDirectory}/${name}.nr`;
+    const fixturePath = `${OUT_DIR}/${hardFork}/${fixtureName}`;
+    const fixtureFile = (name: string) => `${fixturePath}/${name}.nr`;
 
-    await mkdir(fixtureDirectory, { recursive: true });
+    await mkdir(fixturePath, { recursive: true });
 
     await writeFile(fixtureFile('header'), createHeaderFixture(block));
     await writeFile(fixtureFile('account'), createAccountFixture(stateProof));
@@ -78,12 +78,13 @@ for (const hardFork in FIXTURES) {
       await writeFile(fixtureFile('storage_proof'), createStorageProofFixture(stateProof.storageProof[0]));
     }
 
-    const fixtureModule = `mod header;
-mod account;
-mod state_proof;
-`;
-    const fixtureModuleFile = `${OUT_DIR}/${hardFork}/${fixtureName}.nr`;
-    await writeFile(fixtureModuleFile, fixtureModule);
+    const fixtureModules = ['header', 'account', 'state_proof'];
+    if (storageKey) {
+      fixtureModules.push('storage_proof');
+    }
+
+    const importFixtureModules = fixtureModules.map((name) => `mod ${name};`).join('\n') + '\n';
+    await writeFile(`${fixturePath}.nr`, importFixtureModules);
 
     hardforkModule += `mod ${fixtureName};\n`;
   }
