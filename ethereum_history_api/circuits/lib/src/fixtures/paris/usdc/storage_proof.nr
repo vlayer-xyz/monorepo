@@ -1,7 +1,9 @@
 
-use crate::storage::StorageProof;
+use crate::storage::{StorageProof, StorageProofsWithStorageRoot};
 use crate::misc::types::Bytes32;
 use crate::account::PROOF_LEN;
+
+global storage_root: Bytes32 = [236,249,35,40,236,79,19,252,192,40,24,249,103,163,215,123,232,167,225,17,214,124,198,236,16,58,87,150,142,162,11,197];
 
 global proofs: [StorageProof; 1] = [
   
@@ -19,3 +21,8 @@ global proofs: [StorageProof; 1] = [
   }
 
 ];
+
+global storage_proofs_with_storage_root = StorageProofsWithStorageRoot {
+  storage_root,
+  proofs
+};
