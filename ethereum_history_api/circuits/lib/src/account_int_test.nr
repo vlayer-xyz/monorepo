@@ -2,7 +2,7 @@ use crate::account::get_account;
 use crate::account::verify_account;
 use crate::fixtures::{
     paris::{
-        one_inch::{
+        usdc::{
             header::{
                 number, state_root, block_header_partial, block_header_rlp
             },

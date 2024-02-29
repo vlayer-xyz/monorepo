@@ -9,11 +9,11 @@ use crate::fixtures::{
         block_header_partial as frontier_block_header_partial,
         block_header_rlp as frontier_block_header_rlp,
     },
-    paris::one_inch::header::{
+    paris::usdc::header::{
         block_header_partial as paris_block_header_partial,
         block_header_rlp as paris_block_header_rlp,
     },
-    paris::one_inch::header::{
+    paris::usdc::header::{
         hash, number, state_root, transactions_root, receipts_root
     },
 };
