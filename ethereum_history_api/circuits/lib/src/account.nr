@@ -56,8 +56,8 @@ global STORAGE_ROOT_INDEX = 2;
 global CODE_HASH_INDEX = 3;
 
 pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_STATE_LENGTH], account: Account) {
-    let account_rlp_rifht_padded = byte_value(account_rlp_left_padded).0;
-    let account_rlp: RLP_List<ACCOUNT_FIELDS_COUNT> = decode1_small_lis(account_rlp_rifht_padded);
+    let account_rlp_right_padded = byte_value(account_rlp_left_padded).0;
+    let account_rlp: RLP_List<ACCOUNT_FIELDS_COUNT> = decode1_small_lis(account_rlp_right_padded);
     assert(account_rlp.num_fields == ACCOUNT_FIELDS_COUNT, "Invalid number of fields in account RLP");
 
     let nonce = u64_to_u8(account.nonce as u64);
@@ -69,7 +69,7 @@ pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_ST
     assert(
         sub_array_equals_up_to_length(
             nonce,
-            account_rlp_rifht_padded,
+            account_rlp_right_padded,
             account_rlp.offset[NONCE_INDEX],
             nonce_length as u64
         ), "Nonce mismatch"
@@ -79,7 +79,7 @@ pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_ST
     assert(
         sub_array_equals_up_to_length(
             balance,
-            account_rlp_rifht_padded,
+            account_rlp_right_padded,
             account_rlp.offset[BALANCE_INDEX],
             balance_length as u64
         ), "Balance mismatch"
@@ -89,7 +89,7 @@ pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_ST
     assert(
         sub_array_equals_up_to_length(
             account.storage_root,
-            account_rlp_rifht_padded,
+            account_rlp_right_padded,
             account_rlp.offset[STORAGE_ROOT_INDEX],
             HASH_LENGTH as u64
         ), "Storage root mismatch"
@@ -99,7 +99,7 @@ pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_ST
     assert(
         sub_array_equals_up_to_length(
             account.code_hash,
-            account_rlp_rifht_padded,
+            account_rlp_right_padded,
             account_rlp.offset[CODE_HASH_INDEX],
             HASH_LENGTH as u64
         ), "Code hash mismatch"
