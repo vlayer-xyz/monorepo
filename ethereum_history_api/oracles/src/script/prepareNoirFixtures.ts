@@ -13,27 +13,24 @@ const FIXTURES = {
   frontier: {
     first: {
       blockNumber: 1n,
-      address: '0x40d45d9d7625d15156c932b771ca7b0527130958',
-      storageKeys: []
+      address: '0x40d45d9d7625d15156c932b771ca7b0527130958'
     }
   },
   london: {
     crypto_punks: {
       blockNumber: 14_194_126n,
-      address: '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb',
-      storageKeys: []
+      address: '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb'
     },
     vitalik_balance: {
       blockNumber: 12_965_000n,
-      address: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
-      storageKeys: []
+      address: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
     }
   },
   paris: {
     usdc: {
       blockNumber: 19_000_000n,
       address: USDC_TOKEN_CONTRACT_ADDRESS,
-      storageKeys: [CIRCLE_USDC_BALANCE_STORAGE_KEY]
+      storageKey: CIRCLE_USDC_BALANCE_STORAGE_KEY
     }
   }
 } as {
@@ -41,7 +38,7 @@ const FIXTURES = {
     [fixtureName: string]: {
       blockNumber: bigint;
       address: `0x${string}`;
-      storageKeys: `0x${string}`[];
+      storageKey?: `0x${string}`;
     };
   };
 };
@@ -55,12 +52,12 @@ for (const hardFork in FIXTURES) {
   const hardforkModuleFile = `${OUT_DIR}/${hardFork}.nr`;
 
   for (const fixtureName in FIXTURES[hardFork]) {
-    const { blockNumber, address, storageKeys } = FIXTURES[hardFork][fixtureName];
+    const { blockNumber, address, storageKey } = FIXTURES[hardFork][fixtureName];
 
     const block = await client.getBlock({ blockNumber });
     const stateProof = await client.getProof({
       address,
-      storageKeys: storageKeys,
+      storageKeys: storageKey ? [storageKey] : [],
       blockNumber
     });
 
