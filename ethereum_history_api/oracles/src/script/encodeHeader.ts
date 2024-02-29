@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 import { blockHeaders } from '../../fixtures/blockHeader.json';
 import { assert } from '../util/assert.js';
 import { type BlockHeader } from '../ethereum/blockHeader.js';

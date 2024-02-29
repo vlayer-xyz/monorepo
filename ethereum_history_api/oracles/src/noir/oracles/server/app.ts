@@ -5,6 +5,8 @@ import { getHeaderHandler, getAccountHandler, JSONRPCServerMethods, ServerParams
 import { createDefaultClient } from '../../../ethereum/client.js';
 import { PublicClient } from 'viem';
 
+const HTTP_STATUS_NO_CONTENT = 204;
+
 const jsonRPCServer: TypedJSONRPCServer<JSONRPCServerMethods, ServerParams> = new JSONRPCServer();
 jsonRPCServer.addMethod('get_header', getHeaderHandler);
 jsonRPCServer.addMethod('get_account', getAccountHandler);
@@ -24,7 +26,7 @@ export function buildOracleServer(
       if (jsonRPCResponse) {
         reply.send(jsonRPCResponse);
       } else {
-        reply.status(204).send();
+        reply.status(HTTP_STATUS_NO_CONTENT).send();
       }
     });
   });

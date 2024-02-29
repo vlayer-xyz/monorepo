@@ -1,7 +1,13 @@
 import { type Address, isAddress, isHex } from 'viem';
 import { assert } from '../../util/assert.js';
+import { BYTE_HEX_LENGTH } from '../../util/const.js';
 
 export const MODULUS = 21888242871839275222246405745257275088696311157297823662689037894645226208583n;
+
+const BYTES32_LENGTH = 32;
+export const ADDRESS_LENGTH = 20;
+const BITS_IN_BYTE = 8n;
+const MAX_U8 = 255;
 
 // ENCODERS
 export function encodeField(arg: number | bigint): string {
@@ -11,7 +17,7 @@ export function encodeField(arg: number | bigint): string {
 }
 
 export function encodeBytes32(value: bigint): string[] {
-  return encodeBytes(value, 32);
+  return encodeBytes(value, BYTES32_LENGTH);
 }
 
 export function encodeAddress(value: Address): string[] {
@@ -21,8 +27,8 @@ export function encodeAddress(value: Address): string[] {
 
 export function encodeBytes(value: bigint, length: number): string[] {
   assert(value >= 0n, 'Invalid Bytes32: Negative');
-  assert(value < 1n << (8n * BigInt(length)), 'Invalid Bytes32: Overflow');
-  const hexValue = value.toString(16).padStart(length * 2, '0');
+  assert(value < 1n << (BITS_IN_BYTE * BigInt(length)), 'Invalid Bytes32: Overflow');
+  const hexValue = value.toString(16).padStart(length * BYTE_HEX_LENGTH, '0');
   return encodeHex(`0x${hexValue}`);
 }
 
@@ -31,8 +37,8 @@ export function encodeHex(hexString: string): string[] {
     throw new Error(`Invalid hexstring: ${hexString}`);
   }
   const chunks = [];
-  for (let i = 2; i < hexString.length; i += 2) {
-    const chunk = hexString.substring(i, i + 2);
+  for (let i = BYTE_HEX_LENGTH; i < hexString.length; i += BYTE_HEX_LENGTH) {
+    const chunk = hexString.substring(i, i + BYTE_HEX_LENGTH);
     chunks.push(`0x${chunk[0] === '0' ? chunk[1] : chunk}`);
   }
   return chunks;
@@ -40,17 +46,17 @@ export function encodeHex(hexString: string): string[] {
 
 // DECODERS
 export function decodeHexAddress(arg: string[]): Address {
-  assert(arg.length === 20, `Invalid address length: ${arg.length}`);
+  assert(arg.length === ADDRESS_LENGTH, `Invalid address length: ${arg.length}`);
   for (const e of arg) {
     const d = parseInt(e, 16);
-    assert(0 <= d && d <= 255 && isHex(e), `Invalid address, with byte: ${e}`);
+    assert(0 <= d && d <= MAX_U8 && isHex(e), `Invalid address, with byte: ${e}`);
   }
 
   const result =
     '0x' +
     arg
       .map((e) => parseInt(e, 16))
-      .map((e) => e.toString(16).padStart(2, '0'))
+      .map((e) => e.toString(16).padStart(BYTE_HEX_LENGTH, '0'))
       .join('');
 
   assert(isAddress(result), `Invalid address: ${result}`);
