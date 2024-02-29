@@ -1,6 +1,5 @@
 import { isHex } from 'viem';
-
-const BYTE_HEX_LENGTH = 2;
+import { BYTE_HEX_LENGTH } from '../../util/const.js';
 
 // ENCODERS
 export function encodeHexString(value: string): Uint8Array {

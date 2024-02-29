@@ -1,8 +1,9 @@
 import { type Address, isAddress, isHex } from 'viem';
 import { assert } from '../../util/assert.js';
+import { BYTE_HEX_LENGTH } from '../../util/const.js';
 
 export const MODULUS = 21888242871839275222246405745257275088696311157297823662689037894645226208583n;
-const BYTE_HEX_LENGTH = 2;
+
 const BYTES32_LENGTH = 32;
 export const ADDRESS_LENGTH = 20;
 const BITS_IN_BYTE = 8n;
