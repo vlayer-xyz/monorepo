@@ -1,7 +1,7 @@
 use dep::proof::{rlp::{RLP_List, decode1_small_lis}, MAX_ACCOUNT_STATE_LENGTH, KEY_LENGTH, TrieProof, byte_value};
 use dep::std::println;
 use dep::u2b::{u64_to_u8, u120_to_u8};
-use crate::misc::arrays::{alter_array, sub_array_equals_up_to_length};
+use crate::misc::arrays::{alter_array, sub_array_equals_up_to_length, array_equals};
 use crate::HASH_LENGTH;
 use crate::header::get_header;
 use crate::misc::types::{Address, Bytes32};
@@ -16,7 +16,7 @@ struct Account {
 }
 
 struct StateProof {
-    key: [u8; 20],
+    key: Address,
     value: [u8; MAX_ACCOUNT_STATE_LENGTH],
     proof: [u8; PROOF_LEN],
     depth: Field,
@@ -32,7 +32,7 @@ type AccountWithStateProof = (Account, StateProof);
 pub fn get_account(block_no: Field, address: Address) -> AccountWithinBlock {
     let (account, state_proof) = get_account_unconstrained(block_no, address);
     let header = get_header(block_no);
-    verify_account(account, state_proof, header.state_root);
+    verify_account(address, account, state_proof, header.state_root);
     AccountWithinBlock {
         account,
         block_hash: header.hash
@@ -106,6 +106,10 @@ pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_ST
     );
 }
 
+fn assert_address_equals(address1: Address, address2: Address) {
+    assert(array_equals(address1, address2), "Address mismatch");
+}
+
 fn assert_account_proof(account_state_proof: StateProof, state_root: [u8; KEY_LENGTH]) {
     let trie_proof = TrieProof {
         key: account_state_proof.key,
@@ -117,10 +121,13 @@ fn assert_account_proof(account_state_proof: StateProof, state_root: [u8; KEY_LE
 }
 
 pub fn verify_account(
+    address: Address,
     account: Account,
     state_proof: StateProof,
     state_root: [u8; KEY_LENGTH]
 ) {
+
+    assert_address_equals(state_proof.key, address);
     assert_account_equals(state_proof.value, account);
     assert_account_proof(state_proof, state_root);
 }

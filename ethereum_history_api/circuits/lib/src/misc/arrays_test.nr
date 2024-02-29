@@ -1,4 +1,4 @@
-use crate::misc::arrays::{sub_array_equals_up_to_length, sub_array_equals};
+use crate::misc::arrays::{sub_array_equals_up_to_length, sub_array_equals, array_equals};
 
 #[test]
 fn test_assert_sub_array_equals() {
@@ -37,17 +37,36 @@ fn test_assert_sub_array_equals_array_out_of_bound() {
 
 #[test]
 fn test_sub_array_equals() {
-    let a: [Field; 3] = [2, 3, 4];
-    let b: [Field; 5] = [1, 2, 3, 4, 5];
-    assert(sub_array_equals(a, b, 1));
-    assert(!sub_array_equals(a, b, 0));
-    assert(!sub_array_equals(a, b, 2));
-    assert(!sub_array_equals(a, b, 2));
+    let sub_array: [Field; 3] = [2, 3, 4];
+    let array: [Field; 5] = [1, 2, 3, 4, 5];
+    assert(sub_array_equals(sub_array, array, 1));
+    assert(!sub_array_equals(sub_array, array, 0));
+    assert(!sub_array_equals(sub_array, array, 2));
+    assert(!sub_array_equals(sub_array, array, 2));
 }
 
 #[test(should_fail_with = "array index out of bound")]
 fn test_sub_array_equals_index_out_of_bound() -> bool {
-    let a: [Field; 3] = [2, 3, 4];
-    let b: [Field; 5] = [1, 2, 3, 4, 5];
-    sub_array_equals(a, b, 3)
+    let sub_array: [Field; 3] = [2, 3, 4];
+    let array: [Field; 5] = [1, 2, 3, 4, 5];
+    sub_array_equals(sub_array, array, 3)
+}
+
+#[test]
+fn test_empty_array_equals() {
+    let empty_array: [Field; 0] = [];
+    assert(array_equals(empty_array, empty_array));
+}
+
+#[test]
+fn test_array_equals() {
+    let array: [Field; 3] = [1, 2, 3];
+    assert(array_equals(array, array));
+}
+
+#[test(should_fail_with = "Arrays not equal")]
+fn test_array_not_equals() {
+    let array: [Field; 3] = [1, 2, 3];
+    let other_array: [Field; 3] = [1, 2, 4];
+    assert(array_equals(array, other_array), "Arrays not equal");
 }

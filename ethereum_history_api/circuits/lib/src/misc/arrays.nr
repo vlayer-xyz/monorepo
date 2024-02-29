@@ -26,3 +26,7 @@ pub fn sub_array_equals<T, N, M>(subarray: [T; N], array: [T; M], offset: Field)
     }
     result
 }
+
+pub fn array_equals<T, N>(array1: [T; N], array2: [T; N]) -> bool where T: Eq {
+    sub_array_equals(array1, array2, 0)
+}
