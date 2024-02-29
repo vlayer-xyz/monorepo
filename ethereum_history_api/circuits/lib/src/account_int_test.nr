@@ -25,11 +25,11 @@ fn test_verify_account() {
     let _ = verify_account(state_proof.key, account, state_proof, state_root);
 }
 
-#[test(should_fail)]
+#[test(should_fail_with="Address mismatch")]
 fn test_verify_account_wrong_address() {
     let _ = OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp));
 
-    let _ = verify_account(state_proof_from_different_header.key, account, state_proof, state_root_from_different_header);
+    let _ = verify_account(state_proof_from_different_header.key, account, state_proof, state_root);
 
 }
 
