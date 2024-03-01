@@ -9,18 +9,18 @@ export function createStateProofFixture(stateProof: GetProofReturnType): string 
   const depth = stateProof.accountProof.length;
   const stateProofFixture = `use crate::account::StateProof;
 
-global key = [
+global state_proof = StateProof {
+  key: [
     ${key}
-];
-global value = [
+  ],
+  value: [
     ${value}
-];
-global proof = [
+  ],
+  proof: [
     ${proof}
-];
-global depth = ${depth};
-
-global state_proof = StateProof {key, value, proof, depth};
+  ],
+  depth: ${depth},
+};
 `;
   return stateProofFixture;
 }
