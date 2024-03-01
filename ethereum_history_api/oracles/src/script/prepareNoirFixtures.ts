@@ -1,11 +1,11 @@
-import { createDefaultClient } from '../ethereum/client.js';
 import { writeFile, mkdir, rm } from 'fs/promises';
+import { join } from 'path';
+import { createDefaultClient } from '../ethereum/client.js';
 import { createHeaderFixture } from './noir_fixtures/header.js';
 import { createStateProofFixture } from './noir_fixtures/state_proof.js';
 import { createAccountFixture } from './noir_fixtures/account.js';
 import { createStorageProofFixture } from './noir_fixtures/storage_proof.js';
 
-const USDC_TOKEN_CONTRACT_ADDRESS = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48';
 const CIRCLE_USDC_BALANCE_STORAGE_KEY = '0x57d18af793d7300c4ba46d192ec7aa095070dde6c52c687c6d0d92fb8532b305';
 
 const FIXTURES = {
@@ -28,7 +28,7 @@ const FIXTURES = {
   paris: {
     usdc: {
       blockNumber: 19_000_000n,
-      address: USDC_TOKEN_CONTRACT_ADDRESS,
+      address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       storageKeys: [CIRCLE_USDC_BALANCE_STORAGE_KEY]
     }
   }
@@ -60,17 +60,16 @@ for (const hardFork in FIXTURES) {
       blockNumber
     });
 
-    const fixturePath = `${OUT_DIR}/${hardFork}/${fixtureName}`;
-    const fixtureFile = (name: string) => `${fixturePath}/${name}.nr`;
+    const modulePath = `${OUT_DIR}/${hardFork}/${fixtureName}`;
 
-    await mkdir(fixturePath, { recursive: true });
+    await mkdir(modulePath, { recursive: true });
 
-    await writeFile(fixtureFile('header'), createHeaderFixture(block));
-    await writeFile(fixtureFile('account'), createAccountFixture(stateProof));
-    await writeFile(fixtureFile('state_proof'), createStateProofFixture(stateProof));
+    await writeFile(join(modulePath, 'header.nr'), createHeaderFixture(block));
+    await writeFile(join(modulePath, 'account.nr'), createAccountFixture(stateProof));
+    await writeFile(join(modulePath, 'state_proof.nr'), createStateProofFixture(stateProof));
     if (storageKeys) {
       await writeFile(
-        fixtureFile('storage_proof'),
+        join(modulePath, 'storage_proof.nr'),
         createStorageProofFixture(stateProof.storageHash, stateProof.storageProof)
       );
     }
@@ -81,7 +80,7 @@ for (const hardFork in FIXTURES) {
     }
 
     const importFixtureModules = fixtureModules.map((name) => `mod ${name};`).join('\n') + '\n';
-    await writeFile(`${fixturePath}.nr`, importFixtureModules);
+    await writeFile(`${modulePath}.nr`, importFixtureModules);
 
     hardforkModule += `mod ${fixtureName};\n`;
   }
