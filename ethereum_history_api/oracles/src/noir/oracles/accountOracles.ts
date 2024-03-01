@@ -1,15 +1,22 @@
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { fromRlp, type GetProofReturnType, type Hex, isHex, type PublicClient } from 'viem';
 import { assert } from '../../util/assert.js';
-import { ADDRESS_LENGTH, decodeField, decodeHexAddress, encodeField, encodeHex } from './encode.js';
+import {
+  ADDRESS_LENGTH,
+  PROOF_ONE_LEVEL_LENGTH,
+  ZERO_PAD_VALUE,
+  decodeField,
+  decodeHexAddress,
+  encodeField,
+  encodeHex,
+  encodeProof
+} from './encode.js';
 import { padArray } from '../../util/array.js';
 import { NoirArguments } from './oracles.js';
 
-const PROOF_ONE_LEVEL_LENGTH = 532;
-const MAX_PROOF_LEVELS = 9;
-const PROOF_LENGTH = PROOF_ONE_LEVEL_LENGTH * MAX_PROOF_LEVELS;
+const MAX_STATE_PROOF_LEVELS = 9;
+export const STATE_PROOF_LENGTH = PROOF_ONE_LEVEL_LENGTH * MAX_STATE_PROOF_LEVELS;
 const MAX_ACCOUNT_STATE_LENGTH = 134;
-const ZERO_PAD_VALUE = '0x0';
 const RLP_VALUE_INDEX = 1;
 const GET_ACCOUNT_ARGS_COUNT = 2;
 
@@ -60,19 +67,10 @@ export function encodeAccount(ethProof: GetProofReturnType): ForeignCallOutput[]
 export function encodeStateProof(ethProof: GetProofReturnType): ForeignCallOutput[] {
   const key = encodeHex(ethProof.address);
   const value = encodeValue(ethProof.accountProof);
-  const proof = encodeProof(ethProof.accountProof);
+  const proof = encodeProof(ethProof.accountProof, STATE_PROOF_LENGTH);
   const depth = encodeField(ethProof.accountProof.length);
 
   return [key, value, proof, depth];
-}
-
-export function encodeProof(proof: string[]): string[] {
-  const encodedUnpaddedProof = proof
-    .map((it) => encodeHex(it))
-    .map((it) => padArray(it, PROOF_ONE_LEVEL_LENGTH, ZERO_PAD_VALUE))
-    .reduce((accumulator, current) => accumulator.concat(current), []);
-  const encodedProof = padArray(encodedUnpaddedProof, PROOF_LENGTH, ZERO_PAD_VALUE);
-  return encodedProof;
 }
 
 export function encodeValue(proof: Hex[]): string[] {

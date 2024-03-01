@@ -1,0 +1,15 @@
+use crate::misc::types::Bytes32;
+
+global STORAGE_PROOF_LEN = 3724; // = 7 (MAX_STORAGE_PROOF_LEVELS) * 532 (MAX_TRIE_NODE_LENGTH)
+
+struct StorageProofsWithStorageRoot<N> {
+    storage_root: Bytes32,
+    proofs: [StorageProof; N]
+}
+
+struct StorageProof {
+    key: Bytes32,
+    value: Bytes32,
+    proof: [u8; STORAGE_PROOF_LEN],
+    depth: Field
+}

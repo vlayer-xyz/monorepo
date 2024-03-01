@@ -6,7 +6,7 @@ use crate::HASH_LENGTH;
 use crate::header::get_header;
 use crate::misc::types::{Address, Bytes32};
 
-global PROOF_LEN = 4788;
+global STATE_PROOF_LEN = 4788; // = 9 (MAX_STATE_PROOF_LEVELS) * 532 (MAX_TRIE_NODE_LENGTH)
 
 struct Account {
     nonce: Field,
@@ -18,7 +18,7 @@ struct Account {
 struct StateProof {
     key: Address,
     value: [u8; MAX_ACCOUNT_STATE_LENGTH],
-    proof: [u8; PROOF_LEN],
+    proof: [u8; STATE_PROOF_LEN],
     depth: Field,
 }
 
