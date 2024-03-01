@@ -1,6 +1,6 @@
 import { GetProofReturnType } from 'viem';
 import { encodeHexString } from '../../noir/noir_js/encode.js';
-import { STATE_PROOF_LENGTH, encodeValue } from '../../noir/oracles/accountOracles.js';
+import { STATE_PROOF_LENGTH, encodeValue } from '../../noir/oracles/accountOracle.js';
 import { encodeProof } from '../../noir/oracles/encode.js';
 
 export function createStateProofFixture(stateProof: GetProofReturnType): string {

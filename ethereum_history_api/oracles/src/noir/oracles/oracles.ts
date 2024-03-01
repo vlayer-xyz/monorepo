@@ -1,6 +1,6 @@
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { createDefaultClient } from '../../ethereum/client.js';
-import { getAccountOracle } from './accountOracles.js';
+import { getAccountOracle } from './accountOracle.js';
 import { type PublicClient } from 'viem';
 import { getHeaderOracle } from './headerOracle.js';
 

@@ -1,6 +1,6 @@
 import { PublicClient } from 'viem';
 import { ForeignCallResult, ForeignCallParams } from './types.js';
-import { getAccountOracle } from '../accountOracles.js';
+import { getAccountOracle } from '../accountOracle.js';
 import { getHeaderOracle } from '../headerOracle.js';
 import { decodeNoirArguments, encodeForeignCallResult } from './encode.js';
 
