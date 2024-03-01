@@ -12,10 +12,7 @@ export const getHeaderOracle = async (client: PublicClient, args: NoirArguments)
   const blockNumber: bigint = parseNoirGetHeaderArguments(args);
   const blockHeader: BlockHeader = await getBlock(client, blockNumber);
 
-  const partial = encodeBlockHeaderPartial(blockHeader);
-  const rlp = encodeBlockHeaderRlp(blockHeader);
-
-  return [...partial, ...rlp];
+  return encodeBlockHeader(blockHeader);
 };
 
 export function parseNoirGetHeaderArguments(args: NoirArguments): bigint {
