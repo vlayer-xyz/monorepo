@@ -6,5 +6,6 @@ mod header_test;
 mod header_int_test;
 mod misc;
 mod fixtures;
+mod solidity_storage_layout;
 
 global HASH_LENGTH = 32;
