@@ -9,12 +9,13 @@ export function createStorageProofFixture(
 ): string {
   const storageProofsNoir = storageProofs.map(createSingleStorageProofFixture);
   const encodedStorageRoot = encodeHexString(storageRoot);
-  return `
-use crate::storage::{StorageProof, StorageProofsWithStorageRoot};
+  return `use crate::storage::{StorageProof, StorageProofsWithStorageRoot};
 use crate::misc::types::Bytes32;
-use crate::account::PROOF_LEN;
+use crate::storage::STORAGE_PROOF_LEN;
 
-global storage_root: Bytes32 = [${encodedStorageRoot}];
+global storage_root: Bytes32 = [
+  ${encodedStorageRoot}
+];
 
 global proofs: [StorageProof; ${storageProofs.length}] = [
   ${storageProofsNoir.join(',\n')}
@@ -32,8 +33,7 @@ function createSingleStorageProofFixture(storageProof: { key: Hash; proof: Hash[
   const value = encodeBytes32(storageProof.value);
   const proof = encodeProof(storageProof.proof).map((byte) => parseInt(byte, 16));
   const depth = storageProof.proof.length;
-  const storageProofFixture = `
-  StorageProof {
+  const storageProofFixture = `StorageProof {
     key: [
       ${key}
     ],
@@ -44,7 +44,6 @@ function createSingleStorageProofFixture(storageProof: { key: Hash; proof: Hash[
       ${proof}
     ],
     depth: ${depth}
-  }
-`;
+  }`;
   return storageProofFixture;
 }

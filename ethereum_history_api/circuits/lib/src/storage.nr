@@ -1,5 +1,6 @@
 use crate::misc::types::Bytes32;
-use crate::account::PROOF_LEN;
+
+global STORAGE_PROOF_LEN = 4788;
 
 struct StorageProofsWithStorageRoot<N> {
     storage_root: Bytes32,
@@ -9,6 +10,6 @@ struct StorageProofsWithStorageRoot<N> {
 struct StorageProof {
     key: Bytes32,
     value: Bytes32,
-    proof: [u8; PROOF_LEN],
+    proof: [u8; STORAGE_PROOF_LEN],
     depth: Field
 }
