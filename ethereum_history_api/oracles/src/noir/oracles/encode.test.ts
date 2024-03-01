@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { decodeField, decodeHexAddress, encodeAddress, encodeBytes32 } from './encode.js';
+import { decodeField, decodeHexAddress, encodeAddress, encodeBytes32, encodeHex } from './encode.js';
+
+describe('encodeHex', () => {
+  it('invalid hexstring', () => {
+    expect(() => encodeHex('0xg')).toThrow('Invalid hexstring: 0xg');
+  });
+});
 
 describe('encodeBytes32', () => {
   it('zero', () => {
