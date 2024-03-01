@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "test:e2e": "vitest run --config vitest.e2e.config.ts",
-    "test:e2e:coverage": "vitest run --config vitest.e2e.config.ts --coverage",
+    "test:e2e:coverage": "vitest run --config vitest.e2e.config.ts --coverage && echo '\nTo open a nicer version of this coverage report, run `open coverage/index.html`\n'",
     "build": "tsc",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts",
