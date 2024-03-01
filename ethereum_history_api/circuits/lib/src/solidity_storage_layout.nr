@@ -1,26 +1,44 @@
 use crate::misc::{
-    types::U256,
+    types::{U256, Bytes32},
     U256::add_u64_to_U256,
     arrays::pad_left
 };
 use dep::std::hash::keccak256;
 
-fn map(slot: U256, key: U256) -> U256 {
-    let mut preimage: [u8; 64] = [0; 64];
+fn concat_Bytes32_values(left: Bytes32, right: Bytes32) -> [u8; 64] {
+    let mut result = [0; 64];
     for i in 0..32 {
-        preimage[i] = key[i];
+        result[i] = left[i];
     }
     for i in 0..32 {
-        preimage[i + 32] = slot[i];
+        result[32 + i] = right[i];
     }
+    result
+}
+
+pub fn map(slot: U256, key: U256) -> U256 {
+    let preimage = concat_Bytes32_values(key, slot);
     let storage_slot = keccak256(preimage, 64);
     storage_slot
 }
 
-fn array(slot: U256, index: u64) -> U256 {
+pub fn array(slot: U256, index: u64) -> U256 {
     let mut array_storage_slot = keccak256(slot, 32);
     let array_element_storage_slot = add_u64_to_U256(array_storage_slot, index);
     array_element_storage_slot
+}
+
+#[test]
+fn test_concat_Bytes32_values() {
+    let left = pad_left([1]);
+    let right = pad_left([2]);
+    let result = concat_Bytes32_values(left, right);
+    assert_eq(
+        result, [
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2
+    ]
+    );
 }
 
 #[test]
