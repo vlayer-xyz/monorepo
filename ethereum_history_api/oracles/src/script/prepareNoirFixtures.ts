@@ -1,5 +1,6 @@
 import { writeFile, mkdir, rm } from 'fs/promises';
 import { join } from 'path';
+import { type Address, type Hex } from 'viem';
 import { createDefaultClient } from '../ethereum/client.js';
 import { createHeaderFixture } from './noir_fixtures/header.js';
 import { createStateProofFixture } from './noir_fixtures/state_proof.js';
@@ -8,7 +9,19 @@ import { createStorageProofFixture } from './noir_fixtures/storage_proof.js';
 
 const CIRCLE_USDC_BALANCE_STORAGE_KEY = '0x57d18af793d7300c4ba46d192ec7aa095070dde6c52c687c6d0d92fb8532b305';
 
-const FIXTURES = {
+interface Fixture {
+  blockNumber: bigint;
+  address: Address;
+  storageKeys?: Hex[];
+}
+
+interface Fixtures {
+  [hardFork: string]: {
+    [name: string]: Fixture;
+  };
+}
+
+const FIXTURES: Fixtures = {
   frontier: {
     first: {
       blockNumber: 1n,
@@ -32,14 +45,6 @@ const FIXTURES = {
       storageKeys: [CIRCLE_USDC_BALANCE_STORAGE_KEY]
     }
   }
-} as {
-  [fork: string]: {
-    [fixtureName: string]: {
-      blockNumber: bigint;
-      address: `0x${string}`;
-      storageKeys?: `0x${string}`[];
-    };
-  };
 };
 
 const OUT_DIR = '../circuits/lib/src/fixtures';
