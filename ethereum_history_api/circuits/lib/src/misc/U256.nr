@@ -89,9 +89,9 @@ pub(crate) fn add_u64_to_U256(left: U256, right: u64) -> U256 {
 
 #[test]
 fn test_add_u64_to_U256() {
-    let one = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1];
+    let one = pad_left([1]);
     let two = 2;
-    let three = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3];
+    let three = pad_left([3]);
 
     assert(array_equals(add_u64_to_U256(one, two), three));
 }
