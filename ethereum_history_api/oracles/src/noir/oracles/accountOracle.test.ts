@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { encodeAccount, encodeStateProof, parseNoirGetAccountArguments } from './accountOracles.js';
+import { encodeAccount, encodeStateProof, parseNoirGetAccountArguments } from './accountOracle.js';
 import { type GetProofReturnType } from 'viem';
 import { ForeignCallOutput } from '@noir-lang/noir_js';
 import { readFile } from 'fs/promises';

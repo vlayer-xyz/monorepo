@@ -1,6 +1,6 @@
 import { GetProofReturnType } from 'viem';
 import { encodeHexString } from '../../noir/noir_js/encode.js';
-import { encodeValue } from '../../noir/oracles/accountOracles.js';
+import { encodeValue } from '../../noir/oracles/accountOracle.js';
 
 export function createAccountFixture(stateProof: GetProofReturnType): string {
   const balance = '0x' + stateProof.balance.toString(16);
