@@ -1,7 +1,7 @@
 import { Hash } from 'viem';
 import { encodeHexString } from '../../noir/noir_js/encode.js';
-import { encodeProof } from '../../noir/oracles/accountOracles.js';
-import { encodeBytes32 } from '../../noir/oracles/encode.js';
+import { encodeBytes32, encodeProof } from '../../noir/oracles/encode.js';
+import { STORAGE_PROOF_LENGTH } from '../../noir/oracles/storageOracle.js';
 
 type StorageProof = {
   key: Hash;
@@ -28,7 +28,7 @@ global storage_proofs_with_storage_root = StorageProofsWithStorageRoot {
 function createSingleStorageProofFixture(storageProof: StorageProof): string {
   const key = encodeHexString(storageProof.key);
   const value = encodeBytes32(storageProof.value);
-  const proof = encodeProof(storageProof.proof).map((byte) => parseInt(byte, 16));
+  const proof = encodeProof(storageProof.proof, STORAGE_PROOF_LENGTH).map((byte) => parseInt(byte, 16));
   const depth = storageProof.proof.length;
   const storageProofFixture = `StorageProof {
       key: [

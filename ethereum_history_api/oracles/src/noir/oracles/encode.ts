@@ -1,6 +1,7 @@
 import { type Address, isAddress, isHex } from 'viem';
 import { assert } from '../../util/assert.js';
 import { BYTE_HEX_LENGTH } from '../../util/const.js';
+import { padArray } from '../../util/array.js';
 
 export const MODULUS = 21888242871839275222246405745257275088696311157297823662689037894645226208583n;
 
@@ -8,6 +9,8 @@ const BYTES32_LENGTH = 32;
 export const ADDRESS_LENGTH = 20;
 const BITS_IN_BYTE = 8n;
 const MAX_U8 = 255;
+export const PROOF_ONE_LEVEL_LENGTH = 532;
+export const ZERO_PAD_VALUE = '0x0';
 
 // ENCODERS
 export function encodeField(arg: number | bigint): string {
@@ -42,6 +45,15 @@ export function encodeHex(hexString: string): string[] {
     chunks.push(`0x${chunk[0] === '0' ? chunk[1] : chunk}`);
   }
   return chunks;
+}
+
+export function encodeProof(proof: string[], length: number): string[] {
+  const encodedUnpaddedProof = proof
+    .map((it) => encodeHex(it))
+    .map((it) => padArray(it, PROOF_ONE_LEVEL_LENGTH, ZERO_PAD_VALUE))
+    .reduce((accumulator, current) => accumulator.concat(current), []);
+  const encodedProof = padArray(encodedUnpaddedProof, length, ZERO_PAD_VALUE);
+  return encodedProof;
 }
 
 // DECODERS
