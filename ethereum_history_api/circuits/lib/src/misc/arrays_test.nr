@@ -1,4 +1,4 @@
-use crate::misc::arrays::{sub_array_equals_up_to_length, sub_array_equals, array_equals};
+use crate::misc::arrays::{sub_array_equals_up_to_length, sub_array_equals, array_equals, pad_left};
 
 #[test]
 fn test_assert_sub_array_equals() {
@@ -69,4 +69,11 @@ fn test_array_not_equals() {
     let array: [Field; 3] = [1, 2, 3];
     let other_array: [Field; 3] = [1, 2, 4];
     assert(array_equals(array, other_array), "Arrays not equal");
+}
+
+#[test]
+fn test_pad_left() {
+    let array: [u8; 2] = [1, 2];
+    let padded_array: [u8; 4] = [0, 0, 1, 2];
+    assert(array_equals(padded_array, pad_left(array)));
 }

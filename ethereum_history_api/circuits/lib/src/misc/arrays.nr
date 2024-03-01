@@ -30,3 +30,11 @@ pub fn sub_array_equals<T, N, M>(subarray: [T; N], array: [T; M], offset: Field)
 pub fn array_equals<T, N>(array1: [T; N], array2: [T; N]) -> bool where T: Eq {
     sub_array_equals(array1, array2, 0)
 }
+
+pub fn pad_left<LEN, PADDED_LEN>(array: [u8; LEN]) -> [u8; PADDED_LEN] {
+    let mut result = [0; PADDED_LEN];
+    for i in 0..LEN {
+        result[PADDED_LEN - LEN + i] = array[i];
+    }
+    result
+}
