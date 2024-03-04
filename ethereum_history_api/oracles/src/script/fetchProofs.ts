@@ -28,8 +28,10 @@ const proofWithStorage: GetProofReturnType = await client.getProof({
   blockNumber: getProofParams.blockNumber
 });
 
-await writeFile(filePath, stringify(proof, null, '  '));
+const indent = '  ';
+
+await writeFile(filePath, stringify(proof, null, indent));
 console.log(`File has been saved: ${filePath}`);
 
-await writeFile(filePathStorage, stringify(proofWithStorage, null, '  '));
+await writeFile(filePathStorage, stringify(proofWithStorage, null, indent));
 console.log(`File has been saved: ${filePathStorage}`);
