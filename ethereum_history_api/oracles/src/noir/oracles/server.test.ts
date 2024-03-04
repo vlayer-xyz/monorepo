@@ -45,9 +45,9 @@ describe('mock oracle server', async () => {
   });
 
   it('close server when callback throws an exception', async () => {
-    expect(
+    await expect(
       async () =>
-        await withMockOracleServer(async () => {
+        await withMockOracleServer(() => {
           throw new Error('error');
         })
     ).rejects.toThrow('error');
