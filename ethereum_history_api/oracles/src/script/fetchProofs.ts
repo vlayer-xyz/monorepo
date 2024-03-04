@@ -3,7 +3,7 @@ import { writeFile } from 'fs/promises';
 import { stringify } from '../util/json-bigint.js';
 import { type GetProofParameters, type GetProofReturnType } from 'viem';
 
-const filePath = './result.json';
+const filePath = './fixtures/eth_getProof_response.json';
 
 const getProofParams: GetProofParameters = {
   address: '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb',
