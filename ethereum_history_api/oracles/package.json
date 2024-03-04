@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "test:unit": "vitest run --config vitest.unit.config.ts",
+    "test:unit:coverage": "vitest run --config vitest.unit.config.ts --coverage && echo '\nRun `open coverage/index.html` to open HTML coverage report\n'",
     "build": "tsc",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts",
@@ -34,11 +35,12 @@
     "@types/json-bigint": "^1",
     "@types/lodash.isequal": "^4",
     "@types/node": "^20.10.5",
+    "@vitest/coverage-v8": "^1.3.1",
     "eslint": "^8.56.0",
     "pino-pretty": "^10.3.1",
     "prettier": "^3.1.1",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3",
-    "vitest": "^1.0.4"
+    "vitest": "^1.3.1"
   }
 }
