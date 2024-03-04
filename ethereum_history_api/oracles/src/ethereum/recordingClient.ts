@@ -1,56 +1,46 @@
 import { PublicClient } from 'viem';
 
-type CallWithResultPromise = {
-  method: string;
-  arguments: object[];
-  result: Promise<object>;
-};
-
 export type Call = {
   method: string;
-  arguments: object[];
-  result: object;
+  arguments: unknown[];
+  result: unknown;
 };
 
-export type GetCalls = { getCalls: () => Promise<Call[]> };
+export interface EthClient {
+  [key: string]: unknown;
+}
+
+export type GetCalls = { getCalls: () => Call[] };
 export type RecordingClient = PublicClient & GetCalls;
 
 export const isEthereumApiMethod = (methodName: string) => methodName.startsWith('get');
 
-export const createRecordingClient = (client: PublicClient): RecordingClient =>
-  createLoggingProxy(client, isEthereumApiMethod);
+export const createRecordingClient = (client: PublicClient): RecordingClient => createLoggingProxy(client);
 
-function createLoggingProxy<Method, Target extends { [key: string]: Method }>(
-  target: Target,
-  propCondition: (prop: string) => boolean
-): Target & GetCalls {
-  const handler: ProxyHandler<Target> & { _calls: CallWithResultPromise[] } = {
-    _calls: [],
+function createLoggingProxy<Target extends EthClient>(target: Target): RecordingClient {
+  const calls: Call[] = [];
 
-    get(target: Target, prop: string, receiver) {
-      if (prop === 'getCalls') {
-        return async () => awaitResults(this._calls);
+  const handler: ProxyHandler<Target> = {
+    get(target: Target, method: string, receiver) {
+      if (method === 'getCalls') {
+        return () => calls;
       }
 
-      const origMethod = target[prop];
-      if (typeof origMethod === 'function' && propCondition(prop)) {
-        return async (...args: object[]): Promise<object> => {
-          const result = origMethod.apply(target, args);
-          this._calls.push({
-            method: prop,
+      const originalMethod = target[method];
+      if (typeof originalMethod === 'function' && isEthereumApiMethod(method)) {
+        return async (...args: unknown[]): Promise<unknown> => {
+          const result = await originalMethod.apply(target, args);
+          calls.push({
+            method,
             arguments: args,
-            result: result as Promise<object>
+            result
           });
           return result;
         };
       }
-      return Reflect.get(target, prop, receiver);
+      return Reflect.get(target, method, receiver);
     }
   };
 
-  return new Proxy(target, handler) as Target & GetCalls;
-}
-
-async function awaitResults(entries: CallWithResultPromise[]): Promise<Call[]> {
-  return Promise.all(entries.map(async (entry) => ({ ...entry, result: await entry.result })));
+  return new Proxy(target, handler) as unknown as RecordingClient;
 }

@@ -12,7 +12,7 @@ export async function createMockClient(
 ): Promise<PublicClient> {
   const savedCalls = await readObject<Call[]>(filePath);
 
-  return mock<PublicClient>(isEthereumApiMethod, (method: string, args: object): object => {
+  return mock<PublicClient>(isEthereumApiMethod, (method: string, args: unknown): unknown => {
     const call: Call | undefined = savedCalls.find((it) => it.method === method && isEqual(it.arguments, args));
     assert(!!call, `call not found for: ${method}(${args})`);
     return resultModifier(call).result;

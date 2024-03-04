@@ -48,9 +48,9 @@ describe('recordingClient', async () => {
   it('record JSON-RPC API calls', async () => {
     const client = createRecordingClient(publicClientMock);
 
-    client.getBlock(GET_BLOCK_PARAMETERS);
-    client.getProof(GET_PROOF_PARAMETERS);
-    const calls: Call[] = await client.getCalls();
+    await client.getBlock(GET_BLOCK_PARAMETERS);
+    await client.getProof(GET_PROOF_PARAMETERS);
+    const calls: Call[] = client.getCalls();
 
     expect(calls).toMatchObject(EXPECTED_CALLS);
   });
@@ -59,9 +59,9 @@ describe('recordingClient', async () => {
     await withTempFile(async (tempFilePath) => {
       const client = createRecordingClient(publicClientMock);
 
-      client.getBlock(GET_BLOCK_PARAMETERS);
-      client.getProof(GET_PROOF_PARAMETERS);
-      await writeObject(await client.getCalls(), tempFilePath);
+      await client.getBlock(GET_BLOCK_PARAMETERS);
+      await client.getProof(GET_PROOF_PARAMETERS);
+      await writeObject(client.getCalls(), tempFilePath);
 
       const mockingClient: PublicClient = await createMockClient(tempFilePath);
 
