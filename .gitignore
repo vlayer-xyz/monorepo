@@ -10,5 +10,5 @@ contract
 !.yarn/sdks
 !.yarn/versions
 dist
-ethereum_history_api/.DS_Store
 coverage
+.DS_Store
