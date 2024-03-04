@@ -27,10 +27,6 @@ fn verify_storage_values<N>(storage_root: Bytes32, proofs: [StorageProof; N]) {
     }
 }
 pub(crate) fn verify_storage_value(storage_root: Bytes32, proof: StorageProof) {
-    assert_storage_proof(storage_root, proof);
-}
-
-fn assert_storage_proof(storage_root: Bytes32, proof: StorageProof) {
     let trie_proof = TrieProof { key: proof.key, value: proof.value, proof: proof.proof, depth: proof.depth };
     assert(trie_proof.verify_storage_root(storage_root), "TrieProof: Invalid storage root");
 }
