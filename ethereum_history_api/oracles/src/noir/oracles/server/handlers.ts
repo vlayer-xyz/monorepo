@@ -10,10 +10,12 @@ import { decodeNoirArguments, encodeForeignCallResult } from './encode.js';
  * Please refer to ./types.ts for the format that the server receives.
  */
 
-export interface JSONRPCServerMethods {
+// This needs to be a type, not an interface because TypedJSONRPCServer requires it to have an index signature.
+/* eslint-disable-next-line @typescript-eslint/consistent-type-definitions */
+export type JSONRPCServerMethods = {
   get_header(params: ForeignCallParams): ForeignCallResult;
   get_account(params: ForeignCallParams): ForeignCallResult;
-}
+};
 
 export interface ServerParams {
   client: PublicClient;
