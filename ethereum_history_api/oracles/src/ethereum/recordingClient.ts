@@ -1,12 +1,14 @@
 import { PublicClient } from 'viem';
 
-export type Call = {
+export interface Call {
   method: string;
   arguments: unknown[];
   result: unknown;
-};
+}
 
-export type GetCalls = { getCalls: () => Call[] };
+export interface GetCalls {
+  getCalls: () => Call[];
+}
 export type RecordingClient = PublicClient & GetCalls;
 
 export const isEthereumApiMethod = (methodName: string) => methodName.startsWith('get');

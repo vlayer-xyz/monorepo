@@ -10,10 +10,10 @@ import { decodeNoirArguments, encodeForeignCallResult } from './encode.js';
  * Please refer to ./types.ts for the format that the server receives.
  */
 
-export type JSONRPCServerMethods = {
+export interface JSONRPCServerMethods {
   get_header(params: ForeignCallParams): ForeignCallResult;
   get_account(params: ForeignCallParams): ForeignCallResult;
-};
+}
 
 export interface ServerParams {
   client: PublicClient;
