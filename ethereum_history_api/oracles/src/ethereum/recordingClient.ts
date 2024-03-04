@@ -6,10 +6,6 @@ export type Call = {
   result: unknown;
 };
 
-export interface EthClient {
-  [key: string]: unknown;
-}
-
 export type GetCalls = { getCalls: () => Call[] };
 export type RecordingClient = PublicClient & GetCalls;
 
@@ -17,7 +13,7 @@ export const isEthereumApiMethod = (methodName: string) => methodName.startsWith
 
 export const createRecordingClient = (client: PublicClient): RecordingClient => createLoggingProxy(client);
 
-function createLoggingProxy<Target extends EthClient>(target: Target): RecordingClient {
+function createLoggingProxy<Target extends Record<string, unknown>>(target: Target): RecordingClient {
   const calls: Call[] = [];
 
   const handler: ProxyHandler<Target> = {
