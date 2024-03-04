@@ -11,7 +11,7 @@ describe('updateNestedField', () => {
   it('non-existing key', () => {
     const object = { a: [{ bar: { c: 3 } }] };
     updateNestedField(object, ['x', '0', 'y', 'z'], () => 5);
-    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access */
     expect((object as any).x[0]?.y?.z).to.eq(5);
   });
 });

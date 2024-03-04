@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument */
 export function updateNestedField<T, V>(obj: T, pathArray: string[], updater: (value: V) => V): void {
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   pathArray.reduce((acc: any, key: string, i: number) => {

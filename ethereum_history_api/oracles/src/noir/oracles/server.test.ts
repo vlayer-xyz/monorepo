@@ -25,7 +25,7 @@ async function expectServerDown(serverUrl: string) {
   await expect(async () => await fetch(serverUrl, GET_HEADER_POST_DATA)).rejects.toThrow('fetch failed');
 }
 
-describe('mock oracle server', async () => {
+describe('mock oracle server', () => {
   it('start server', async () => {
     await withMockOracleServer(async (serverUrl) => {
       await expectServerUp(serverUrl);
@@ -33,7 +33,7 @@ describe('mock oracle server', async () => {
   });
 
   it('return callback value', async () => {
-    const result = await withMockOracleServer(async () => 'callback return value');
+    const result = await withMockOracleServer(() => Promise.resolve('callback return value'));
 
     expect(result).toStrictEqual('callback return value');
   });

@@ -25,7 +25,7 @@ function createLoggingProxy<Target extends Record<string, unknown>>(target: Targ
       const originalMethod = target[method];
       if (typeof originalMethod === 'function' && isEthereumApiMethod(method)) {
         return async (...args: unknown[]): Promise<unknown> => {
-          const result = await originalMethod.apply(target, args);
+          const result = (await originalMethod.apply(target, args)) as unknown;
           calls.push({
             method,
             arguments: args,

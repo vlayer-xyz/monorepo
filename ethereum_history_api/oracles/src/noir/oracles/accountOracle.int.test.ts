@@ -4,7 +4,7 @@ import { createMockClient } from '../../ethereum/mockClient.js';
 
 describe(
   'accountOracle',
-  async () => {
+  () => {
     const OFFSETS = {
       NONCE: 0,
       BALANCE: 1,

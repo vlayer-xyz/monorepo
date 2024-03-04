@@ -20,10 +20,10 @@ for (const header of blockHeaders) {
 }
 
 describe('calculateBlockHash', async () => {
-  const blocks = parse(await readFile('./fixtures/blocks.json', 'utf-8'));
+  const blocks = parse(await readFile('./fixtures/blocks.json', 'utf-8')) as GetBlockReturnType[];
   for (const block of blocks) {
-    it(`block #${block.number}`, async () => {
-      expect(calculateBlockHash(block as GetBlockReturnType)).toBe(block.hash);
+    it(`block #${block.number}`, () => {
+      expect(calculateBlockHash(block)).toBe(block.hash);
     });
   }
 });

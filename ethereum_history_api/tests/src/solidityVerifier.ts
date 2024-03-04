@@ -34,7 +34,7 @@ export async function deploySolidityProofVerifier(artefact: FoundryArtefact): Pr
 
   assert(!!txReceipt.contractAddress, 'Deployed contract address should not be empty');
 
-  const solidityProofVerifier = new SolidityProofVerifier(txReceipt.contractAddress!, artefact.abi);
+  const solidityProofVerifier = new SolidityProofVerifier(txReceipt.contractAddress, artefact.abi);
   return solidityProofVerifier;
 }
 
