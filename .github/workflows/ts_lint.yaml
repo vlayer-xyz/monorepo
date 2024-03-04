@@ -24,9 +24,6 @@ jobs:
       - name: Install Dependencies
         run: yarn install
 
-      - name: Run TypeScript Linter
-        run: yarn lint:all
-
       # We don't store circuit and smart contract compilation artefacts in the repo,
       # but typecheck fails on import without them so we just create fake files here
       - name: Create fake circuit compilation artefacts
@@ -49,3 +46,8 @@ jobs:
 
       - name: Run TypeScript format check
         run: yarn format:all:ci
+
+      # It's important to run lint after build as eslint does not support project references yet
+      # https://github.com/typescript-eslint/typescript-eslint/issues/2094
+      - name: Run TypeScript Linter
+        run: yarn lint:all
