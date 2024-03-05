@@ -5,7 +5,7 @@ import { createHeaderFixture } from './noir_fixtures/header.js';
 import { createStateProofFixture } from './noir_fixtures/state_proof.js';
 import { createAccountFixture } from './noir_fixtures/account.js';
 import { createStorageProofFixture } from './noir_fixtures/storage_proof.js';
-import { FIXTURES } from './fixtureConfig.js';
+import { FIXTURES } from '../fixtures/config.js';
 
 const OUT_DIR = '../circuits/lib/src/fixtures';
 await rm(OUT_DIR, { recursive: true, force: true });

@@ -4,8 +4,8 @@ import { join } from 'path';
 import { GetProofParameters } from 'viem';
 
 import { createDefaultClient } from '../ethereum/client.js';
-import { FIXTURES } from './fixtureConfig.js';
 import { stringify } from '../util/json-bigint.js';
+import { FIXTURES } from '../fixtures/config.js';
 
 const OUT_DIR = 'new_fixtures';
 await rm(OUT_DIR, { recursive: true, force: true });
