@@ -11,3 +11,4 @@ contract
 !.yarn/versions
 dist
 coverage
+.DS_Store
