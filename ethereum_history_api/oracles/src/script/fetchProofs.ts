@@ -1,7 +1,7 @@
 import { createDefaultClient } from '../ethereum/client.js';
 import { writeFile, appendFile } from 'fs/promises';
 import { stringify } from '../util/json-bigint.js';
-import { CIRCLE_USDC_BALANCE_STORAGE_KEY } from './prepareNoirFixtures.js';
+import { CIRCLE_USDC_BALANCE_STORAGE_KEY } from './fixtureConfig.js';
 import { type GetProofParameters, type GetProofReturnType } from 'viem';
 
 const filePath = './fixtures/eth_getProof_response.json';
