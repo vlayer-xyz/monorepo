@@ -1,9 +1,7 @@
-import { readFile } from 'fs/promises';
-import { parse } from '../util/json-bigint.js';
 import { describe, expect, it } from 'vitest';
-import { type GetBlockReturnType } from 'viem';
 import { type BlockHeader, calculateBlockHash, calculateBlockHeaderHash, headerToRlp } from './blockHeader.js';
 import { blockHeaders } from '../../fixtures/blockHeader.json';
+import { getBlockFixtures } from '../fixtures/blocks.js';
 
 for (const header of blockHeaders) {
   describe('encodeBlockHeader', () => {
@@ -20,10 +18,10 @@ for (const header of blockHeaders) {
 }
 
 describe('calculateBlockHash', async () => {
-  const blocks = parse(await readFile('./fixtures/blocks.json', 'utf-8'));
+  const blocks = await getBlockFixtures();
   for (const block of blocks) {
     it(`block #${block.number}`, async () => {
-      expect(calculateBlockHash(block as GetBlockReturnType)).toBe(block.hash);
+      expect(calculateBlockHash(block)).toBe(block.hash);
     });
   }
 });

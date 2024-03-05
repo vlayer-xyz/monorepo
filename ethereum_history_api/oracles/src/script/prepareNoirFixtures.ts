@@ -7,13 +7,13 @@ import { createAccountFixture } from './noir_fixtures/account.js';
 import { createStorageProofFixture } from './noir_fixtures/storage_proof.js';
 import { FIXTURES } from '../fixtures/config.js';
 
-const OUT_DIR = '../circuits/lib/src/fixtures';
-await rm(OUT_DIR, { recursive: true, force: true });
+const NOIR_FIXTURES_DIRECTORY = '../circuits/lib/src/fixtures';
+await rm(NOIR_FIXTURES_DIRECTORY, { recursive: true, force: true });
 
 const client = createDefaultClient();
 for (const hardFork in FIXTURES) {
   let hardforkModule = ``;
-  const hardforkModuleFile = `${OUT_DIR}/${hardFork}.nr`;
+  const hardforkModuleFile = `${NOIR_FIXTURES_DIRECTORY}/${hardFork}.nr`;
 
   for (const fixtureName in FIXTURES[hardFork]) {
     const { blockNumber, address, storageKeys } = FIXTURES[hardFork][fixtureName];
@@ -25,7 +25,7 @@ for (const hardFork in FIXTURES) {
       blockNumber
     });
 
-    const modulePath = `${OUT_DIR}/${hardFork}/${fixtureName}`;
+    const modulePath = `${NOIR_FIXTURES_DIRECTORY}/${hardFork}/${fixtureName}`;
 
     await mkdir(modulePath, { recursive: true });
 

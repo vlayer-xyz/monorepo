@@ -1,52 +1,51 @@
-import { mkdir, rm, writeFile } from 'fs/promises';
-import prettier from 'prettier';
+import { mkdir, rm } from 'fs/promises';
 import { join } from 'path';
-import { GetProofParameters } from 'viem';
+import { GetProofParameters, PublicClient } from 'viem';
 
 import { createDefaultClient } from '../ethereum/client.js';
-import { stringify } from '../util/json-bigint.js';
-import { FIXTURES } from '../fixtures/config.js';
+import { FIXTURES, JS_FIXTURES_DIRECTORY } from '../fixtures/config.js';
+import { GetBlockFixture, GetProofFixture } from '../fixtures/types.js';
+import { writeObject } from '../util/file.js';
 
-const OUT_DIR = 'new_fixtures';
-await rm(OUT_DIR, { recursive: true, force: true });
-const INDENTATION = 2;
-
-async function prettierFormatJSON(data: string): Promise<string> {
-  const options = await prettier.resolveConfig('./');
-  return prettier.format(data, { parser: 'json', tabWidth: INDENTATION, ...options });
-}
-
-async function createBlockFixture(blockNumber: bigint, modulePath: string): Promise<void> {
+async function createBlockFixture(client: PublicClient, blockNumber: bigint): Promise<GetBlockFixture> {
   const block = await client.getBlock({ blockNumber });
-  const getBlockFixture = {
+  return {
     method: 'eth_getBlockByHash',
     arguments: [blockNumber, false],
     result: block
   };
-  const formattedBlockDataFixture = await prettierFormatJSON(stringify(getBlockFixture));
-  await writeFile(join(modulePath, 'eth_getBlockByHash.json'), formattedBlockDataFixture);
 }
 
-async function createProofFixture(parameters: GetProofParameters, modulePath: string): Promise<void> {
+async function createProofFixture(client: PublicClient, parameters: GetProofParameters): Promise<GetProofFixture> {
   const proof = await client.getProof(parameters);
-  const getProofFixture = {
+  return {
     method: 'eth_getProof',
-    arguments: [parameters.address, parameters.storageKeys, parameters.blockNumber],
+    arguments: [parameters.address, parameters.storageKeys, parameters.blockNumber!],
     result: proof
   };
-  const formattedProofDataFixture = await prettierFormatJSON(stringify(getProofFixture));
-  await writeFile(join(modulePath, 'eth_getProof.json'), formattedProofDataFixture);
 }
 
-const client = createDefaultClient();
-for (const hardFork in FIXTURES) {
-  for (const fixtureName in FIXTURES[hardFork]) {
-    const modulePath = `${OUT_DIR}/${hardFork}/${fixtureName}`;
+export async function prepareJSFixtures(): Promise<void> {
+  await rm(JS_FIXTURES_DIRECTORY, { recursive: true, force: true });
+  const client = createDefaultClient();
+  for (const hardFork in FIXTURES) {
+    for (const fixtureName in FIXTURES[hardFork]) {
+      const modulePath = `${JS_FIXTURES_DIRECTORY}/${hardFork}/${fixtureName}`;
 
-    await mkdir(modulePath, { recursive: true });
-    const { blockNumber, address, storageKeys } = FIXTURES[hardFork][fixtureName];
+      await mkdir(modulePath, { recursive: true });
+      const { blockNumber, address, storageKeys } = FIXTURES[hardFork][fixtureName];
 
-    await createBlockFixture(blockNumber, modulePath);
-    await createProofFixture({ address, storageKeys: storageKeys ?? [], blockNumber }, modulePath);
+      const getBlockFixture = await createBlockFixture(client, blockNumber);
+      await writeObject(getBlockFixture, join(modulePath, 'eth_getBlockByHash.json'));
+
+      const getProofFixture = await createProofFixture(client, {
+        address,
+        storageKeys: storageKeys ?? [],
+        blockNumber
+      });
+      await writeObject(getProofFixture, join(modulePath, 'eth_getProof.json'));
+    }
   }
 }
+
+await prepareJSFixtures();
