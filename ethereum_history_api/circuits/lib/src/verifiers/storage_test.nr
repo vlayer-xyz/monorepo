@@ -1,4 +1,4 @@
-use crate::storage::{verify_storage_value};
+use crate::verifiers::storage::{verify_storage_value};
 use crate::fixtures::paris::usdc::storage_proof::storage_proofs_with_storage_root;
 
 #[test]
