@@ -6,7 +6,10 @@ export interface Call {
   result: unknown;
 }
 
-export type RecordingClientMixin = { getCalls: () => Call[]; getLastCall: () => Call };
+export interface RecordingClientMixin {
+  getCalls: () => Call[];
+  getLastCall: () => Call;
+}
 export type RecordingClient = PublicClient & RecordingClientMixin;
 
 export const isEthereumApiMethod = (methodName: string) => methodName.startsWith('get');

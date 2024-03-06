@@ -9,11 +9,7 @@ interface Fixture {
   storageKeys?: Hex[];
 }
 
-interface Fixtures {
-  [hardFork: string]: {
-    [name: string]: Fixture;
-  };
-}
+type Fixtures = Record<string, Record<string, Fixture>>;
 
 export const FIXTURES: Fixtures = {
   frontier: {
