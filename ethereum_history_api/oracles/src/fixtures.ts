@@ -1,6 +1,6 @@
 import { join } from 'path';
 import { GetBlockReturnType, GetProofReturnType } from 'viem';
-import { JS_FIXTURES_DIRECTORY } from './fixtures/config.js';
+import { FIXTURES, JS_FIXTURES_DIRECTORY } from './fixtures/config.js';
 import { BaseFixture } from './fixtures/types.js';
 import { readObject } from './util/file.js';
 
@@ -16,4 +16,14 @@ export async function loadBlockFixture(hardFork: string, fixtureName: string): P
 
 export async function loadProofFixture(hardFork: string, fixtureName: string): Promise<GetProofReturnType> {
   return loadFixture<GetProofReturnType>(hardFork, fixtureName, 'eth_getProof');
+}
+
+export async function loadBlockFixtures(): Promise<GetBlockReturnType[]> {
+  const blocks: GetBlockReturnType[] = [];
+  for (const hardFork in FIXTURES) {
+    for (const fixtureName in FIXTURES[hardFork]) {
+      blocks.push(await loadBlockFixture(hardFork, fixtureName));
+    }
+  }
+  return blocks;
 }

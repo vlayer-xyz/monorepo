@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { calculateBlockHash, calculateBlockHeaderHash, headerToRlp, blockToHeader } from './blockHeader.js';
-import { loadBlockFixtures } from '../fixtures/blocks.js';
-import { loadBlockFixture } from '../fixtures.js';
+import { loadBlockFixture, loadBlockFixtures } from '../fixtures.js';
 
 describe('calculateBlockHeaderHash', () => {
   it('frontier block', async () => {
