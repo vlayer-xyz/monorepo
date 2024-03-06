@@ -7,6 +7,13 @@ describe('updateNestedField', () => {
     updateNestedField(object, ['a', '0', 'bar', 'c'], (x: number) => x + 1);
     expect(object.a[0].bar.c).to.eq(4);
   });
+
+  it('non-existing key', () => {
+    const object = { a: [{ bar: { c: 3 } }] };
+    expect(() => updateNestedField(object, ['x', '0', 'y', 'z'], () => 5)).toThrow(
+      'Path x.0.y.z does not exist in the object'
+    );
+  });
 });
 
 describe('copy', () => {

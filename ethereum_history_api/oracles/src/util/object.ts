@@ -7,6 +7,9 @@ export function updateNestedField<T, V>(obj: T, pathArray: string[], updater: (v
   const pathWithoutLast = pathArray.slice(0, pathArray.length - 1);
   const lastPathElem = pathArray[pathArray.length - 1];
   for (const pathElem of pathWithoutLast) {
+    if (!(pathElem in currentSubtree)) {
+      throw new Error(`Path ${pathArray.join('.')} does not exist in the object`);
+    }
     currentSubtree = currentSubtree[pathElem] as NestedObject<V>;
   }
 
