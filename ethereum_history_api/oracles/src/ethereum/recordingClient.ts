@@ -6,8 +6,8 @@ export type Call = {
   result: unknown;
 };
 
-export type GetCalls = { getCalls: () => Call[] };
-export type RecordingClient = PublicClient & GetCalls;
+export type RecordingClientMixin = { getCalls: () => Call[]; getLastCall: () => Call };
+export type RecordingClient = PublicClient & RecordingClientMixin;
 
 export const isEthereumApiMethod = (methodName: string) => methodName.startsWith('get');
 
@@ -20,6 +20,10 @@ function createLoggingProxy<Target extends Record<string, unknown>>(target: Targ
     get(target: Target, method: string, receiver) {
       if (method === 'getCalls') {
         return () => calls;
+      }
+
+      if (method === 'getLastCall') {
+        return () => calls[calls.length - 1];
       }
 
       const originalMethod = target[method];
