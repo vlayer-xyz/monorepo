@@ -1,6 +1,8 @@
 {
-  "method": "eth_getProof",
-  "arguments": ["0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb", [], 14194126],
+  "method": "getProof",
+  "arguments": [
+    { "address": "0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb", "storageKeys": [], "blockNumber": 14194126 }
+  ],
   "result": {
     "address": "0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb",
     "accountProof": [

@@ -1,6 +1,6 @@
 {
-  "method": "eth_getProof",
-  "arguments": ["0x40d45d9d7625d15156c932b771ca7b0527130958", [], 1],
+  "method": "getProof",
+  "arguments": [{ "address": "0x40d45d9d7625d15156c932b771ca7b0527130958", "storageKeys": [], "blockNumber": 1 }],
   "result": {
     "address": "0x40d45d9d7625d15156c932b771ca7b0527130958",
     "accountProof": [
