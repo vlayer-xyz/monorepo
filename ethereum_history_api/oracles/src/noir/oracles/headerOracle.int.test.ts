@@ -7,7 +7,7 @@ import { createMockClient } from '../../ethereum/mockClient.js';
 describe(
   'headerOracle',
   async () => {
-    const client = await createMockClient('./fixtures/mockClientData.json');
+    const client = await createMockClient(['./fixtures/mockClientData.json']);
 
     it('getBlock', async () => {
       const blockHeader: BlockHeader = await getBlock(client, 0n);

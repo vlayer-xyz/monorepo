@@ -18,7 +18,7 @@ describe(
         "0x5", "0xd7", "0xa", "0xb8", "0x65", "0xde", "0x6e", "0x19", "0x3b", "0xbb"
       ]
       const blockNumberInNoirFormat = '0xd895ce';
-      const client = await createMockClient('./fixtures/mockClientData.json');
+      const client = await createMockClient(['./fixtures/mockClientData.json']);
       const account = await getAccountOracle(client, [[blockNumberInNoirFormat], accountAddressInNoirFormat]);
       expect(account[OFFSETS.NONCE]).toStrictEqual('0x1');
       expect(account[OFFSETS.BALANCE]).toStrictEqual('0x313570a84bf378efd25');

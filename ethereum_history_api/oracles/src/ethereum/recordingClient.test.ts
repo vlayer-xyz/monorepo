@@ -63,7 +63,7 @@ describe('recordingClient', () => {
       await client.getProof(GET_PROOF_PARAMETERS);
       await writeObject(client.getCalls(), tempFilePath);
 
-      const mockingClient: PublicClient = await createMockClient(tempFilePath);
+      const mockingClient: PublicClient = await createMockClient([tempFilePath]);
 
       const block = await mockingClient.getBlock(GET_BLOCK_PARAMETERS);
       const proof = await mockingClient.getProof(GET_PROOF_PARAMETERS);
