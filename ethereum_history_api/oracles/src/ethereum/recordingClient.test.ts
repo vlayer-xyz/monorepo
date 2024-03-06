@@ -39,7 +39,7 @@ const EXPECTED_CALLS = [
   }
 ];
 
-describe('recordingClient', async () => {
+describe('recordingClient', () => {
   const publicClientMock: PublicClient = {
     getBlock: () => EXPECTED_CALLS[0].result,
     getProof: () => EXPECTED_CALLS[1].result

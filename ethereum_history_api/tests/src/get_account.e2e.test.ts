@@ -20,19 +20,19 @@ describe('get_account', async () => {
   });
 
   it('proof verification successes', async () => {
-    const witnessMap = abiEncode(abi, inputMap, inputMap['return']);
+    const witnessMap = abiEncode(abi, inputMap, inputMap.return);
     expect(await proofVerifier.verify(proof, witnessMap)).toEqual(true);
   });
 
   it('proof fails: invalid nonce', async () => {
     updateNestedField(inputMap, ['return', 'account', 'nonce'], incHexStr);
-    const witnessMapInvalidNonce = abiEncode(abi, inputMap, inputMap['return']);
+    const witnessMapInvalidNonce = abiEncode(abi, inputMap, inputMap.return);
     expect(await proofVerifier.verify(proof, witnessMapInvalidNonce)).toEqual(false);
   });
 
   it('proof fails: invalid block hash', async () => {
     updateNestedField(inputMap, ['return', 'block_hash', '0'], incHexStr);
-    const witnessMapInvalidBlockHash = abiEncode(abi, inputMap, inputMap['return']);
+    const witnessMapInvalidBlockHash = abiEncode(abi, inputMap, inputMap.return);
     expect(await proofVerifier.verify(proof, witnessMapInvalidBlockHash)).toEqual(false);
   });
 });

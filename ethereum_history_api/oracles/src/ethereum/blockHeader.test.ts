@@ -47,7 +47,7 @@ describe('encodeBlockHeader', () => {
 describe('calculateBlockHash', async () => {
   const blocks = await getBlockFixtures();
   for (const block of blocks) {
-    it(`block #${block.number}`, async () => {
+    it(`block #${block.number}`, () => {
       expect(calculateBlockHash(block)).toBe(block.hash);
     });
   }

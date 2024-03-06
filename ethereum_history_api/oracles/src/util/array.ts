@@ -6,7 +6,7 @@ type PaddingDirection = 'left' | 'right';
 export function padArray<T>(array: T[], len: number, pad: T, direction: PaddingDirection = 'right'): T[] {
   assert(len >= array.length, `len param: ${len} should be greater than array length: ${array.length}`);
 
-  const padding = new Array(len - array.length).fill(pad);
+  const padding = new Array<T>(len - array.length).fill(pad);
   switch (direction) {
     case 'left':
       return padding.concat(array);

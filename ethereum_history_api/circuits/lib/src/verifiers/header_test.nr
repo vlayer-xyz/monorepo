@@ -1,4 +1,5 @@
-use crate::header::{get_header_fields_count, verify_header, BlockHeaderPartial, BlockHeaderRlp, MAX_HEADER_RLP_SIZE, LONDON_BLOCK_NUMBER, PARIS_BLOCK_NUMBER};
+use crate::header::{BlockHeaderPartial, BlockHeaderRlp, MAX_HEADER_RLP_SIZE};
+use crate::verifiers::header::{get_header_fields_count, verify_header, LONDON_BLOCK_NUMBER, PARIS_BLOCK_NUMBER};
 use crate::misc::arrays::alter_array;
 use crate::fixtures::{
     london::crypto_punks::header::{

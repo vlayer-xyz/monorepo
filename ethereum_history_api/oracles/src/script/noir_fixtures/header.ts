@@ -19,16 +19,16 @@ export function createHeaderFixture(block: GetBlockReturnType): string {
 
 global number: Field = ${block.number};
 global hash = [
-    ${blockHash}
+    ${blockHash.join(',')}
 ];
 global state_root = [
-    ${stateRoot}
+    ${stateRoot.join(',')}
 ];
 global transactions_root = [
-   ${transactionsRoot}
+   ${transactionsRoot.join(',')}
 ];
 global receipts_root = [
-    ${receiptsRoot}
+    ${receiptsRoot.join(',')}
 ];
 
 global encoded_length: Field = ${headerUint8Array.length};

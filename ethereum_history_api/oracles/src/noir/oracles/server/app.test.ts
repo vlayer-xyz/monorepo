@@ -4,8 +4,8 @@ import { describe, it, expect, afterAll } from 'vitest';
 
 describe('Oracle Server', () => {
   const app = buildOracleServer();
-  afterAll(() => {
-    app.close();
+  afterAll(async () => {
+    await app.close();
   });
 
   it('should handle get_header request', async () => {

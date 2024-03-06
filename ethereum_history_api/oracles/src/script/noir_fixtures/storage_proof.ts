@@ -3,11 +3,11 @@ import { encodeHexString } from '../../noir/noir_js/encode.js';
 import { encodeBytes32, encodeProof } from '../../noir/oracles/encode.js';
 import { STORAGE_PROOF_LENGTH } from '../../noir/oracles/storageOracle.js';
 
-type StorageProof = {
+interface StorageProof {
   key: Hash;
   proof: Hash[];
   value: bigint;
-};
+}
 
 export function createStorageProofFixture(storageRoot: Hash, storageProofs: StorageProof[]): string {
   const storageProofsNoir = storageProofs.map(createSingleStorageProofFixture);
@@ -16,7 +16,7 @@ export function createStorageProofFixture(storageRoot: Hash, storageProofs: Stor
 
 global storage_proofs_with_storage_root = StorageProofsWithStorageRoot {
   storage_root: [
-    ${encodedStorageRoot}
+    ${encodedStorageRoot.join(',')}
   ],
   proofs: [
     ${storageProofsNoir.join(',\n')}
@@ -32,13 +32,13 @@ function createSingleStorageProofFixture(storageProof: StorageProof): string {
   const depth = storageProof.proof.length;
   const storageProofFixture = `StorageProof {
       key: [
-        ${key}
+        ${key.join(',')}
       ],
       value: [
-        ${value}
+        ${value.join(',')}
       ],
       proof: [
-        ${proof}
+        ${proof.join(',')}
       ],
       depth: ${depth}
     }`;
