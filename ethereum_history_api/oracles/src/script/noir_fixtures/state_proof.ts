@@ -12,13 +12,13 @@ export function createStateProofFixture(stateProof: GetProofReturnType): string 
 
 global state_proof = StateProof {
   key: [
-    ${key}
+    ${key.join(',')}
   ],
   value: [
-    ${value}
+    ${value.join(',')}
   ],
   proof: [
-    ${proof}
+    ${proof.join(',')}
   ],
   depth: ${depth},
 };

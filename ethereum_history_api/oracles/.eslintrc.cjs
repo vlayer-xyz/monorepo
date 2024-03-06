@@ -1,10 +1,3 @@
-const unrestrictedTemplateExpressionsInNoirFixturesScripts = {
-  files: ['./src/script/noir_fixtures/**/*.ts'],
-  rules: {
-    '@typescript-eslint/restrict-template-expressions': 'off'
-  }
-};
-
 module.exports = {
   parserOptions: {
     sourceType: 'module',
@@ -23,6 +16,5 @@ module.exports = {
         ]
       }
     ]
-  },
-  overrides: [unrestrictedTemplateExpressionsInNoirFixturesScripts]
+  }
 };

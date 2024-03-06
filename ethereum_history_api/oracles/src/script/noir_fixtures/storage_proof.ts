@@ -16,7 +16,7 @@ export function createStorageProofFixture(storageRoot: Hash, storageProofs: Stor
 
 global storage_proofs_with_storage_root = StorageProofsWithStorageRoot {
   storage_root: [
-    ${encodedStorageRoot}
+    ${encodedStorageRoot.join(',')}
   ],
   proofs: [
     ${storageProofsNoir.join(',\n')}
@@ -32,13 +32,13 @@ function createSingleStorageProofFixture(storageProof: StorageProof): string {
   const depth = storageProof.proof.length;
   const storageProofFixture = `StorageProof {
       key: [
-        ${key}
+        ${key.join(',')}
       ],
       value: [
-        ${value}
+        ${value.join(',')}
       ],
       proof: [
-        ${proof}
+        ${proof.join(',')}
       ],
       depth: ${depth}
     }`;
