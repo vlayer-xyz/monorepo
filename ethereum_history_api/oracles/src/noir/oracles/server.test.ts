@@ -1,10 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { withMockOracleServer } from './server.js';
 
+const LONDON_BLOCK_NUMBER_HEX = 'd895ce';
+
 const JSON_RPC_PAYLOAD = {
   jsonrpc: '2.0',
   method: 'get_header',
-  params: [{ Single: { inner: 'd895ce' } }],
+  params: [{ Single: { inner: LONDON_BLOCK_NUMBER_HEX } }],
   id: 1
 };
 
@@ -14,6 +16,7 @@ const GET_HEADER_POST_DATA = {
   body: JSON.stringify(JSON_RPC_PAYLOAD)
 };
 
+const FIXTURE_FILE_PATHS = ['./new_fixtures/london/crypto_punks/eth_getBlockByHash.json'];
 const MOCK_ORACLE_SERVER_URL = `http://localhost:5556`;
 
 async function expectServerUp(serverUrl: string) {
@@ -27,19 +30,19 @@ async function expectServerDown(serverUrl: string) {
 
 describe('mock oracle server', () => {
   it('start server', async () => {
-    await withMockOracleServer(async (serverUrl) => {
+    await withMockOracleServer(FIXTURE_FILE_PATHS, async (serverUrl) => {
       await expectServerUp(serverUrl);
     });
   });
 
   it('return callback value', async () => {
-    const result = await withMockOracleServer(() => Promise.resolve('callback return value'));
+    const result = await withMockOracleServer(FIXTURE_FILE_PATHS, async () => Promise.resolve('callback return value'));
 
     expect(result).toStrictEqual('callback return value');
   });
 
   it('close server after callback finish', async () => {
-    await withMockOracleServer(async () => {});
+    await withMockOracleServer(FIXTURE_FILE_PATHS, async () => {});
 
     await expectServerDown(MOCK_ORACLE_SERVER_URL);
   });
@@ -47,7 +50,7 @@ describe('mock oracle server', () => {
   it('close server when callback throws an exception', async () => {
     await expect(
       async () =>
-        await withMockOracleServer(() => {
+        await withMockOracleServer(FIXTURE_FILE_PATHS, () => {
           throw new Error('error');
         })
     ).rejects.toThrow('error');

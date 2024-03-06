@@ -18,11 +18,11 @@ describe(
         "0x5", "0xd7", "0xa", "0xb8", "0x65", "0xde", "0x6e", "0x19", "0x3b", "0xbb"
       ]
       const londonBlockNumberInNoirFormat = '0xd895ce';
-      const filePaths = [
+      const mockFilePaths = [
         './new_fixtures/london/crypto_punks/eth_getBlockByHash.json',
         './new_fixtures/london/crypto_punks/eth_getProof.json'
       ];
-      const client = await createMockClient(filePaths);
+      const client = await createMockClient(mockFilePaths);
       const account = await getAccountOracle(client, [
         [londonBlockNumberInNoirFormat],
         cryptoPunksAccountAddressInNoirFormat
