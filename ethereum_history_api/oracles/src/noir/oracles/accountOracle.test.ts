@@ -1,16 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { encodeAccount, encodeStateProof, parseNoirGetAccountArguments } from './accountOracle.js';
-import { type GetProofReturnType } from 'viem';
 import { ForeignCallOutput } from '@noir-lang/noir_js';
-import { readFile } from 'fs/promises';
-import { parse } from '../../util/json-bigint.js';
 import account from '../../../fixtures/account.json';
 import stateProof from '../../../fixtures/stateProof.json';
 import { ADDRESS } from '../../ethereum/recordingClient.test.js';
+import { loadProofFixture } from '../../fixtures.js';
 
 describe('encodeAccount', () => {
   it('encode account', async () => {
-    const proof = parse(await readFile('./fixtures/eth_getProof_response.json', 'utf-8')) as GetProofReturnType;
+    const proof = await loadProofFixture('paris', 'usdc');
 
     expect(encodeAccount(proof)).toStrictEqual(serializeAccount(account));
     expect(encodeStateProof(proof)).toStrictEqual(serializeStateProof(stateProof));
