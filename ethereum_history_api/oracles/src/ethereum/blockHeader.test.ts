@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { calculateBlockHash, calculateBlockHeaderHash, headerToRlp, blockToHeader } from './blockHeader.js';
-import { getBlockFixtures } from '../fixtures/blocks.js';
+import { loadBlockFixtures } from '../fixtures/blocks.js';
 import { readObject } from '../util/file.js';
 import { join } from 'path';
 import { JS_FIXTURES_DIRECTORY } from '../fixtures/config.js';
@@ -14,20 +14,27 @@ async function loadBlockFixture(hardFork: string, fixtureName: string): Promise<
 }
 
 describe('calculateBlockHeaderHash', () => {
-  it('pre-London block', async () => {
+  it('frontier block', async () => {
     const block = await loadBlockFixture('frontier', 'first');
     const header = blockToHeader(block);
     expect(calculateBlockHeaderHash(header)).toBe(block.hash);
   });
-  it('post-London block', async () => {
+
+  it('london block', async () => {
+    const block = await loadBlockFixture('london', 'crypto_punks');
+    const header = blockToHeader(block);
+    expect(calculateBlockHeaderHash(header)).toBe(block.hash);
+  });
+
+  it('paris block', async () => {
     const block = await loadBlockFixture('paris', 'usdc');
     const header = blockToHeader(block);
     expect(calculateBlockHeaderHash(header)).toBe(block.hash);
   });
 });
 
-describe('encodeBlockHeader', () => {
-  it('pre-London block', async () => {
+describe('headerToRlp', () => {
+  it('frontier block', async () => {
     const block = await loadBlockFixture('frontier', 'first');
     const header = blockToHeader(block);
     const expectedHeaderRlp =
@@ -35,7 +42,15 @@ describe('encodeBlockHeader', () => {
     expect(headerToRlp(header)).toEqual(expectedHeaderRlp);
   });
 
-  it('post-London block', async () => {
+  it('london block', async () => {
+    const block = await loadBlockFixture('london', 'crypto_punks');
+    const header = blockToHeader(block);
+    const expectedHeaderRlp =
+      '0xf90219a01315c9495925503b99fe391c5190b03c928b0afa5eba257f093e825604bd4d56a01dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347941ad91ee08f21be3de0ba2ba6918e714da6b45836a0d78d4f182ebd7f0dc86c5b328b73f9ea3dfe17ee56fbb490d9b67edac48e2b04a0ffadf2a50d8aa20e19c37ea385864998231e6524d200425f076479629cb20d9ca0bcb477e406f547e79f0bcc5406f60fbba70cf12b874fbdd646cb6c1e81d64db1b90100c320000000021204803045c1800512044102d0080e00110001852a204cd001970800e0028080805000084100004201040381848008008b88824a88000230260d34083880002201400b84040a140006280090620000620420101a3580804438400b09300503aa0a0220001e8110000a92200a4238083a44006200411006000281300014000eae10c03058a4104793100c150088010084048a0e080242001000000a90980806180800000400d00001440440801000440009108100110758851b404050042a483408016710020042020310041000010009049000190546046229001911a20c004080881026002664222ac500810058b40000460002d88008400000872e2632952e320283d895ce8401c9c38083924c6f8462083b4791486976656f6e2065752d68656176792d32a0b1ee7558e23d1014b70be22081b602661492bef5b5211b42d7fe84dbf34cde3688331f32cd8d3536b1850a22bc31c8';
+    expect(headerToRlp(header)).toEqual(expectedHeaderRlp);
+  });
+
+  it('paris block', async () => {
     const block = await loadBlockFixture('paris', 'usdc');
     const header = blockToHeader(block);
     const expectedHeaderRlp =
@@ -45,7 +60,7 @@ describe('encodeBlockHeader', () => {
 });
 
 describe('calculateBlockHash', async () => {
-  const blocks = await getBlockFixtures();
+  const blocks = await loadBlockFixtures();
   for (const block of blocks) {
     it(`block #${block.number}`, () => {
       expect(calculateBlockHash(block)).toBe(block.hash);
