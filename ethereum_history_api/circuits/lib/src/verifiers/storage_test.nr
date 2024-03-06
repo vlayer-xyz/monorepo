@@ -1,5 +1,5 @@
-use crate::storage::{verify_storage_value};
 use crate::fixtures::paris::usdc::storage_proof::storage_proofs_with_storage_root;
+use crate::verifiers::storage::{verify_storage_value};
 
 #[test]
 fn test_verify_storage_proof() {
