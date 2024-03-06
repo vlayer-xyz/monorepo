@@ -8,5 +8,6 @@ mod storage;
 mod storage_test;
 mod misc;
 mod fixtures;
+mod verifiers;
 
 global HASH_LENGTH = 32;
