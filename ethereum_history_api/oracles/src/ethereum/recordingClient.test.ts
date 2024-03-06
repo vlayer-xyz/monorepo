@@ -51,7 +51,9 @@ describe('recordingClient', () => {
     await client.getBlock(GET_BLOCK_PARAMETERS);
     await client.getProof(GET_PROOF_PARAMETERS);
     const calls: Call[] = client.getCalls();
+    const lastCall: Call = client.getLastCall();
 
+    expect(lastCall).toMatchObject(EXPECTED_CALLS[1]);
     expect(calls).toMatchObject(EXPECTED_CALLS);
   });
 
