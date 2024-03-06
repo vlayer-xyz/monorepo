@@ -14,10 +14,9 @@
     "format": "prettier --write src",
     "format:ci": "prettier --check src",
     "oracle-server": "tsx src/script/startOracleServer",
+    "prepare-js-fixtures": "tsx src/script/prepareJSFixtures",
     "prepare-noir-fixtures": "tsx src/script/prepareNoirFixtures",
-    "fetch-blocks": "tsx src/script/fetchBlocks",
-    "fetch-proofs": "tsx src/script/fetchProofs",
-    "encode-header": "tsx src/script/encodeHeader"
+    "fetch-proofs": "tsx src/script/fetchProofs"
   },
   "author": "",
   "license": "ISC",

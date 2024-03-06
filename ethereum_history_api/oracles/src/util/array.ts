@@ -19,3 +19,8 @@ export const alterArray = function (array: readonly string[]): string[] {
   assert(array.length > 0, 'Array should not be empty');
   return [incHexByte(array[0]), ...array.slice(1)];
 };
+
+export function last<T>(array: readonly T[]): T {
+  assert(array.length > 0, 'Array should not be empty');
+  return array[array.length - 1];
+}
