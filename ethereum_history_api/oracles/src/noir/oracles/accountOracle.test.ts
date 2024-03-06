@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { encodeAccount, encodeStateProof, parseNoirGetAccountArguments } from './accountOracle.js';
 import { ForeignCallOutput } from '@noir-lang/noir_js';
-import account from '../../../fixtures/account.json';
-import stateProof from '../../../fixtures/stateProof.json';
+import account from './fixtures/account.json';
+import stateProof from './fixtures/stateProof.json';
 import { ADDRESS } from '../../ethereum/recordingClient.test.js';
 import { loadProofFixture } from '../../fixtures.js';
 
