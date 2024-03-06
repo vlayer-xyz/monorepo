@@ -16,12 +16,12 @@ describe('mockingClient', () => {
     ];
     const mockingClient: PublicClient = await createMockClient(filePaths);
 
-    const block = await mockingClient.getBlock(LONDON_CRYPTO_PUNKS_GET_BLOCK_PARAMETERS);
-    const proof = await mockingClient.getProof(LONDON_CRYPTO_PUNKS_GET_PROOF_PARAMETERS);
-    const blockFixture = await readObject<GetBlockFixture>(filePaths[0]);
-    const proofFixture = await readObject<GetBlockFixture>(filePaths[1]);
+    const actualBlock = await mockingClient.getBlock(LONDON_CRYPTO_PUNKS_GET_BLOCK_PARAMETERS);
+    const actualProof = await mockingClient.getProof(LONDON_CRYPTO_PUNKS_GET_PROOF_PARAMETERS);
+    const expectedBlock = (await readObject<GetBlockFixture>(filePaths[0])).result;
+    const expectedProof = (await readObject<GetBlockFixture>(filePaths[1])).result;
 
-    expect(block).toStrictEqual(blockFixture.result);
-    expect(proof).toStrictEqual(proofFixture.result);
+    expect(actualBlock).toStrictEqual(expectedBlock);
+    expect(actualProof).toStrictEqual(expectedProof);
   });
 });
