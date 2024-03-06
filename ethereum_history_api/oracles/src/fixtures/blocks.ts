@@ -4,7 +4,7 @@ import { GetBlockReturnType } from 'viem';
 import { readObject } from '../util/file.js';
 import { GetBlockFixture } from './types.js';
 
-export async function getBlockFixtures(): Promise<GetBlockReturnType[]> {
+export async function loadBlockFixtures(): Promise<GetBlockReturnType[]> {
   const blocks: GetBlockReturnType[] = [];
   for (const hardFork in FIXTURES) {
     for (const fixtureName in FIXTURES[hardFork]) {
