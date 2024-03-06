@@ -18,15 +18,15 @@ export function buildOracleServer(
   const app = Fastify(opts);
   const serverParams = { client };
 
-  app.post('/', (request, reply) => {
+  app.post('/', async (request, reply) => {
     const jsonRPCRequest = request.body as JSONRPCRequest;
     request.log.info({ jsonRPCRequest }, 'Received request');
 
-    jsonRPCServer.receive(jsonRPCRequest, serverParams).then((jsonRPCResponse) => {
+    await jsonRPCServer.receive(jsonRPCRequest, serverParams).then(async (jsonRPCResponse) => {
       if (jsonRPCResponse) {
-        reply.send(jsonRPCResponse);
+        await reply.send(jsonRPCResponse);
       } else {
-        reply.status(HTTP_STATUS_NO_CONTENT).send();
+        await reply.status(HTTP_STATUS_NO_CONTENT).send();
       }
     });
   });

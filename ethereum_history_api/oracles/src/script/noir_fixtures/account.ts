@@ -10,16 +10,16 @@ export function createAccountFixture(stateProof: GetProofReturnType): string {
   const accountFixture = `use crate::account::Account;
 
 global rlp_encoded_left_padded_account = [
-  ${value}
+  ${value.join(',')}
 ];
 
 global nonce = ${stateProof.nonce};
 global balance = ${balance};
 global storage_root = [
-    ${storageHash}
+    ${storageHash.join(',')}
 ];
 global code_hash = [
-    ${codeHash}
+    ${codeHash.join(',')}
 ];
 
 global account = Account { nonce, balance, storage_root, code_hash };

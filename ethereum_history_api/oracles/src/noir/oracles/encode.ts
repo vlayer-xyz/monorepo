@@ -42,7 +42,7 @@ export function encodeHex(hexString: string): string[] {
   const chunks = [];
   for (let i = BYTE_HEX_LENGTH; i < hexString.length; i += BYTE_HEX_LENGTH) {
     const chunk = hexString.substring(i, i + BYTE_HEX_LENGTH);
-    chunks.push(`0x${chunk[0] === '0' ? chunk[1] : chunk}`);
+    chunks.push(`0x${chunk.startsWith('0') ? chunk[1] : chunk}`);
   }
   return chunks;
 }

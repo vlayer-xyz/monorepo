@@ -15,11 +15,7 @@ interface Fixture {
   storageKeys?: Hex[];
 }
 
-interface Fixtures {
-  [hardFork: string]: {
-    [name: string]: Fixture;
-  };
-}
+type Fixtures = Record<string, Record<string, Fixture>>;
 
 const FIXTURES: Fixtures = {
   frontier: {
@@ -61,7 +57,7 @@ for (const hardFork in FIXTURES) {
     const block = await client.getBlock({ blockNumber });
     const stateProof = await client.getProof({
       address,
-      storageKeys: storageKeys || [],
+      storageKeys: storageKeys ?? [],
       blockNumber
     });
 

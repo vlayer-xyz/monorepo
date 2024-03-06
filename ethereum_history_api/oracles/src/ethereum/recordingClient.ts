@@ -1,12 +1,14 @@
 import { PublicClient } from 'viem';
 
-export type Call = {
+export interface Call {
   method: string;
   arguments: unknown[];
   result: unknown;
-};
+}
 
-export type GetCalls = { getCalls: () => Call[] };
+export interface GetCalls {
+  getCalls: () => Call[];
+}
 export type RecordingClient = PublicClient & GetCalls;
 
 export const isEthereumApiMethod = (methodName: string) => methodName.startsWith('get');
@@ -25,7 +27,7 @@ function createLoggingProxy<Target extends Record<string, unknown>>(target: Targ
       const originalMethod = target[method];
       if (typeof originalMethod === 'function' && isEthereumApiMethod(method)) {
         return async (...args: unknown[]): Promise<unknown> => {
-          const result = await originalMethod.apply(target, args);
+          const result = (await originalMethod.apply(target, args)) as unknown;
           calls.push({
             method,
             arguments: args,

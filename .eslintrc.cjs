@@ -22,7 +22,12 @@ module.exports = {
   env: {
     es2021: true
   },
-  extends: ['plugin:@typescript-eslint/recommended', 'prettier', 'plugin:prettier/recommended'],
+  extends: [
+    'plugin:@typescript-eslint/recommended-type-checked',
+    'plugin:@typescript-eslint/stylistic-type-checked',
+    'prettier',
+    'plugin:prettier/recommended'
+  ],
   rules: {
     // Override specific rules
     '@typescript-eslint/consistent-type-assertions': [
@@ -32,6 +37,7 @@ module.exports = {
         objectLiteralTypeAssertions: 'allow'
       }
     ],
+    '@typescript-eslint/no-empty-function': 'off',
     'no-magic-numbers': ['error', { ignore: [0, 1, 16, 256, '0n', '1n'] }]
   },
   overrides: [parseConfigFilesAsScripts, allowMagicNumbersInTests]

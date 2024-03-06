@@ -17,7 +17,7 @@ async function readProof(path: string): Promise<Uint8Array> {
 
 async function readInputMap(path: string): Promise<InputMap> {
   const verifierData = await fs.readFile(path, 'utf-8');
-  const inputMap = toml.parse(verifierData);
+  const inputMap = toml.parse(verifierData) as InputMap;
   return inputMap;
 }
 

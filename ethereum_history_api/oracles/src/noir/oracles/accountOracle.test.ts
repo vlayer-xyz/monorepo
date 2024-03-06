@@ -8,9 +8,9 @@ import account from '../../../fixtures/account.json';
 import stateProof from '../../../fixtures/stateProof.json';
 import { ADDRESS } from '../../ethereum/recordingClient.test.js';
 
-describe('encodeAccount', async () => {
+describe('encodeAccount', () => {
   it('encode account', async () => {
-    const proof: GetProofReturnType = parse(await readFile('./fixtures/eth_getProof_response.json', 'utf-8'));
+    const proof = parse(await readFile('./fixtures/eth_getProof_response.json', 'utf-8')) as GetProofReturnType;
 
     expect(encodeAccount(proof)).toStrictEqual(serializeAccount(account));
     expect(encodeStateProof(proof)).toStrictEqual(serializeStateProof(stateProof));
