@@ -1,11 +1,16 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument */
-export function updateNestedField<T, V>(obj: T, pathArray: string[], updater: (value: V) => V): void {
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  pathArray.reduce((acc: any, key: string, i: number) => {
-    if (acc[key] === undefined) acc[key] = {};
-    if (i === pathArray.length - 1) acc[key] = updater(acc[key]);
-    return acc[key];
-  }, obj);
+interface NestedObject<V> {
+  [key: string]: NestedObject<V> | V;
 }
 
-export const copy = <T>(obj: T): T => JSON.parse(JSON.stringify(obj));
+export function updateNestedField<T, V>(obj: T, pathArray: string[], updater: (value: V) => V): void {
+  let currentSubtree = obj as NestedObject<V>;
+  const pathWithoutLast = pathArray.slice(0, pathArray.length - 1);
+  const lastPathElem = pathArray[pathArray.length - 1];
+  for (const pathElem of pathWithoutLast) {
+    currentSubtree = currentSubtree[pathElem] as NestedObject<V>;
+  }
+
+  currentSubtree[lastPathElem] = updater(currentSubtree[lastPathElem] as V);
+}
+
+export const copy = <T>(obj: T): T => JSON.parse(JSON.stringify(obj)) as T;
