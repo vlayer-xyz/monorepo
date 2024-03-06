@@ -3,7 +3,7 @@ import { encodeAccount, encodeStateProof, parseNoirGetAccountArguments } from '.
 import { ForeignCallOutput } from '@noir-lang/noir_js';
 import account from './fixtures/account.json';
 import stateProof from './fixtures/stateProof.json';
-import { ADDRESS } from '../../ethereum/recordingClient.test.js';
+import { CRYPTO_PUNKS_ADDRESS } from '../../ethereum/recordingClient.test.js';
 import { loadProofFixture } from '../../fixtures.js';
 
 describe('encodeAccount', () => {
@@ -24,7 +24,7 @@ describe('encodeAccount', () => {
       ])
     ).toStrictEqual({
       blockNumber: 15n,
-      address: ADDRESS
+      address: CRYPTO_PUNKS_ADDRESS
     });
   });
 });
