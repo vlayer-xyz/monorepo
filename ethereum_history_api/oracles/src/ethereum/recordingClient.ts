@@ -24,10 +24,6 @@ function createLoggingProxy<Target extends Record<string, unknown>>(target: Targ
         return () => calls;
       }
 
-      if (method === 'getLastCall') {
-        return () => calls[calls.length - 1];
-      }
-
       const originalMethod = target[method];
       if (typeof originalMethod === 'function' && isEthereumApiMethod(method)) {
         return async (...args: unknown[]): Promise<unknown> => {
