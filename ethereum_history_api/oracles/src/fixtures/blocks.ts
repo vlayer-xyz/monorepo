@@ -8,8 +8,7 @@ export async function getBlockFixtures(): Promise<GetBlockReturnType[]> {
   const blocks: GetBlockReturnType[] = [];
   for (const hardFork in FIXTURES) {
     for (const fixtureName in FIXTURES[hardFork]) {
-      const modulePath = `${JS_FIXTURES_DIRECTORY}/${hardFork}/${fixtureName}`;
-      const fileName = join(modulePath, 'eth_getBlockByHash.json');
+      const fileName = join(JS_FIXTURES_DIRECTORY, hardFork, fixtureName, 'eth_getBlockByHash.json');
       const blockFixture = await readObject<GetBlockFixture>(fileName);
       blocks.push(blockFixture.result);
     }
