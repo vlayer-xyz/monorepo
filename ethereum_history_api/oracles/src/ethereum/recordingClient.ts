@@ -8,7 +8,6 @@ export interface Call {
 
 export interface RecordingClientMixin {
   getCalls: () => Call[];
-  getLastCall: () => Call;
 }
 export type RecordingClient = PublicClient & RecordingClientMixin;
 
@@ -23,10 +22,6 @@ function createLoggingProxy<Target extends Record<string, unknown>>(target: Targ
     get(target: Target, method: string, receiver) {
       if (method === 'getCalls') {
         return () => calls;
-      }
-
-      if (method === 'getLastCall') {
-        return () => calls[calls.length - 1];
       }
 
       const originalMethod = target[method];

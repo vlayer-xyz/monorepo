@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { alterArray, padArray } from './array.js';
+import { alterArray, last, padArray } from './array.js';
 
 describe('arrays', () => {
   it('padArray right', () => {
@@ -21,5 +21,10 @@ describe('arrays', () => {
     expect(alterArray(['0x1', '0x2'])).toStrictEqual(['0x2', '0x2']);
     expect(alterArray(['0xFF', '0x2'])).toStrictEqual(['0x0', '0x2']);
     expect(() => alterArray([])).toThrow('Array should not be empty');
+  });
+
+  it('last', () => {
+    expect(last(['a', 'b', 'c'])).toStrictEqual('c');
+    expect(() => last([])).toThrow('Array should not be empty');
   });
 });

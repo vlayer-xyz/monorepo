@@ -7,15 +7,16 @@ import { FIXTURES, JS_FIXTURES_DIRECTORY } from '../fixtures/config.js';
 import { GetBlockFixture, GetProofFixture } from '../fixtures/types.js';
 import { writeObject } from '../util/file.js';
 import { RecordingClient, createRecordingClient } from '../ethereum/recordingClient.js';
+import { last } from '../util/array.js';
 
 async function createBlockFixture(client: RecordingClient, blockNumber: bigint): Promise<GetBlockFixture> {
   await client.getBlock({ blockNumber });
-  return client.getLastCall() as GetBlockFixture;
+  return last(client.getCalls()) as GetBlockFixture;
 }
 
 async function createProofFixture(client: RecordingClient, parameters: GetProofParameters): Promise<GetProofFixture> {
   await client.getProof(parameters);
-  return client.getLastCall() as GetProofFixture;
+  return last(client.getCalls()) as GetProofFixture;
 }
 
 export async function prepareJSFixtures(): Promise<void> {
