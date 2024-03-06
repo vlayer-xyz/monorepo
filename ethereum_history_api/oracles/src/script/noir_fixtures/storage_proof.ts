@@ -18,8 +18,7 @@ global storage_proofs_with_storage_root = StorageProofsWithStorageRoot {
   storage_root: [
     ${encodedStorageRoot.join(',')}
   ],
-  proofs: [
-    ${storageProofsNoir.join(',\n')}
+  proofs: [ ${storageProofsNoir.join(',')}
   ]
 };
 `;
@@ -30,7 +29,8 @@ function createSingleStorageProofFixture(storageProof: StorageProof): string {
   const value = encodeBytes32(storageProof.value);
   const proof = encodeProof(storageProof.proof, STORAGE_PROOF_LENGTH).map((byte) => parseInt(byte, 16));
   const depth = storageProof.proof.length;
-  const storageProofFixture = `StorageProof {
+  const storageProofFixture = `
+    StorageProof {
       key: [
         ${key.join(',')}
       ],
