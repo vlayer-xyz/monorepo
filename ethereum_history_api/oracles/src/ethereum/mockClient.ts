@@ -8,10 +8,10 @@ import { identity } from '../util/function.js';
 import { stringify } from '../util/json-bigint.js';
 
 export async function createMockClient(
-  filePath: string,
+  filePaths: string[],
   resultModifier: (call: Call) => Call = identity
 ): Promise<PublicClient> {
-  const savedCalls = await readObject<Call[]>(filePath);
+  const savedCalls = (await Promise.all(filePaths.map(readObject<Call>))).flat();
 
   return mock<PublicClient>(isEthereumApiMethod, (method: string, args: unknown): unknown => {
     const call: Call | undefined = savedCalls.find((it) => it.method === method && isEqual(it.arguments, args));

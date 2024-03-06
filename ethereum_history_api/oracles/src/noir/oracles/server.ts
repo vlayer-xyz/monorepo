@@ -25,8 +25,11 @@ export const startOracleServer = async (client: PublicClient, port: number = POR
   return app;
 };
 
-export async function withMockOracleServer<T>(fn: (serverUrl: string) => Promise<T>): Promise<T> {
-  const mockClient = await createMockClient('./fixtures/mockClientData.json');
+export async function withMockOracleServer<T>(
+  fixtureFilePaths: string[],
+  fn: (serverUrl: string) => Promise<T>
+): Promise<T> {
+  const mockClient = await createMockClient(fixtureFilePaths);
   const app = await startOracleServer(mockClient, MOCK_ORACLE_SERVER_PORT);
   const serverUrl = `http://localhost:${MOCK_ORACLE_SERVER_PORT}`;
   try {

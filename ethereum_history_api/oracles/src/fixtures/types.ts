@@ -1,5 +1,11 @@
 import { GetBlockReturnType, GetProofReturnType } from 'viem';
 
+export interface BaseFixture<T> {
+  method: string;
+  arguments: unknown[];
+  result: T;
+}
+
 export interface GetProofFixture {
   method: 'eth_getProof';
   arguments: [string, string[], bigint];

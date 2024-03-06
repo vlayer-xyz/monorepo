@@ -4,23 +4,23 @@ import { withTempFile, writeObject } from '../util/file.js';
 import { createMockClient } from './mockClient.js';
 import { GetBlockParameters, GetProofParameters, Hex, PublicClient } from 'viem';
 
-export const BLOCK_NUMBER = 14194126n;
-export const ADDRESS: Hex = '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb';
+export const LONDON_BLOCK_NUMBER = 14194126n;
+export const CRYPTO_PUNKS_ADDRESS: Hex = '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb';
 const BLOCK_HASH: Hex = '0xbe8aa5945d3377e65ed06757555d0d4babe269097574c210133e59cf6bc17d18';
 const STORAGE_ROOT: Hex = '0xae2792244417bc1749b9cd9a0bdc1c4a6cf32f147b37202c8cb3590777659aec';
 
-export const GET_PROOF_PARAMETERS = {
-  blockNumber: BLOCK_NUMBER,
+export const LONDON_CRYPTO_PUNKS_GET_PROOF_PARAMETERS = {
+  blockNumber: LONDON_BLOCK_NUMBER,
   storageKeys: [],
-  address: ADDRESS
+  address: CRYPTO_PUNKS_ADDRESS
 } as GetProofParameters;
-export const GET_BLOCK_PARAMETERS = { blockNumber: BLOCK_NUMBER } as GetBlockParameters;
+export const LONDON_CRYPTO_PUNKS_GET_BLOCK_PARAMETERS = { blockNumber: LONDON_BLOCK_NUMBER } as GetBlockParameters;
 const EXPECTED_CALLS = [
   {
     method: 'getBlock',
-    arguments: [{ blockNumber: BLOCK_NUMBER }],
+    arguments: [{ blockNumber: LONDON_BLOCK_NUMBER }],
     result: {
-      number: BLOCK_NUMBER,
+      number: LONDON_BLOCK_NUMBER,
       hash: BLOCK_HASH
     }
   },
@@ -28,9 +28,9 @@ const EXPECTED_CALLS = [
     method: 'getProof',
     arguments: [
       {
-        blockNumber: BLOCK_NUMBER,
+        blockNumber: LONDON_BLOCK_NUMBER,
         storageKeys: [],
-        address: ADDRESS
+        address: CRYPTO_PUNKS_ADDRESS
       }
     ],
     result: {
@@ -48,8 +48,8 @@ describe('recordingClient', () => {
   it('record JSON-RPC API calls', async () => {
     const client = createRecordingClient(publicClientMock);
 
-    await client.getBlock(GET_BLOCK_PARAMETERS);
-    await client.getProof(GET_PROOF_PARAMETERS);
+    await client.getBlock(LONDON_CRYPTO_PUNKS_GET_BLOCK_PARAMETERS);
+    await client.getProof(LONDON_CRYPTO_PUNKS_GET_PROOF_PARAMETERS);
     const calls: Call[] = client.getCalls();
 
     expect(calls).toMatchObject(EXPECTED_CALLS);
@@ -59,16 +59,16 @@ describe('recordingClient', () => {
     await withTempFile(async (tempFilePath) => {
       const client = createRecordingClient(publicClientMock);
 
-      await client.getBlock(GET_BLOCK_PARAMETERS);
-      await client.getProof(GET_PROOF_PARAMETERS);
+      await client.getBlock(LONDON_CRYPTO_PUNKS_GET_BLOCK_PARAMETERS);
+      await client.getProof(LONDON_CRYPTO_PUNKS_GET_PROOF_PARAMETERS);
       await writeObject(client.getCalls(), tempFilePath);
 
-      const mockingClient: PublicClient = await createMockClient(tempFilePath);
+      const mockingClient: PublicClient = await createMockClient([tempFilePath]);
 
-      const block = await mockingClient.getBlock(GET_BLOCK_PARAMETERS);
-      const proof = await mockingClient.getProof(GET_PROOF_PARAMETERS);
+      const block = await mockingClient.getBlock(LONDON_CRYPTO_PUNKS_GET_BLOCK_PARAMETERS);
+      const proof = await mockingClient.getProof(LONDON_CRYPTO_PUNKS_GET_PROOF_PARAMETERS);
 
-      expect(block.number).toBe(BLOCK_NUMBER);
+      expect(block.number).toBe(LONDON_BLOCK_NUMBER);
       expect(block.hash).toBe(BLOCK_HASH);
 
       expect(proof.storageHash).toBe(STORAGE_ROOT);

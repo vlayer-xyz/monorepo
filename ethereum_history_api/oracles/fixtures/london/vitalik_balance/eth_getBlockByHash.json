@@ -1,6 +1,6 @@
 {
-  "method": "eth_getBlockByHash",
-  "arguments": [12965000, false],
+  "method": "getBlock",
+  "arguments": [{ "blockNumber": 12965000 }],
   "result": {
     "number": 12965000,
     "hash": "0x9b83c12c69edb74f6c8dd5d052765c1adf940e320bd1291696e6fa07829eee71",

@@ -1,17 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { calculateBlockHash, calculateBlockHeaderHash, headerToRlp, blockToHeader } from './blockHeader.js';
-import { loadBlockFixtures } from '../fixtures/blocks.js';
-import { readObject } from '../util/file.js';
-import { join } from 'path';
-import { JS_FIXTURES_DIRECTORY } from '../fixtures/config.js';
-import { GetBlockFixture } from '../fixtures/types.js';
-import { GetBlockReturnType } from 'viem';
-
-async function loadBlockFixture(hardFork: string, fixtureName: string): Promise<GetBlockReturnType> {
-  const fileName = join(JS_FIXTURES_DIRECTORY, hardFork, fixtureName, 'eth_getBlockByHash.json');
-  const getBlockFixture = await readObject<GetBlockFixture>(fileName);
-  return getBlockFixture.result;
-}
+import { loadBlockFixture, loadBlockFixtures } from '../fixtures.js';
 
 describe('calculateBlockHeaderHash', () => {
   it('frontier block', async () => {
