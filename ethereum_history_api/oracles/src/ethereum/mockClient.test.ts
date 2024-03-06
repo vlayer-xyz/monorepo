@@ -11,8 +11,8 @@ import { GetBlockFixture } from '../fixtures/types.js';
 describe('mockingClient', () => {
   it('read recorded JSON-RPC API calls from file in mocking client', async () => {
     const filePaths = [
-      './new_fixtures/london/crypto_punks/eth_getBlockByHash.json',
-      './new_fixtures/london/crypto_punks/eth_getProof.json'
+      './fixtures/london/crypto_punks/eth_getBlockByHash.json',
+      './fixtures/london/crypto_punks/eth_getProof.json'
     ];
     const mockingClient: PublicClient = await createMockClient(filePaths);
 

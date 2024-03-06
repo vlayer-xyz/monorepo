@@ -8,7 +8,7 @@ import { FIXTURES } from '../../fixtures/config.js';
 describe(
   'headerOracle',
   async () => {
-    const mockFilePaths = ['./new_fixtures/paris/usdc/eth_getBlockByHash.json'];
+    const mockFilePaths = ['./fixtures/paris/usdc/eth_getBlockByHash.json'];
     const client = await createMockClient(mockFilePaths);
 
     it('getBlock', async () => {
