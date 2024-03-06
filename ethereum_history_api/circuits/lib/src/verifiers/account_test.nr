@@ -1,6 +1,4 @@
 use crate::account::{Account, MAX_ACCOUNT_STATE_LENGTH, verify_account};
-use crate::verifiers::account::assert_account_equals;
-use crate::misc::arrays::alter_array;
 use crate::fixtures::{
     london::{
         crypto_punks::{
@@ -10,6 +8,8 @@ use crate::fixtures::{
         }
     }
 };
+use crate::misc::arrays::alter_array;
+use crate::verifiers::account::assert_account_equals;
 
 #[test]
 fn test_assert_account_equals() {

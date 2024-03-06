@@ -1,8 +1,9 @@
 use dep::proof::{rlp::{decode1, RLP_List}, byte_value};
 use dep::std::hash::keccak256;
-use crate::misc::arrays::{sub_array_equals, sub_array_equals_up_to_length};
 use dep::u2b::{u40_to_u8};
+
 use crate::header::{BlockHeaderPartial, BlockHeaderRlp};
+use crate::misc::arrays::{sub_array_equals, sub_array_equals_up_to_length};
 
 global MAX_HEADER_FIELDS_COUNT = 17;
 global STATE_ROOT_INDEX = 3;
