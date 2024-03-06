@@ -18,7 +18,7 @@ global storage_proofs_with_storage_root = StorageProofsWithStorageRoot {
   storage_root: [
     ${encodedStorageRoot.join(',')}
   ],
-  proofs: [ ${storageProofsNoir.join(',')}
+  proofs: [${storageProofsNoir.join(',')}
   ]
 };
 `;

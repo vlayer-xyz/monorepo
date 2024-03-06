@@ -1,16 +1,24 @@
 use crate::fixtures::paris::usdc::storage_proof::storage_proofs_with_storage_root;
-use crate::verifiers::storage::{verify_storage_value};
+use crate::verifiers::storage::{verify_storage_value, verify_storage_values};
 
 #[test]
-fn test_verify_storage_proof() {
+fn test_verify_storage_value() {
     let _ = verify_storage_value(
         storage_proofs_with_storage_root.storage_root,
         storage_proofs_with_storage_root.proofs[0]
     );
 }
 
+#[test]
+fn test_verify_storage_values() {
+    let _ = verify_storage_values(
+        storage_proofs_with_storage_root.storage_root,
+        storage_proofs_with_storage_root.proofs
+    );
+}
+
 #[test(should_fail)]
-fn test_verify_storage_proof_invalid_storage_root() {
+fn test_verify_storage_value_invalid_storage_root() {
     let mut root = storage_proofs_with_storage_root.storage_root;
     root[0] += 1;
 
@@ -18,7 +26,15 @@ fn test_verify_storage_proof_invalid_storage_root() {
 }
 
 #[test(should_fail)]
-fn test_verify_storage_proof_invalid_proof() {
+fn test_verify_storage_values_invalid_storage_root() {
+    let mut root = storage_proofs_with_storage_root.storage_root;
+    root[0] += 1;
+
+    let _ = verify_storage_values(root, storage_proofs_with_storage_root.proofs);
+}
+
+#[test(should_fail)]
+fn test_verify_storage_value_invalid_proof() {
     let mut proof = storage_proofs_with_storage_root.proofs[0];
     proof.proof[0] += 1;
 
@@ -26,7 +42,7 @@ fn test_verify_storage_proof_invalid_proof() {
 }
 
 #[test(should_fail)]
-fn test_verify_storage_proof_invalid_depth() {
+fn test_verify_storage_value_invalid_depth() {
     let mut proof = storage_proofs_with_storage_root.proofs[0];
     proof.depth += 1;
 
@@ -34,7 +50,7 @@ fn test_verify_storage_proof_invalid_depth() {
 }
 
 #[test(should_fail)]
-fn test_verify_storage_proof_invalid_key() {
+fn test_verify_storage_value_invalid_key() {
     let mut proof = storage_proofs_with_storage_root.proofs[0];
     proof.key[0] += 1;
 
@@ -42,7 +58,7 @@ fn test_verify_storage_proof_invalid_key() {
 }
 
 #[test(should_fail)]
-fn test_verify_storage_proof_invalid_value() {
+fn test_verify_storage_value_invalid_value() {
     let mut proof = storage_proofs_with_storage_root.proofs[0];
     proof.value[0] += 1;
 
