@@ -1,18 +1,11 @@
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { fromRlp, type GetProofReturnType, type Hex, isHex, type PublicClient } from 'viem';
 import { assert } from '../../util/assert.js';
-import {
-  ADDRESS_LENGTH,
-  PROOF_ONE_LEVEL_LENGTH,
-  ZERO_PAD_VALUE,
-  decodeField,
-  decodeHexAddress,
-  encodeField,
-  encodeHex,
-  encodeProof
-} from './encode.js';
 import { padArray } from '../../util/array.js';
 import { NoirArguments } from './oracles.js';
+import { PROOF_ONE_LEVEL_LENGTH, ADDRESS_LENGTH, ZERO_PAD_VALUE } from './codec/const.js';
+import { decodeField, decodeHexAddress } from './codec/decode.js';
+import { encodeField, encodeHex, encodeProof } from './codec/encode.js';
 
 const MAX_STATE_PROOF_LEVELS = 9;
 export const STATE_PROOF_LENGTH = PROOF_ONE_LEVEL_LENGTH * MAX_STATE_PROOF_LEVELS;

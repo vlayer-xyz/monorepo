@@ -1,10 +1,11 @@
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { type BlockHeader, blockToHeader, headerToRlp } from '../../ethereum/blockHeader.js';
-import { decodeField, encodeField, encodeHex } from './encode.js';
 import { padArray } from '../../util/array.js';
 import { type GetBlockReturnType, hexToBytes, isHex, keccak256, type PublicClient } from 'viem';
 import { assert } from '../../util/assert.js';
 import { NoirArguments } from './oracles.js';
+import { decodeField } from './codec/decode.js';
+import { encodeHex, encodeField } from './codec/encode.js';
 
 export const MAX_HEADER_RLP_SIZE = 708;
 
