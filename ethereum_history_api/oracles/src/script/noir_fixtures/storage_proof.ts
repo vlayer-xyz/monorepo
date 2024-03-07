@@ -9,18 +9,12 @@ interface StorageProof {
   value: bigint;
 }
 
-export function createStorageProofFixture(storageRoot: Hash, storageProofs: StorageProof[]): string {
+export function createStorageProofFixture(storageProofs: StorageProof[]): string {
   const storageProofsNoir = storageProofs.map(createSingleStorageProofFixture);
-  const encodedStorageRoot = encodeHexString(storageRoot);
-  return `use crate::storage::{StorageProof, StorageProofsWithStorageRoot};
+  return `use crate::storage::{StorageProof};
 
-global storage_proofs_with_storage_root = StorageProofsWithStorageRoot {
-  storage_root: [
-    ${encodedStorageRoot.join(',')}
-  ],
-  proofs: [${storageProofsNoir.join(',')}
-  ]
-};
+global proofs = [${storageProofsNoir.join(',')}
+];
 `;
 }
 
@@ -30,17 +24,17 @@ function createSingleStorageProofFixture(storageProof: StorageProof): string {
   const proof = encodeProof(storageProof.proof, STORAGE_PROOF_LENGTH).map((byte) => parseInt(byte, 16));
   const depth = storageProof.proof.length;
   const storageProofFixture = `
-    StorageProof {
-      key: [
-        ${key.join(',')}
-      ],
-      value: [
-        ${value.join(',')}
-      ],
-      proof: [
-        ${proof.join(',')}
-      ],
-      depth: ${depth}
-    }`;
+  StorageProof {
+    key: [
+      ${key.join(',')}
+    ],
+    value: [
+      ${value.join(',')}
+    ],
+    proof: [
+      ${proof.join(',')}
+    ],
+    depth: ${depth}
+  }`;
   return storageProofFixture;
 }
