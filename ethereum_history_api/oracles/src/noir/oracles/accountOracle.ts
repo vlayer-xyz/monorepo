@@ -1,16 +1,11 @@
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
-import { fromRlp, type GetProofReturnType, type Hex, isHex, type PublicClient } from 'viem';
+import { type Hex, isHex, type PublicClient } from 'viem';
 import { assert } from '../../util/assert.js';
-import { padArray } from '../../util/array.js';
 import { NoirArguments } from './oracles.js';
-import { PROOF_ONE_LEVEL_LENGTH, ADDRESS_LENGTH, ZERO_PAD_VALUE } from './codec/const.js';
+import { ADDRESS_LENGTH } from './codec/const.js';
 import { decodeField, decodeHexAddress } from './codec/decode.js';
-import { encodeField, encodeHex, encodeProof } from './codec/encode.js';
+import { encodeAccount, encodeStateProof } from './accountOracle/codec.js';
 
-const MAX_STATE_PROOF_LEVELS = 9;
-export const STATE_PROOF_LENGTH = PROOF_ONE_LEVEL_LENGTH * MAX_STATE_PROOF_LEVELS;
-const MAX_ACCOUNT_STATE_LENGTH = 134;
-const RLP_VALUE_INDEX = 1;
 const GET_ACCOUNT_ARGS_COUNT = 2;
 
 export const getAccountOracle = async (client: PublicClient, args: NoirArguments): Promise<ForeignCallOutput[]> => {
@@ -46,29 +41,4 @@ export function parseNoirGetAccountArguments(args: NoirArguments): {
   const address: Hex = decodeHexAddress(noirAddress);
 
   return { blockNumber, address };
-}
-
-export function encodeAccount(ethProof: GetProofReturnType): ForeignCallOutput[] {
-  const nonce = encodeField(ethProof.nonce);
-  const balance = encodeField(ethProof.balance);
-  const storageRoot = encodeHex(ethProof.storageHash);
-  const codeHash = encodeHex(ethProof.codeHash);
-
-  return [nonce, balance, storageRoot, codeHash];
-}
-
-export function encodeStateProof(ethProof: GetProofReturnType): ForeignCallOutput[] {
-  const key = encodeHex(ethProof.address);
-  const value = encodeValue(ethProof.accountProof);
-  const proof = encodeProof(ethProof.accountProof, STATE_PROOF_LENGTH);
-  const depth = encodeField(ethProof.accountProof.length);
-
-  return [key, value, proof, depth];
-}
-
-export function encodeValue(proof: Hex[]): string[] {
-  const lastProofEntry = fromRlp(proof[proof.length - 1], 'hex');
-  const value = lastProofEntry[RLP_VALUE_INDEX];
-  assert(isHex(value), 'value should be of type Hex');
-  return padArray(encodeHex(value), MAX_ACCOUNT_STATE_LENGTH, ZERO_PAD_VALUE, 'left');
 }

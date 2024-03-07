@@ -1,19 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { encodeAccount, encodeStateProof, parseNoirGetAccountArguments } from './accountOracle.js';
-import { ForeignCallOutput } from '@noir-lang/noir_js';
-import account from './fixtures/account.json';
-import stateProof from './fixtures/stateProof.json';
 import { CRYPTO_PUNKS_ADDRESS } from '../../ethereum/recordingClient.test.js';
-import { loadProofFixture } from '../../fixtures.js';
+import { parseNoirGetAccountArguments } from './accountOracle.js';
 
-describe('encodeAccount', () => {
-  it('encode account', async () => {
-    const proof = await loadProofFixture('paris', 'usdc');
-
-    expect(encodeAccount(proof)).toStrictEqual(serializeAccount(account));
-    expect(encodeStateProof(proof)).toStrictEqual(serializeStateProof(stateProof));
-  });
-
+describe('accountOracle', () => {
   it('parseNoirGetAccountArguments success', () => {
     expect(
       parseNoirGetAccountArguments([
@@ -28,25 +17,3 @@ describe('encodeAccount', () => {
     });
   });
 });
-
-interface Account {
-  nonce: string;
-  balance: string;
-  codeHash: string[];
-  storageRoot: string[];
-}
-
-interface AccountStateProof {
-  key: string[];
-  value: string[];
-  proof: string[];
-  depth: string;
-}
-
-function serializeAccount(account: Account): ForeignCallOutput[] {
-  return [account.nonce, account.balance, account.storageRoot, account.codeHash];
-}
-
-function serializeStateProof(account: AccountStateProof): ForeignCallOutput[] {
-  return [account.key, account.value, account.proof, account.depth];
-}
