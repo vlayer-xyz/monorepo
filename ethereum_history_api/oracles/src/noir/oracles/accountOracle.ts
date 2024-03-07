@@ -9,7 +9,7 @@ import { encodeAccount, encodeStateProof } from './accountOracle/encode.js';
 const GET_ACCOUNT_ARGS_COUNT = 2;
 
 export const getAccountOracle = async (client: PublicClient, args: NoirArguments): Promise<ForeignCallOutput[]> => {
-  const { blockNumber, address } = parseNoirGetAccountArguments(args);
+  const { blockNumber, address } = decodeGetAccountArguments(args);
   const accountProof = await client.getProof({
     address,
     storageKeys: [],
@@ -20,7 +20,7 @@ export const getAccountOracle = async (client: PublicClient, args: NoirArguments
   return [...encodedAccount, ...encodedProof];
 };
 
-export function parseNoirGetAccountArguments(args: NoirArguments): {
+export function decodeGetAccountArguments(args: NoirArguments): {
   blockNumber: bigint;
   address: Hex;
 } {

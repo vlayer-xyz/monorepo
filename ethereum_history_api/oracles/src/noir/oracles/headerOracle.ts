@@ -9,13 +9,13 @@ import { encodeBlockHeader } from './headerOracle/encode.js';
 export const MAX_HEADER_RLP_SIZE = 708;
 
 export const getHeaderOracle = async (client: PublicClient, args: NoirArguments): Promise<ForeignCallOutput[]> => {
-  const blockNumber: bigint = parseNoirGetHeaderArguments(args);
+  const blockNumber: bigint = decodeGetHeaderArguments(args);
   const blockHeader: BlockHeader = await getBlock(client, blockNumber);
 
   return encodeBlockHeader(blockHeader);
 };
 
-export function parseNoirGetHeaderArguments(args: NoirArguments): bigint {
+export function decodeGetHeaderArguments(args: NoirArguments): bigint {
   assert(args.length === 1, 'get_header requires 1 argument');
   assert(args[0].length === 1, 'get_account first argument must be an array of length 1');
   assert(isHex(args[0][0]), 'get_account first argument must be a hex value');

@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { CRYPTO_PUNKS_ADDRESS } from '../../ethereum/recordingClient.test.js';
-import { parseNoirGetAccountArguments } from './accountOracle.js';
+import { decodeGetAccountArguments } from './accountOracle.js';
 
 describe('accountOracle', () => {
-  it('parseNoirGetAccountArguments success', () => {
+  it('decodeGetAccountArguments success', () => {
     expect(
-      parseNoirGetAccountArguments([
+      decodeGetAccountArguments([
         ['0xf'],
         // prettier-ignore
         ["0xb4", "0x7e", "0x3c", "0xd8", "0x37", "0xdd", "0xf8", "0xe4", "0xc5", "0x7f", "0x05", "0xd7", "0x0a", "0xb8",
