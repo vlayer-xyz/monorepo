@@ -4,7 +4,7 @@ import { type GetBlockReturnType, isHex, type PublicClient } from 'viem';
 import { assert } from '../../util/assert.js';
 import { NoirArguments } from './oracles.js';
 import { decodeField } from './codec/decode.js';
-import { encodeBlockHeader } from './headerOracle/codec.js';
+import { encodeBlockHeader } from './headerOracle/encode.js';
 
 export const MAX_HEADER_RLP_SIZE = 708;
 

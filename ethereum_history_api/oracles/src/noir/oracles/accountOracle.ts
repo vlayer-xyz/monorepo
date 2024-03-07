@@ -4,7 +4,7 @@ import { assert } from '../../util/assert.js';
 import { NoirArguments } from './oracles.js';
 import { ADDRESS_LENGTH } from './codec/const.js';
 import { decodeField, decodeHexAddress } from './codec/decode.js';
-import { encodeAccount, encodeStateProof } from './accountOracle/codec.js';
+import { encodeAccount, encodeStateProof } from './accountOracle/encode.js';
 
 const GET_ACCOUNT_ARGS_COUNT = 2;
 

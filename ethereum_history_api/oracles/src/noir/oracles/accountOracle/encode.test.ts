@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { loadProofFixture } from '../../../fixtures.js';
 import account from './fixtures/account.json';
 import { ForeignCallOutput } from '@noir-lang/noir_js';
-import { encodeAccount, encodeStateProof } from './codec.js';
+import { encodeAccount, encodeStateProof } from './encode.js';
 import stateProof from './fixtures/stateProof.json';
 
 describe('AccountOracle Codec', () => {
