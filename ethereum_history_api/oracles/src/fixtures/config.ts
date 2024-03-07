@@ -2,6 +2,7 @@ import { Address, Hex } from 'viem';
 
 export const JS_FIXTURES_DIRECTORY = 'fixtures';
 export const CIRCLE_USDC_BALANCE_STORAGE_KEY = '0x57d18af793d7300c4ba46d192ec7aa095070dde6c52c687c6d0d92fb8532b305';
+export const UNISWAP_V3_USDC_BALANCE_STORAGE_KEY = '0x1f21a62c4538bacf2aabeca410f0fe63151869f172e03c0e00357ba26a341eff';
 
 interface Fixture {
   blockNumber: bigint;
@@ -32,7 +33,7 @@ export const FIXTURES: Fixtures = {
     usdc: {
       blockNumber: 19_000_000n,
       address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-      storageKeys: [CIRCLE_USDC_BALANCE_STORAGE_KEY]
+      storageKeys: [CIRCLE_USDC_BALANCE_STORAGE_KEY, UNISWAP_V3_USDC_BALANCE_STORAGE_KEY]
     }
   }
 };
