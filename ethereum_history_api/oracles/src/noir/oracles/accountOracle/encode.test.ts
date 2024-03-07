@@ -1,44 +1,44 @@
 import { describe, expect, it } from 'vitest';
 import { loadProofFixture } from '../../../fixtures.js';
-import account from './fixtures/account.json';
+import accountAsFields from './fixtures/accountAsFields.json';
+import stateProofAsFields from './fixtures/stateProofAsFields.json';
 import { ForeignCallOutput } from '@noir-lang/noir_js';
 import { encodeAccount, encodeStateProof } from './encode.js';
-import stateProof from './fixtures/stateProof.json';
 
 describe('AccountOracle Codec', () => {
   describe('encodeAccount', () => {
     it('encode account', async () => {
       const proof = await loadProofFixture('paris', 'usdc');
-      expect(encodeAccount(proof)).toStrictEqual(serializeAccount(account));
+      expect(encodeAccount(proof)).toStrictEqual(serializeAccount(accountAsFields));
     });
   });
 
   describe('encodeStateProof', () => {
     it('encode state proof', async () => {
       const proof = await loadProofFixture('paris', 'usdc');
-      expect(encodeStateProof(proof)).toStrictEqual(serializeStateProof(stateProof));
+      expect(encodeStateProof(proof)).toStrictEqual(serializeStateProof(stateProofAsFields));
     });
   });
 });
 
-interface Account {
+interface AccountAsFields {
   nonce: string;
   balance: string;
   codeHash: string[];
   storageRoot: string[];
 }
 
-interface AccountStateProof {
+interface AccountStateProofAsFields {
   key: string[];
   value: string[];
   proof: string[];
   depth: string;
 }
 
-function serializeAccount(account: Account): ForeignCallOutput[] {
+function serializeAccount(account: AccountAsFields): ForeignCallOutput[] {
   return [account.nonce, account.balance, account.storageRoot, account.codeHash];
 }
 
-function serializeStateProof(account: AccountStateProof): ForeignCallOutput[] {
+function serializeStateProof(account: AccountStateProofAsFields): ForeignCallOutput[] {
   return [account.key, account.value, account.proof, account.depth];
 }
