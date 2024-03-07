@@ -1,9 +1,9 @@
 import { ForeignCallOutput } from '@noir-lang/noir_js';
 import { GetProofReturnType, Hex, fromRlp, isHex } from 'viem';
 import { encodeField, encodeHex, encodeProof } from '../codec/encode.js';
-import { assert } from 'vitest';
 import { padArray } from '../../../util/array.js';
 import { PROOF_ONE_LEVEL_LENGTH, ZERO_PAD_VALUE } from '../codec/const.js';
+import { assert } from '../../../util/assert.js';
 
 const MAX_STATE_PROOF_LEVELS = 9;
 const MAX_ACCOUNT_STATE_LENGTH = 134;
