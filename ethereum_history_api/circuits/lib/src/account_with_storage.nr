@@ -37,11 +37,6 @@ struct StateAndStorageProof {
     storage_proof: StorageProof
 }
 
-struct StorageProofsWithStorageRoot<N> {
-    storage_root: Bytes32,
-    proofs: [StorageProof; N]
-}
-
 struct StorageWithinBlock<N> {
     block_hash: Bytes32,
     account: Account,

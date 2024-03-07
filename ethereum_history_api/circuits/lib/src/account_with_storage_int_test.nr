@@ -8,7 +8,7 @@ use crate::fixtures::{
             },
             account::account,
             state_proof::state_proof,
-            storage_proof::storage_proofs_with_storage_root
+            storage_proof::{storage_root, proofs}
         }
     },
     london::{
@@ -25,13 +25,9 @@ use dep::std::test::OracleMock;
 #[test]
 fn test_get_account_with_storage_success() {
     let _ = OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp));
-    let _ = OracleMock::mock("get_proof").returns((account, state_proof, storage_proofs_with_storage_root.proofs[0]));
+    let _ = OracleMock::mock("get_proof").returns((account, state_proof, proofs[0]));
 
-    let account_with_storage = get_account_with_storage(
-        number,
-        state_proof.key,
-        storage_proofs_with_storage_root.proofs[0].key
-    );
+    let account_with_storage = get_account_with_storage(number, state_proof.key, proofs[0].key);
 
     assert_eq(account.nonce, account_with_storage.account.nonce);
     assert_eq(account.balance, account_with_storage.account.balance);
@@ -39,18 +35,13 @@ fn test_get_account_with_storage_success() {
     assert_eq(account.storage_root, account_with_storage.account.storage_root);
 
     assert_eq(block_header_partial.hash, account_with_storage.block_hash);
-
-    assert_eq(storage_proofs_with_storage_root.proofs[0].value, account_with_storage.values[0]);
+    assert_eq(proofs[0].value, account_with_storage.values[0]);
 }
 
 #[test(should_fail)]
 fn test_get_account_with_storage_invalid_state_root() {
     let _ = OracleMock::mock("get_header").returns((block_header_partial_from_different_block, block_header_rlp_from_different_block));
-    let _ = OracleMock::mock("get_proof").returns((account, state_proof, storage_proofs_with_storage_root.proofs[0]));
+    let _ = OracleMock::mock("get_proof").returns((account, state_proof, proofs[0]));
 
-    let _ = get_account_with_storage(
-        number,
-        state_proof.key,
-        storage_proofs_with_storage_root.proofs[0].key
-    );
+    let _ = get_account_with_storage(number, state_proof.key, proofs[0].key);
 }
