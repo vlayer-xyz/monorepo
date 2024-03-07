@@ -9,7 +9,6 @@ describe('AccountOracle Codec', () => {
   describe('encodeAccount', () => {
     it('encode account', async () => {
       const proof = await loadProofFixture('paris', 'usdc');
-
       expect(encodeAccount(proof)).toStrictEqual(serializeAccount(account));
     });
   });
@@ -17,7 +16,6 @@ describe('AccountOracle Codec', () => {
   describe('encodeStateProof', () => {
     it('encode state proof', async () => {
       const proof = await loadProofFixture('paris', 'usdc');
-
       expect(encodeStateProof(proof)).toStrictEqual(serializeStateProof(stateProof));
     });
   });
