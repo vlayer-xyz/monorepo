@@ -30,8 +30,8 @@ struct StorageProof {
 }
 
 struct StateAndStorageProof {
-		account: Account,
-		state_proof: StateProof,
+    account: Account,
+    state_proof: StateProof,
     storage_proof: StorageProof
 }
 struct StorageProofsWithStorageRoot<N> {
