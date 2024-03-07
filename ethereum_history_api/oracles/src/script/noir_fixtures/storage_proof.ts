@@ -1,7 +1,7 @@
 import { Hash } from 'viem';
 import { encodeHexString } from '../../noir/noir_js/encode.js';
-import { encodeBytes32, encodeProof } from '../../noir/oracles/encode.js';
 import { STORAGE_PROOF_LENGTH } from '../../noir/oracles/storageOracle.js';
+import { encodeBytes32, encodeProof } from '../../noir/oracles/codec/encode.js';
 
 interface StorageProof {
   key: Hash;

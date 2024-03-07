@@ -1,4 +1,4 @@
-import { PROOF_ONE_LEVEL_LENGTH } from './encode.js';
+import { PROOF_ONE_LEVEL_LENGTH } from './codec/const.js';
 
 const MAX_STORAGE_PROOF_LEVELS = 7;
 export const STORAGE_PROOF_LENGTH = PROOF_ONE_LEVEL_LENGTH * MAX_STORAGE_PROOF_LEVELS;
