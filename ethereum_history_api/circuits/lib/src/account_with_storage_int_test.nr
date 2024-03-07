@@ -14,8 +14,8 @@ use crate::fixtures::{
     london::{
         crypto_punks::{
             header::{
-                block_header_partial as block_header_partial_from_crypto_punks, 
-                block_header_rlp as block_header_rlp_from_crypto_punks
+                block_header_partial as block_header_partial_from_different_block, 
+                block_header_rlp as block_header_rlp_from_different_block
             }
         }
     }
@@ -45,7 +45,7 @@ fn test_get_account_with_storage_success() {
 
 #[test(should_fail)]
 fn test_get_account_with_storage_invalid_state_root() {
-    let _ = OracleMock::mock("get_header").returns((block_header_partial_from_crypto_punks, block_header_rlp_from_crypto_punks));
+    let _ = OracleMock::mock("get_header").returns((block_header_partial_from_different_block, block_header_rlp_from_different_block));
 
     let _ = OracleMock::mock("get_proof").returns((account, state_proof, storage_proofs_with_storage_root.proofs[0]));
 
