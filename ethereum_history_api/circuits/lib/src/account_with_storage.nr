@@ -29,11 +29,14 @@ struct StorageProof {
     depth: Field
 }
 
+// For now oracle does not support returning array of arrays so at the moment we support only one storage proof.
+// When https://github.com/noir-lang/noir/issues/4498 is resolved we can change to `StateAndStorageProof<N>` and `storage_proof: [StorageProof; N]`.
 struct StateAndStorageProof {
     account: Account,
     state_proof: StateProof,
     storage_proof: StorageProof
 }
+
 struct StorageProofsWithStorageRoot<N> {
     storage_root: Bytes32,
     proofs: [StorageProof; N]
