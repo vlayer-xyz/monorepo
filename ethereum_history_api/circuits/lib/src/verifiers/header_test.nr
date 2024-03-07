@@ -6,9 +6,13 @@ use crate::fixtures::{
         block_header_partial as london_block_header_partial,
         block_header_rlp as london_block_header_rlp,
     },
+    frontier::zero::header::{
+        block_header_partial as frontier_zero_block_header_partial,
+        block_header_rlp as frontier_zero_block_header_rlp,
+    },
     frontier::first::header::{
-        block_header_partial as frontier_block_header_partial,
-        block_header_rlp as frontier_block_header_rlp,
+        block_header_partial as frontier_first_block_header_partial,
+        block_header_rlp as frontier_first_block_header_rlp,
     },
     paris::usdc::header::{
         block_header_partial as paris_block_header_partial,
@@ -20,8 +24,13 @@ use crate::fixtures::{
 };
 
 #[test]
-fn test_verify_frontier_header_success() {
-    verify_header(frontier_block_header_partial, frontier_block_header_rlp);
+fn test_verify_frontier_zero_header_success() {
+    verify_header(frontier_zero_block_header_partial, frontier_zero_block_header_rlp);
+}
+
+#[test]
+fn test_verify_frontier_first_header_success() {
+    verify_header(frontier_first_block_header_partial, frontier_first_block_header_rlp);
 }
 
 #[test]
@@ -91,7 +100,7 @@ fn test_verify_header_invalid_rlp() {
 // TODO: Add correct assertion message when we migrate to Noir >=0.24.0 which fixes assertions order
 #[test(should_fail)]
 fn test_verify_header_invalid_rlp_fields_count() {
-    verify_header(paris_block_header_partial, frontier_block_header_rlp);
+    verify_header(paris_block_header_partial, frontier_first_block_header_rlp);
 }
 
 #[test]

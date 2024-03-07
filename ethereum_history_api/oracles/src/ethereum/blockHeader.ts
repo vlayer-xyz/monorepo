@@ -20,6 +20,10 @@ export interface BlockHeader {
   withdrawalsRoot?: Hex;
 }
 
+function shortened(hex: Hex) {
+  return hex === '0x0' ? '0x' : hex;
+}
+
 export function headerToRlp(blockHeader: BlockHeader): Hex {
   const header: Hex[] = [
     blockHeader.parentHash,
@@ -29,11 +33,11 @@ export function headerToRlp(blockHeader: BlockHeader): Hex {
     blockHeader.transactionsRoot,
     blockHeader.receiptsRoot,
     blockHeader.logsBloom,
-    blockHeader.difficulty === '0x0' ? '0x' : blockHeader.difficulty,
-    blockHeader.number,
-    blockHeader.gasLimit,
-    blockHeader.gasUsed === '0x0' ? '0x' : blockHeader.gasUsed,
-    blockHeader.timestamp,
+    shortened(blockHeader.difficulty),
+    shortened(blockHeader.number),
+    shortened(blockHeader),
+    shortened(blockHeader.gasUsed),
+    shortened(blockHeader.timestamp),
     blockHeader.extraData,
     blockHeader.mixHash,
     blockHeader.nonce
