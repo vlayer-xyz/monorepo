@@ -13,8 +13,3 @@ struct StorageProof {
     proof: [u8; STORAGE_PROOF_LEN],
     depth: Field
 }
-
-struct StorageProofsWithStorageRoot<N> {
-    storage_root: Bytes32,
-    proofs: [StorageProof; N]
-}
