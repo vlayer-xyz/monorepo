@@ -20,7 +20,7 @@ export interface BlockHeader {
   withdrawalsRoot?: Hex;
 }
 
-function shortened(hex: Hex) {
+function unpadded(hex: Hex) {
   return hex === '0x0' ? '0x' : hex;
 }
 
@@ -33,11 +33,11 @@ export function headerToRlp(blockHeader: BlockHeader): Hex {
     blockHeader.transactionsRoot,
     blockHeader.receiptsRoot,
     blockHeader.logsBloom,
-    shortened(blockHeader.difficulty),
-    shortened(blockHeader.number),
-    shortened(blockHeader),
-    shortened(blockHeader.gasUsed),
-    shortened(blockHeader.timestamp),
+    unpadded(blockHeader.difficulty),
+    unpadded(blockHeader.number),
+    unpadded(blockHeader.gasLimit),
+    unpadded(blockHeader.gasUsed),
+    unpadded(blockHeader.timestamp),
     blockHeader.extraData,
     blockHeader.mixHash,
     blockHeader.nonce
