@@ -60,7 +60,7 @@ pub fn get_account_with_storage(
 #[oracle(get_proof)]
 unconstrained fn get_proof_oracle(
     _block_no: Field,
-    _address: [u8; 20],
+    _address: Address,
     _storage_key: Bytes32
 ) -> StateAndStorageProof {}
 
