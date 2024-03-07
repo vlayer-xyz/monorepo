@@ -1,7 +1,7 @@
 use dep::proof::TrieProof;
 
 use crate::misc::types::Bytes32;
-use crate::storage::StorageProof;
+use crate::account_with_storage::StorageProof;
 
 pub(crate) fn verify_storage_value(storage_root: Bytes32, proof: StorageProof) {
     let trie_proof = TrieProof { key: proof.key, value: proof.value, proof: proof.proof, depth: proof.depth };
