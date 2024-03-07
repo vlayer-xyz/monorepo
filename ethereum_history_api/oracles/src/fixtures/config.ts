@@ -13,6 +13,10 @@ type Fixtures = Record<string, Record<string, Fixture>>;
 
 export const FIXTURES: Fixtures = {
   frontier: {
+    zero: {
+      blockNumber: 0n,
+      address: '0x756F45E3FA69347A9A973A725E3C98bC4db0b5a0'
+    },
     first: {
       blockNumber: 1n,
       address: '0x40d45d9d7625d15156c932b771ca7b0527130958'
