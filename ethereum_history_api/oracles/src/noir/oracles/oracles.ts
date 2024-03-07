@@ -4,7 +4,8 @@ import { getAccountOracle } from './accountOracle.js';
 import { type PublicClient } from 'viem';
 import { getHeaderOracle } from './headerOracle.js';
 
-export type NoirArguments = string[][];
+export type NoirArgument = string[];
+export type NoirArguments = NoirArgument[];
 
 export type Oracle = (client: PublicClient, args: NoirArguments) => Promise<ForeignCallOutput[]>;
 

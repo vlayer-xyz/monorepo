@@ -3,7 +3,8 @@ import { keccak256, hexToBytes } from 'viem';
 import { BlockHeader, headerToRlp } from '../../../ethereum/blockHeader.js';
 import { padArray } from '../../../util/array.js';
 import { encodeHex, encodeField } from '../codec/encode.js';
-import { MAX_HEADER_RLP_SIZE } from '../headerOracle.js';
+
+export const MAX_HEADER_RLP_SIZE = 708;
 
 export function encodeBlockHeader(header: BlockHeader): ForeignCallOutput[] {
   return [...encodeBlockHeaderPartial(header), ...encodeBlockHeaderRlp(header)];

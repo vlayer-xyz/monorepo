@@ -22,5 +22,6 @@ export function decodeHexAddress(arg: string[]): Address {
 }
 
 export function decodeField(arg: string): bigint {
+  assert(isHex(arg), `Invalid field element: ${arg}`);
   return BigInt(arg);
 }
