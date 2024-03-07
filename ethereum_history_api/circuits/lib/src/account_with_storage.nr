@@ -44,7 +44,7 @@ struct StorageProofsWithStorageRoot<N> {
 
 struct StorageWithinBlock<N> {
     block_hash: Bytes32,
-		account: Account,
+    account: Account,
     values: [Bytes32; N],
 }
 
