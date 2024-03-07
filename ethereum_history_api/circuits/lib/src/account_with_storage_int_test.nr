@@ -8,7 +8,7 @@ use crate::fixtures::{
             },
             account::account,
             state_proof::state_proof,
-            storage_proof::{storage_root, proofs}
+            storage_proof::proofs
         }
     },
     london::{

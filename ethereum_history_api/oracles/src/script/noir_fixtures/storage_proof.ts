@@ -11,7 +11,7 @@ interface StorageProof {
 
 export function createStorageProofFixture(storageProofs: StorageProof[]): string {
   const storageProofsNoir = storageProofs.map(createSingleStorageProofFixture);
-  return `use crate::storage::StorageProof;
+  return `use crate::account_with_storage::StorageProof;
 
 global proofs = [${storageProofsNoir.join(',')}
 ];
