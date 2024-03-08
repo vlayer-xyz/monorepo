@@ -1,7 +1,13 @@
 import { JSONRPCRequest, JSONRPCServer, TypedJSONRPCServer } from 'json-rpc-2.0';
 import Fastify from 'fastify';
 import http from 'http';
-import { getHeaderHandler, getAccountHandler, JSONRPCServerMethods, ServerParams } from './handlers.js';
+import {
+  getHeaderHandler,
+  getAccountHandler,
+  JSONRPCServerMethods,
+  ServerParams,
+  getProofHandler
+} from './handlers.js';
 import { createDefaultClient } from '../../../ethereum/client.js';
 import { PublicClient } from 'viem';
 
@@ -10,6 +16,7 @@ const HTTP_STATUS_NO_CONTENT = 204;
 const jsonRPCServer: TypedJSONRPCServer<JSONRPCServerMethods, ServerParams> = new JSONRPCServer();
 jsonRPCServer.addMethod('get_header', getHeaderHandler);
 jsonRPCServer.addMethod('get_account', getAccountHandler);
+jsonRPCServer.addMethod('get_proof', getProofHandler);
 
 export function buildOracleServer(
   opts: Fastify.FastifyHttpOptions<http.Server> = {},
