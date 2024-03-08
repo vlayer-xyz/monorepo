@@ -1,4 +1,4 @@
-use crate::storage::{StorageProof};
+use crate::storage::StorageProof;
 
 global proofs = [
   StorageProof {
