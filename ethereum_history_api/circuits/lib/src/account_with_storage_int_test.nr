@@ -29,12 +29,13 @@ fn test_get_account_with_storage_success() {
 
     let account_with_storage = get_account_with_storage(number, state_proof.key, proofs[0].key);
 
+    assert_eq(block_header_partial.hash, account_with_storage.block_hash);
+
     assert_eq(account.nonce, account_with_storage.account.nonce);
     assert_eq(account.balance, account_with_storage.account.balance);
     assert_eq(account.code_hash, account_with_storage.account.code_hash);
     assert_eq(account.storage_root, account_with_storage.account.storage_root);
 
-    assert_eq(block_header_partial.hash, account_with_storage.block_hash);
     assert_eq(proofs[0].value, account_with_storage.values[0]);
 }
 
