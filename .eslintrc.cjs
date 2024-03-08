@@ -38,6 +38,7 @@ module.exports = {
       }
     ],
     '@typescript-eslint/no-empty-function': 'off',
+    'no-console': 'error',
     'no-magic-numbers': ['error', { ignore: [0, 1, 16, 256, '0n', '1n'] }]
   },
   overrides: [parseConfigFilesAsScripts, allowMagicNumbersInTests]
