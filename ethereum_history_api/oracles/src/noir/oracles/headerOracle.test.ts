@@ -10,7 +10,7 @@ describe('headerOracle', () => {
   it('decodeGetHeaderArguments fail', () => {
     expect(() => decodeGetHeaderArguments([])).toThrow('get_header requires 1 argument');
     expect(() => decodeGetHeaderArguments([[], []])).toThrow('get_header requires 1 argument');
-    expect(() => decodeGetHeaderArguments([[]])).toThrow('get_account first argument must be an array of length 1');
-    expect(() => decodeGetHeaderArguments([['1']])).toThrow('get_account first argument must be a hex value');
+    expect(() => decodeGetHeaderArguments([[]])).toThrow('blockNumber should be a single value');
+    expect(() => decodeGetHeaderArguments([['1']])).toThrow('Field elements should be hexes: 1');
   });
 });
