@@ -10,30 +10,40 @@ interface Fixture {
   storageKeys?: Hex[];
 }
 
-type Fixtures = Record<string, Record<string, Fixture>>;
+type Fixtures = Record<string, Record<string, Record<string, Fixture>>>;
 
 export const FIXTURES: Fixtures = {
-  frontier: {
-    first: {
-      blockNumber: 1n,
-      address: '0x40d45d9d7625d15156c932b771ca7b0527130958'
-    }
-  },
-  london: {
-    crypto_punks: {
-      blockNumber: 14_194_126n,
-      address: '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb'
+  mainnet: {
+    frontier: {
+      first: {
+        blockNumber: 1n,
+        address: '0x40d45d9d7625d15156c932b771ca7b0527130958'
+      }
     },
-    vitalik_balance: {
-      blockNumber: 12_965_000n,
-      address: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
+    london: {
+      crypto_punks: {
+        blockNumber: 14_194_126n,
+        address: '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb'
+      },
+      vitalik_balance: {
+        blockNumber: 12_965_000n,
+        address: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
+      }
+    },
+    paris: {
+      usdc: {
+        blockNumber: 19_000_000n,
+        address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+        storageKeys: [CIRCLE_USDC_BALANCE_STORAGE_KEY, UNISWAP_V3_USDC_BALANCE_STORAGE_KEY]
+      }
     }
   },
-  paris: {
-    usdc: {
-      blockNumber: 19_000_000n,
-      address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-      storageKeys: [CIRCLE_USDC_BALANCE_STORAGE_KEY, UNISWAP_V3_USDC_BALANCE_STORAGE_KEY]
+  sepolia: {
+    dencun: {
+      some: {
+        blockNumber: 5435826n,
+        address: '0xc6e2459991BfE27cca6d86722F35da23A1E4Cb97'
+      }
     }
   }
 };
