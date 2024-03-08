@@ -46,11 +46,13 @@ jobs:
         run: |
           nargo prove --package get_header --oracle-resolver=http://localhost:5555
           nargo prove --package get_account --oracle-resolver=http://localhost:5555
+          nargo prove --package get_storage --oracle-resolver=http://localhost:5555
 
       - name: Veirfy Proof
         run: |
           nargo verify --package get_header
           nargo verify --package get_account
+          nargo verify --package get_storage
 
       - name: Stop Oracle Server
         if: always()
