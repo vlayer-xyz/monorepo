@@ -11,12 +11,9 @@ export function createHeaderFixture(block: GetBlockReturnType): string {
   const receiptsRoot = encodeHexString(block.receiptsRoot);
 
   const header = blockToHeader(block);
-  const headerHex = headerToRlp(header); // UWAGA: TO JEST DOBRZE POLICZONE!
-  // console.log('HEADER HEX', headerHex);
+  const headerHex = headerToRlp(header);
   const headerUint8Array = encodeHexString(headerHex);
-  console.log('HEADER UINT8', headerUint8Array);
   const headerData = JSON.stringify(padArray(Array.from(headerUint8Array), MAX_HEADER_RLP_SIZE, 0));
-  //console.log('HEADER DATA', headerData);
 
   const headerFixture = `use crate::header::{BlockHeaderPartial, BlockHeaderRlp};
 
