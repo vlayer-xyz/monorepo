@@ -4,4 +4,4 @@ export const ADDRESS_LENGTH = 20;
 export const BITS_IN_BYTE = 8n;
 export const MAX_U8 = 255;
 export const PROOF_ONE_LEVEL_LENGTH = 532;
-export const ZERO_PAD_VALUE = '0x0';
+export const ZERO_PAD_VALUE = '0x00';
