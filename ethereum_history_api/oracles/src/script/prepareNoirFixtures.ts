@@ -12,6 +12,9 @@ await rm(NOIR_FIXTURES_DIRECTORY, { recursive: true, force: true });
 
 for (const chain in FIXTURES) {
   const client = createClient.get(chain)!();
+
+  let chainModule = ``;
+  const chainModuleFile = `${NOIR_FIXTURES_DIRECTORY}/${chain}.nr`;
   for (const hardFork in FIXTURES[chain]) {
     let hardforkModule = ``;
     const hardforkModuleFile = `${NOIR_FIXTURES_DIRECTORY}/${chain}/${hardFork}.nr`;
@@ -47,7 +50,9 @@ for (const chain in FIXTURES) {
 
       hardforkModule += `mod ${fixtureName};\n`;
     }
-
+    chainModule += `mod ${hardFork};\n`;
     await writeFile(hardforkModuleFile, hardforkModule);
   }
+  await writeFile(chainModuleFile, chainModule);
 }
+

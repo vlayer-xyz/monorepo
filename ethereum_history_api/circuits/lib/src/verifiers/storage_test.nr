@@ -1,4 +1,4 @@
-use crate::fixtures::paris::usdc::{
+use crate::fixtures::mainnet::paris::usdc::{
     storage_proof::proofs,
     account::storage_root,
 };
