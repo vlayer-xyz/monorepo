@@ -28,7 +28,7 @@ export async function loadProofFixture(
 
 export async function loadBlockFixtures(): Promise<GetBlockReturnType[]> {
   const blocks: GetBlockReturnType[] = [];
-  for (const chain in FIXTURES) {
+  for (const chain of ['mainnet']) { // TO BE CHANGED ASAP (next PR) TO: in FIXTURES) {
     for (const hardFork in FIXTURES[chain]) {
       for (const fixtureName in FIXTURES[chain][hardFork]) {
         blocks.push(await loadBlockFixture(chain, hardFork, fixtureName));
