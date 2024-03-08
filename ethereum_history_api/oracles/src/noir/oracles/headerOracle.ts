@@ -3,7 +3,7 @@ import { type BlockHeader, blockToHeader } from '../../ethereum/blockHeader.js';
 import { type GetBlockReturnType, type PublicClient } from 'viem';
 import { assert } from '../../util/assert.js';
 import { encodeBlockHeader } from './headerOracle/encode.js';
-import { decodeField } from './codec/decode.js';
+import { decodeField } from './common/decode.js';
 import { NoirArguments } from './oracles.js';
 
 const GET_HEADER_ARGS_COUNT = 1;

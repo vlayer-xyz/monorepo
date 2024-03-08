@@ -6,7 +6,7 @@ import storageProofAsFields from './fixtures/storageProofAsFields.json';
 import { ForeignCallOutput } from '@noir-lang/noir_js';
 import { encodeAccount, encodeStateProof, encodeStorageProof } from './encode.js';
 
-describe('AccountOracle Codec', () => {
+describe('AccountOracle encode', () => {
   describe('encodeAccount', () => {
     it('encode account', async () => {
       const proofFixture = await loadProofFixture('paris', 'usdc');
