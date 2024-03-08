@@ -43,11 +43,6 @@ fn test_verify_paris_header_success() {
     verify_header(paris_block_header_partial, paris_block_header_rlp);
 }
 
-// #[test]
-// fn test_veriify_dencun_header_success() {
-//     verify_header()
-// }
-
 #[test(should_fail_with = "block number does not match")]
 fn test_verify_header_invalid_block_number() {
     let wrong_number = number + 1;
