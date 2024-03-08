@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { decodeField, decodeHexAddress } from './decode.js';
+import { decodeField, decodeAddress as decodeAddress } from './decode.js';
 
 describe('decodeHexAddress', () => {
   it('simple', () => {
@@ -25,7 +25,7 @@ describe('decodeHexAddress', () => {
       '0x000000000000000000000000000000000000000000000000000000000000003b',
       '0x00000000000000000000000000000000000000000000000000000000000000bb'
     ];
-    expect(decodeHexAddress(arg)).toBe('0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb');
+    expect(decodeAddress(arg)).toBe('0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb');
   });
 
   it('various length', () => {
@@ -51,7 +51,7 @@ describe('decodeHexAddress', () => {
       '0x000000000000000000000000000000000000000000000000000000000000003b',
       '0x00000000000000000000000000000000000000000000000000000000000000bb'
     ];
-    expect(decodeHexAddress(arg)).toBe('0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb');
+    expect(decodeAddress(arg)).toBe('0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb');
   });
 
   it('zero', () => {
@@ -77,7 +77,7 @@ describe('decodeHexAddress', () => {
       '0x0000000000000000000000000000000000000000000000000000000000000000',
       '0x0000000000000000000000000000000000000000000000000000000000000000'
     ];
-    expect(decodeHexAddress(arg)).toBe('0x0000000000000000000000000000000000000000');
+    expect(decodeAddress(arg)).toBe('0x0000000000000000000000000000000000000000');
   });
 
   it('invalid byte', () => {
@@ -103,7 +103,7 @@ describe('decodeHexAddress', () => {
       '0x0000000000000000000000000000000000000000000000000000000000000000',
       '0x0000000000000000000000000000000000000000000000000000000000000000'
     ];
-    expect(() => decodeHexAddress(arg)).toThrow(
+    expect(() => decodeAddress(arg)).toThrow(
       'Invalid address, with byte: 0x0000000000000000000000000000000000000000000000000000000000000123'
     );
   });
@@ -132,7 +132,7 @@ describe('decodeHexAddress', () => {
       '0x0000000000000000000000000000000000000000000000000000000000000000',
       '0x0000000000000000000000000000000000000000000000000000000000000000'
     ];
-    expect(() => decodeHexAddress(arg)).toThrow('Invalid address length: 21');
+    expect(() => decodeAddress(arg)).toThrow('Invalid address length: 21');
   });
 
   it('not enough bytes', () => {
@@ -157,7 +157,7 @@ describe('decodeHexAddress', () => {
       '0x0000000000000000000000000000000000000000000000000000000000000000',
       '0x0000000000000000000000000000000000000000000000000000000000000000'
     ];
-    expect(() => decodeHexAddress(arg)).toThrow('Invalid address length: 19');
+    expect(() => decodeAddress(arg)).toThrow('Invalid address length: 19');
   });
   it('too many bytes', () => {
     const arg = [
@@ -183,7 +183,7 @@ describe('decodeHexAddress', () => {
       '0x0000000000000000000000000000000000000000000000000000000000000000',
       '0x0000000000000000000000000000000000000000000000000000000000000000'
     ];
-    expect(() => decodeHexAddress(arg)).toThrow('Invalid address length: 21');
+    expect(() => decodeAddress(arg)).toThrow('Invalid address length: 21');
   });
 
   it('invalid charater', () => {
@@ -209,7 +209,7 @@ describe('decodeHexAddress', () => {
       '0x0000000000000000000000000000000000000000000000000000000000000000',
       '0x0000000000000000000000000000000000000000000000000000000000000000'
     ];
-    expect(() => decodeHexAddress(arg)).toThrow(
+    expect(() => decodeAddress(arg)).toThrow(
       'Invalid address, with byte: 0x000000000000000000000000000000000000000000000000000000000000000w'
     );
   });
