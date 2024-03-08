@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getBlock, getHeaderOracle } from './headerOracle.js';
-import { type BlockHeader } from '../../ethereum/blockHeader.js';
+import { getBlockHeader, getHeaderOracle } from './headerOracle.js';
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { createMockClient } from '../../ethereum/mockClient.js';
 import { FIXTURES } from '../../fixtures/config.js';
@@ -13,7 +12,7 @@ describe(
 
     it('getBlock', async () => {
       const blockNumber = FIXTURES.paris.usdc.blockNumber;
-      const blockHeader: BlockHeader = await getBlock(client, blockNumber);
+      const blockHeader = await getBlockHeader(client, blockNumber);
       expect(blockHeader.number).toStrictEqual('0x121eac0');
       expect(blockHeader.parentHash).toStrictEqual(
         '0x759e27a5069535949f0a7247ebc999367dbd77964d77ed004ffc8db3d4940248'
