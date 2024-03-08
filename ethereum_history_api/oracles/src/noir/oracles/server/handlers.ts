@@ -3,6 +3,7 @@ import { ForeignCallResult, ForeignCallParams } from './types.js';
 import { getAccountOracle } from '../accountOracle.js';
 import { getHeaderOracle } from '../headerOracle.js';
 import { decodeNoirArguments, encodeForeignCallResult } from './encode.js';
+import { getProofOracle } from '../proofOracle.js';
 
 /**
  * The format that the Noir oracles server receives the arguments in is slightly different than the format that acvm.js uses.
@@ -15,6 +16,7 @@ import { decodeNoirArguments, encodeForeignCallResult } from './encode.js';
 export type JSONRPCServerMethods = {
   get_header(params: ForeignCallParams): ForeignCallResult;
   get_account(params: ForeignCallParams): ForeignCallResult;
+  get_proof(params: ForeignCallParams): ForeignCallResult;
 };
 
 export interface ServerParams {
@@ -37,6 +39,13 @@ export async function getAccountHandler(
 ): Promise<ForeignCallResult> {
   const noirArguments = decodeNoirArguments(params);
   const noirOutputs = await getAccountOracle(client, noirArguments);
+  const result = encodeForeignCallResult(noirOutputs);
+  return result;
+}
+
+export async function getProofHandler(params: ForeignCallParams, { client }: ServerParams): Promise<ForeignCallResult> {
+  const noirArguments = decodeNoirArguments(params);
+  const noirOutputs = await getProofOracle(client, noirArguments);
   const result = encodeForeignCallResult(noirOutputs);
   return result;
 }
