@@ -7,7 +7,7 @@ import { BITS_IN_BYTE, BYTES32_LENGTH, MODULUS, PROOF_ONE_LEVEL_LENGTH, ZERO_PAD
 export function encodeField(arg: number | bigint): string {
   assert(arg < MODULUS, 'Field overflow');
   assert(arg >= 0, 'Field underflow');
-  return `0x${arg.toString(16)}`;
+  return `0x${arg.toString(16).padStart(BYTE_HEX_LENGTH, '0')}`;
 }
 
 export function encodeBytes32(value: bigint): string[] {
@@ -28,21 +28,21 @@ export function encodeBytes(value: bigint, length: number): string[] {
 
 export function encodeHex(hexString: string): string[] {
   if (!isHex(hexString)) {
-    throw new Error(`Invalid hexstring: ${hexString}`);
+    throw new Error(`Invalid hex string: ${hexString}`);
   }
-  const chunks = [];
+  const chunks: string[] = [];
   for (let i = BYTE_HEX_LENGTH; i < hexString.length; i += BYTE_HEX_LENGTH) {
     const chunk = hexString.substring(i, i + BYTE_HEX_LENGTH);
-    chunks.push(`0x${chunk.startsWith('0') ? chunk[1] : chunk}`);
+    chunks.push(`0x${chunk.padStart(BYTE_HEX_LENGTH, '0')}`);
   }
   return chunks;
 }
 
 export function encodeProof(proof: string[], length: number): string[] {
-  const encodedUnpaddedProof = proof
+  const encodedUnPaddedProof = proof
     .map((it) => encodeHex(it))
     .map((it) => padArray(it, PROOF_ONE_LEVEL_LENGTH, ZERO_PAD_VALUE))
     .reduce((accumulator, current) => accumulator.concat(current), []);
-  const encodedProof = padArray(encodedUnpaddedProof, length, ZERO_PAD_VALUE);
+  const encodedProof = padArray(encodedUnPaddedProof, length, ZERO_PAD_VALUE);
   return encodedProof;
 }
