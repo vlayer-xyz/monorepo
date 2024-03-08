@@ -9,7 +9,7 @@ export const createClient = new Map<string, () => PublicClient>([
   ['sepolia', createSepoliaClient]
 ]);
 
-function createDefaultClient(): PublicClient {
+export function createDefaultClient(): PublicClient {
   return createPublicClient({
     chain: mainnet,
     transport: http(process.env.ETHEREUM_JSON_RPC_API_URL)
