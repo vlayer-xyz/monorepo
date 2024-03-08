@@ -2,14 +2,14 @@ import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { type Hex, type PublicClient } from 'viem';
 import { assert } from '../../util/assert.js';
 import { encodeAccount, encodeStateProof } from './accountOracle/encode.js';
-import { decodeAddress, decodeField } from './codec/decode.js';
+import { decodeAddress, decodeField } from './common/decode.js';
 import { NoirArguments } from './oracles.js';
 
 const GET_ACCOUNT_ARGS_COUNT = 2;
 const BLOCK_NUMBER_INDEX = 0;
 const ADDRESS_INDEX = 1;
 
-export const getAccountOracle = async (client: PublicClient, args: NoirArguments): Promise<ForeignCallOutput[]> => {
+export async function getAccountOracle(client: PublicClient, args: NoirArguments): Promise<ForeignCallOutput[]> {
   const { blockNumber, address } = decodeGetAccountArguments(args);
   const accountProof = await client.getProof({
     address,
@@ -19,7 +19,7 @@ export const getAccountOracle = async (client: PublicClient, args: NoirArguments
   const encodedAccount = encodeAccount(accountProof);
   const encodedProof = encodeStateProof(accountProof);
   return [...encodedAccount, ...encodedProof];
-};
+}
 
 export function decodeGetAccountArguments(args: NoirArguments): {
   blockNumber: bigint;
