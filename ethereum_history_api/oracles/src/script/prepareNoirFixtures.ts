@@ -55,4 +55,3 @@ for (const chain in FIXTURES) {
   }
   await writeFile(chainModuleFile, chainModule);
 }
-

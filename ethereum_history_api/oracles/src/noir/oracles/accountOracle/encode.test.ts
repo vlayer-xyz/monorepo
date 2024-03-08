@@ -8,14 +8,14 @@ import { encodeAccount, encodeStateProof } from './encode.js';
 describe('AccountOracle Codec', () => {
   describe('encodeAccount', () => {
     it('encode account', async () => {
-      const proof = await loadProofFixture('paris', 'usdc');
+      const proof = await loadProofFixture('mainnet', 'paris', 'usdc');
       expect(encodeAccount(proof)).toStrictEqual(serializeAccount(accountAsFields));
     });
   });
 
   describe('encodeStateProof', () => {
     it('encode state proof', async () => {
-      const proof = await loadProofFixture('paris', 'usdc');
+      const proof = await loadProofFixture('mainnet', 'paris', 'usdc');
       expect(encodeStateProof(proof)).toStrictEqual(serializeStateProof(stateProofAsFields));
     });
   });
