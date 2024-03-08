@@ -20,7 +20,6 @@ describe('get_storage', async () => {
   });
 
   it('proof verification successes', async () => {
-    console.log(abi, inputMap, inputMap.return);
     const witnessMap = abiEncode(abi, inputMap, inputMap.return);
     expect(await proofVerifier.verify(proof, witnessMap)).toEqual(true);
   });
