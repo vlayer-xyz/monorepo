@@ -1,0 +1,1 @@
+../../../../contract/get_storage/plonk_vk.sol
