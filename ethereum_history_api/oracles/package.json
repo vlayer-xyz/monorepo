@@ -14,6 +14,7 @@
     "format": "prettier --write src",
     "format:ci": "prettier --check src",
     "oracle-server": "tsx src/script/startOracleServer",
+    "oracle-server:watch": "tsx watch src/script/startOracleServer",
     "prepare-js-fixtures": "tsx src/script/prepareJSFixtures",
     "prepare-noir-fixtures": "tsx src/script/prepareNoirFixtures"
   },
