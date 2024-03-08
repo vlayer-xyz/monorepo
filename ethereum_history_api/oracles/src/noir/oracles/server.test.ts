@@ -16,7 +16,7 @@ const GET_HEADER_POST_DATA = {
   body: JSON.stringify(JSON_RPC_PAYLOAD)
 };
 
-const FIXTURE_FILE_PATHS = ['./fixtures/london/crypto_punks/eth_getBlockByHash.json'];
+const FIXTURE_FILE_PATHS = ['./fixtures/mainnet/london/crypto_punks/eth_getBlockByHash.json'];
 const MOCK_ORACLE_SERVER_URL = `http://localhost:5556`;
 
 async function expectServerUp(serverUrl: string) {

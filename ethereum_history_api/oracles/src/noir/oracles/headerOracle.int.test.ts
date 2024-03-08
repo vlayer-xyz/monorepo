@@ -12,7 +12,7 @@ describe(
     const client = await createMockClient(mockFilePaths);
 
     it('getBlock', async () => {
-      const blockNumber = FIXTURES.paris.usdc.blockNumber;
+      const blockNumber = FIXTURES.mainnet.paris.usdc.blockNumber;
       const blockHeader: BlockHeader = await getBlock(client, blockNumber);
       expect(blockHeader.number).toStrictEqual('0x121eac0');
       expect(blockHeader.parentHash).toStrictEqual(
