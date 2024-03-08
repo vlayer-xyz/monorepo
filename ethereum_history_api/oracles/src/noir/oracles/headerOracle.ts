@@ -9,20 +9,20 @@ import { encodeBlockHeader } from './headerOracle/encode.js';
 export const MAX_HEADER_RLP_SIZE = 708;
 
 export const getHeaderOracle = async (client: PublicClient, args: NoirArguments): Promise<ForeignCallOutput[]> => {
-  const blockNumber: bigint = decodeGetHeaderArguments(args);
-  const blockHeader: BlockHeader = await getBlock(client, blockNumber);
+  const blockNumber: bigint = decodeHeaderArgs(args);
+  const blockHeader: BlockHeader = await ethGetBlock(client, blockNumber);
 
   return encodeBlockHeader(blockHeader);
 };
 
-export function decodeGetHeaderArguments(args: NoirArguments): bigint {
+export function decodeHeaderArgs(args: NoirArguments): bigint {
   assert(args.length === 1, 'get_header requires 1 argument');
   assert(args[0].length === 1, 'get_account first argument must be an array of length 1');
   assert(isHex(args[0][0]), 'get_account first argument must be a hex value');
   return decodeField(args[0][0]);
 }
 
-export async function getBlock(client: PublicClient, blockNumber: bigint): Promise<BlockHeader> {
+export async function ethGetBlock(client: PublicClient, blockNumber: bigint): Promise<BlockHeader> {
   const block: GetBlockReturnType = (await client.getBlock({ blockNumber })) as GetBlockReturnType;
   return blockToHeader(block);
 }
