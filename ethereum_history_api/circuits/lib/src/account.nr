@@ -4,7 +4,7 @@ use crate::header::get_header;
 use crate::misc::types::{Address, Bytes32};
 use crate::verifiers::account::verify_account;
 
-global STATE_PROOF_LEN = 4788; // = 9 (MAX_STATE_PROOF_LEVELS) * 532 (MAX_TRIE_NODE_LENGTH)
+global STATE_PROOF_LEN = 5852; // = 11 (MAX_STATE_PROOF_LEVELS) * 532 (MAX_TRIE_NODE_LENGTH)
 
 struct Account {
     nonce: Field,
