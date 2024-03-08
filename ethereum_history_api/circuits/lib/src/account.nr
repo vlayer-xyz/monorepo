@@ -1,24 +1,7 @@
-use dep::proof::{MAX_ACCOUNT_STATE_LENGTH, KEY_LENGTH};
-
+use crate::account_with_storage::{Account, StateProof};
 use crate::header::get_header;
 use crate::misc::types::{Address, Bytes32};
 use crate::verifiers::account::verify_account;
-
-global STATE_PROOF_LEN = 4788; // = 9 (MAX_STATE_PROOF_LEVELS) * 532 (MAX_TRIE_NODE_LENGTH)
-
-struct Account {
-    nonce: Field,
-    balance: Field,
-    storage_root: Bytes32,
-    code_hash: Bytes32,
-}
-
-struct StateProof {
-    key: Address,
-    value: [u8; MAX_ACCOUNT_STATE_LENGTH],
-    proof: [u8; STATE_PROOF_LEN],
-    depth: Field,
-}
 
 struct AccountWithinBlock {
     account: Account,

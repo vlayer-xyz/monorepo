@@ -1,4 +1,4 @@
-use crate::account::{Account, MAX_ACCOUNT_STATE_LENGTH, verify_account};
+use crate::account_with_storage::{Account, MAX_ACCOUNT_STATE_LENGTH, verify_account};
 use crate::fixtures::{
     london::{
         crypto_punks::{
