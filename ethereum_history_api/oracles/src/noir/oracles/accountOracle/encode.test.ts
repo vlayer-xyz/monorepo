@@ -2,21 +2,32 @@ import { describe, expect, it } from 'vitest';
 import { loadProofFixture } from '../../../fixtures.js';
 import accountAsFields from './fixtures/accountAsFields.json';
 import stateProofAsFields from './fixtures/stateProofAsFields.json';
+import storageProofAsFields from './fixtures/storageProofAsFields.json';
 import { ForeignCallOutput } from '@noir-lang/noir_js';
-import { encodeAccount, encodeStateProof } from './encode.js';
+import { encodeAccount, encodeStateProof, encodeStorageProof } from './encode.js';
 
 describe('AccountOracle Codec', () => {
   describe('encodeAccount', () => {
     it('encode account', async () => {
-      const proof = await loadProofFixture('paris', 'usdc');
-      expect(encodeAccount(proof)).toStrictEqual(serializeAccount(accountAsFields));
+      const proofFixture = await loadProofFixture('paris', 'usdc');
+      expect(encodeAccount(proofFixture)).toStrictEqual(serializeAccount(accountAsFields));
     });
   });
 
   describe('encodeStateProof', () => {
     it('encode state proof', async () => {
-      const proof = await loadProofFixture('paris', 'usdc');
-      expect(encodeStateProof(proof)).toStrictEqual(serializeStateProof(stateProofAsFields));
+      const proofFixture = await loadProofFixture('paris', 'usdc');
+      expect(encodeStateProof(proofFixture)).toStrictEqual(serializeStateProof(stateProofAsFields));
+    });
+  });
+
+  describe('encodeStorageProof', () => {
+    it('encode storage proof', async () => {
+      const proofFixture = await loadProofFixture('paris', 'usdc');
+      const usdcCircleStorageKey = '0x57d18af793d7300c4ba46d192ec7aa095070dde6c52c687c6d0d92fb8532b305';
+      expect(encodeStorageProof(usdcCircleStorageKey, proofFixture.storageProof[0])).toStrictEqual(
+        serializeStorageProof(storageProofAsFields)
+      );
     });
   });
 });
@@ -28,7 +39,7 @@ interface AccountAsFields {
   storageRoot: string[];
 }
 
-interface AccountStateProofAsFields {
+interface ProofAsFields {
   key: string[];
   value: string[];
   proof: string[];
@@ -39,6 +50,10 @@ function serializeAccount(account: AccountAsFields): ForeignCallOutput[] {
   return [account.nonce, account.balance, account.storageRoot, account.codeHash];
 }
 
-function serializeStateProof(account: AccountStateProofAsFields): ForeignCallOutput[] {
-  return [account.key, account.value, account.proof, account.depth];
+function serializeStateProof(stateProof: ProofAsFields): ForeignCallOutput[] {
+  return [stateProof.key, stateProof.value, stateProof.proof, stateProof.depth];
+}
+
+function serializeStorageProof(storageProof: ProofAsFields): ForeignCallOutput[] {
+  return [storageProof.key, storageProof.value, storageProof.proof, storageProof.depth];
 }
