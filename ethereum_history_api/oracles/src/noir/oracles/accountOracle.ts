@@ -2,10 +2,12 @@ import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { type Hex, type PublicClient } from 'viem';
 import { assert } from '../../util/assert.js';
 import { encodeAccount, encodeStateProof } from './accountOracle/encode.js';
-import { decodeField, decodeHexAddress } from './codec/decode.js';
+import { decodeAddress, decodeField } from './codec/decode.js';
 import { NoirArguments } from './oracles.js';
 
 const GET_ACCOUNT_ARGS_COUNT = 2;
+const BLOCK_NUMBER_INDEX = 0;
+const ADDRESS_INDEX = 1;
 
 export const getAccountOracle = async (client: PublicClient, args: NoirArguments): Promise<ForeignCallOutput[]> => {
   const { blockNumber, address } = decodeGetAccountArguments(args);
@@ -25,9 +27,9 @@ export function decodeGetAccountArguments(args: NoirArguments): {
 } {
   assert(args.length === GET_ACCOUNT_ARGS_COUNT, 'get_account requires 2 arguments');
 
-  assert(args[0].length === 1, 'blockNumber should be a single value');
-  const blockNumber = decodeField(args[0][0]);
-  const address = decodeHexAddress(args[1]);
+  assert(args[BLOCK_NUMBER_INDEX].length === 1, 'blockNumber should be a single value');
+  const blockNumber = decodeField(args[BLOCK_NUMBER_INDEX][0]);
+  const address = decodeAddress(args[ADDRESS_INDEX]);
 
   return { blockNumber, address };
 }
