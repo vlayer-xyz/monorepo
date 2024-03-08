@@ -1,6 +1,6 @@
 use dep::proof::{MAX_ACCOUNT_STATE_LENGTH, KEY_LENGTH};
 
-use crate::header::get_header;
+use crate::header::{get_header, BlockHeaderPartial};
 use crate::misc::types::{Address, Bytes32};
 use crate::verifiers::account::verify_account;
 use crate::verifiers::storage::verify_storage_values;
@@ -48,13 +48,13 @@ pub fn get_account_with_storage(
     address: Address,
     storage_key: Bytes32
 ) -> StorageWithinBlock<1> {
-    let header = get_header(block_number);
-    let proof = get_proof_unconstrained(block_number, address, storage_key);
+    let BlockHeaderPartial { number: _, hash, state_root, transactions_root: _, receipts_root: _ } = get_header(block_number);
+    let StateAndStorageProof { account, state_proof, storage_proof } = get_proof_unconstrained(block_number, address, storage_key);
 
-    verify_account(address, proof.account, proof.state_proof, header.state_root);
-    verify_storage_values(proof.account.storage_root, [proof.storage_proof]);
+    verify_account(address, account, state_proof, state_root);
+    verify_storage_values(account.storage_root, [storage_proof]);
 
-    StorageWithinBlock { block_hash: header.hash, account: proof.account, values: [proof.storage_proof.value] }
+    StorageWithinBlock { block_hash: hash, account, values: [storage_proof.value] }
 }
 
 #[oracle(get_proof)]

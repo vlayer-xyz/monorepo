@@ -27,7 +27,9 @@ fn test_get_account_with_storage_success() {
     let _ = OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp));
     let _ = OracleMock::mock("get_proof").returns((account, state_proof, proofs[0]));
 
-    let account_with_storage = get_account_with_storage(number, state_proof.key, proofs[0].key);
+    let address = state_proof.key;
+    let storage_key = proofs[0].key;
+    let account_with_storage = get_account_with_storage(number, address, storage_key);
 
     assert_eq(block_header_partial.hash, account_with_storage.block_hash);
 
@@ -44,5 +46,7 @@ fn test_get_account_with_storage_invalid_state_root() {
     let _ = OracleMock::mock("get_header").returns((block_header_partial_from_different_block, block_header_rlp_from_different_block));
     let _ = OracleMock::mock("get_proof").returns((account, state_proof, proofs[0]));
 
-    let _ = get_account_with_storage(number, state_proof.key, proofs[0].key);
+    let address = state_proof.key;
+    let storage_key = proofs[0].key;
+    let _ = get_account_with_storage(number, address, storage_key);
 }
