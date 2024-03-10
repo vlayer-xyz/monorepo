@@ -85,7 +85,7 @@ fn test_verify_header_invalid_receipt_root() {
 
 global RLP_SHORT_STRING_TYPE = 0x80;
 
-// TODO: Add correct assertion message when we migrate to Noir >=0.24.0 which fixes assertions order
+// TODO: Add correct assertion message when noir-trie-proofs is updated
 #[test(should_fail)]
 fn test_verify_header_invalid_rlp() {
     let mut rlp_empty_string_encoding = [0; MAX_HEADER_RLP_SIZE];

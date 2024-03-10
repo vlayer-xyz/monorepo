@@ -17,7 +17,7 @@ fn test_assert_account_equals() {
 
 global RLP_SHORT_STRING_TYPE = 0x80;
 
-// TODO: Add correct assertion message when we migrate to Noir >=0.24.0 which fixes assertions order
+// TODO: Add correct assertion message when noir-trie-proofs is updated
 #[test(should_fail)]
 fn test_account_rlp_invalid_type() {
     let mut rlp_empty_string_encoding = [0; MAX_ACCOUNT_STATE_LENGTH];
@@ -91,7 +91,7 @@ fn test_verify_account_wrong_address() {
     let _ = verify_account(wrong_address, account, state_proof, state_root);
 }
 
-// TODO: Add correct assertion message when we migrate to Noir >=0.24.0 which fixes assertions order
+// TODO: Add correct assertion message when noir-trie-proofs is updated
 #[test(should_fail)]
 fn test_verify_account_wrong_state_proof() {
     let mut wrong_proof = state_proof;
