@@ -50,7 +50,8 @@ fn test_verify_header_invalid_block_number() {
 
 #[test(should_fail_with = "block number length does not match")]
 fn test_verify_header_invalid_block_number_length() {
-    let wrong_number_length = 0;
+    // This is 0x100000000 which takes up 6 bytes which is not equal to the 5 bytes that original paris block number 19000000 takes up
+    let wrong_number_length = 4294967296;
     let paris_block_header_partial = BlockHeaderPartial { number: wrong_number_length, hash, state_root, transactions_root, receipts_root };
     verify_header(paris_block_header_partial, paris_block_header_rlp);
 }
