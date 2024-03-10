@@ -2,25 +2,20 @@ use crate::misc::types::Bytes32;
 use crate::account_with_storage::{StorageProof, get_account_with_storage};
 use crate::fixtures::mainnet::{
     paris::{
-        usdc::{
-            header::{
-                number, state_root, block_header_partial, block_header_rlp
-            },
-            account::account,
-            state_proof::state_proof,
-            storage_proof::proofs
-        }
-    },
+    usdc::{
+    header::{number, state_root, block_header_partial, block_header_rlp}, account::account,
+    state_proof::state_proof, storage_proof::proofs
+}
+},
     london::{
-        crypto_punks::{
-            header::{
-                block_header_partial as crypto_punks_block_header_partial, 
-                block_header_rlp as crypto_punks_block_header_rlp
-            },
-            account::account as crypto_punks_account,
-            state_proof::state_proof as crypto_punks_state_proof,
-        }
-    }
+    crypto_punks::{
+    header::{
+    block_header_partial as crypto_punks_block_header_partial,
+    block_header_rlp as crypto_punks_block_header_rlp
+},
+    account::account as crypto_punks_account, state_proof::state_proof as crypto_punks_state_proof
+}
+}
 };
 use dep::std::test::OracleMock;
 

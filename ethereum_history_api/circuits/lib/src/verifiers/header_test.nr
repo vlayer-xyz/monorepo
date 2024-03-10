@@ -1,36 +1,34 @@
 use crate::header::{BlockHeaderPartial, BlockHeaderRlp, MAX_HEADER_RLP_SIZE};
 use crate::verifiers::header::{get_header_fields_count, verify_header, LONDON_BLOCK_NUMBER, PARIS_BLOCK_NUMBER};
 use crate::misc::arrays::alter_array;
-use crate::fixtures::{
-    mainnet::london::crypto_punks::header::{
-        block_header_partial as london_block_header_partial,
-        block_header_rlp as london_block_header_rlp,
-    },
-    mainnet::frontier::zero::header::{
-        block_header_partial as frontier_zero_block_header_partial,
-        block_header_rlp as frontier_zero_block_header_rlp,
-    },
-    mainnet::frontier::first::header::{
-        block_header_partial as frontier_first_block_header_partial,
-        block_header_rlp as frontier_first_block_header_rlp,
-    },
-    mainnet::paris::usdc::header::{
-        block_header_partial as paris_block_header_partial,
-        block_header_rlp as paris_block_header_rlp,
-    },
-    mainnet::paris::usdc::header::{
-        hash, number, state_root, transactions_root, receipts_root
-    },
+use crate::fixtures::mainnet::{
+    london::crypto_punks::header::{block_header_partial as london_block_header_partial, block_header_rlp as london_block_header_rlp},
+    frontier::zero::header::{
+    block_header_partial as frontier_zero_block_header_partial,
+    block_header_rlp as frontier_zero_block_header_rlp
+},
+    frontier::first::header::{
+    block_header_partial as frontier_first_block_header_partial,
+    block_header_rlp as frontier_first_block_header_rlp
+},
+    paris::usdc::header::{block_header_partial as paris_block_header_partial, block_header_rlp as paris_block_header_rlp},
+    paris::usdc::header::{hash, number, state_root, transactions_root, receipts_root}
 };
 
 #[test]
 fn test_verify_frontier_zero_header_success() {
-    verify_header(frontier_zero_block_header_partial, frontier_zero_block_header_rlp);
+    verify_header(
+        frontier_zero_block_header_partial,
+        frontier_zero_block_header_rlp
+    );
 }
 
 #[test]
 fn test_verify_frontier_first_header_success() {
-    verify_header(frontier_first_block_header_partial, frontier_first_block_header_rlp);
+    verify_header(
+        frontier_first_block_header_partial,
+        frontier_first_block_header_rlp
+    );
 }
 
 #[test]
