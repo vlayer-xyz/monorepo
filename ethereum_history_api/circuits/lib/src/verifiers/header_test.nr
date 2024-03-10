@@ -95,8 +95,7 @@ fn test_verify_header_invalid_rlp() {
     verify_header(paris_block_header_partial, malformed_block_header_rlp);
 }
 
-// TODO: Add correct assertion message when we migrate to Noir >=0.24.0 which fixes assertions order
-#[test(should_fail)]
+#[test(should_fail_with = "number of header RLP fields does not match")]
 fn test_verify_header_invalid_rlp_fields_count() {
     verify_header(paris_block_header_partial, frontier_first_block_header_rlp);
 }
