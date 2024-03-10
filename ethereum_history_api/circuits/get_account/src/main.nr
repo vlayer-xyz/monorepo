@@ -1,5 +1,5 @@
 use dep::ethereum_history_api::account::{get_account, AccountWithinBlock};
-use dep::ethereum_history_api::misc::types::{Address, Bytes32};
+use dep::ethereum_history_api::misc::types::Address;
 
 fn main(
     block_no: pub Field,
