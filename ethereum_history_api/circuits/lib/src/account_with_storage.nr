@@ -5,7 +5,7 @@ use crate::misc::types::{Address, Bytes32};
 use crate::verifiers::account::verify_account;
 use crate::verifiers::storage::verify_storage_values;
 
-global STATE_PROOF_LEN = 4788; // = 9 (MAX_STATE_PROOF_LEVELS) * 532 (MAX_TRIE_NODE_LENGTH)
+global STATE_PROOF_LEN = 5852; // = 11 (MAX_STATE_PROOF_LEVELS) * 532 (MAX_TRIE_NODE_LENGTH)
 global STORAGE_PROOF_LEN = 3724; // = 7 (MAX_STORAGE_PROOF_LEVELS) * 532 (MAX_TRIE_NODE_LENGTH)
 
 struct Account {
