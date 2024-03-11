@@ -2,10 +2,15 @@
 
 TypeScript oracle server that provides data for circuits.
 
-There are three types of oracles : Header Oracle, Account Oracle and Proof Oracle.
-Header Oracle gets only one argument that is block number. Account Oracle gets two arguments : block number and account address. Proof Oracle gets three arguments: block number, account address and storage key. For clarity, below are headers of functions in Noir:
+There are three types of oracles:
 
-```
+- Header Oracle - gets only one argument that is block number
+- Account Oracle - gets two arguments: block number and account address
+- Proof Oracle - gets three arguments: block number, account address and storage key
+
+Below are headers for respective functions in Noir:
+
+```rust
 fn get_header(block_no: Field) -> (BlockHeaderPartial, BlockHeaderRlp);
 fn get_account(block_no: Field, address: Address) -> AccountWithStateProof;
 fn get_proof(block_no: Field, address: Address, storage_key: Bytes32) -> StateAndStorageProof;
@@ -13,7 +18,7 @@ fn get_proof(block_no: Field, address: Address, storage_key: Bytes32) -> StateAn
 
 ## Starting oracle server
 
-Oracle server uses connection to Alchemy. Because of that, before running oracle server, first create a file `.env` with a key to Alchemy. It can be done by using template `.env.example` where <ALCHEMY_KEY> should be replaced by your key and then the file should be saved as `.env`
+Oracle server uses connection to Ethereum node. Hence, before running oracle server, first create a `.env` file with a url to Ethereum node. Use template `.env.example` and replace `ETHEREUM_JSON_RPC_API_URL` with your url to rpc server, then the file should be saved as `.env`.
 
 To start oracle server run:
 
@@ -21,13 +26,11 @@ To start oracle server run:
 yarn oracle-server
 ```
 
-You can also use command:
+Following command allows you to use server without restarting it after every change. Server automatically uses new configuration after file change is saved.
 
 ```sh
 yarn oracle-server watch
 ```
-
-This command allows you to use server without restarting it after every change. Server automatically uses new configuration after it is saved in files.
 
 ## Testing
 
@@ -45,17 +48,21 @@ yarn test:unit:coverage
 
 After running these commands unit tests, but also integration tests of oracles are run.
 
-### Test fixtures
+### Fixtures
+
+A few projects in this monorepo use fixtures for testing. Fixtures are precached data from JSON RPC node, saved for later use. There are two formats to which fixtures are generated: Noir and js. Both described below.
 
 #### Noir Fixtures
 
-Noir fixtures are generated as Noir modules and consumed in Noir tests.
+Noir fixtures are generated as Noir modules (i.e. `.nr` files) and consumed in Noir tests.
 
 To generate data for Noir tests run:
 
 ```sh
 yarn prepare-noir-fixtures
 ```
+
+Files will be generated in `ethereum_history_api/circuits/lib/src/fixtures`.
 
 #### JavaScript Fixtures
 
@@ -67,6 +74,8 @@ To generate data for JavaScript tests run:
 ```sh
 yarn prepare-js-fixtures
 ```
+
+Files will be generated in `ethereum_history_api/oracles/fixtures`.
 
 #### Configuration of Fixtures
 
