@@ -4,9 +4,9 @@ TypeScript oracle server that provides data for circuits.
 
 There are three oracles:
 
-- Header Oracle - gets only one argument that is block number
-- Account Oracle - gets two arguments: block number and account address
-- Proof Oracle - gets three arguments: block number, account address and storage key
+- Header Oracle - fetches Ethereum block header
+- Account Oracle - fetches Ethereum account state with state proof
+- Proof Oracle - fetches Ethereum storage value with both storage & state proof
 
 Below are headers for respective functions in Noir:
 
