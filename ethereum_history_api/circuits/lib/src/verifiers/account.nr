@@ -2,10 +2,7 @@ use dep::proof::{rlp::{RLP_List, decode1_small_lis}, MAX_ACCOUNT_STATE_LENGTH, K
 use dep::u2b::u64_to_u8;
 
 use crate::account::{Account, StateProof};
-use crate::misc::{
-    arrays::{sub_array_equals_up_to_length, array_equals}, types::{Address, Bytes32},
-    u128_to_u8::{u128_to_u8}
-};
+use crate::misc::{arrays::{sub_array_equals_up_to_length, array_equals}, types::{Address, Bytes32}};
 
 use crate::HASH_LENGTH;
 
@@ -22,7 +19,7 @@ pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_ST
 
     let nonce = u64_to_u8(account.nonce as u64);
     let (nonce, nonce_length) = byte_value(nonce);
-    let balance = u128_to_u8(U128::from_integer(account.balance));
+    let balance = U128::from_integer(account.balance).to_be_bytes();
     let (balance, balance_length) = byte_value(balance);
 
     assert(account_rlp.length[NONCE_INDEX] == nonce_length, "Nonce length mismatch");
