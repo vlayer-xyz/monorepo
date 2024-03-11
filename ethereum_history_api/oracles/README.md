@@ -2,7 +2,7 @@
 
 TypeScript oracle server that provides data for circuits.
 
-There are three types of oracles:
+There are three oracles:
 
 - Header Oracle - gets only one argument that is block number
 - Account Oracle - gets two arguments: block number and account address
