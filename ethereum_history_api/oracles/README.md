@@ -1,31 +1,90 @@
-## Noir Ethereum history api oracles
+# Noir Ethereum history api oracles
 
 TypeScript oracle server that provides data for circuits.
 
-### Preparing fixtures
+There are three types of oracles : Header Oracle, Account Oracle and Proof Oracle.
+Header Oracle gets only one argument that is block number. Account Oracle gets two arguments : block number and account address. Proof Oracle gets three arguments: block number, account address and storage key. For clarity, below are headers of functions in Noir:
 
-Fixtures are data used for testing. They are downloaded and kept as local data. There are two types of fixtures: noir and js. They are pepared in different format and are used in different tests.
+```
+fn get_header(block_no: Field) -> (BlockHeaderPartial, BlockHeaderRlp);
+fn get_account(block_no: Field, address: Address) -> AccountWithStateProof;
+fn get_proof(block_no: Field, address: Address, storage_key: Bytes32) -> StateAndStorageProof;
+```
 
-To generate data for noir tests run:
+## Starting oracle server
+
+Oracle server uses connection to Alchemy. Because of that, before running oracle server, first create a file `.env` with a key to Alchemy. It can be done by using template `.env.example` where <ALCHEMY_KEY> should be replaced by your key and then the file should be saved as `.env`
+
+To start oracle server run:
+
+```sh
+yarn oracle-server
+```
+
+You can also use command:
+
+```sh
+yarn oracle-server watch
+```
+
+This command allows you to use server without restarting it after every change. Server automatically uses new configuration after it is saved in files.
+
+## Testing
+
+To test oracles run:
+
+```sh
+yarn test:unit
+```
+
+To be able to additionally see the coverage of tests, run:
+
+```sh
+yarn test:unit:coverage
+```
+
+After running these commands unit tests, but also integration tests of oracles are run.
+
+### Test fixtures
+
+#### Noir Fixtures
+
+Noir fixtures are generated as Noir modules and consumed in Noir tests.
+
+To generate data for Noir tests run:
 
 ```sh
 yarn prepare-noir-fixtures
 ```
 
-This command will delete current `circuits/lib/src/fixtures` catalog and it will create a new one with new data prepared inside it. Data will be prepared in noir format.
+#### JavaScript Fixtures
 
-To generate data for js tests run:
+JavaScript fixtures are JSON files which cache JSON RPC request/responses pairs.
+JavaScript fixtures are consumed either directly in unit tests or through a Mock client in integration tests.
+
+To generate data for JavaScript tests run:
 
 ```sh
 yarn prepare-js-fixtures
 ```
 
-To configure what data shoud be prepared, use `oracles/src/fixtures/config.ts`. To find a certain Account enter block number and account address. To select Storage from that account additionaly enter storage key. It should be written in the format as shown below:
+#### Configuration of Fixtures
+
+Fixture represents an interesting system state that will be tested.
+
+Examples of fixtures:
+
+- Crypto punk account state at london block
+- USDC Circle balance as paris block
+
+To configure the data that will be prepared, manipulate `oracles/src/fixtures/config.ts` file. To add a certain Account enter block number and account address. To additionally add Storage slots from that account enter chosen storage keys. New configuration data needs to adhere to the format below:
 
 ```
-name_of_account: {
-    blockNumber : number_of_block,
-    address : address_of_account,
-    storageKeys : [storage_keys]
+interface Fixture {
+  blockNumber: bigint;
+  address: Address;
+  storageKeys?: Hex[];
 }
 ```
+
+Note: storageKeys field can be omitted if generating storage slots is not expected.
