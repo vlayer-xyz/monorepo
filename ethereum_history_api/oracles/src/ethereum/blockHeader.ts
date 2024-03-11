@@ -18,6 +18,9 @@ export interface BlockHeader {
   nonce: Hex;
   baseFeePerGas?: Hex;
   withdrawalsRoot?: Hex;
+  blobGasUsed?: Hex;
+  excessBlobGas?: Hex;
+  parentBeaconBlockRoot?: Hex;
 }
 
 function unpadded(hex: Hex) {
@@ -48,6 +51,15 @@ export function headerToRlp(blockHeader: BlockHeader): Hex {
   if (blockHeader.withdrawalsRoot !== undefined) {
     header.push(blockHeader.withdrawalsRoot);
   }
+  if (blockHeader.blobGasUsed !== undefined) {
+    header.push(blockHeader.blobGasUsed);
+  }
+  if (blockHeader.excessBlobGas !== undefined) {
+    header.push(blockHeader.excessBlobGas);
+  }
+  if (blockHeader.parentBeaconBlockRoot !== undefined) {
+    header.push(blockHeader.parentBeaconBlockRoot);
+  }
   return hexToRlp(header);
 }
 
@@ -73,7 +85,10 @@ export function blockToHeader(block: GetBlockReturnType): BlockHeader {
     mixHash: block.mixHash,
     nonce: block.nonce,
     baseFeePerGas: block.baseFeePerGas !== null ? toHexString(block.baseFeePerGas) : undefined,
-    withdrawalsRoot: block.withdrawalsRoot !== null ? block.withdrawalsRoot : undefined
+    withdrawalsRoot: block.withdrawalsRoot !== null ? block.withdrawalsRoot : undefined,
+    blobGasUsed: block.blobGasUsed !== null ? toHexString(block.blobGasUsed) : undefined,
+    excessBlobGas: block.excessBlobGas !== null ? toHexString(block.excessBlobGas) : undefined,
+    parentBeaconBlockRoot: block.parentBeaconBlockRoot !== null ? block.parentBeaconBlockRoot : undefined
   };
   return blockHeader;
 }
