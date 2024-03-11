@@ -29,7 +29,7 @@ To start oracle server run:
 yarn oracle-server
 ```
 
-Following command allows you to use server without restarting it after every change. Server automatically uses new configuration after file change is saved.
+You can also run the server in watch mode:
 
 ```sh
 yarn oracle-server:watch
