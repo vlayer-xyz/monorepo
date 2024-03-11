@@ -1,4 +1,4 @@
-import { type GetBlockReturnType, type Hex, Hash, Address, BlockTag, hexToBytes, hexToRlp, keccak256 } from 'viem';
+import { type GetBlockReturnType, type Hex, hexToBytes, hexToRlp, keccak256 } from 'viem';
 
 export interface BlockHeader {
   parentHash: Hex;
