@@ -19,14 +19,14 @@ struct StateProof {
     key: Address,
     value: [u8; MAX_ACCOUNT_STATE_LENGTH],
     proof: [u8; STATE_PROOF_LEN],
-    depth: Field,
+    depth: u64,
 }
 
 struct StorageProof {
     key: Bytes32,
     value: Bytes32,
     proof: [u8; STORAGE_PROOF_LEN],
-    depth: Field
+    depth: u64
 }
 
 // For now oracle does not support returning array of arrays so at the moment we support only one storage proof.

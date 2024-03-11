@@ -1,7 +1,4 @@
-use crate::fixtures::mainnet::paris::usdc::{
-    storage_proof::proofs,
-    account::storage_root,
-};
+use crate::fixtures::mainnet::paris::usdc::{storage_proof::proofs, account::storage_root};
 use crate::verifiers::storage::{verify_storage_value, verify_storage_values};
 
 #[test]
