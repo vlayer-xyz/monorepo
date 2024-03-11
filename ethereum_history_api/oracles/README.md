@@ -32,7 +32,7 @@ yarn oracle-server
 Following command allows you to use server without restarting it after every change. Server automatically uses new configuration after file change is saved.
 
 ```sh
-yarn oracle-server watch
+yarn oracle-server:watch
 ```
 
 ## Testing
