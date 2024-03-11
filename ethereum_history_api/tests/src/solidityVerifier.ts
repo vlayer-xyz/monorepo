@@ -7,6 +7,8 @@ import { createAnvilClient } from './ethereum/anvilClient.js';
 
 export const VERIFICATION_GAS_LIMIT = 500_000n;
 
+const PAIRING_FAILED_SELECTOR = 'd71fd263';
+
 const ANVIL_TEST_ACCOUNT_PRIVATE_KEY = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
 const account = privateKeyToAccount(ANVIL_TEST_ACCOUNT_PRIVATE_KEY);
 const client = createAnvilClient();
@@ -82,7 +84,7 @@ export class SolidityProofVerifier {
   private static isProofFailureRevert(e: unknown): boolean {
     return (
       e instanceof TransactionExecutionError &&
-      e.shortMessage === 'Execution reverted with reason: custom error 0711fcec:.'
+      e.shortMessage === `Execution reverted with reason: custom error ${PAIRING_FAILED_SELECTOR}:.`
     );
   }
 }
