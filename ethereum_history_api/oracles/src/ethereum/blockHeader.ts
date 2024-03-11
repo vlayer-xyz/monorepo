@@ -52,10 +52,10 @@ export function headerToRlp(blockHeader: BlockHeader): Hex {
     header.push(blockHeader.withdrawalsRoot);
   }
   if (blockHeader.blobGasUsed !== undefined) {
-    header.push(blockHeader.blobGasUsed);
+    header.push(unpadded(blockHeader.blobGasUsed));
   }
   if (blockHeader.excessBlobGas !== undefined) {
-    header.push(blockHeader.excessBlobGas);
+    header.push(unpadded(blockHeader.excessBlobGas));
   }
   if (blockHeader.parentBeaconBlockRoot !== undefined) {
     header.push(blockHeader.parentBeaconBlockRoot);
