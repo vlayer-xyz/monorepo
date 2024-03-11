@@ -1,4 +1,4 @@
-import { type GetBlockReturnType, type Hex, hexToBytes, hexToRlp, keccak256 } from 'viem';
+import { type GetBlockReturnType, type Hex, Hash, Address, BlockTag, hexToBytes, hexToRlp, keccak256 } from 'viem';
 
 export interface BlockHeader {
   parentHash: Hex;
@@ -67,7 +67,31 @@ export function toHexString(arg: number | bigint): Hex {
   return `0x${arg.toString(16)}`;
 }
 
-export function blockToHeader(block: GetBlockReturnType): BlockHeader {
+/* Can be removed after Dencun hardfork */
+export type Block = GetBlockReturnType & {
+  parentHash: Hash;
+  sha3Uncles: Hash;
+  miner: Address;
+  stateRoot: Hash;
+  transactionsRoot: Hash;
+  receiptsRoot: Hex;
+  logsBloom: BlockTag extends 'pending' ? null : Hex;
+  difficulty: bigint;
+  number: BlockTag extends 'pending' ? null : bigint;
+  gasLimit: bigint;
+  gasUsed: bigint;
+  timestamp: bigint;
+  extraData: Hex;
+  mixHash: Hash;
+  nonce: BlockTag extends 'pending' ? null : Hex;
+  baseFeePerGas: bigint | null;
+  withdrawalsRoot?: Hex;
+  blobGasUsed: bigint;
+  excessBlobGas: bigint;
+  parentBeaconBlockRoot: Hex;
+};
+
+export function blockToHeader(block: Block): BlockHeader {
   const blockHeader: BlockHeader = {
     parentHash: block.parentHash,
     sha3Uncles: block.sha3Uncles,
@@ -86,9 +110,9 @@ export function blockToHeader(block: GetBlockReturnType): BlockHeader {
     nonce: block.nonce,
     baseFeePerGas: block.baseFeePerGas !== null ? toHexString(block.baseFeePerGas) : undefined,
     withdrawalsRoot: block.withdrawalsRoot !== null ? block.withdrawalsRoot : undefined,
-    blobGasUsed: block.blobGasUsed !== null ? toHexString(block.blobGasUsed) : undefined,
-    excessBlobGas: block.excessBlobGas !== null ? toHexString(block.excessBlobGas) : undefined,
-    parentBeaconBlockRoot: block.parentBeaconBlockRoot !== null ? block.parentBeaconBlockRoot : undefined
+    blobGasUsed: block.blobGasUsed !== undefined ? toHexString(block.blobGasUsed) : undefined,
+    excessBlobGas: block.excessBlobGas !== undefined ? toHexString(block.excessBlobGas) : undefined,
+    parentBeaconBlockRoot: block.parentBeaconBlockRoot ?? undefined
   };
   return blockHeader;
 }
@@ -97,6 +121,6 @@ export function calculateBlockHeaderHash(blockHeader: BlockHeader): Hex {
   return keccak256(hexToBytes(headerToRlp(blockHeader)));
 }
 
-export function calculateBlockHash(block: GetBlockReturnType): Hex {
+export function calculateBlockHash(block: Block): Hex {
   return calculateBlockHeaderHash(blockToHeader(block));
 }
