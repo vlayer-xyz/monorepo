@@ -69,26 +69,9 @@ export function toHexString(arg: number | bigint): Hex {
 
 /* Can be removed after Dencun hardfork */
 export type Block = GetBlockReturnType & {
-  parentHash: Hash;
-  sha3Uncles: Hash;
-  miner: Address;
-  stateRoot: Hash;
-  transactionsRoot: Hash;
-  receiptsRoot: Hex;
-  logsBloom: BlockTag extends 'pending' ? null : Hex;
-  difficulty: bigint;
-  number: BlockTag extends 'pending' ? null : bigint;
-  gasLimit: bigint;
-  gasUsed: bigint;
-  timestamp: bigint;
-  extraData: Hex;
-  mixHash: Hash;
-  nonce: BlockTag extends 'pending' ? null : Hex;
-  baseFeePerGas: bigint | null;
-  withdrawalsRoot?: Hex;
-  blobGasUsed: bigint;
-  excessBlobGas: bigint;
-  parentBeaconBlockRoot: Hex;
+  blobGasUsed?: bigint;
+  excessBlobGas?: bigint;
+  parentBeaconBlockRoot?: Hex;
 };
 
 export function blockToHeader(block: Block): BlockHeader {
