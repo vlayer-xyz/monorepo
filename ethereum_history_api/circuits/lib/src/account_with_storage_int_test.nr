@@ -1,6 +1,6 @@
 use crate::misc::types::Bytes32;
 use crate::account_with_storage::{StorageProof, get_account_with_storage};
-use crate::fixtures::{
+use crate::fixtures::mainnet::{
     paris::{
         usdc::{
             header::{

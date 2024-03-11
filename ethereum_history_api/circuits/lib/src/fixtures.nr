@@ -1,3 +1,1 @@
-mod frontier;
-mod london;
-mod paris;
+mod mainnet;

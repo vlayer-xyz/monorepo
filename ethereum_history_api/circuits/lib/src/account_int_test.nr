@@ -1,5 +1,5 @@
 use crate::account::get_account;
-use crate::fixtures::{
+use crate::fixtures::mainnet::{
     paris::{
         usdc::{
             header::{

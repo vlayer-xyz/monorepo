@@ -2,23 +2,23 @@ use crate::header::{BlockHeaderPartial, BlockHeaderRlp, MAX_HEADER_RLP_SIZE};
 use crate::verifiers::header::{get_header_fields_count, verify_header, LONDON_BLOCK_NUMBER, PARIS_BLOCK_NUMBER};
 use crate::misc::arrays::alter_array;
 use crate::fixtures::{
-    london::crypto_punks::header::{
+    mainnet::london::crypto_punks::header::{
         block_header_partial as london_block_header_partial,
         block_header_rlp as london_block_header_rlp,
     },
-    frontier::zero::header::{
+    mainnet::frontier::zero::header::{
         block_header_partial as frontier_zero_block_header_partial,
         block_header_rlp as frontier_zero_block_header_rlp,
     },
-    frontier::first::header::{
+    mainnet::frontier::first::header::{
         block_header_partial as frontier_first_block_header_partial,
         block_header_rlp as frontier_first_block_header_rlp,
     },
-    paris::usdc::header::{
+    mainnet::paris::usdc::header::{
         block_header_partial as paris_block_header_partial,
         block_header_rlp as paris_block_header_rlp,
     },
-    paris::usdc::header::{
+    mainnet::paris::usdc::header::{
         hash, number, state_root, transactions_root, receipts_root
     },
 };

@@ -1,6 +1,6 @@
 use crate::account_with_storage::{Account, MAX_ACCOUNT_STATE_LENGTH, verify_account};
 use crate::fixtures::{
-    london::{
+    mainnet::london::{
         crypto_punks::{
             account::{rlp_encoded_left_padded_account, account, balance, storage_root, code_hash, nonce},
             header::state_root,

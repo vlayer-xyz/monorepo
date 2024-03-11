@@ -1,6 +1,6 @@
 use dep::std::test::OracleMock;
 use crate::header::get_header;
-use crate::fixtures::{
+use crate::fixtures::mainnet::{
     paris::usdc::header::{
         block_header_partial as paris_block_header_partial,
         block_header_rlp as paris_block_header_rlp,

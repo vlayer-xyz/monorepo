@@ -5,11 +5,11 @@ import { createMockClient } from '../../ethereum/mockClient.js';
 import { FIXTURES } from '../../fixtures/config.js';
 
 describe('headerOracle', async () => {
-  const mockFilePaths = ['./fixtures/paris/usdc/eth_getBlockByHash.json'];
+  const mockFilePaths = ['./fixtures/mainnet/paris/usdc/eth_getBlockByHash.json'];
   const client = await createMockClient(mockFilePaths);
 
   it('getBlock', async () => {
-    const blockNumber = FIXTURES.paris.usdc.blockNumber;
+    const blockNumber = FIXTURES.mainnet.paris.usdc.blockNumber;
     const blockHeader = await getBlockHeader(client, blockNumber);
     expect(blockHeader.number).toStrictEqual('0x121eac0');
     expect(blockHeader.parentHash).toStrictEqual('0x759e27a5069535949f0a7247ebc999367dbd77964d77ed004ffc8db3d4940248');
