@@ -18,7 +18,10 @@ fn get_proof(block_no: Field, address: Address, storage_key: Bytes32) -> StateAn
 
 ## Starting oracle server
 
-Oracle server uses connection to Ethereum node. Hence, before running oracle server, first create a `.env` file with a url to Ethereum node. Use template `.env.example` and replace `ETHEREUM_JSON_RPC_API_URL` with your url to rpc server, then the file should be saved as `.env`.
+To run Oracle server, you'll need RPC access to an ETH node.
+Set it as an environment variable in `.env` file.
+`ETHEREUM_JSON_RPC_API_URL=<url>`
+You can copy `.env.example` file.
 
 To start oracle server run:
 
