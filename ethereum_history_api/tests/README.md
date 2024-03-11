@@ -12,7 +12,7 @@ yarn oracle-server
 and run e2e prep script:
 
 ```sh
-scripts/e2e_prep.sh
+../scripts/e2e_prep.sh
 ```
 
 To run tests run:
