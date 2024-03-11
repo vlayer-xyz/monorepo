@@ -1,10 +1,11 @@
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { type BlockHeader, blockToHeader } from '../../ethereum/blockHeader.js';
-import { type GetBlockReturnType, type PublicClient } from 'viem';
+import { type PublicClient } from 'viem';
 import { assert } from '../../util/assert.js';
 import { encodeBlockHeader } from './headerOracle/encode.js';
 import { decodeField } from './common/decode.js';
 import { NoirArguments } from './oracles.js';
+import { type Block } from '../../ethereum/blockHeader.js';
 
 const GET_HEADER_ARGS_COUNT = 1;
 
@@ -21,6 +22,6 @@ export function decodeGetHeaderArguments(args: NoirArguments): bigint {
 }
 
 export async function getBlockHeader(client: PublicClient, blockNumber: bigint): Promise<BlockHeader> {
-  const block: GetBlockReturnType = (await client.getBlock({ blockNumber })) as GetBlockReturnType;
+  const block: Block = (await client.getBlock({ blockNumber })) as Block;
   return blockToHeader(block);
 }
