@@ -20,12 +20,12 @@ describe('headerOracle', async () => {
     const blockHeader: ForeignCallOutput[] = await getHeaderOracle(client, [['0x121eac0']]);
     expect(blockHeader.length === 7);
     // prettier-ignore
-    const encodedStateRootOfParisBlockBlock = [
+    const encodedStateRootOfParisBlock = [
         "0x1a","0xd7","0xb8","0x0a","0xf0","0xc2","0x8b","0xc1",
         "0x48","0x95","0x13","0x34","0x6d","0x27","0x06","0x88",
         "0x5b","0xe9","0x0a","0xbb","0x07","0xf2","0x3c","0xa2",
         "0x8e","0x50","0x48","0x2a","0xdb","0x39","0x2d","0x61"
       ];
-    expect(blockHeader[2]).toStrictEqual(encodedStateRootOfParisBlockBlock);
+    expect(blockHeader[2]).toStrictEqual(encodedStateRootOfParisBlock);
   });
 });
