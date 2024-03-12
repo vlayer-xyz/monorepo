@@ -2,6 +2,8 @@ use crate::misc::types::Bytes32;
 use crate::verifiers::header::verify_header;
 
 global MAX_HEADER_RLP_SIZE = 708;
+global ETHEREUM_MAINNET_ID = 1;
+global ETHEREUM_SEPOLIA_ID = 58008;
 
 struct BlockHeaderPartial {
     number: Field,
@@ -18,7 +20,7 @@ struct BlockHeaderRlp {
 
 pub fn get_header(block_number: Field) -> BlockHeaderPartial {
     let (block_header_partial, block_header_rlp) = get_header_unconstrained(block_number);
-    verify_header(block_header_partial, block_header_rlp);
+    verify_header(ETHEREUM_MAINNET_ID, block_header_partial, block_header_rlp);
     // TODO: This breaks nargo proof: https://discord.com/channels/1113924620781883405/1211646790864994336/1211646790864994336
     // assert(block_header_partial.number == block_number, "block number does not match the argument");
     block_header_partial
