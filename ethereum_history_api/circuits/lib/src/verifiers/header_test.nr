@@ -13,7 +13,8 @@ use crate::fixtures::{
 },
     mainnet::paris::usdc::header::{block_header_partial as paris_block_header_partial, block_header_rlp as paris_block_header_rlp},
     mainnet::paris::usdc::header::{hash, number, state_root, transactions_root, receipts_root},
-    sepolia::dencun::some::header::{block_header_partial as dencun_block_header_partial, block_header_rlp as dencun_block_header_rlp},
+    sepolia::dencun::some::header::{block_header_partial as dencun_some_block_header_partial, block_header_rlp as dencun_some_block_header_rlp},
+    sepolia::dencun::some_blobGasUsed::header::{block_header_partial as dencun_some_blobGasUsed_block_header_partial, block_header_rlp as dencun_some_blobGasUsed_block_header_rlp},
 };
 
 #[test]
@@ -46,12 +47,12 @@ fn test_verify_paris_header_success() {
 
 #[test]
 fn test_verify_dencun_some_header_success() {
-    verify_header(ETHEREUM_SEPOLIA_ID, dencun_block_header_partial, dencun_block_header_rlp);
+    verify_header(ETHEREUM_SEPOLIA_ID, dencun_some_block_header_partial, dencun_some_block_header_rlp);
 }
 
 #[test]
 fn test_verify_dencun_some_blobGasUsed_header_success() {
-    verify_header(ETHEREUM_SEPOLIA_ID, dencun_block_header_partial, dencun_block_header_rlp);
+    verify_header(ETHEREUM_SEPOLIA_ID, dencun_some_blobGasUsed_block_header_partial, dencun_some_blobGasUsed_block_header_rlp);
 }
 
 #[test(should_fail_with = "block number does not match")]
