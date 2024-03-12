@@ -7,5 +7,6 @@ mod account_with_storage_int_test;
 mod misc;
 mod fixtures;
 mod verifiers;
+mod receipt;
 
 global HASH_LENGTH = 32;
