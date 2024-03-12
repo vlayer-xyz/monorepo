@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "ethereum_history_api/circuits/lib",
+    "ethereum_history_api/circuits/get_receipt",
     "ethereum_history_api/circuits/get_storage",
     "ethereum_history_api/circuits/get_account",
     "ethereum_history_api/circuits/get_header",
