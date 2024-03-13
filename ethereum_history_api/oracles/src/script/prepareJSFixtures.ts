@@ -14,7 +14,11 @@ async function createBlockFixture(
   blockNumber: bigint,
   includeTransactions = false
 ): Promise<GetBlockFixture> {
-  await client.getBlock({ blockNumber, includeTransactions: includeTransactions });
+  if (includeTransactions) {
+    await client.getBlock({ blockNumber, includeTransactions: includeTransactions });
+  } else {
+    await client.getBlock({ blockNumber });
+  }
   return last(client.getCalls()) as GetBlockFixture;
 }
 

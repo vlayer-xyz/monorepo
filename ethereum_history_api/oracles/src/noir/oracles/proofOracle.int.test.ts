@@ -28,7 +28,7 @@ describe(
       // 19000000
       const parisBlockNumberInNoirFormat = '0x121eac0';
       const mockFilePaths = [
-        './fixtures/paris/usdc/eth_getBlockByHash.json',
+        './fixtures/paris/usdc/eth_getBlockByHash_19000000.json',
         './fixtures/paris/usdc/eth_getProof.json'
       ];
       const client = await createMockClient(mockFilePaths);

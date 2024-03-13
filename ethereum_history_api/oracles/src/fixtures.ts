@@ -10,8 +10,20 @@ export async function loadFixture<T>(hardFork: string, fixtureName: string, meth
   return fixture.result;
 }
 
-export async function loadBlockFixture(hardFork: string, fixtureName: string): Promise<GetBlockReturnType> {
-  return loadFixture<GetBlockReturnType>(hardFork, fixtureName, 'eth_getBlockByHash');
+export async function loadBlockFixture(
+  hardFork: string,
+  fixtureName: string,
+  includeTransactions = false
+): Promise<GetBlockReturnType> {
+  const blockNumber = FIXTURES[hardFork][fixtureName].blockNumber;
+  if (includeTransactions) {
+    return loadFixture<GetBlockReturnType>(
+      hardFork,
+      fixtureName,
+      `eth_getBlockByHash_${blockNumber}_includeTransactions`
+    );
+  }
+  return loadFixture<GetBlockReturnType>(hardFork, fixtureName, `eth_getBlockByHash_${blockNumber}`);
 }
 
 export async function loadProofFixture(hardFork: string, fixtureName: string): Promise<GetProofReturnType> {
