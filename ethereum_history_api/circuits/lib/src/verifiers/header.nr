@@ -23,7 +23,7 @@ pub(crate) fn get_header_fields_count(chain_id: Field, block_number: u64) -> u64
         frontier_fields_count += 1;
     }
     if chain_id == ETHEREUM_SEPOLIA_ID {
-        frontier_fields_count += 3;
+        frontier_fields_count = 20;
     }
     frontier_fields_count
 }
