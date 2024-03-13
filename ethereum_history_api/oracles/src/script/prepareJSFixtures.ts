@@ -17,7 +17,7 @@ async function createBlockFixture<TIncludeTransactions extends boolean>(
   if (includeTransactions) {
     await client.getBlock({ blockNumber, includeTransactions: includeTransactions });
   } else {
-    await client.getBlock({ blockNumber }); // Leaving includeTransactions undefined instead of setting it to false, for later comparing of arguments
+    await client.getBlock({ blockNumber }); // It's important for mock client that includeTransactions is undefined and not false
   }
   return last(client.getCalls()) as GetBlockFixture<TIncludeTransactions>;
 }
