@@ -5,7 +5,7 @@ use crate::verifiers::receipt::verify_receipt;
 global BLOOM_FILTER_SIZE = 2048;
 global MAX_LOG_DATA_SIZE = 256; // 8 * 32 (Eth word length)
 global MAX_RECEIPT_RLP_LENGTH = 1024; // TODO: Pick a reasonable value
-global MAX_RECEIPT_TREE_DEPTH = 3;
+global MAX_RECEIPT_TREE_DEPTH = 6;
 global RECEIPT_PROOF_LEN = 1024; // TODO: Pick a reasonable value
 
 struct Log {
