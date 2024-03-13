@@ -51,7 +51,7 @@ struct TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_SIZE> {
 pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_SIZE, RECEIPT_PROOF_LENGTH>(
     block_number: Field,
     tx_idx: Field,
-    _receipt_proof_len: FakeTurbofishReceiptProofLen<RECEIPT_PROOF_LENGTH>
+    _max_receipt_proof_len: FakeTurbofishReceiptProofLen<RECEIPT_PROOF_LENGTH>
 ) -> TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_SIZE> {
     assert(false, "Not implemented");
     zeroed()
@@ -61,13 +61,13 @@ pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_SIZE, RECEIPT_PROOF_LENGTH>(
 unconstrained fn get_receipt_oracle<LOG_NUM, MAX_LOG_DATA_SIZE, RECEIPT_PROOF_LENGTH>(
     _block_number: Field,
     _tx_idx: Field,
-    _receipt_proof_len: FakeTurbofishReceiptProofLen<RECEIPT_PROOF_LENGTH>
+    _max_receipt_proof_len: FakeTurbofishReceiptProofLen<RECEIPT_PROOF_LENGTH>
 ) -> (TxReceipt<LOG_NUM, MAX_LOG_DATA_SIZE>, TxReceiptProof<RECEIPT_PROOF_LENGTH>) {}
 
 unconstrained fn get_receipt_unconstrained<LOG_NUM, MAX_LOG_DATA_SIZE, RECEIPT_PROOF_LENGTH>(
     block_number: Field,
     tx_idx: Field,
-    _receipt_proof_len: FakeTurbofishReceiptProofLen<RECEIPT_PROOF_LENGTH>
+    _max_receipt_proof_len: FakeTurbofishReceiptProofLen<RECEIPT_PROOF_LENGTH>
 ) -> (TxReceipt<LOG_NUM, MAX_LOG_DATA_SIZE>, TxReceiptProof<RECEIPT_PROOF_LENGTH>) {
-    get_receipt_oracle(block_number, tx_idx, _receipt_proof_len)
+    get_receipt_oracle(block_number, tx_idx, _max_receipt_proof_len)
 }
