@@ -9,8 +9,12 @@ import { writeObject } from '../util/file.js';
 import { RecordingClient, createRecordingClient } from '../ethereum/recordingClient.js';
 import { last } from '../util/array.js';
 
-async function createBlockFixture(client: RecordingClient, blockNumber: bigint): Promise<GetBlockFixture> {
-  await client.getBlock({ blockNumber });
+async function createBlockFixture(
+  client: RecordingClient,
+  blockNumber: bigint,
+  includeTransactions = false
+): Promise<GetBlockFixture> {
+  await client.getBlock({ blockNumber, includeTransactions: includeTransactions });
   return last(client.getCalls()) as GetBlockFixture;
 }
 
@@ -30,7 +34,13 @@ export async function prepareJSFixtures(): Promise<void> {
       const { blockNumber, address, storageKeys } = FIXTURES[hardFork][fixtureName];
 
       const getBlockFixture = await createBlockFixture(client, blockNumber);
-      await writeObject(getBlockFixture, join(modulePath, 'eth_getBlockByHash.json'));
+      await writeObject(getBlockFixture, join(modulePath, `eth_getBlockByHash_${blockNumber}.json`));
+
+      const getBlockFixtureWithTransactions = await createBlockFixture(client, blockNumber, true);
+      await writeObject(
+        getBlockFixtureWithTransactions,
+        join(modulePath, `eth_getBlockByHash_${blockNumber}_includeTransactions.json`)
+      );
 
       const getProofFixture = await createProofFixture(client, {
         address,
