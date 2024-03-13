@@ -5,7 +5,18 @@ use crate::verifiers::receipt::verify_receipt;
 global BLOOM_FILTER_SIZE = 2048;
 global MAX_RECEIPT_RLP_LENGTH = 1024; // TODO: Pick a reasonable value
 global MAX_RECEIPT_TREE_DEPTH = 6;
-global RECEIPT_PROOF_LEN = 1024; // TODO: Pick a reasonable value
+
+// MAX_TRIE_NODE_LENGTH = Max(MAX_LEAF_LENGTH, MAX_BRANCH_LENGTH)
+// Leafs can have arbitrary length and will be constrained by generics, but in normal case - branches are longer than leaves
+// MAX_BRANCH_LENGTH = MAX_RLP_LIST_HEADER_LENGTH + 16 * MAX_RLP_ELEMENT_LENGTH + LENGTH_OF_NULL_ELEMENT
+// MAX_RLP_LIST_HEADER_LENGTH = 1 + MAX_LENGTH_BYTES
+// MAX_LENGTH_BYTES = 2
+// MAX_RLP_LIST_HEADER_LENGTH = 3
+// MAX_RLP_ELEMENT_LENGTH = 32
+// LENGTH_OF_NULL_ELEMENT = 1
+// MAX_BRANCH_LENGTH = 3 + 16 * 32 + 1 = 515
+global MAX_TRIE_NODE_LENGTH: u64 = 515;
+global RECEIPT_PROOF_LEN = 3090; // MAX_TRIE_NODE_LENGTH * MAX_RECEIPT_TREE_DEPTH
 
 struct Log<MAX_LOG_DATA_SIZE> {
     address: Address,
