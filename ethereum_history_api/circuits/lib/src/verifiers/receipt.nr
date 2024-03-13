@@ -16,18 +16,18 @@ fn assert_tx_idx_equals(key: [u8; MAX_RECEIPT_TREE_DEPTH], tx_idx: Field) {
     assert(false, "Not implemented");
 }
 
-fn assert_receipt_proof<RECEIPT_PROOF_LEN>(
-    proof: TxReceiptProof<RECEIPT_PROOF_LEN>,
+fn assert_receipt_proof<RECEIPT_PROOF_LENGTH>(
+    proof: TxReceiptProof<RECEIPT_PROOF_LENGTH>,
     root: [u8; KEY_LENGTH]
 ) {
     assert(false, "Not implemented");
 }
 
-pub fn verify_receipt<LOG_NUM, MAX_LOG_DATA_SIZE, RECEIPT_PROOF_LEN>(
+pub fn verify_receipt<LOG_NUM, MAX_LOG_DATA_SIZE, RECEIPT_PROOF_LENGTH>(
     block_number: Field,
     tx_idx: Field,
     receipt: TxReceipt<LOG_NUM, MAX_LOG_DATA_SIZE>,
-    receipt_proof: TxReceiptProof<RECEIPT_PROOF_LEN>,
+    receipt_proof: TxReceiptProof<RECEIPT_PROOF_LENGTH>,
     receipt_root: [u8; KEY_LENGTH]
 ) {
     assert(false, "Not implemented");

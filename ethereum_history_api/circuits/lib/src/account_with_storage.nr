@@ -5,8 +5,8 @@ use crate::misc::types::{Address, Bytes32};
 use crate::verifiers::account::verify_account;
 use crate::verifiers::storage::verify_storage_values;
 
-global STATE_PROOF_LEN = 5852; // = 11 (MAX_STATE_PROOF_LEVELS) * 532 (MAX_TRIE_NODE_LENGTH)
-global STORAGE_PROOF_LEN = 3724; // = 7 (MAX_STORAGE_PROOF_LEVELS) * 532 (MAX_TRIE_NODE_LENGTH)
+global STATE_PROOF_LENGTH = 5852; // = 11 (MAX_STATE_PROOF_LEVELS) * 532 (MAX_TRIE_NODE_LENGTH)
+global STORAGE_PROOF_LENGTH = 3724; // = 7 (MAX_STORAGE_PROOF_LEVELS) * 532 (MAX_TRIE_NODE_LENGTH)
 
 struct Account {
     nonce: Field,
@@ -18,14 +18,14 @@ struct Account {
 struct StateProof {
     key: Address,
     value: [u8; MAX_ACCOUNT_STATE_LENGTH],
-    proof: [u8; STATE_PROOF_LEN],
+    proof: [u8; STATE_PROOF_LENGTH],
     depth: u64,
 }
 
 struct StorageProof {
     key: Bytes32,
     value: Bytes32,
-    proof: [u8; STORAGE_PROOF_LEN],
+    proof: [u8; STORAGE_PROOF_LENGTH],
     depth: u64
 }
 
