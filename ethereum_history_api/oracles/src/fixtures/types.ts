@@ -21,5 +21,5 @@ export interface GetBlockFixture<TIncludeTransactions extends boolean> {
 export interface GetBlockReceiptsFixture {
   method: 'eth_getBlockReceipts';
   arguments: [string];
-  result: object;
+  result: unknown;
 }
