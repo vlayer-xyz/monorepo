@@ -30,7 +30,7 @@ async function createProofFixture(client: RecordingClient, parameters: GetProofP
 
 async function createReceiptsFixture(client: RecordingClient, blockNumber: bigint): Promise<GetBlockReceiptsFixture> {
   await client.request({
-    // @ts-ignore
+    // @ts-expect-error 'eth_getBlockReceipts' method is not part of Viem RPC schema
     method: 'eth_getBlockReceipts',
     params: [toHexString(blockNumber)]
   });
