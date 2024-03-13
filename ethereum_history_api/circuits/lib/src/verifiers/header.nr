@@ -2,7 +2,7 @@ use dep::proof::{rlp::{decode1, RLP_List}, byte_value};
 use dep::std::hash::keccak256;
 use dep::u2b::u64_to_u8;
 
-use crate::header::{BlockHeaderPartial, BlockHeaderRlp, ETHEREUM_SEPOLIA_ID};
+use crate::header::{BlockHeaderPartial, BlockHeaderRlp, ETHEREUM_MAINNET_ID, ETHEREUM_SEPOLIA_ID};
 use crate::misc::arrays::{sub_array_equals, sub_array_equals_up_to_length};
 
 global MAX_HEADER_FIELDS_COUNT = 20;
@@ -15,17 +15,18 @@ global LONDON_BLOCK_NUMBER: u64 = 12_965_000;
 global PARIS_BLOCK_NUMBER: u64 = 15_537_394;
 
 pub(crate) fn get_header_fields_count(chain_id: Field, block_number: u64) -> u64 {
-    let mut frontier_fields_count = 15;
-    if block_number >= LONDON_BLOCK_NUMBER {
-        frontier_fields_count += 1;
+    let mut fields_count = 15;
+    if chain_id == ETHEREUM_MAINNET_ID {
+        if block_number >= LONDON_BLOCK_NUMBER {
+            fields_count += 1;
+        }
+        if block_number >= PARIS_BLOCK_NUMBER {
+            fields_count += 1;
+        }
+    } else if chain_id == ETHEREUM_SEPOLIA_ID {
+        fields_count = 20;
     }
-    if block_number >= PARIS_BLOCK_NUMBER {
-        frontier_fields_count += 1;
-    }
-    if chain_id == ETHEREUM_SEPOLIA_ID {
-        frontier_fields_count = 20;
-    }
-    frontier_fields_count
+    fields_count
 }
 
 pub(crate) fn verify_header(chain_id: Field, block_header_partial: BlockHeaderPartial, block_header_rlp: BlockHeaderRlp) {
