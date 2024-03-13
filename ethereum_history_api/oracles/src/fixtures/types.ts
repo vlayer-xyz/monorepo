@@ -17,3 +17,9 @@ export interface GetBlockFixture<TIncludeTransactions extends boolean> {
   arguments: [bigint, boolean];
   result: GetBlockReturnType<undefined, TIncludeTransactions>;
 }
+
+export interface GetBlockReceiptsFixture {
+  method: 'eth_getBlockReceipts';
+  arguments: [string];
+  result: object;
+}

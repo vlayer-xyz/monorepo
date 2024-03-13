@@ -4,10 +4,11 @@ import { GetProofParameters } from 'viem';
 
 import { createClient } from '../ethereum/client.js';
 import { FIXTURES, JS_FIXTURES_DIRECTORY } from '../fixtures/config.js';
-import { GetBlockFixture, GetProofFixture } from '../fixtures/types.js';
+import { GetBlockFixture, GetProofFixture, GetBlockReceiptsFixture } from '../fixtures/types.js';
 import { writeObject } from '../util/file.js';
 import { RecordingClient, createRecordingClient } from '../ethereum/recordingClient.js';
 import { last } from '../util/array.js';
+import { toHexString } from '../ethereum/blockHeader.js';
 
 async function createBlockFixture<TIncludeTransactions extends boolean>(
   client: RecordingClient,
@@ -25,6 +26,14 @@ async function createBlockFixture<TIncludeTransactions extends boolean>(
 async function createProofFixture(client: RecordingClient, parameters: GetProofParameters): Promise<GetProofFixture> {
   await client.getProof(parameters);
   return last(client.getCalls()) as GetProofFixture;
+}
+
+async function createReceiptsFixture(client: RecordingClient, blockNumber: bigint): Promise<GetBlockReceiptsFixture> {
+  await client.request({
+    method: 'eth_getBlockReceipts',
+    params: [toHexString(blockNumber)]
+  });
+  return last(client.getCalls()) as GetBlockReceiptsFixture;
 }
 
 export async function prepareJSFixtures(): Promise<void> {
@@ -53,6 +62,9 @@ export async function prepareJSFixtures(): Promise<void> {
           blockNumber
         });
         await writeObject(getProofFixture, join(modulePath, `eth_getProof_${blockNumber}.json`));
+
+        const getReceiptsFixture = await createReceiptsFixture(client, blockNumber);
+        await writeObject(getReceiptsFixture, join(modulePath, 'eth_getBlockReceipts.json'));
       }
     }
   }

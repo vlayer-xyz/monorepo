@@ -11,7 +11,7 @@ export interface RecordingClientMixin {
 }
 export type RecordingClient = PublicClient & RecordingClientMixin;
 
-export const isEthereumApiMethod = (methodName: string) => methodName.startsWith('get');
+export const isEthereumApiMethod = (methodName: string) => methodName.startsWith('get') || methodName == 'request';
 
 export const createRecordingClient = (client: PublicClient): RecordingClient => createLoggingProxy(client);
 
