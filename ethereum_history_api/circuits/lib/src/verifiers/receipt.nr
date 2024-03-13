@@ -17,12 +17,12 @@ fn assert_tx_idx_equals(key: [u8; MAX_RECEIPT_TREE_DEPTH], tx_idx: Field) {
     assert(sub_array_equals_up_to_length(tx_idx, key, offset, length), "Tx index mismatch");
 }
 
-fn assert_receipt_proof(receipt_proof: TxReceiptProof, receipts_root: [u8; KEY_LENGTH]) {
+fn assert_receipt_proof(proof: TxReceiptProof, root: [u8; KEY_LENGTH]) {
     let trie_proof = TrieProof {
-        key: receipt_proof.key,
-        proof: receipt_proof.proof,
-        depth: receipt_proof.depth,
-        value: receipt_proof.value
+        key: proof.key,
+        proof: proof.proof,
+        depth: proof.depth,
+        value: proof.value
     };
     // TODO: Uncomment when it's implemented
     // assert(trie_proof.verify_receipts_root(receipts_root), "TrieProof: Invalid receipts root");
@@ -32,11 +32,11 @@ pub fn verify_receipt<LOG_NUM>(
     block_number: Field,
     tx_idx: Field,
     receipt: TxReceipt<LOG_NUM>,
-    state_proof: TxReceiptProof,
-    state_root: [u8; KEY_LENGTH]
+    receipt_proof: TxReceiptProof,
+    receipt_root: [u8; KEY_LENGTH]
 ) {
-    assert_tx_idx_equals(state_proof.key, tx_idx);
-    assert_receipt_equals(block_number, state_proof.value, receipt);
-    assert_receipt_proof(state_proof, state_root);
+    assert_tx_idx_equals(receipt_proof.key, tx_idx);
+    assert_receipt_equals(block_number, receipt_proof.value, receipt);
+    assert_receipt_proof(receipt_proof, receipt_root);
 }
 
