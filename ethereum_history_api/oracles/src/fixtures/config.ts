@@ -40,13 +40,11 @@ export const FIXTURES: Fixtures = {
         address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
         storageKeys: [CIRCLE_USDC_BALANCE_STORAGE_KEY]
       }
-    }
-  },
-  sepolia: {
+    },
     dencun: {
-      some: {
-        blockNumber: 5476866n,
-        address: '0x1268AD189526AC0b386faF06eFfC46779c340eE6'
+      usdc: {
+        blockNumber: 19_426_663n,
+        address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
       }
     }
   }
