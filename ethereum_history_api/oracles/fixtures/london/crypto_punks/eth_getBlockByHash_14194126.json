@@ -1,6 +1,6 @@
 {
   "method": "getBlock",
-  "arguments": [{ "blockNumber": 14194126, "includeTransactions": false }],
+  "arguments": [{ "blockNumber": 14194126 }],
   "result": {
     "number": 14194126,
     "hash": "0xbe8aa5945d3377e65ed06757555d0d4babe269097574c210133e59cf6bc17d18",
