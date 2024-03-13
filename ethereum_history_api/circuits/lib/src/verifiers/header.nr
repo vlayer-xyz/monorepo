@@ -1,6 +1,6 @@
 use dep::proof::{rlp::{decode1, RLP_List}, byte_value};
 use dep::std::hash::keccak256;
-use dep::u2b::{u40_to_u8};
+use dep::u2b::u64_to_u8;
 
 use crate::header::{BlockHeaderPartial, BlockHeaderRlp};
 use crate::misc::arrays::{sub_array_equals, sub_array_equals_up_to_length};
@@ -14,7 +14,7 @@ global BLOCK_NUMBER_INDEX = 8;
 global LONDON_BLOCK_NUMBER: u64 = 12_965_000;
 global PARIS_BLOCK_NUMBER: u64 = 15_537_394;
 
-pub(crate) fn get_header_fields_count(block_number: u64) -> Field {
+pub(crate) fn get_header_fields_count(block_number: u64) -> u64 {
     let mut frontier_fields_count = 15;
     if block_number >= LONDON_BLOCK_NUMBER {
         frontier_fields_count += 1;
@@ -34,7 +34,7 @@ pub(crate) fn verify_header(block_header_partial: BlockHeaderPartial, block_head
     );
 
     // We use u40 for block number because even if block time is 1s - it would take 34865 years to reach u40
-    let block_number = u40_to_u8(block_header_partial.number as u40);
+    let block_number = u64_to_u8(block_header_partial.number as u64);
     let (block_number, block_number_length) = byte_value(block_number);
 
     assert(rlp_list.length[BLOCK_NUMBER_INDEX] == block_number_length, "block number length does not match");

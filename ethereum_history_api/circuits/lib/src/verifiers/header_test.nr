@@ -1,36 +1,34 @@
 use crate::header::{BlockHeaderPartial, BlockHeaderRlp, MAX_HEADER_RLP_SIZE};
 use crate::verifiers::header::{get_header_fields_count, verify_header, LONDON_BLOCK_NUMBER, PARIS_BLOCK_NUMBER};
 use crate::misc::arrays::alter_array;
-use crate::fixtures::{
-    london::crypto_punks::header::{
-        block_header_partial as london_block_header_partial,
-        block_header_rlp as london_block_header_rlp,
-    },
+use crate::fixtures::mainnet::{
+    london::crypto_punks::header::{block_header_partial as london_block_header_partial, block_header_rlp as london_block_header_rlp},
     frontier::zero::header::{
-        block_header_partial as frontier_zero_block_header_partial,
-        block_header_rlp as frontier_zero_block_header_rlp,
-    },
+    block_header_partial as frontier_zero_block_header_partial,
+    block_header_rlp as frontier_zero_block_header_rlp
+},
     frontier::first::header::{
-        block_header_partial as frontier_first_block_header_partial,
-        block_header_rlp as frontier_first_block_header_rlp,
-    },
-    paris::usdc::header::{
-        block_header_partial as paris_block_header_partial,
-        block_header_rlp as paris_block_header_rlp,
-    },
-    paris::usdc::header::{
-        hash, number, state_root, transactions_root, receipts_root
-    },
+    block_header_partial as frontier_first_block_header_partial,
+    block_header_rlp as frontier_first_block_header_rlp
+},
+    paris::usdc::header::{block_header_partial as paris_block_header_partial, block_header_rlp as paris_block_header_rlp},
+    paris::usdc::header::{hash, number, state_root, transactions_root, receipts_root}
 };
 
 #[test]
 fn test_verify_frontier_zero_header_success() {
-    verify_header(frontier_zero_block_header_partial, frontier_zero_block_header_rlp);
+    verify_header(
+        frontier_zero_block_header_partial,
+        frontier_zero_block_header_rlp
+    );
 }
 
 #[test]
 fn test_verify_frontier_first_header_success() {
-    verify_header(frontier_first_block_header_partial, frontier_first_block_header_rlp);
+    verify_header(
+        frontier_first_block_header_partial,
+        frontier_first_block_header_rlp
+    );
 }
 
 #[test]
@@ -52,7 +50,8 @@ fn test_verify_header_invalid_block_number() {
 
 #[test(should_fail_with = "block number length does not match")]
 fn test_verify_header_invalid_block_number_length() {
-    let wrong_number_length = 0;
+    // This is 0x100000000 which takes up 6 bytes which is not equal to the 5 bytes that original paris block number 19000000 takes up
+    let wrong_number_length = 4294967296;
     let paris_block_header_partial = BlockHeaderPartial { number: wrong_number_length, hash, state_root, transactions_root, receipts_root };
     verify_header(paris_block_header_partial, paris_block_header_rlp);
 }
@@ -87,7 +86,7 @@ fn test_verify_header_invalid_receipt_root() {
 
 global RLP_SHORT_STRING_TYPE = 0x80;
 
-// TODO: Add correct assertion message when we migrate to Noir >=0.24.0 which fixes assertions order
+// TODO: Add correct assertion message when noir-trie-proofs is updated
 #[test(should_fail)]
 fn test_verify_header_invalid_rlp() {
     let mut rlp_empty_string_encoding = [0; MAX_HEADER_RLP_SIZE];
@@ -97,8 +96,7 @@ fn test_verify_header_invalid_rlp() {
     verify_header(paris_block_header_partial, malformed_block_header_rlp);
 }
 
-// TODO: Add correct assertion message when we migrate to Noir >=0.24.0 which fixes assertions order
-#[test(should_fail)]
+#[test(should_fail_with = "number of header RLP fields does not match")]
 fn test_verify_header_invalid_rlp_fields_count() {
     verify_header(paris_block_header_partial, frontier_first_block_header_rlp);
 }

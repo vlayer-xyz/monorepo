@@ -5,7 +5,7 @@ import { padArray } from '../../../util/array.js';
 import { PROOF_ONE_LEVEL_LENGTH, ZERO_PAD_VALUE } from '../common/const.js';
 import { assert } from '../../../util/assert.js';
 
-const MAX_STATE_PROOF_LEVELS = 9;
+const MAX_STATE_PROOF_LEVELS = 11;
 const MAX_ACCOUNT_STATE_LENGTH = 134;
 export const STATE_PROOF_LENGTH = PROOF_ONE_LEVEL_LENGTH * MAX_STATE_PROOF_LEVELS;
 const MAX_STORAGE_PROOF_LEVELS = 7;

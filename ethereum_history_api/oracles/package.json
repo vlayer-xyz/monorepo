@@ -21,7 +21,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@noir-lang/noir_js": "0.23.0",
+    "@noir-lang/noir_js": "0.25.0",
     "dotenv": "^16.3.1",
     "fastify": "^4.25.2",
     "json-bigint": "^1.0.0",
