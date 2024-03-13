@@ -30,6 +30,7 @@ async function createProofFixture(client: RecordingClient, parameters: GetProofP
 
 async function createReceiptsFixture(client: RecordingClient, blockNumber: bigint): Promise<GetBlockReceiptsFixture> {
   await client.request({
+    // @ts-ignore
     method: 'eth_getBlockReceipts',
     params: [toHexString(blockNumber)]
   });
