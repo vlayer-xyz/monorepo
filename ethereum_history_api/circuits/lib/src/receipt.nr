@@ -54,13 +54,18 @@ struct TxReceiptProof {
     depth: u64
 }
 
-pub fn get_tx_receipt<LOG_NUM>(block_number: Field, tx_idx: Field) -> TxReceipt<LOG_NUM> {
+struct TxReceiptWithinBlock<LOG_NUM> {
+    receipt: TxReceipt<LOG_NUM>,
+    block_hash: Bytes32
+}
+
+pub fn get_receipt<LOG_NUM>(block_number: Field, tx_idx: Field) -> TxReceiptWithinBlock<LOG_NUM> {
     let header = get_header(block_number);
-    let (tx_receipt, tx_receipt_proof) = get_receipt_unconstrained(block_number, tx_idx);
+    let (receipt, receipt_proof) = get_receipt_unconstrained(block_number, tx_idx);
     // TODO: This breaks nargo proof: https://discord.com/channels/1113924620781883405/1211646790864994336/1211646790864994336
     // assert(header.number == block_number, "block number does not match the argument");
-    verify_receipt(block_number, tx_idx, tx_receipt, tx_receipt_proof, header.receipts_root);
-    tx_receipt
+    verify_receipt(block_number, tx_idx, receipt, receipt_proof, header.receipts_root);
+    TxReceiptWithinBlock {receipt, block_hash: header.hash}
 }
 
 #[oracle(get_receipt)]
