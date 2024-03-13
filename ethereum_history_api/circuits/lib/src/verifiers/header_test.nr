@@ -127,5 +127,6 @@ fn test_get_header_fields_count() {
     assert_eq(get_header_fields_count(ETHEREUM_MAINNET_ID, london_block_number), 16);
     assert_eq(get_header_fields_count(ETHEREUM_MAINNET_ID, PARIS_BLOCK_NUMBER), 17);
     assert_eq(get_header_fields_count(ETHEREUM_MAINNET_ID, paris_block_number), 17);
+    
     assert_eq(get_header_fields_count(ETHEREUM_SEPOLIA_ID, some_block_number), 20);
 }
