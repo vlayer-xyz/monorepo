@@ -1,4 +1,4 @@
-use dep::ethereum_history_api::receipt::{get_receipt, TxReceiptWithinBlock, FakeTurbofishReceiptProofLen, FakeTurbofishReceiptRlpLen};
+use dep::ethereum_history_api::receipt::{get_receipt, TxReceiptWithinBlock, PhantomReceiptProofLen, PhantomReceiptRlpLen};
 
 global LOG_NUM = 1;
 global MAX_LOG_DATA_SIZE = 128; // 4 * 32 (Eth word length)
@@ -19,8 +19,8 @@ fn main(
     block_number: pub Field,
     tx_idx: pub Field
 ) -> pub TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_SIZE> {
-    let max_receipt_proof_len: FakeTurbofishReceiptProofLen<MAX_RECEIPT_PROOF_LENGTH> = FakeTurbofishReceiptProofLen {};
-    let max_receipt_rlp_length: FakeTurbofishReceiptRlpLen<MAX_RECEIPT_RLP_LENGTH> = FakeTurbofishReceiptRlpLen {};
+    let max_receipt_proof_len: PhantomReceiptProofLen<MAX_RECEIPT_PROOF_LENGTH> = PhantomReceiptProofLen {};
+    let max_receipt_rlp_length: PhantomReceiptRlpLen<MAX_RECEIPT_RLP_LENGTH> = PhantomReceiptRlpLen {};
     get_receipt(
         block_number,
         tx_idx,
