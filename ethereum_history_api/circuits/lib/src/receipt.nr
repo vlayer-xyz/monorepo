@@ -3,25 +3,24 @@ use crate::header::get_header;
 use crate::verifiers::receipt::verify_receipt;
 
 global BLOOM_FILTER_SIZE = 2048;
-global MAX_LOG_DATA_SIZE = 256; // 8 * 32 (Eth word length)
 global MAX_RECEIPT_RLP_LENGTH = 1024; // TODO: Pick a reasonable value
 global MAX_RECEIPT_TREE_DEPTH = 6;
 global RECEIPT_PROOF_LEN = 1024; // TODO: Pick a reasonable value
 
-struct Log {
+struct Log<MAX_LOG_DATA_SIZE> {
     address: Address,
     topics: [Bytes32; 4],
     data: [u8; MAX_LOG_DATA_SIZE]
 }
 
-struct TxReceipt<LOG_NUM> {
+struct TxReceipt<LOG_NUM, MAX_LOG_DATA_SIZE> {
     blob_gas_used: Field,
     blob_gas_price: Field,
     status: u1,
     state_root: Bytes32,
     cumulative_gas_used: Field,
     logs_bloom: [u8; BLOOM_FILTER_SIZE],
-    logs: [Log; LOG_NUM]
+    logs: [Log<MAX_LOG_DATA_SIZE>; LOG_NUM]
 }
 
 struct TxReceiptProof {
@@ -31,12 +30,12 @@ struct TxReceiptProof {
     depth: u64
 }
 
-struct TxReceiptWithinBlock<LOG_NUM> {
-    receipt: TxReceipt<LOG_NUM>,
+struct TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_SIZE> {
+    receipt: TxReceipt<LOG_NUM, MAX_LOG_DATA_SIZE>,
     block_hash: Bytes32
 }
 
-pub fn get_receipt<LOG_NUM>(block_number: Field, tx_idx: Field) -> TxReceiptWithinBlock<LOG_NUM> {
+pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_SIZE>(block_number: Field, tx_idx: Field) -> TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_SIZE> {
     let header = get_header(block_number);
     let (receipt, receipt_proof) = get_receipt_unconstrained(block_number, tx_idx);
     // TODO: This breaks nargo proof: https://discord.com/channels/1113924620781883405/1211646790864994336/1211646790864994336
@@ -46,8 +45,8 @@ pub fn get_receipt<LOG_NUM>(block_number: Field, tx_idx: Field) -> TxReceiptWith
 }
 
 #[oracle(get_receipt)]
-unconstrained fn get_receipt_oracle<LOG_NUM>(_block_number: Field, _tx_idx: Field) -> (TxReceipt<LOG_NUM>, TxReceiptProof) {}
+unconstrained fn get_receipt_oracle<LOG_NUM, MAX_LOG_DATA_SIZE>(_block_number: Field, _tx_idx: Field) -> (TxReceipt<LOG_NUM, MAX_LOG_DATA_SIZE>, TxReceiptProof) {}
 
-unconstrained fn get_receipt_unconstrained<LOG_NUM>(block_number: Field, tx_idx: Field) -> (TxReceipt<LOG_NUM>, TxReceiptProof) {
+unconstrained fn get_receipt_unconstrained<LOG_NUM, MAX_LOG_DATA_SIZE>(block_number: Field, tx_idx: Field) -> (TxReceipt<LOG_NUM, MAX_LOG_DATA_SIZE>, TxReceiptProof) {
     get_receipt_oracle(block_number, tx_idx)
 }

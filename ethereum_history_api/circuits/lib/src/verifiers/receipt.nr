@@ -4,7 +4,7 @@ use dep::u2b::u32_to_u8;
 use crate::receipt::{TxReceiptProof, TxReceipt, MAX_RECEIPT_RLP_LENGTH, MAX_RECEIPT_TREE_DEPTH};
 use crate::misc::arrays::sub_array_equals_up_to_length;
 
-pub(crate) fn assert_receipt_equals<LOG_NUM>(block_number: Field, receipt_rlp: [u8; MAX_RECEIPT_RLP_LENGTH], receipt: TxReceipt<LOG_NUM>) {
+pub(crate) fn assert_receipt_equals<LOG_NUM, MAX_LOG_DATA_SIZE>(block_number: Field, receipt_rlp: [u8; MAX_RECEIPT_RLP_LENGTH], receipt: TxReceipt<LOG_NUM, MAX_LOG_DATA_SIZE>) {
     // TODO: Implement RLP decoding and equality checks
 }
 
@@ -28,10 +28,10 @@ fn assert_receipt_proof(proof: TxReceiptProof, root: [u8; KEY_LENGTH]) {
     // assert(trie_proof.verify_receipts_root(receipts_root), "TrieProof: Invalid receipts root");
 }
 
-pub fn verify_receipt<LOG_NUM>(
+pub fn verify_receipt<LOG_NUM, MAX_LOG_DATA_SIZE>(
     block_number: Field,
     tx_idx: Field,
-    receipt: TxReceipt<LOG_NUM>,
+    receipt: TxReceipt<LOG_NUM, MAX_LOG_DATA_SIZE>,
     receipt_proof: TxReceiptProof,
     receipt_root: [u8; KEY_LENGTH]
 ) {
