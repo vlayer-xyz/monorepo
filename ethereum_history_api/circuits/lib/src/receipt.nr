@@ -14,29 +14,6 @@ struct Log {
     data: [u8; MAX_LOG_DATA_SIZE]
 }
 
-struct PreByzantiumTxReceipt<LOG_NUM> {
-    state_root: Bytes32,
-    cumulative_gas_used: Field,
-    logs_bloom: [u8; BLOOM_FILTER_SIZE],
-    logs: [Log; LOG_NUM]
-}
-
-struct PostByzantiumTxReceipt<LOG_NUM> {
-    status: u1,
-    cumulative_gas_used: Field,
-    logs_bloom: [u8; BLOOM_FILTER_SIZE],
-    logs: [Log; LOG_NUM]
-}
-
-struct EIP4844BlobTxReceipt<LOG_NUM> {
-    blob_gas_used: Field,
-    blob_gas_price: Field,
-    status: u1,
-    cumulative_gas_used: Field,
-    logs_bloom: [u8; BLOOM_FILTER_SIZE],
-    logs: [Log; LOG_NUM]
-}
-
 struct TxReceipt<LOG_NUM> {
     blob_gas_used: Field,
     blob_gas_price: Field,
