@@ -1,10 +1,10 @@
 use dep::proof::{KEY_LENGTH, TrieProof, rlp::decode0, byte_value};
 use dep::u2b::u32_to_u8;
 
-use crate::receipt::{TxReceiptProof, TxReceipt, MAX_RECEIPT_LENGTH, MAX_RECEIPT_TREE_DEPTH};
+use crate::receipt::{TxReceiptProof, TxReceipt, MAX_RECEIPT_RLP_LENGTH, MAX_RECEIPT_TREE_DEPTH};
 use crate::misc::arrays::sub_array_equals_up_to_length;
 
-pub(crate) fn assert_receipt_equals<LOG_NUM>(block_number: Field, receipt_rlp: [u8; MAX_RECEIPT_LENGTH], receipt: TxReceipt<LOG_NUM>) {
+pub(crate) fn assert_receipt_equals<LOG_NUM>(block_number: Field, receipt_rlp: [u8; MAX_RECEIPT_RLP_LENGTH], receipt: TxReceipt<LOG_NUM>) {
     // TODO: Implement RLP decoding and equality checks
 }
 
