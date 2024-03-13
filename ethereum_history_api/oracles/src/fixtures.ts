@@ -11,8 +11,18 @@ export async function loadFixture<T>(chain: string, hardFork: string, fixtureNam
   return fixture.result;
 }
 
-export async function loadBlockFixture(chain: string, hardFork: string, fixtureName: string): Promise<Block> {
-  return loadFixture<Block>(chain, hardFork, fixtureName, 'eth_getBlockByHash');
+export async function loadBlockFixture(
+  chain: string,
+  hardFork: string,
+  fixtureName: string,
+  includeTransactions = false
+): Promise<Block> {
+  const blockNumber = FIXTURES[chain][hardFork][fixtureName].blockNumber;
+  if (includeTransactions) {
+    return loadFixture<Block>(chain, hardFork, fixtureName, `eth_getBlockByHash_${blockNumber}_includeTransactions`);
+  } else {
+    return loadFixture<Block>(chain, hardFork, fixtureName, `eth_getBlockByHash_${blockNumber}`);
+  }
 }
 
 export async function loadProofFixture(
@@ -20,7 +30,8 @@ export async function loadProofFixture(
   hardFork: string,
   fixtureName: string
 ): Promise<GetProofReturnType> {
-  return loadFixture<GetProofReturnType>(chain, hardFork, fixtureName, 'eth_getProof');
+  const blockNumber = FIXTURES[chain][hardFork][fixtureName].blockNumber;
+  return loadFixture<GetProofReturnType>(chain, hardFork, fixtureName, `eth_getProof_${blockNumber}`);
 }
 
 export async function loadBlockFixtures(): Promise<Block[]> {

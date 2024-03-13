@@ -5,7 +5,7 @@ import { createMockClient } from '../../ethereum/mockClient.js';
 import { FIXTURES } from '../../fixtures/config.js';
 
 describe('headerOracle', async () => {
-  const mockFilePaths = ['./fixtures/mainnet/paris/usdc/eth_getBlockByHash.json'];
+  const mockFilePaths = ['./fixtures/mainnet/paris/usdc/eth_getBlockByHash_19000000.json'];
   const client = await createMockClient(mockFilePaths);
 
   it('getBlock', async () => {

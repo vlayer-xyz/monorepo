@@ -45,12 +45,8 @@ export const FIXTURES: Fixtures = {
   sepolia: {
     dencun: {
       some: {
-        blockNumber: 5435826n,
-        address: '0xc6e2459991BfE27cca6d86722F35da23A1E4Cb97'
-      },
-      some_blobGasUsed: {
-        blockNumber: 5469271n,
-        address: '0xeA7e42C7C9262e6831bfa7Be71d67aa5523E27BD'
+        blockNumber: 5476866n,
+        address: '0x1268AD189526AC0b386faF06eFfC46779c340eE6'
       }
     }
   }

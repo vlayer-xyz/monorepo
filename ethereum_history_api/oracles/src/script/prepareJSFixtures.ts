@@ -9,9 +9,17 @@ import { writeObject } from '../util/file.js';
 import { RecordingClient, createRecordingClient } from '../ethereum/recordingClient.js';
 import { last } from '../util/array.js';
 
-async function createBlockFixture(client: RecordingClient, blockNumber: bigint): Promise<GetBlockFixture> {
-  await client.getBlock({ blockNumber });
-  return last(client.getCalls()) as GetBlockFixture;
+async function createBlockFixture<TIncludeTransactions extends boolean>(
+  client: RecordingClient,
+  blockNumber: bigint,
+  includeTransactions = false
+): Promise<GetBlockFixture<TIncludeTransactions>> {
+  if (includeTransactions) {
+    await client.getBlock({ blockNumber, includeTransactions: includeTransactions });
+  } else {
+    await client.getBlock({ blockNumber }); // It's important for mock client that includeTransactions is undefined and not false
+  }
+  return last(client.getCalls()) as GetBlockFixture<TIncludeTransactions>;
 }
 
 async function createProofFixture(client: RecordingClient, parameters: GetProofParameters): Promise<GetProofFixture> {
@@ -31,14 +39,20 @@ export async function prepareJSFixtures(): Promise<void> {
         const { blockNumber, address, storageKeys } = FIXTURES[chain][hardFork][fixtureName];
 
         const getBlockFixture = await createBlockFixture(client, blockNumber);
-        await writeObject(getBlockFixture, join(modulePath, 'eth_getBlockByHash.json'));
+        await writeObject(getBlockFixture, join(modulePath, `eth_getBlockByHash_${blockNumber}.json`));
+
+        const getBlockFixtureWithTransactions = await createBlockFixture(client, blockNumber, true);
+        await writeObject(
+          getBlockFixtureWithTransactions,
+          join(modulePath, `eth_getBlockByHash_${blockNumber}_includeTransactions.json`)
+        );
 
         const getProofFixture = await createProofFixture(client, {
           address,
           storageKeys: storageKeys ?? [],
           blockNumber
         });
-        await writeObject(getProofFixture, join(modulePath, 'eth_getProof.json'));
+        await writeObject(getProofFixture, join(modulePath, `eth_getProof_${blockNumber}.json`));
       }
     }
   }
