@@ -1,6 +1,7 @@
 use crate::misc::types::{Bytes32, Address};
 use crate::header::get_header;
 use crate::verifiers::receipt::verify_receipt;
+use dep::std::unsafe::zeroed;
 
 global BLOOM_FILTER_SIZE = 2048;
 global MAX_RECEIPT_TREE_DEPTH = 6;
@@ -48,12 +49,8 @@ struct TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_SIZE> {
 }
 
 pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_SIZE>(block_number: Field, tx_idx: Field) -> TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_SIZE> {
-    let header = get_header(block_number);
-    let (receipt, receipt_proof) = get_receipt_unconstrained(block_number, tx_idx);
-    // TODO: This breaks nargo proof: https://discord.com/channels/1113924620781883405/1211646790864994336/1211646790864994336
-    // assert(header.number == block_number, "block number does not match the argument");
-    verify_receipt(block_number, tx_idx, receipt, receipt_proof, header.receipts_root);
-    TxReceiptWithinBlock {receipt, block_hash: header.hash}
+    assert(false, "Not implemented");
+    zeroed()
 }
 
 #[oracle(get_receipt)]
