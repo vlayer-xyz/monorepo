@@ -46,8 +46,8 @@ pub fn get_receipt<LOG_NUM>(block_number: Field, tx_idx: Field) -> TxReceiptWith
 }
 
 #[oracle(get_receipt)]
-unconstrained fn get_receipt_oracle<N>(_block_number: Field, _tx_idx: Field) -> (TxReceipt<N>, TxReceiptProof) {}
+unconstrained fn get_receipt_oracle<LOG_NUM>(_block_number: Field, _tx_idx: Field) -> (TxReceipt<LOG_NUM>, TxReceiptProof) {}
 
-unconstrained fn get_receipt_unconstrained<N>(block_number: Field, tx_idx: Field) -> (TxReceipt<N>, TxReceiptProof) {
+unconstrained fn get_receipt_unconstrained<LOG_NUM>(block_number: Field, tx_idx: Field) -> (TxReceipt<LOG_NUM>, TxReceiptProof) {
     get_receipt_oracle(block_number, tx_idx)
 }
