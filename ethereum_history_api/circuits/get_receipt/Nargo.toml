@@ -1,5 +1,5 @@
 [package]
-name = "get_storage"
+name = "get_receipt"
 type = "bin"
 authors = [""]
 compiler_version = ">=0.25.0"
