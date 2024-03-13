@@ -20,8 +20,9 @@ export async function loadBlockFixture(
   const blockNumber = FIXTURES[chain][hardFork][fixtureName].blockNumber;
   if (includeTransactions) {
     return loadFixture<Block>(chain, hardFork, fixtureName, `eth_getBlockByHash_${blockNumber}_includeTransactions`);
+  } else {
+    return loadFixture<Block>(chain, hardFork, fixtureName, `eth_getBlockByHash_${blockNumber}`);
   }
-  return loadFixture<Block>(chain, hardFork, fixtureName, `eth_getBlockByHash_${blockNumber}`);
 }
 
 export async function loadProofFixture(

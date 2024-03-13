@@ -12,8 +12,8 @@ export interface GetProofFixture {
   result: GetProofReturnType;
 }
 
-export interface GetBlockFixture {
+export interface GetBlockFixture<TIncludeTransactions extends boolean> {
   method: 'eth_getBlockByHash';
   arguments: [bigint, boolean];
-  result: GetBlockReturnType;
+  result: GetBlockReturnType<undefined, TIncludeTransactions>;
 }

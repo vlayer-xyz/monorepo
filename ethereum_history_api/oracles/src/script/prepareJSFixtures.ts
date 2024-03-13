@@ -9,17 +9,17 @@ import { writeObject } from '../util/file.js';
 import { RecordingClient, createRecordingClient } from '../ethereum/recordingClient.js';
 import { last } from '../util/array.js';
 
-async function createBlockFixture(
+async function createBlockFixture<TIncludeTransactions extends boolean>(
   client: RecordingClient,
   blockNumber: bigint,
   includeTransactions = false
-): Promise<GetBlockFixture> {
+): Promise<GetBlockFixture<TIncludeTransactions>> {
   if (includeTransactions) {
     await client.getBlock({ blockNumber, includeTransactions: includeTransactions });
   } else {
-    await client.getBlock({ blockNumber });
+    await client.getBlock({ blockNumber }); // Leaving includeTransactions undefined instead of setting it to false, for later comparing of arguments
   }
-  return last(client.getCalls()) as GetBlockFixture;
+  return last(client.getCalls()) as GetBlockFixture<TIncludeTransactions>;
 }
 
 async function createProofFixture(client: RecordingClient, parameters: GetProofParameters): Promise<GetProofFixture> {
