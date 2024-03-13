@@ -3,7 +3,6 @@ use crate::header::get_header;
 use crate::verifiers::receipt::verify_receipt;
 
 global BLOOM_FILTER_SIZE = 2048;
-global MAX_RECEIPT_RLP_LENGTH = 1024; // TODO: Pick a reasonable value
 global MAX_RECEIPT_TREE_DEPTH = 6;
 
 // MAX_TRIE_NODE_LENGTH = Max(MAX_LEAF_LENGTH, MAX_BRANCH_LENGTH)
@@ -17,6 +16,8 @@ global MAX_RECEIPT_TREE_DEPTH = 6;
 // MAX_BRANCH_LENGTH = 3 + 16 * 32 + 1 = 515
 global MAX_TRIE_NODE_LENGTH: u64 = 515;
 global RECEIPT_PROOF_LEN = 3090; // MAX_TRIE_NODE_LENGTH * MAX_RECEIPT_TREE_DEPTH
+// We can't make it generic for now because Noir does not support turbofish-like syntax. https://github.com/orgs/noir-lang/discussions/3413
+global MAX_RECEIPT_RLP_LENGTH = 515; // Instead - we will use the same value as MAX_TRIE_NODE_LENGTH. Most of receipts will fit
 
 struct Log<MAX_LOG_DATA_SIZE> {
     address: Address,
