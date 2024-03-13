@@ -2,30 +2,14 @@ import { describe, expect, it } from 'vitest';
 import { calculateBlockHash, calculateBlockHeaderHash, headerToRlp, blockToHeader } from './blockHeader.js';
 import { loadBlockFixture, loadBlockFixtures } from '../fixtures.js';
 
-describe('calculateBlockHeaderHash', () => {
-  it('frontier block', async () => {
-    const block = await loadBlockFixture('mainnet', 'frontier', 'first');
-    const header = blockToHeader(block);
-    expect(calculateBlockHeaderHash(header)).toBe(block.hash);
-  });
-
-  it('london block', async () => {
-    const block = await loadBlockFixture('mainnet', 'london', 'crypto_punks');
-    const header = blockToHeader(block);
-    expect(calculateBlockHeaderHash(header)).toBe(block.hash);
-  });
-
-  it('paris block', async () => {
-    const block = await loadBlockFixture('mainnet', 'paris', 'usdc');
-    const header = blockToHeader(block);
-    expect(calculateBlockHeaderHash(header)).toBe(block.hash);
-  });
-
-  it('dencun block', async () => {
-    const block = await loadBlockFixture('sepolia', 'dencun', 'some');
-    const header = blockToHeader(block);
-    expect(calculateBlockHeaderHash(header)).toBe(block.hash);
-  });
+describe('calculateBlockHeaderHash', async () => {
+  const blocks = await loadBlockFixtures();
+  for (const block of blocks) {
+    it(`block #${block.number}`, () => {
+      const header = blockToHeader(block);
+      expect(calculateBlockHeaderHash(header)).toBe(block.hash);
+    });
+  }
 });
 
 describe('headerToRlp', () => {
