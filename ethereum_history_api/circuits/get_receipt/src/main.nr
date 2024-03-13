@@ -1,5 +1,7 @@
-use dep::ethereum_history_api::receipt::{get_receipt, TxReceipt};
+use dep::ethereum_history_api::receipt::{get_receipt, TxReceiptWithinBlock};
 
-fn main(block_number: pub Field, tx_idx: pub Field) -> pub TxReceipt<1> {
+global LOG_NUM = 1;
+
+fn main(block_number: pub Field, tx_idx: pub Field) -> pub TxReceiptWithinBlock<LOG_NUM> {
     get_receipt(block_number, tx_idx)
 }
