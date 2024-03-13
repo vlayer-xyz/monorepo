@@ -29,7 +29,7 @@ describe(
       const parisBlockNumberInNoirFormat = '0x121eac0';
       const mockFilePaths = [
         './fixtures/paris/usdc/eth_getBlockByHash_19000000.json',
-        './fixtures/paris/usdc/eth_getProof.json'
+        './fixtures/paris/usdc/eth_getProof_19000000.json'
       ];
       const client = await createMockClient(mockFilePaths);
       const stateAndStorageProof = await getProofOracle(client, [

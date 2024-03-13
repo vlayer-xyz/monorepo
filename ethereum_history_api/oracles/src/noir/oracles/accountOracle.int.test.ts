@@ -18,7 +18,7 @@ describe('accountOracle', () => {
     const londonBlockNumberInNoirFormat = '0xd895ce';
     const mockFilePaths = [
       './fixtures/london/crypto_punks/eth_getBlockByHash_14194126.json',
-      './fixtures/london/crypto_punks/eth_getProof.json'
+      './fixtures/london/crypto_punks/eth_getProof_14194126.json'
     ];
     const client = await createMockClient(mockFilePaths);
     const account = await getAccountOracle(client, [

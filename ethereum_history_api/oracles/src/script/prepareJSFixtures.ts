@@ -51,7 +51,7 @@ export async function prepareJSFixtures(): Promise<void> {
         storageKeys: storageKeys ?? [],
         blockNumber
       });
-      await writeObject(getProofFixture, join(modulePath, 'eth_getProof.json'));
+      await writeObject(getProofFixture, join(modulePath, `eth_getProof_${blockNumber}.json`));
     }
   }
 }

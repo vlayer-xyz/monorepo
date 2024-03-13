@@ -27,7 +27,8 @@ export async function loadBlockFixture(
 }
 
 export async function loadProofFixture(hardFork: string, fixtureName: string): Promise<GetProofReturnType> {
-  return loadFixture<GetProofReturnType>(hardFork, fixtureName, 'eth_getProof');
+  const blockNumber = FIXTURES[hardFork][fixtureName].blockNumber;
+  return loadFixture<GetProofReturnType>(hardFork, fixtureName, `eth_getProof_${blockNumber}`);
 }
 
 export async function loadBlockFixtures(): Promise<GetBlockReturnType[]> {
