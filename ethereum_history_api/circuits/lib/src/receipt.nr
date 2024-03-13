@@ -9,9 +9,9 @@ global MAX_RECEIPT_TREE_DEPTH = 3;
 global RECEIPT_PROOF_LEN = 1024; // TODO: Pick a reasonable value
 
 struct Log {
-	address: Address,
-	topics: [Bytes32; 4],
-	data: [u8; MAX_LOG_DATA_SIZE]
+    address: Address,
+    topics: [Bytes32; 4],
+    data: [u8; MAX_LOG_DATA_SIZE]
 }
 
 struct PreByzantiumTxReceipt<LOG_NUM> {
@@ -48,10 +48,10 @@ struct TxReceipt<LOG_NUM> {
 }
 
 struct TxReceiptProof {
-	key: [u8; MAX_RECEIPT_TREE_DEPTH],
-	value: [u8; MAX_RECEIPT_LENGTH],
-	proof: [u8; RECEIPT_PROOF_LEN],
-	depth: u64
+    key: [u8; MAX_RECEIPT_TREE_DEPTH],
+    value: [u8; MAX_RECEIPT_LENGTH],
+    proof: [u8; RECEIPT_PROOF_LEN],
+    depth: u64
 }
 
 pub fn get_tx_receipt<LOG_NUM>(block_number: Field, tx_idx: Field) -> TxReceipt<LOG_NUM> {
