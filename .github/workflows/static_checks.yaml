@@ -63,7 +63,6 @@ jobs:
           yarn prepare-js-fixtures
           yarn prepare-noir-fixtures
 
-          git diff --exit-code ./fixtures
-          if [ $? -ne 0 ]; then
-            exit 1
-          fi
+          cd ..
+          git diff --exit-code ./oracles/fixtures
+          git diff --exit-code ./circuits/lib/src/fixtures
