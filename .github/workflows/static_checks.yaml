@@ -1,12 +1,14 @@
-name: TS Lint and Typecheck
+name: Static checks
 
 on: [push]
 
 jobs:
-  lint-and-typecheck:
-    name: Lint and Typecheck
+  test:
+    name: Static checks
     runs-on: ubuntu-latest
     environment: CI
+    env:
+      ETHEREUM_JSON_RPC_API_URL: ${{ secrets.ETHEREUM_JSON_RPC_API_URL }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
