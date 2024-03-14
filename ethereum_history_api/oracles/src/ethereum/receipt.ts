@@ -3,7 +3,7 @@ import { toHexString } from './blockHeader.js';
 
 export type RecursiveArray<T> = T | RecursiveArray<T>[];
 
-export function logToRlp(log: Log): RecursiveArray<Hex> {
+export function logToRlpFields(log: Log): RecursiveArray<Hex> {
   return [log.address, log.topics, log.data];
 }
 
@@ -23,15 +23,26 @@ export function txTypeToHex(type: TransactionType): Hex {
   }
 }
 
-export function encodeReceipt(receipt: TransactionReceipt): Hex {
-  const logs = receipt.logs.map(logToRlp);
-  const receiptHex = [
-    (receipt.status === 'reverted' ? '0x00' : '0x01') as Hex,
-    toHexString(receipt.cumulativeGasUsed),
-    receipt.logsBloom,
-    logs
-  ];
+export function receiptToRlpFields(receipt: TransactionReceipt): RecursiveArray<Hex> {
+  const logs = receipt.logs.map(logToRlpFields);
+  const fields: RecursiveArray<Hex> = [];
+  if (receipt.root) {
+    // pre Byzantium
+    fields.push(receipt.root);
+  } else {
+    // post Byzantium
+    fields.push((receipt.status === 'reverted' ? '0x00' : '0x01') as Hex);
+  }
+  fields.push(toHexString(receipt.cumulativeGasUsed), receipt.logsBloom, logs);
+  return fields;
+}
 
-  const encodedReceipt = concatHex([txTypeToHex(receipt.type), hexToRlp(receiptHex)]);
+export function encodeReceipt(receipt: TransactionReceipt): Hex {
+  const receiptRlpFields = receiptToRlpFields(receipt);
+  const receiptRlp = hexToRlp(receiptRlpFields);
+  if (receipt.type === 'legacy') {
+    return receiptRlp;
+  }
+  const encodedReceipt = concatHex([txTypeToHex(receipt.type), receiptRlp]);
   return encodedReceipt;
 }
