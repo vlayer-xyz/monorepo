@@ -29,13 +29,17 @@ function isPreByzantium(receipt: TransactionReceipt): receipt is PreByzantiumRec
   return receipt.root !== undefined;
 }
 
+function statusToHex(status: 'success' | 'reverted') {
+  return (status === 'reverted' ? '0x00' : '0x01') as Hex;
+}
+
 export function receiptToRlpFields(receipt: TransactionReceipt): RecursiveArray<Hex> {
   const logs = receipt.logs.map(logToRlpFields);
   const fields: RecursiveArray<Hex> = [];
   if (isPreByzantium(receipt)) {
     fields.push(receipt.root);
   } else {
-    fields.push((receipt.status === 'reverted' ? '0x00' : '0x01') as Hex);
+    fields.push(statusToHex(receipt.status));
   }
   fields.push(toHexString(receipt.cumulativeGasUsed), receipt.logsBloom, logs);
   return fields;
