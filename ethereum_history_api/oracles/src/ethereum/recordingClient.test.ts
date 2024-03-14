@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { Call, createRecordingClient } from './recordingClient.js';
 import { withTempFile, writeObject } from '../util/file.js';
 import { createMockClient } from './mockClient.js';
-import { GetBlockParameters, GetProofParameters, Hex, PublicClient } from 'viem';
+import { GetBlockParameters, GetProofParameters, Hex } from 'viem';
+import { AlchemyClient } from './client.js';
 
 export const LONDON_BLOCK_NUMBER = 14194126n;
 export const CRYPTO_PUNKS_ADDRESS: Hex = '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb';
@@ -40,10 +41,10 @@ const EXPECTED_CALLS = [
 ];
 
 describe('recordingClient', () => {
-  const publicClientMock: PublicClient = {
+  const publicClientMock: AlchemyClient = {
     getBlock: () => EXPECTED_CALLS[0].result,
     getProof: () => EXPECTED_CALLS[1].result
-  } as unknown as PublicClient;
+  } as unknown as AlchemyClient;
 
   it('record JSON-RPC API calls', async () => {
     const client = createRecordingClient(publicClientMock);
@@ -63,7 +64,7 @@ describe('recordingClient', () => {
       await client.getProof(LONDON_CRYPTO_PUNKS_GET_PROOF_PARAMETERS);
       await writeObject(client.getCalls(), tempFilePath);
 
-      const mockingClient: PublicClient = await createMockClient([tempFilePath]);
+      const mockingClient: AlchemyClient = await createMockClient([tempFilePath]);
 
       const block = await mockingClient.getBlock(LONDON_CRYPTO_PUNKS_GET_BLOCK_PARAMETERS);
       const proof = await mockingClient.getProof(LONDON_CRYPTO_PUNKS_GET_PROOF_PARAMETERS);

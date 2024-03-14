@@ -8,8 +8,7 @@ import {
   ServerParams,
   getProofHandler
 } from './handlers.js';
-import { createDefaultClient } from '../../../ethereum/client.js';
-import { PublicClient } from 'viem';
+import { AlchemyClient, createDefaultClient } from '../../../ethereum/client.js';
 
 const HTTP_STATUS_NO_CONTENT = 204;
 
@@ -20,7 +19,7 @@ jsonRPCServer.addMethod('get_proof', getProofHandler);
 
 export function buildOracleServer(
   opts: Fastify.FastifyHttpOptions<http.Server> = {},
-  client: PublicClient = createDefaultClient()
+  client: AlchemyClient = createDefaultClient()
 ): Fastify.FastifyInstance {
   const app = Fastify(opts);
   const serverParams = { client };

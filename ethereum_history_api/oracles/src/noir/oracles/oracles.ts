@@ -1,21 +1,20 @@
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
-import { createDefaultClient } from '../../ethereum/client.js';
+import { AlchemyClient, createDefaultClient } from '../../ethereum/client.js';
 import { getAccountOracle } from './accountOracle.js';
-import { type PublicClient } from 'viem';
 import { getHeaderOracle } from './headerOracle.js';
 import { getProofOracle } from './proofOracle.js';
 
 export type NoirArgument = string[];
 export type NoirArguments = NoirArgument[];
 
-export type Oracle = (client: PublicClient, args: NoirArguments) => Promise<ForeignCallOutput[]>;
+export type Oracle = (client: AlchemyClient, args: NoirArguments) => Promise<ForeignCallOutput[]>;
 
 export type Oracles = (name: string, args: NoirArguments) => Promise<ForeignCallOutput[]>;
 
 type OracleMap = Record<string, Oracle>;
 
 export const createOracles =
-  (client: PublicClient) =>
+  (client: AlchemyClient) =>
   (dict: OracleMap): Oracles =>
   async (name: string, args: NoirArguments): Promise<ForeignCallOutput[]> => {
     const fn = dict[name];
@@ -25,7 +24,7 @@ export const createOracles =
     return await fn(client, args);
   };
 
-export type { PublicClient };
+export type { AlchemyClient as ExtendedClient };
 
 export const defaultOraclesMap: OracleMap = {
   get_account: getAccountOracle,
