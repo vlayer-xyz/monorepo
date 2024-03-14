@@ -1,4 +1,4 @@
-import { GetBlockReturnType, GetProofReturnType } from 'viem';
+import { GetBlockReturnType, GetProofReturnType, TransactionReceipt } from 'viem';
 
 export interface BaseFixture<T> {
   method: string;
@@ -16,4 +16,10 @@ export interface GetBlockFixture<TIncludeTransactions extends boolean> {
   method: 'eth_getBlockByHash';
   arguments: [bigint, boolean];
   result: GetBlockReturnType<undefined, TIncludeTransactions>;
+}
+
+export interface GetTransactionReceiptsFixture {
+  method: 'alchemy_getTransactionReceipts';
+  arguments: [bigint];
+  result: TransactionReceipt[];
 }
