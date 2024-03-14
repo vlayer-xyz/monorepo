@@ -1,6 +1,19 @@
-import { Hex, RpcTransactionReceipt, TransactionReceipt, formatTransactionReceipt } from 'viem';
-import { AlchemyClient } from '../alchemyClient.js';
+import {
+  Chain,
+  Client,
+  Hex,
+  PublicRpcSchema,
+  RpcTransactionReceipt,
+  TransactionReceipt,
+  Transport,
+  formatTransactionReceipt
+} from 'viem';
 import { toHexString } from '../blockHeader.js';
+
+export type AlchemyClient<
+  transport extends Transport = Transport,
+  chain extends Chain | undefined = Chain | undefined
+> = Client<transport, chain, undefined, PublicRpcSchema | [AlchemyGetTransactionReceiptsRpcSchema]>;
 
 export interface AlchemyGetTransactionReceiptsRpcSchema {
   Method: 'alchemy_getTransactionReceipts';

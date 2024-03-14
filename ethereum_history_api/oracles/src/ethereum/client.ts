@@ -1,8 +1,7 @@
 import dotenv from 'dotenv';
-import { Chain, Client, PublicActions, PublicRpcSchema, Transport, createPublicClient, http } from 'viem';
-import { Prettify, mainnet, sepolia } from 'viem/chains';
-import { AlchemyActions, alchemyActions } from './alchemyClient.js';
-import { AlchemyGetTransactionReceiptsRpcSchema } from './alchemyClientActions/getTransactionReceipts.js';
+import { createPublicClient, http } from 'viem';
+import { mainnet, sepolia } from 'viem/chains';
+import { AlchemyClient, alchemyActions } from './alchemyClient.js';
 
 dotenv.config();
 
@@ -25,15 +24,4 @@ function createSepoliaClient(): AlchemyClient {
   }).extend(alchemyActions());
 }
 
-export type AlchemyClient<
-  transport extends Transport = Transport,
-  chain extends Chain | undefined = Chain | undefined
-> = Prettify<
-  Client<
-    transport,
-    chain,
-    undefined,
-    PublicRpcSchema & [AlchemyGetTransactionReceiptsRpcSchema],
-    PublicActions & AlchemyActions
-  >
->;
+export { AlchemyClient };
