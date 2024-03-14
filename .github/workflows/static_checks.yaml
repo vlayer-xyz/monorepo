@@ -57,10 +57,11 @@ jobs:
 
       - name: Check if fixtures are up to date
         run: |
+          cd ./ethereum_history_api/oracles
           yarn prepare-js-fixtures
           yarn prepare-noir-fixtures
 
-          git diff --exit-code
+          git diff --exit-code ./fixtures
           if [ $? -ne 0 ]; then
             exit 1
           fi
