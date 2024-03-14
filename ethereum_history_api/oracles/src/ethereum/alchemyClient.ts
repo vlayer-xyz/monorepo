@@ -47,14 +47,14 @@ export function extendedActions() {
 
 export async function getTransactionReceipts<TChain extends Chain | undefined>(
   client: AlchemyRpcExtendedClient<Transport, TChain>,
-  blockNo: GetTransactionReceiptsParameters
+  param: GetTransactionReceiptsParameters
 ): Promise<TransactionReceipt[]> {
   const { receipts } = await client.request({
     method: 'alchemy_getTransactionReceipts',
-    params: { blockNumber: toHexString(blockNo.blockNumber) }
+    params: { blockNumber: toHexString(param.blockNumber) }
   });
 
-  if (!receipts) throw new Error('');
+  if (!receipts) throw new Error(`No receipts found for block number ${param.blockNumber}`);
 
   const formattedReceipts: TransactionReceipt[] = receipts.map(formatTransactionReceipt);
 
