@@ -29,7 +29,11 @@ pub(crate) fn get_header_fields_count(chain_id: Field, block_number: u64) -> u64
     fields_count
 }
 
-pub(crate) fn verify_header(chain_id: Field, block_header_partial: BlockHeaderPartial, block_header_rlp: BlockHeaderRlp) {
+pub(crate) fn verify_header(
+    chain_id: Field,
+    block_header_partial: BlockHeaderPartial,
+    block_header_rlp: BlockHeaderRlp
+) {
     let rlp_list: RLP_List<MAX_HEADER_FIELDS_COUNT> = decode1(block_header_rlp.data);
     let expected_header_fields_count = get_header_fields_count(chain_id, block_header_partial.number as u64);
 
