@@ -41,7 +41,7 @@ export const FIXTURES: Fixtures = {
         storageKeys: [CIRCLE_USDC_BALANCE_STORAGE_KEY]
       }
     },
-    dencun: {
+    cancun: {
       some: {
         blockNumber: 19_432_086n
       },
