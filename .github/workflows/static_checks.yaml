@@ -54,3 +54,13 @@ jobs:
       # https://github.com/typescript-eslint/typescript-eslint/issues/2094
       - name: Run TypeScript Linter
         run: yarn lint:all
+
+      - name: Check if fixtures are up to date
+        run: |
+          yarn prepare-js-fixtures
+          yarn prepare-noir-fixtures
+
+          git diff --exit-code
+          if [ $? -ne 0 ]; then
+            exit 1
+          fi
