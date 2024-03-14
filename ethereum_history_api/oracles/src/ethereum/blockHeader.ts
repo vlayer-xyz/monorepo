@@ -28,7 +28,7 @@ function unpadded(hex: Hex) {
 }
 
 export function headerToRlpFields(blockHeader: BlockHeader): Hex[] {
-  const header: Hex[] = [
+  const headerFields: Hex[] = [
     blockHeader.parentHash,
     blockHeader.sha3Uncles,
     blockHeader.miner,
@@ -46,21 +46,21 @@ export function headerToRlpFields(blockHeader: BlockHeader): Hex[] {
     blockHeader.nonce
   ];
   if (blockHeader.baseFeePerGas !== undefined) {
-    header.push(blockHeader.baseFeePerGas);
+    headerFields.push(blockHeader.baseFeePerGas);
   }
   if (blockHeader.withdrawalsRoot !== undefined) {
-    header.push(blockHeader.withdrawalsRoot);
+    headerFields.push(blockHeader.withdrawalsRoot);
   }
   if (blockHeader.blobGasUsed !== undefined) {
-    header.push(unpadded(blockHeader.blobGasUsed));
+    headerFields.push(unpadded(blockHeader.blobGasUsed));
   }
   if (blockHeader.excessBlobGas !== undefined) {
-    header.push(unpadded(blockHeader.excessBlobGas));
+    headerFields.push(unpadded(blockHeader.excessBlobGas));
   }
   if (blockHeader.parentBeaconBlockRoot !== undefined) {
-    header.push(blockHeader.parentBeaconBlockRoot);
+    headerFields.push(blockHeader.parentBeaconBlockRoot);
   }
-  return header;
+  return headerFields;
 }
 
 export function headerToRlp(blockHeader: BlockHeader): Hex {
