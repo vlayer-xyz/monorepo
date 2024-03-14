@@ -1,4 +1,4 @@
-import { PublicClient } from 'viem';
+import { AlchemyClient } from './client.js';
 
 export interface Call {
   method: string;
@@ -9,11 +9,11 @@ export interface Call {
 export interface RecordingClientMixin {
   getCalls: () => Call[];
 }
-export type RecordingClient = PublicClient & RecordingClientMixin;
+export type RecordingClient = AlchemyClient & RecordingClientMixin;
 
 export const isEthereumApiMethod = (methodName: string) => methodName.startsWith('get');
 
-export const createRecordingClient = (client: PublicClient): RecordingClient => createLoggingProxy(client);
+export const createRecordingClient = (client: AlchemyClient): RecordingClient => createLoggingProxy(client);
 
 function createLoggingProxy<Target extends Record<string, unknown>>(target: Target): RecordingClient {
   const calls: Call[] = [];
