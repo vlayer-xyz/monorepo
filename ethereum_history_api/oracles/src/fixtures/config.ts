@@ -6,7 +6,7 @@ export const UNISWAP_V3_USDC_BALANCE_STORAGE_KEY = '0x1f21a62c4538bacf2aabeca410
 
 interface Fixture {
   blockNumber: bigint;
-  address: Address;
+  address?: Address;
   storageKeys?: Hex[];
 }
 

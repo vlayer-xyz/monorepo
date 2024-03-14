@@ -47,12 +47,14 @@ export async function prepareJSFixtures(): Promise<void> {
           join(modulePath, `eth_getBlockByHash_${blockNumber}_includeTransactions.json`)
         );
 
-        const getProofFixture = await createProofFixture(client, {
-          address,
-          storageKeys: storageKeys ?? [],
-          blockNumber
-        });
-        await writeObject(getProofFixture, join(modulePath, `eth_getProof_${blockNumber}.json`));
+        if (address) {
+          const getProofFixture = await createProofFixture(client, {
+            address,
+            storageKeys: storageKeys ?? [],
+            blockNumber
+          });
+          await writeObject(getProofFixture, join(modulePath, `eth_getProof_${blockNumber}.json`));
+        }
       }
     }
   }
