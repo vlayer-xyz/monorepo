@@ -13,15 +13,15 @@ use crate::fixtures::mainnet::{
 },
     paris::usdc::header::{block_header_partial as paris_block_header_partial, block_header_rlp as paris_block_header_rlp},
     paris::usdc::header::{hash, number, state_root, transactions_root, receipts_root},
-    cancun::some::header::{
-    block_header_partial as cancun_some_block_header_partial,
-    block_header_rlp as cancun_some_block_header_rlp, hash as cancun_hash,
+    cancun::small_block::header::{
+    block_header_partial as cancun_small_block_header_partial,
+    block_header_rlp as cancun_small_block_header_rlp, hash as cancun_hash,
     state_root as cancun_state_root, transactions_root as cancun_transactions_root,
     receipts_root as cancun_receipts_root
 },
-    cancun::some_blobGasUsed::header::{
-    block_header_partial as cancun_some_blobGasUsed_block_header_partial,
-    block_header_rlp as cancun_some_blobGasUsed_block_header_rlp
+    cancun::with_blob::header::{
+    block_header_partial as cancun_with_blob_block_header_partial,
+    block_header_rlp as cancun_with_blob_block_header_rlp
 }
 };
 
@@ -62,20 +62,20 @@ fn test_verify_paris_header_success() {
 }
 
 #[test]
-fn test_verify_cancun_some_header_success() {
+fn test_verify_cancun_small_block_header_success() {
     verify_header(
         ETHEREUM_MAINNET_ID,
-        cancun_some_block_header_partial,
-        cancun_some_block_header_rlp
+        cancun_small_block_header_partial,
+        cancun_small_block_header_rlp
     );
 }
 
 #[test]
-fn test_verify_cancun_some_blobGasUsed_header_success() {
+fn test_verify_cancun_with_blob_header_success() {
     verify_header(
         ETHEREUM_MAINNET_ID,
-        cancun_some_blobGasUsed_block_header_partial,
-        cancun_some_blobGasUsed_block_header_rlp
+        cancun_with_blob_block_header_partial,
+        cancun_with_blob_block_header_rlp
     );
 }
 
@@ -94,7 +94,7 @@ fn test_verify_header_invalid_block_number() {
 fn test_verify_header_invalid_block_number_length() {
     // This is 0x100000000 which takes up 6 bytes which is not equal to the 5 bytes that original cancun block number 19432086 takes up
     let wrong_number_length = 4294967296;
-    let cancun_some_block_header_partial = BlockHeaderPartial {
+    let cancun_small_block_header_partial = BlockHeaderPartial {
         number: wrong_number_length,
         hash: cancun_hash,
         state_root: cancun_state_root,
@@ -103,8 +103,8 @@ fn test_verify_header_invalid_block_number_length() {
     };
     verify_header(
         ETHEREUM_MAINNET_ID,
-        cancun_some_block_header_partial,
-        cancun_some_block_header_rlp
+        cancun_small_block_header_partial,
+        cancun_small_block_header_rlp
     );
 }
 

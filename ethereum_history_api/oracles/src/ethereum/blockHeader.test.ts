@@ -89,7 +89,7 @@ describe('headerToRlpFields', () => {
   });
 
   it('cancun block', async () => {
-    const block = await loadBlockFixture('mainnet', 'cancun', 'some');
+    const block = await loadBlockFixture('mainnet', 'cancun', 'small_block');
     const header = blockToHeader(block);
     expect(headerToRlpFields(header)).toMatchInlineSnapshot(`
       [
@@ -118,7 +118,7 @@ describe('headerToRlpFields', () => {
   });
 
   it('cancun block with blobGasUsed', async () => {
-    const block = await loadBlockFixture('mainnet', 'cancun', 'some_blobGasUsed');
+    const block = await loadBlockFixture('mainnet', 'cancun', 'with_blob');
     const header = blockToHeader(block);
     expect(headerToRlpFields(header)).toMatchInlineSnapshot(`
       [

@@ -1,2 +1,2 @@
-mod some;
-mod some_blobGasUsed;
+mod small_block;
+mod with_blob;
