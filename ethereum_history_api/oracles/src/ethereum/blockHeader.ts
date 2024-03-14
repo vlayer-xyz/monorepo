@@ -27,7 +27,7 @@ function unpadded(hex: Hex) {
   return hex === '0x0' ? '0x' : hex;
 }
 
-export function headerToRlp(blockHeader: BlockHeader): Hex {
+export function headerToRlpFields(blockHeader: BlockHeader): Hex[] {
   const header: Hex[] = [
     blockHeader.parentHash,
     blockHeader.sha3Uncles,
@@ -60,6 +60,11 @@ export function headerToRlp(blockHeader: BlockHeader): Hex {
   if (blockHeader.parentBeaconBlockRoot !== undefined) {
     header.push(blockHeader.parentBeaconBlockRoot);
   }
+  return header;
+}
+
+export function headerToRlp(blockHeader: BlockHeader): Hex {
+  const header = headerToRlpFields(blockHeader);
   return hexToRlp(header);
 }
 
