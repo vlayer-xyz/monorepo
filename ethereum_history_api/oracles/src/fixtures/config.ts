@@ -43,7 +43,7 @@ export const FIXTURES: Fixtures = {
     },
     cancun: {
       some: {
-        blockNumber: 19_432_086n
+        blockNumber: 19_432_673n
       },
       some_blobGasUsed: {
         blockNumber: 19_432_087n
