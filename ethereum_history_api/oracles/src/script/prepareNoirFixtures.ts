@@ -21,32 +21,32 @@ for (const chain in FIXTURES) {
 
     for (const fixtureName in FIXTURES[chain][hardFork]) {
       const { blockNumber, address, storageKeys } = FIXTURES[chain][hardFork][fixtureName];
+      const modulePath = `${NOIR_FIXTURES_DIRECTORY}/${chain}/${hardFork}/${fixtureName}`;
+      await mkdir(modulePath, { recursive: true });
+      const fixtureModules: string[] = [];
 
       const block = await client.getBlock({ blockNumber });
-      const stateProof = await client.getProof({
-        address,
-        storageKeys: storageKeys ?? [],
-        blockNumber
-      });
-
-      const modulePath = `${NOIR_FIXTURES_DIRECTORY}/${chain}/${hardFork}/${fixtureName}`;
-
-      await mkdir(modulePath, { recursive: true });
-
       await writeFile(join(modulePath, 'header.nr'), createHeaderFixture(block));
-      await writeFile(join(modulePath, 'account.nr'), createAccountFixture(stateProof));
-      await writeFile(join(modulePath, 'state_proof.nr'), createStateProofFixture(stateProof));
-      if (storageKeys) {
-        await writeFile(join(modulePath, 'storage_proof.nr'), createStorageProofFixture(stateProof.storageProof));
+      fixtureModules.push('header');
+
+      if (address) {
+        const stateProof = await client.getProof({
+          address,
+          storageKeys: storageKeys ?? [],
+          blockNumber
+        });
+
+        await writeFile(join(modulePath, 'account.nr'), createAccountFixture(stateProof));
+        await writeFile(join(modulePath, 'state_proof.nr'), createStateProofFixture(stateProof));
+        fixtureModules.push('account', 'state_proof');
+        if (storageKeys) {
+          await writeFile(join(modulePath, 'storage_proof.nr'), createStorageProofFixture(stateProof.storageProof));
+          fixtureModules.push('storage_proof');
+        }
       }
 
-      const fixtureModules = ['header', 'account', 'state_proof'];
-      if (storageKeys) {
-        fixtureModules.push('storage_proof');
-      }
-
-      const importFixtureModules = fixtureModules.map((name) => `mod ${name};`).join('\n') + '\n';
-      await writeFile(`${modulePath}.nr`, importFixtureModules);
+      const declareFixtureModules = fixtureModules.map((name) => `mod ${name};`).join('\n') + '\n';
+      await writeFile(`${modulePath}.nr`, declareFixtureModules);
 
       hardforkModule += `mod ${fixtureName};\n`;
     }
