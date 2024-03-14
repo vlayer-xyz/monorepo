@@ -24,8 +24,6 @@ export const createOracles =
     return await fn(client, args);
   };
 
-export type { AlchemyClient as ExtendedClient };
-
 export const defaultOraclesMap: OracleMap = {
   get_account: getAccountOracle,
   get_header: getHeaderOracle,
