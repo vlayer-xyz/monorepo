@@ -13,13 +13,13 @@ use crate::fixtures::mainnet::{
 },
     paris::usdc::header::{block_header_partial as paris_block_header_partial, block_header_rlp as paris_block_header_rlp},
     paris::usdc::header::{hash, number, state_root, transactions_root, receipts_root},
-    dencun::some::header::{
+    cancun::some::header::{
     block_header_partial as cancun_some_block_header_partial,
     block_header_rlp as cancun_some_block_header_rlp, hash as cancun_hash,
     state_root as cancun_state_root, transactions_root as cancun_transactions_root,
     receipts_root as cancun_receipts_root
 },
-    dencun::some_blobGasUsed::header::{
+    cancun::some_blobGasUsed::header::{
     block_header_partial as cancun_some_blobGasUsed_block_header_partial,
     block_header_rlp as cancun_some_blobGasUsed_block_header_rlp
 }
