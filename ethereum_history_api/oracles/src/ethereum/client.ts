@@ -10,7 +10,11 @@ import {
   http
 } from 'viem';
 import { Prettify, mainnet, sepolia } from 'viem/chains';
-import { GetTransactionReceiptsParameters, extendedActions } from './alchemyClient.js';
+import {
+  AlchemyGetTransactionReceiptsRpcSchema,
+  GetTransactionReceiptsParameters,
+  alchemyActions
+} from './alchemyClient.js';
 
 dotenv.config();
 
@@ -23,20 +27,28 @@ export function createDefaultClient(): AlchemyClient {
   return createPublicClient({
     chain: mainnet,
     transport: http(process.env.ETHEREUM_JSON_RPC_API_URL)
-  }).extend(extendedActions());
+  }).extend(alchemyActions());
 }
 
 function createSepoliaClient(): AlchemyClient {
   return createPublicClient({
     chain: sepolia,
     transport: http(process.env.ETHEREUM_JSON_RPC_API_URL_SEPOLIA)
-  }).extend(extendedActions());
+  }).extend(alchemyActions());
 }
 
 export type AlchemyClient<
   transport extends Transport = Transport,
   chain extends Chain | undefined = Chain | undefined
-> = Prettify<Client<transport, chain, undefined, PublicRpcSchema, PublicActions<transport, chain> & ExtendedActions>>;
+> = Prettify<
+  Client<
+    transport,
+    chain,
+    undefined,
+    PublicRpcSchema & [AlchemyGetTransactionReceiptsRpcSchema],
+    PublicActions & ExtendedActions
+  >
+>;
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type ExtendedActions = {

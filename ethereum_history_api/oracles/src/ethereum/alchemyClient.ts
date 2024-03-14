@@ -2,7 +2,6 @@ import {
   Chain,
   Client,
   Hex,
-  PublicActions,
   PublicRpcSchema,
   RpcTransactionReceipt,
   TransactionReceipt,
@@ -12,51 +11,41 @@ import {
 import { toHexString } from './blockHeader.js';
 import { ExtendedActions } from './client.js';
 
-export type AlchemyRpcExtendedClient<
+export type AlchemyClient<
   transport extends Transport = Transport,
   chain extends Chain | undefined = Chain | undefined
-> = Client<
-  transport,
-  chain,
-  undefined,
-  PublicRpcSchema | AlchemyGetTransactionReceiptsRpcSchema,
-  PublicActions<transport, chain>
->;
+> = Client<transport, chain, undefined, PublicRpcSchema | [AlchemyGetTransactionReceiptsRpcSchema]>;
 
-type AlchemyGetTransactionReceiptsRpcSchema = [
-  {
-    Method: 'alchemy_getTransactionReceipts';
-    Parameters: { blockNumber: Hex };
-    ReturnType: { receipts: RpcTransactionReceipt[] };
-  }
-];
+type AlchemyActions = (client: AlchemyClient) => ExtendedActions;
 
-export interface GetTransactionReceiptsParameters {
-  blockNumber: bigint;
-}
-
-export function extendedActions() {
-  return <TTransport extends Transport, TChain extends Chain | undefined = Chain | undefined>(
-    client: AlchemyRpcExtendedClient<TTransport, TChain>
-  ): ExtendedActions => {
+export function alchemyActions(): AlchemyActions {
+  return (client: AlchemyClient) => {
     return {
       getTransactionReceipts: (args) => getTransactionReceipts(client, args)
     };
   };
 }
 
-export async function getTransactionReceipts<TChain extends Chain | undefined>(
-  client: AlchemyRpcExtendedClient<Transport, TChain>,
-  param: GetTransactionReceiptsParameters
+export interface AlchemyGetTransactionReceiptsRpcSchema {
+  Method: 'alchemy_getTransactionReceipts';
+  Parameters: { blockNumber: Hex };
+  ReturnType: { receipts: RpcTransactionReceipt[] };
+}
+
+export interface GetTransactionReceiptsParameters {
+  blockNumber: bigint;
+}
+
+export async function getTransactionReceipts(
+  client: AlchemyClient,
+  params: GetTransactionReceiptsParameters
 ): Promise<TransactionReceipt[]> {
   const { receipts } = await client.request({
     method: 'alchemy_getTransactionReceipts',
-    params: { blockNumber: toHexString(param.blockNumber) }
+    params: { blockNumber: toHexString(params.blockNumber) }
   });
 
-  if (!receipts) throw new Error(`No receipts found for block number ${param.blockNumber}`);
+  if (!receipts) throw new Error(`No receipts found for block number ${params.blockNumber}`);
 
-  const formattedReceipts: TransactionReceipt[] = receipts.map(formatTransactionReceipt);
-
-  return formattedReceipts;
+  return receipts.map(formatTransactionReceipt);
 }
