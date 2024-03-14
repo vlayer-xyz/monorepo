@@ -1,5 +1,5 @@
-use crate::header::{BlockHeaderPartial, BlockHeaderRlp, ETHEREUM_MAINNET_ID, ETHEREUM_SEPOLIA_ID, MAX_HEADER_RLP_SIZE};
-use crate::verifiers::header::{get_header_fields_count, verify_header, LONDON_BLOCK_NUMBER, PARIS_BLOCK_NUMBER};
+use crate::header::{BlockHeaderPartial, BlockHeaderRlp, ETHEREUM_MAINNET_ID, MAX_HEADER_RLP_SIZE};
+use crate::verifiers::header::{get_header_fields_count, verify_header, LONDON_BLOCK_NUMBER, PARIS_BLOCK_NUMBER, CANCUN_BLOCK_NUMBER};
 use crate::misc::arrays::alter_array;
 use crate::fixtures::mainnet::{
     london::crypto_punks::header::{block_header_partial as london_block_header_partial, block_header_rlp as london_block_header_rlp},
@@ -14,12 +14,14 @@ use crate::fixtures::mainnet::{
     paris::usdc::header::{block_header_partial as paris_block_header_partial, block_header_rlp as paris_block_header_rlp},
     paris::usdc::header::{hash, number, state_root, transactions_root, receipts_root},
     dencun::some::header::{
-    block_header_partial as dencun_some_block_header_partial,
-    block_header_rlp as dencun_some_block_header_rlp
+    block_header_partial as cancun_some_block_header_partial,
+    block_header_rlp as cancun_some_block_header_rlp, hash as cancun_hash,
+    state_root as cancun_state_root, transactions_root as cancun_transactions_root,
+    receipts_root as cancun_receipts_root
 },
     dencun::some_blobGasUsed::header::{
-    block_header_partial as dencun_some_blobGasUsed_block_header_partial,
-    block_header_rlp as dencun_some_blobGasUsed_block_header_rlp
+    block_header_partial as cancun_some_blobGasUsed_block_header_partial,
+    block_header_rlp as cancun_some_blobGasUsed_block_header_rlp
 }
 };
 
@@ -60,20 +62,20 @@ fn test_verify_paris_header_success() {
 }
 
 #[test]
-fn test_verify_dencun_some_header_success() {
+fn test_verify_cancun_some_header_success() {
     verify_header(
-        ETHEREUM_SEPOLIA_ID,
-        dencun_some_block_header_partial,
-        dencun_some_block_header_rlp
+        ETHEREUM_MAINNET_ID,
+        cancun_some_block_header_partial,
+        cancun_some_block_header_rlp
     );
 }
 
 #[test]
-fn test_verify_dencun_some_blobGasUsed_header_success() {
+fn test_verify_cancun_some_blobGasUsed_header_success() {
     verify_header(
-        ETHEREUM_SEPOLIA_ID,
-        dencun_some_blobGasUsed_block_header_partial,
-        dencun_some_blobGasUsed_block_header_rlp
+        ETHEREUM_MAINNET_ID,
+        cancun_some_blobGasUsed_block_header_partial,
+        cancun_some_blobGasUsed_block_header_rlp
     );
 }
 
@@ -90,13 +92,19 @@ fn test_verify_header_invalid_block_number() {
 
 #[test(should_fail_with = "block number length does not match")]
 fn test_verify_header_invalid_block_number_length() {
-    // This is 0x100000000 which takes up 6 bytes which is not equal to the 5 bytes that original paris block number 19000000 takes up
+    // This is 0x100000000 which takes up 6 bytes which is not equal to the 5 bytes that original cancun block number 19432086 takes up
     let wrong_number_length = 4294967296;
-    let paris_block_header_partial = BlockHeaderPartial { number: wrong_number_length, hash, state_root, transactions_root, receipts_root };
+    let cancun_some_block_header_partial = BlockHeaderPartial {
+        number: wrong_number_length,
+        hash: cancun_hash,
+        state_root: cancun_state_root,
+        transactions_root: cancun_transactions_root,
+        receipts_root: cancun_receipts_root
+    };
     verify_header(
         ETHEREUM_MAINNET_ID,
-        paris_block_header_partial,
-        paris_block_header_rlp
+        cancun_some_block_header_partial,
+        cancun_some_block_header_rlp
     );
 }
 
@@ -173,14 +181,14 @@ fn test_verify_header_invalid_rlp_fields_count() {
 fn test_get_header_fields_count() {
     let frontier_block_number = 1_920_000;
     let london_block_number = 13_000_000;
-    let paris_block_number = 20_000_000;
-    let some_block_number = 5_000_000;
+    let paris_block_number = 16_000_000;
+    let cancun_block_number = 19_432_540;
 
     assert_eq(get_header_fields_count(ETHEREUM_MAINNET_ID, frontier_block_number), 15);
     assert_eq(get_header_fields_count(ETHEREUM_MAINNET_ID, LONDON_BLOCK_NUMBER), 16);
     assert_eq(get_header_fields_count(ETHEREUM_MAINNET_ID, london_block_number), 16);
     assert_eq(get_header_fields_count(ETHEREUM_MAINNET_ID, PARIS_BLOCK_NUMBER), 17);
     assert_eq(get_header_fields_count(ETHEREUM_MAINNET_ID, paris_block_number), 17);
-
-    assert_eq(get_header_fields_count(ETHEREUM_SEPOLIA_ID, some_block_number), 20);
+    assert_eq(get_header_fields_count(ETHEREUM_MAINNET_ID, CANCUN_BLOCK_NUMBER), 20);
+    assert_eq(get_header_fields_count(ETHEREUM_MAINNET_ID, cancun_block_number), 20);
 }

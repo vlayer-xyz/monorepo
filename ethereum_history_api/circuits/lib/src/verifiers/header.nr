@@ -13,6 +13,7 @@ global BLOCK_NUMBER_INDEX = 8;
 
 global LONDON_BLOCK_NUMBER: u64 = 12_965_000;
 global PARIS_BLOCK_NUMBER: u64 = 15_537_394;
+global CANCUN_BLOCK_NUMBER: u64 = 19_426_587;
 
 pub(crate) fn get_header_fields_count(chain_id: Field, block_number: u64) -> u64 {
     let mut fields_count = 15;
@@ -22,6 +23,9 @@ pub(crate) fn get_header_fields_count(chain_id: Field, block_number: u64) -> u64
         }
         if block_number >= PARIS_BLOCK_NUMBER {
             fields_count += 1;
+        }
+        if block_number >= CANCUN_BLOCK_NUMBER {
+            fields_count += 3;
         }
     } else if chain_id == ETHEREUM_SEPOLIA_ID {
         fields_count = 20;
