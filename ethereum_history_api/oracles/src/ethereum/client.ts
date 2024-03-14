@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { createPublicClient, http } from 'viem';
 import { mainnet, sepolia } from 'viem/chains';
-import { AlchemyClient, alchemyActions } from './alchemyClient.js';
+import { type AlchemyClient, alchemyActions } from './alchemyClient.js';
 
 dotenv.config();
 
