@@ -1,20 +1,8 @@
 import dotenv from 'dotenv';
-import {
-  Chain,
-  Client,
-  PublicActions,
-  PublicRpcSchema,
-  TransactionReceipt,
-  Transport,
-  createPublicClient,
-  http
-} from 'viem';
+import { Chain, Client, PublicActions, PublicRpcSchema, Transport, createPublicClient, http } from 'viem';
 import { Prettify, mainnet, sepolia } from 'viem/chains';
-import {
-  AlchemyGetTransactionReceiptsRpcSchema,
-  GetTransactionReceiptsParameters,
-  alchemyActions
-} from './alchemyClient.js';
+import { AlchemyActions, alchemyActions } from './alchemyClient.js';
+import { AlchemyGetTransactionReceiptsRpcSchema } from './alchemyClientActions/getTransactionReceipts.js';
 
 dotenv.config();
 
@@ -46,11 +34,6 @@ export type AlchemyClient<
     chain,
     undefined,
     PublicRpcSchema & [AlchemyGetTransactionReceiptsRpcSchema],
-    PublicActions & ExtendedActions
+    PublicActions & AlchemyActions
   >
 >;
-
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-export type ExtendedActions = {
-  getTransactionReceipts: (args: GetTransactionReceiptsParameters) => Promise<TransactionReceipt[]>;
-};
