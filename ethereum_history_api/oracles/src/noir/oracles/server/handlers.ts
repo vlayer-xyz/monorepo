@@ -1,9 +1,9 @@
-import { PublicClient } from 'viem';
 import { ForeignCallResult, ForeignCallParams } from './types.js';
 import { getAccountOracle } from '../accountOracle.js';
 import { getHeaderOracle } from '../headerOracle.js';
 import { decodeNoirArguments, encodeForeignCallResult } from './encode.js';
 import { getProofOracle } from '../proofOracle.js';
+import { AlchemyClient } from '../../../ethereum/client.js';
 
 /**
  * The format that the Noir oracles server receives the arguments in is slightly different than the format that acvm.js uses.
@@ -20,7 +20,7 @@ export type JSONRPCServerMethods = {
 };
 
 export interface ServerParams {
-  client: PublicClient;
+  client: AlchemyClient;
 }
 
 export async function getHeaderHandler(

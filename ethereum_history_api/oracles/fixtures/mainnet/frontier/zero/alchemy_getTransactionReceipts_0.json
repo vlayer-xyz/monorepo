@@ -1,0 +1,1 @@
+{ "method": "getTransactionReceipts", "arguments": [{ "blockNumber": 0 }], "result": [] }

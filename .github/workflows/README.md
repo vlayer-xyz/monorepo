@@ -10,3 +10,8 @@
   - Runs `forge test`
 - [TypeScript E2E tests using solidity verifiers](./e2e_test.yml)
   - Runs `yarn test:e2e`
+- [Static checks](./static_checks.yaml)
+  - Runs `yarn format:all:ci`
+  - Runs `yarn lint:all`
+  - Runs `yarn prepare-js-fixtures`
+  - Runs `yarn prepare-noir-fixtures`

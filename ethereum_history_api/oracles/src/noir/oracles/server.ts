@@ -1,11 +1,11 @@
-import { PublicClient } from 'viem';
 import { buildOracleServer } from './server/app.js';
 import { createMockClient } from '../../ethereum/mockClient.js';
+import { AlchemyClient } from '../../ethereum/client.js';
 
 const PORT = 5555;
 const MOCK_ORACLE_SERVER_PORT = PORT + 1;
 
-export const startOracleServer = async (client: PublicClient, port: number = PORT) => {
+export const startOracleServer = async (client: AlchemyClient, port: number = PORT) => {
   const app = buildOracleServer(
     {
       logger: {

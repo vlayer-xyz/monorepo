@@ -1,12 +1,14 @@
-name: TS Lint and Typecheck
+name: Static checks
 
 on: [push]
 
 jobs:
-  lint-and-typecheck:
-    name: Lint and Typecheck
+  test:
+    name: Static checks
     runs-on: ubuntu-latest
     environment: CI
+    env:
+      ETHEREUM_JSON_RPC_API_URL: ${{ secrets.ETHEREUM_JSON_RPC_API_URL }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -54,3 +56,13 @@ jobs:
       # https://github.com/typescript-eslint/typescript-eslint/issues/2094
       - name: Run TypeScript Linter
         run: yarn lint:all
+
+      - name: Check if fixtures are up to date
+        run: |
+          cd ./ethereum_history_api/oracles
+          yarn prepare-js-fixtures
+          yarn prepare-noir-fixtures
+
+          cd ..
+          git diff --exit-code ./oracles/fixtures
+          git diff --exit-code ./circuits/lib/src/fixtures

@@ -1,16 +1,17 @@
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
-import { type Hex, type PublicClient } from 'viem';
 import { assert } from '../../util/assert.js';
 import { encodeAccount, encodeStateProof, encodeStorageProof } from './accountOracle/encode.js';
 import { decodeAddress, decodeBytes32, decodeField } from './common/decode.js';
 import { NoirArguments } from './oracles.js';
+import { Hex } from 'viem';
+import { AlchemyClient } from '../../ethereum/client.js';
 
 const GET_PROOF_ARGS_COUNT = 3;
 const BLOCK_NUMBER_INDEX = 0;
 const ADDRESS_INDEX = 1;
 const STORAGE_KEY_INDEX = 2;
 
-export const getProofOracle = async (client: PublicClient, args: NoirArguments): Promise<ForeignCallOutput[]> => {
+export const getProofOracle = async (client: AlchemyClient, args: NoirArguments): Promise<ForeignCallOutput[]> => {
   const { blockNumber, address, storageKey } = decodeGetProofArguments(args);
   const accountProof = await client.getProof({
     address,
