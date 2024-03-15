@@ -24,6 +24,11 @@ export const FIXTURES: Fixtures = {
         address: '0x40d45d9d7625d15156c932b771ca7b0527130958'
       }
     },
+    homestead: {
+      fork: {
+        blockNumber: 1_150_000n
+      }
+    },
     london: {
       crypto_punks: {
         blockNumber: 14_194_126n,
