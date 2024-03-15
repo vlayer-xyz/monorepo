@@ -1,78 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { encodeReceipt, logToRlpFields, receiptToRlpFields, txTypeToHex } from './receipt.js';
-import { Log, TransactionReceipt } from 'viem';
+import { Log, TransactionReceipt, toEventSelector } from 'viem';
 import { assert } from '../util/assert.js';
-
-// TODO: Use JS fixtures when ready
-const CHAINLINK_TRANSFER_LOG = {
-  blockHash: '0x7306134ec4774f63f023a641c25fcf11f9625cfe5dcb1c29cdd13732e4a583aa',
-  address: '0x514910771af9ca656af840dff83e8264ecf986ca',
-  logIndex: 21,
-  data: '0x00000000000000000000000000000000000000000000003f44127fb43fa10000',
-  removed: false,
-  topics: [
-    '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
-    '0x000000000000000000000000fa4d81487ece32e95ae2bee5fc860f189fe163d8',
-    '0x000000000000000000000000125f660239707c9de3462d3fa633f2723ad0b884'
-  ],
-  blockNumber: 19432673n,
-  transactionIndex: 8,
-  transactionHash: '0x98e19df80eb8feae436896cc7cc6d4a97818e6010b56a249352b9ac2caf0d573'
-} as Log;
-
-// TODO: Use JS fixtures when ready
-const CHAINLINK_TRANSFER_RECEIPT = {
-  transactionHash: '0x98e19df80eb8feae436896cc7cc6d4a97818e6010b56a249352b9ac2caf0d573',
-  blockHash: '0x7306134ec4774f63f023a641c25fcf11f9625cfe5dcb1c29cdd13732e4a583aa',
-  blockNumber: 19432673n,
-  logsBloom:
-    '0x00000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040000008000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000010000000000000000000020000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000400000000000000004000000000000100000000000000000000000000000000000000000000000000000000000000000000000000002000000',
-  gasUsed: 34989n,
-  contractAddress: null,
-  cumulativeGasUsed: 661473n,
-  transactionIndex: 8,
-  from: '0xfa4d81487ece32e95ae2bee5fc860f189fe163d8',
-  to: '0x514910771af9ca656af840dff83e8264ecf986ca',
-  type: 'eip1559',
-  effectiveGasPrice: 52868291457n,
-  logs: [CHAINLINK_TRANSFER_LOG],
-  status: 'success'
-} as TransactionReceipt;
-
-// TODO: Use JS fixtures when ready
-const LEGACY_RECEIPT = {
-  transactionHash: '0x94a8715a083008845fc4983e89627e6a99de9f15d8455cc3fb2c1583f594932a',
-  blockHash: '0x7306134ec4774f63f023a641c25fcf11f9625cfe5dcb1c29cdd13732e4a583aa',
-  blockNumber: 19432673n,
-  logsBloom:
-    '0x00000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000200000000000000001000000000000000080000000000000000000000000400000000000000000000000000000800000000000000000000000000080000000000000000000000000000000000000000000000000000000080000000000000000000000020000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000001000000000000',
-  gasUsed: 47233n,
-  contractAddress: null,
-  cumulativeGasUsed: 567100n,
-  transactionIndex: 6,
-  from: '0x7069eca2855d49926d2bb9508cbceb92e3d26f0b',
-  to: '0x405154cfaf5ea4ef57b65b86959c73dd079fa312',
-  type: 'legacy',
-  effectiveGasPrice: 53531637243n,
-  logs: [
-    {
-      blockHash: '0x7306134ec4774f63f023a641c25fcf11f9625cfe5dcb1c29cdd13732e4a583aa',
-      address: '0x405154cfaf5ea4ef57b65b86959c73dd079fa312',
-      logIndex: 19,
-      data: '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
-      removed: false,
-      topics: [
-        '0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925',
-        '0x0000000000000000000000007069eca2855d49926d2bb9508cbceb92e3d26f0b',
-        '0x000000000000000000000000c465cc50b7d5a29b9308968f870a4b242a8e1873'
-      ],
-      blockNumber: 19432673n,
-      transactionIndex: 6,
-      transactionHash: '0x94a8715a083008845fc4983e89627e6a99de9f15d8455cc3fb2c1583f594932a'
-    }
-  ],
-  status: 'success'
-} as TransactionReceipt;
+import { loadReceiptFixture } from '../fixtures.js';
 
 // TODO: Use JS fixtures when ready
 const BLOB_DATA_RECEIPT = {
@@ -137,11 +67,19 @@ const PRE_BYZANTIUM_RECEIPT = {
 } as unknown as TransactionReceipt;
 
 describe('logToRlpFields', () => {
-  it(`log`, () => {
-    expect(logToRlpFields(CHAINLINK_TRANSFER_LOG)).toEqual([
+  it(`log`, async () => {
+    const chainLinkTransferReceipt = await loadReceiptFixture(
+      'mainnet',
+      'cancun',
+      'small_block',
+      '0x98e19df80eb8feae436896cc7cc6d4a97818e6010b56a249352b9ac2caf0d573'
+    );
+    const transferLog = chainLinkTransferReceipt.logs[0];
+
+    expect(logToRlpFields(transferLog)).toEqual([
       '0x514910771af9ca656af840dff83e8264ecf986ca',
       [
-        '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
+        toEventSelector('Transfer(address,address,uint256)'),
         '0x000000000000000000000000fa4d81487ece32e95ae2bee5fc860f189fe163d8',
         '0x000000000000000000000000125f660239707c9de3462d3fa633f2723ad0b884'
       ],
@@ -190,8 +128,14 @@ describe('receiptToRlpFields', () => {
     `);
   });
 
-  it(`post Byzantinum receipt`, () => {
-    const rlpFields = receiptToRlpFields(LEGACY_RECEIPT);
+  it(`post Byzantinum receipt`, async () => {
+    const legacyReceipt = await loadReceiptFixture(
+      'mainnet',
+      'cancun',
+      'small_block',
+      '0x94a8715a083008845fc4983e89627e6a99de9f15d8455cc3fb2c1583f594932a'
+    );
+    const rlpFields = receiptToRlpFields(legacyReceipt);
 
     expect(rlpFields).toMatchInlineSnapshot(`
       [
@@ -215,20 +159,32 @@ describe('receiptToRlpFields', () => {
 });
 
 describe('encodeReceipt', () => {
-  it('legacy receipt', () => {
-    assert(LEGACY_RECEIPT.type === 'legacy', 'Expected legacy receipt type. Please check the fixtures');
+  it('legacy receipt', async () => {
+    const legacyReceipt = await loadReceiptFixture(
+      'mainnet',
+      'cancun',
+      'small_block',
+      '0x94a8715a083008845fc4983e89627e6a99de9f15d8455cc3fb2c1583f594932a'
+    );
+    assert(legacyReceipt.type === 'legacy', 'Expected legacy receipt type. Please check the fixtures');
 
-    const encodedReceipt = encodeReceipt(LEGACY_RECEIPT);
+    const encodedReceipt = encodeReceipt(legacyReceipt);
 
     expect(encodedReceipt.startsWith('0x00')).toBeFalsy();
   });
 
   // TODO: EIP 2930 example. Those are much less popular and hard to find
 
-  it(`eip1559 receipt`, () => {
-    assert(CHAINLINK_TRANSFER_RECEIPT.type === 'eip1559', 'Expected eip1559 receipt type. Please check the fixtures');
+  it(`eip1559 receipt`, async () => {
+    const eip1559Receipt = await loadReceiptFixture(
+      'mainnet',
+      'cancun',
+      'small_block',
+      '0x98e19df80eb8feae436896cc7cc6d4a97818e6010b56a249352b9ac2caf0d573'
+    );
+    assert(eip1559Receipt.type === 'eip1559', 'Expected eip1559 receipt type. Please check the fixtures');
 
-    const encodedReceipt = encodeReceipt(CHAINLINK_TRANSFER_RECEIPT);
+    const encodedReceipt = encodeReceipt(eip1559Receipt);
 
     expect(encodedReceipt.startsWith('0x02')).toBeTruthy();
   });
