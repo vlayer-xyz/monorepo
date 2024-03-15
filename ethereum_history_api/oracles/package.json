@@ -22,12 +22,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@ethereumjs/trie": "^6.1.1",
     "@noir-lang/noir_js": "0.25.0",
     "dotenv": "^16.3.1",
     "fastify": "^4.25.2",
     "json-bigint": "^1.0.0",
     "json-rpc-2.0": "^1.7.0",
     "lodash.isequal": "^4.5.0",
+    "rlp": "^3.0.0",
     "toml": "^3.0.0",
     "viem": "^2.0.0"
   },

@@ -408,6 +408,55 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@ethereumjs/rlp", [\
+      ["npm:5.0.2", {\
+        "packageLocation": "./.yarn/cache/@ethereumjs-rlp-npm-5.0.2-72fb389b37-56162eaee9.zip/node_modules/@ethereumjs/rlp/",\
+        "packageDependencies": [\
+          ["@ethereumjs/rlp", "npm:5.0.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@ethereumjs/trie", [\
+      ["npm:6.1.1", {\
+        "packageLocation": "./.yarn/cache/@ethereumjs-trie-npm-6.1.1-294771deeb-aa7035bfed.zip/node_modules/@ethereumjs/trie/",\
+        "packageDependencies": [\
+          ["@ethereumjs/trie", "npm:6.1.1"],\
+          ["@ethereumjs/rlp", "npm:5.0.2"],\
+          ["@ethereumjs/util", "virtual:294771deebc703fb875819a4dda62110b678c49a92c750fc4d58c6d2f5238faf88b50ae596a5c72c6701698ae152833b006966f7cdb5d53bca861df3c15abac6#npm:9.0.2"],\
+          ["@types/readable-stream", "npm:2.3.15"],\
+          ["debug", "virtual:1ff4b5f90832ba0a9c93ba1223af226e44ba70c1126a3740d93562b97bc36544e896a5e95908196f7458713e6a6089a34bfc67362fc6df7fa093bd06c878be47#npm:4.3.4"],\
+          ["ethereum-cryptography", "npm:2.1.3"],\
+          ["lru-cache", "npm:10.2.0"],\
+          ["readable-stream", "npm:3.6.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@ethereumjs/util", [\
+      ["npm:9.0.2", {\
+        "packageLocation": "./.yarn/cache/@ethereumjs-util-npm-9.0.2-83e7569c17-7383b11ba1.zip/node_modules/@ethereumjs/util/",\
+        "packageDependencies": [\
+          ["@ethereumjs/util", "npm:9.0.2"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:294771deebc703fb875819a4dda62110b678c49a92c750fc4d58c6d2f5238faf88b50ae596a5c72c6701698ae152833b006966f7cdb5d53bca861df3c15abac6#npm:9.0.2", {\
+        "packageLocation": "./.yarn/__virtual__/@ethereumjs-util-virtual-514121fa10/0/cache/@ethereumjs-util-npm-9.0.2-83e7569c17-7383b11ba1.zip/node_modules/@ethereumjs/util/",\
+        "packageDependencies": [\
+          ["@ethereumjs/util", "virtual:294771deebc703fb875819a4dda62110b678c49a92c750fc4d58c6d2f5238faf88b50ae596a5c72c6701698ae152833b006966f7cdb5d53bca861df3c15abac6#npm:9.0.2"],\
+          ["@ethereumjs/rlp", "npm:5.0.2"],\
+          ["@types/c-kzg", null],\
+          ["c-kzg", null],\
+          ["ethereum-cryptography", "npm:2.1.3"]\
+        ],\
+        "packagePeers": [\
+          "@types/c-kzg",\
+          "c-kzg"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["@fastify/ajv-compiler", [\
       ["npm:3.5.0", {\
         "packageLocation": "./.yarn/cache/@fastify-ajv-compiler-npm-3.5.0-d1a90dc51f-d10df76b70.zip/node_modules/@fastify/ajv-compiler/",\
@@ -578,6 +627,14 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@noble/curves", "npm:1.2.0"],\
           ["@noble/hashes", "npm:1.3.2"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:1.3.0", {\
+        "packageLocation": "./.yarn/cache/@noble-curves-npm-1.3.0-e6ed020ee6-704bf8fda8.zip/node_modules/@noble/curves/",\
+        "packageDependencies": [\
+          ["@noble/curves", "npm:1.3.0"],\
+          ["@noble/hashes", "npm:1.3.3"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -859,6 +916,16 @@ const RAW_RUNTIME_STATE =
           ["@scure/base", "npm:1.1.5"]\
         ],\
         "linkType": "HARD"\
+      }],\
+      ["npm:1.3.3", {\
+        "packageLocation": "./.yarn/cache/@scure-bip32-npm-1.3.3-3bddda01e8-48fa04ebf0.zip/node_modules/@scure/bip32/",\
+        "packageDependencies": [\
+          ["@scure/bip32", "npm:1.3.3"],\
+          ["@noble/curves", "npm:1.3.0"],\
+          ["@noble/hashes", "npm:1.3.3"],\
+          ["@scure/base", "npm:1.1.5"]\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["@scure/bip39", [\
@@ -866,6 +933,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@scure-bip39-npm-1.2.1-f930930e61-fe951f69dd.zip/node_modules/@scure/bip39/",\
         "packageDependencies": [\
           ["@scure/bip39", "npm:1.2.1"],\
+          ["@noble/hashes", "npm:1.3.3"],\
+          ["@scure/base", "npm:1.1.5"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:1.2.2", {\
+        "packageLocation": "./.yarn/cache/@scure-bip39-npm-1.2.2-958e4465a8-be38bc1dc1.zip/node_modules/@scure/bip39/",\
+        "packageDependencies": [\
+          ["@scure/bip39", "npm:1.2.2"],\
           ["@noble/hashes", "npm:1.3.3"],\
           ["@scure/base", "npm:1.1.5"]\
         ],\
@@ -951,6 +1027,25 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@types/node", "npm:20.11.17"],\
           ["undici-types", "npm:5.26.5"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:20.11.25", {\
+        "packageLocation": "./.yarn/cache/@types-node-npm-20.11.25-b6ac39dd46-3a65a04693.zip/node_modules/@types/node/",\
+        "packageDependencies": [\
+          ["@types/node", "npm:20.11.25"],\
+          ["undici-types", "npm:5.26.5"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/readable-stream", [\
+      ["npm:2.3.15", {\
+        "packageLocation": "./.yarn/cache/@types-readable-stream-npm-2.3.15-d06d8380b8-789e0948a8.zip/node_modules/@types/readable-stream/",\
+        "packageDependencies": [\
+          ["@types/readable-stream", "npm:2.3.15"],\
+          ["@types/node", "npm:20.11.25"],\
+          ["safe-buffer", "npm:5.1.2"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -2735,6 +2830,19 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["ethereum-cryptography", [\
+      ["npm:2.1.3", {\
+        "packageLocation": "./.yarn/cache/ethereum-cryptography-npm-2.1.3-b42d3b0b51-a2f25ad5ff.zip/node_modules/ethereum-cryptography/",\
+        "packageDependencies": [\
+          ["ethereum-cryptography", "npm:2.1.3"],\
+          ["@noble/curves", "npm:1.3.0"],\
+          ["@noble/hashes", "npm:1.3.3"],\
+          ["@scure/bip32", "npm:1.3.3"],\
+          ["@scure/bip39", "npm:1.2.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["event-target-shim", [\
       ["npm:5.0.1", {\
         "packageLocation": "./.yarn/cache/event-target-shim-npm-5.0.1-cb48709025-0255d9f936.zip/node_modules/event-target-shim/",\
@@ -4368,6 +4476,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./ethereum_history_api/oracles/",\
         "packageDependencies": [\
           ["noir-ethereum-api-oracles", "workspace:ethereum_history_api/oracles"],\
+          ["@ethereumjs/trie", "npm:6.1.1"],\
           ["@noir-lang/noir_js", "npm:0.25.0"],\
           ["@types/json-bigint", "npm:1.0.4"],\
           ["@types/lodash.isequal", "npm:4.5.8"],\
@@ -4381,6 +4490,7 @@ const RAW_RUNTIME_STATE =
           ["lodash.isequal", "npm:4.5.0"],\
           ["pino-pretty", "npm:10.3.1"],\
           ["prettier", "npm:3.2.5"],\
+          ["rlp", "npm:3.0.0"],\
           ["toml", "npm:3.0.0"],\
           ["tsx", "npm:4.7.1"],\
           ["typescript", "patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"],\
@@ -4928,6 +5038,16 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["readable-stream", [\
+      ["npm:3.6.2", {\
+        "packageLocation": "./.yarn/cache/readable-stream-npm-3.6.2-d2a6069158-e37be5c79c.zip/node_modules/readable-stream/",\
+        "packageDependencies": [\
+          ["readable-stream", "npm:3.6.2"],\
+          ["inherits", "npm:2.0.4"],\
+          ["string_decoder", "npm:1.3.0"],\
+          ["util-deprecate", "npm:1.0.2"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
       ["npm:4.5.2", {\
         "packageLocation": "./.yarn/cache/readable-stream-npm-4.5.2-4a1062e2a4-a2c80e0e53.zip/node_modules/readable-stream/",\
         "packageDependencies": [\
@@ -5048,6 +5168,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["rlp", [\
+      ["npm:3.0.0", {\
+        "packageLocation": "./.yarn/cache/rlp-npm-3.0.0-a4866551ad-02935f3d37.zip/node_modules/rlp/",\
+        "packageDependencies": [\
+          ["rlp", "npm:3.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["rollup", [\
       ["npm:4.10.0", {\
         "packageLocation": "./.yarn/cache/rollup-npm-4.10.0-a760e7de95-f0cd08a293.zip/node_modules/rollup/",\
@@ -5096,6 +5225,13 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["safe-buffer", [\
+      ["npm:5.1.2", {\
+        "packageLocation": "./.yarn/cache/safe-buffer-npm-5.1.2-c27fedf6c4-780ba6b5d9.zip/node_modules/safe-buffer/",\
+        "packageDependencies": [\
+          ["safe-buffer", "npm:5.1.2"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
       ["npm:5.2.1", {\
         "packageLocation": "./.yarn/cache/safe-buffer-npm-5.2.1-3481c8aa9b-6501914237.zip/node_modules/safe-buffer/",\
         "packageDependencies": [\
@@ -5848,6 +5984,15 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["uri-js", "npm:4.4.1"],\
           ["punycode", "npm:2.3.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["util-deprecate", [\
+      ["npm:1.0.2", {\
+        "packageLocation": "./.yarn/cache/util-deprecate-npm-1.0.2-e3fe1a219c-41a5bdd214.zip/node_modules/util-deprecate/",\
+        "packageDependencies": [\
+          ["util-deprecate", "npm:1.0.2"]\
         ],\
         "linkType": "HARD"\
       }]\

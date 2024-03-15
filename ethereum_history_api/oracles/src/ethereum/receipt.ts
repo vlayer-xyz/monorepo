@@ -1,5 +1,9 @@
-import { Hash, Hex, Log, TransactionReceipt, TransactionType, concatHex, hexToRlp } from 'viem';
+import { Hash, Hex, Log, TransactionReceipt, TransactionType, bytesToHex, concatHex, hexToBytes, hexToRlp } from 'viem';
 import { toHexString } from './blockHeader.js';
+import { AlchemyClient } from './alchemyClient.js';
+import { Trie } from '@ethereumjs/trie';
+import { encode } from 'rlp';
+import { assert } from '../util/assert.js';
 
 export type RecursiveArray<T> = T | RecursiveArray<T>[];
 
@@ -53,4 +57,22 @@ export function encodeReceipt(receipt: TransactionReceipt): Hex {
   }
   const encodedReceipt = concatHex([txTypeToHex(receipt.type), receiptRlp]);
   return encodedReceipt;
+}
+
+export async function getReceiptProof(client: AlchemyClient, blockNumber: bigint, txIdx: number): Promise<Hex[]> {
+  const trie = new Trie();
+
+  const block = await client.getBlock({ blockNumber });
+  const receipts = await client.getTransactionReceipts({ blockNumber });
+
+  for (const [i, receipt] of receipts.entries()) {
+    await trie.put(encode(i), hexToBytes(encodeReceipt(receipt)));
+  }
+
+  assert(
+    block.receiptsRoot === bytesToHex(trie.root()),
+    `receiptsRoot mismatch: ${block.receiptsRoot} !== ${bytesToHex(trie.root())}`
+  );
+
+  return (await trie.createProof(encode(txIdx))).map((value) => bytesToHex(value));
 }
