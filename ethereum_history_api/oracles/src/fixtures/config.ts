@@ -47,6 +47,9 @@ export const FIXTURES: Fixtures = {
       },
       with_blob: {
         blockNumber: 19_432_087n
+      },
+      access_list: {
+        blockNumber: 19_439_366n
       }
     }
   }
