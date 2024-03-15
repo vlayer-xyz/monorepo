@@ -129,7 +129,19 @@ describe('encodeReceipt', () => {
     expect(encodedReceipt.startsWith('0x00')).toBeFalsy();
   });
 
-  // TODO: EIP 2930 example. Those are much less popular and hard to find
+  it('eip2930 receipt', async () => {
+    const eip2930Receipt = await loadReceiptFixture(
+      'mainnet',
+      'cancun',
+      'access_list',
+      '0x702385c4922ef4476df045495d122c87294de15ad8abad104991458d98765978'
+    );
+    assert(eip2930Receipt.type === 'eip2930', 'Expected eip2930 receipt type. Please check the fixtures');
+
+    const encodedReceipt = encodeReceipt(eip2930Receipt);
+
+    expect(encodedReceipt.startsWith('0x01')).toBeTruthy();
+  });
 
   it(`eip1559 receipt`, async () => {
     const eip1559Receipt = await loadReceiptFixture(
