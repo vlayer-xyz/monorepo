@@ -1,52 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { encodeReceipt, logToRlpFields, receiptToRlpFields, txTypeToHex } from './receipt.js';
-import { Log, TransactionReceipt, toEventSelector } from 'viem';
+import { TransactionReceipt, toEventSelector } from 'viem';
 import { assert } from '../util/assert.js';
 import { loadReceiptFixture } from '../fixtures.js';
-
-// TODO: Use JS fixtures when ready
-const BLOB_DATA_RECEIPT = {
-  transactionHash: '0xd76ce9d036dc7e8491d134f9bc953ebb204545950821d8ada25968fea779a4b2',
-  blockHash: '0x3fb5bb2b9efa2f44b91de93c23313ede0bf1e9debe893854646f6350498b6d47',
-  blockNumber: 19432087n,
-  logsBloom:
-    '0x00000000010002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000010000000000000100000000',
-  contractAddress: null,
-  transactionIndex: 111,
-  type: 'eip4844',
-  gasUsed: 136612n,
-  cumulativeGasUsed: 11591901n,
-  from: '0x2c169dfe5fbba12957bdd0ba47d9cedbfe260ca7',
-  to: '0xc662c410c0ecf747543f5ba90660f6abebd9c8c4',
-  effectiveGasPrice: 43236838323n,
-  blobGasPrice: 1n,
-  blobGasUsed: 131072n,
-  logs: [
-    {
-      blockHash: '0x3fb5bb2b9efa2f44b91de93c23313ede0bf1e9debe893854646f6350498b6d47',
-      address: '0xc662c410c0ecf747543f5ba90660f6abebd9c8c4',
-      logIndex: 296,
-      data: '0x1aeba55c9aca796976a1047001aa267b9b076ac32f339d7dcc505bc105aab074',
-      removed: false,
-      topics: ['0x9866f8ddfe70bb512b2f2b28b49d4017c43f7ba775f1a20c61c13eea8cdac111'],
-      blockNumber: 19432087n,
-      transactionIndex: 111,
-      transactionHash: '0xd76ce9d036dc7e8491d134f9bc953ebb204545950821d8ada25968fea779a4b2'
-    },
-    {
-      blockHash: '0x3fb5bb2b9efa2f44b91de93c23313ede0bf1e9debe893854646f6350498b6d47',
-      address: '0xc662c410c0ecf747543f5ba90660f6abebd9c8c4',
-      logIndex: 297,
-      data: '0x05e36c6369de7046251778fe3c00d6b80e35ecf1d7f3430190a83c750a176cf500000000000000000000000000000000000000000000000000000000000954d10511cbb57aeb9baa65ae2554072616eb542add0bef98b2d27aabe30aa8a79c4d',
-      removed: false,
-      topics: ['0xd342ddf7a308dec111745b00315c14b7efb2bdae570a6856e088ed0c65a3576c'],
-      blockNumber: 19432087n,
-      transactionIndex: 111,
-      transactionHash: '0xd76ce9d036dc7e8491d134f9bc953ebb204545950821d8ada25968fea779a4b2'
-    }
-  ],
-  status: 'success'
-} as TransactionReceipt;
 
 const PRE_BYZANTIUM_RECEIPT = {
   transactionHash: '0xe9e91f1ee4b56c0df2e9f06c2b8c27c6076195a88a7b8537ba8313d80e6f124e',
@@ -189,10 +145,16 @@ describe('encodeReceipt', () => {
     expect(encodedReceipt.startsWith('0x02')).toBeTruthy();
   });
 
-  it(`eip4844 receipt`, () => {
-    assert(BLOB_DATA_RECEIPT.type === 'eip4844', 'Expected eip4844 receipt type. Please check the fixtures');
+  it(`eip4844 receipt`, async () => {
+    const eip4344Receipt = await loadReceiptFixture(
+      'mainnet',
+      'cancun',
+      'with_blob',
+      '0xd76ce9d036dc7e8491d134f9bc953ebb204545950821d8ada25968fea779a4b2'
+    );
+    assert(eip4344Receipt.type === 'eip4844', 'Expected eip4844 receipt type. Please check the fixtures');
 
-    const encodedReceipt = encodeReceipt(BLOB_DATA_RECEIPT);
+    const encodedReceipt = encodeReceipt(eip4344Receipt);
 
     expect(encodedReceipt.startsWith('0x03')).toBeTruthy();
   });
