@@ -3,6 +3,7 @@ import { getAccountOracle } from '../accountOracle.js';
 import { getHeaderOracle } from '../headerOracle.js';
 import { decodeNoirArguments, encodeForeignCallResult } from './encode.js';
 import { getProofOracle } from '../proofOracle.js';
+import { getReceiptOracle } from '../receiptOracle.js';
 import { AlchemyClient } from '../../../ethereum/client.js';
 
 /**
@@ -17,6 +18,7 @@ export type JSONRPCServerMethods = {
   get_header(params: ForeignCallParams): ForeignCallResult;
   get_account(params: ForeignCallParams): ForeignCallResult;
   get_proof(params: ForeignCallParams): ForeignCallResult;
+  get_receipt(params: ForeignCallParams): ForeignCallResult;
 };
 
 export interface ServerParams {
@@ -46,6 +48,16 @@ export async function getAccountHandler(
 export async function getProofHandler(params: ForeignCallParams, { client }: ServerParams): Promise<ForeignCallResult> {
   const noirArguments = decodeNoirArguments(params);
   const noirOutputs = await getProofOracle(client, noirArguments);
+  const result = encodeForeignCallResult(noirOutputs);
+  return result;
+}
+
+export async function getReceiptHandler(
+  params: ForeignCallParams,
+  { client }: ServerParams
+): Promise<ForeignCallResult> {
+  const noirArguments = decodeNoirArguments(params);
+  const noirOutputs = await getReceiptOracle(client, noirArguments);
   const result = encodeForeignCallResult(noirOutputs);
   return result;
 }

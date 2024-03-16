@@ -4,6 +4,7 @@ import http from 'http';
 import {
   getHeaderHandler,
   getAccountHandler,
+  getReceiptHandler,
   JSONRPCServerMethods,
   ServerParams,
   getProofHandler
@@ -16,6 +17,7 @@ const jsonRPCServer: TypedJSONRPCServer<JSONRPCServerMethods, ServerParams> = ne
 jsonRPCServer.addMethod('get_header', getHeaderHandler);
 jsonRPCServer.addMethod('get_account', getAccountHandler);
 jsonRPCServer.addMethod('get_proof', getProofHandler);
+jsonRPCServer.addMethod('get_receipt', getReceiptHandler);
 
 export function buildOracleServer(
   opts: Fastify.FastifyHttpOptions<http.Server> = {},
