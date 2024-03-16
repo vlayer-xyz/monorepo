@@ -3,7 +3,7 @@ use crate::header::get_header;
 use crate::verifiers::receipt::verify_receipt;
 use dep::std::unsafe::zeroed;
 
-global BLOOM_FILTER_SIZE = 2048;
+global BLOOM_FILTER_SIZE = 256;
 global MAX_RECEIPT_TREE_DEPTH = 6;
 
 struct Log<MAX_LOG_DATA_SIZE> {
