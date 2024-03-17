@@ -1,9 +1,5 @@
-import { Hash, Hex, Log, TransactionReceipt, TransactionType, bytesToHex, concatHex, hexToBytes, toRlp } from 'viem';
+import { Hash, Hex, Log, TransactionReceipt, TransactionType, concatHex, toRlp } from 'viem';
 import { toHexString } from './blockHeader.js';
-import { AlchemyClient } from './alchemyClient.js';
-import { Trie } from '@ethereumjs/trie';
-import { assert } from '../util/assert.js';
-import { encodeField } from '../noir/oracles/common/encode.js';
 
 export type RecursiveArray<T> = T | RecursiveArray<T>[];
 
@@ -57,45 +53,4 @@ export function encodeReceipt(receipt: TransactionReceipt): Hex {
   }
   const encodedReceipt = concatHex([txTypeToHex(receipt.type), receiptRlp]);
   return encodedReceipt;
-}
-
-export class ReceiptTrie {
-  private trie: Trie = new Trie();
-
-  public root(): Hex {
-    return bytesToHex(this.trie.root());
-  }
-
-  public async put(txIdx: number, receipt: TransactionReceipt) {
-    const key = ReceiptTrie.keyFromIdx(txIdx);
-    const value = hexToBytes(encodeReceipt(receipt));
-    await this.trie.put(key, value);
-  }
-
-  public async createProof(txIdx: number): Promise<Hex[]> {
-    const key = ReceiptTrie.keyFromIdx(txIdx);
-    const proof = await this.trie.createProof(key);
-    return proof.map((node) => bytesToHex(node));
-  }
-
-  public static keyFromIdx(txIdx: number): Uint8Array {
-    return toRlp(encodeField(txIdx), 'bytes');
-  }
-}
-
-export async function getReceiptTrie(receipts: TransactionReceipt[], expectedRoot: Hex): Promise<ReceiptTrie> {
-  const trie = new ReceiptTrie();
-  for (const [i, receipt] of receipts.entries()) {
-    await trie.put(i, receipt);
-  }
-  assert(expectedRoot === trie.root(), `receiptsRoot mismatch: ${expectedRoot} !== ${trie.root()}`);
-  return trie;
-}
-
-export async function getReceiptProof(client: AlchemyClient, blockNumber: bigint, txIdx: number): Promise<Hex[]> {
-  const block = await client.getBlock({ blockNumber });
-  const receipts = await client.getTransactionReceipts({ blockNumber });
-  const trie = await getReceiptTrie(receipts, block.receiptsRoot);
-
-  return await trie.createProof(txIdx);
 }
