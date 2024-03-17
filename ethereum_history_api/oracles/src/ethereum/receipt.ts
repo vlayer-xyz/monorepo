@@ -1,8 +1,7 @@
-import { Hash, Hex, Log, TransactionReceipt, TransactionType, bytesToHex, concatHex, hexToBytes, hexToRlp } from 'viem';
+import { Hash, Hex, Log, TransactionReceipt, TransactionType, bytesToHex, concatHex, hexToBytes, toRlp } from 'viem';
 import { toHexString } from './blockHeader.js';
 import { AlchemyClient } from './alchemyClient.js';
 import { Trie } from '@ethereumjs/trie';
-import { encode } from 'rlp';
 import { assert } from '../util/assert.js';
 
 export type RecursiveArray<T> = T | RecursiveArray<T>[];
@@ -51,7 +50,7 @@ export function receiptToRlpFields(receipt: TransactionReceipt): RecursiveArray<
 
 export function encodeReceipt(receipt: TransactionReceipt): Hex {
   const receiptRlpFields = receiptToRlpFields(receipt);
-  const receiptRlp = hexToRlp(receiptRlpFields);
+  const receiptRlp = toRlp(receiptRlpFields);
   if (receipt.type === 'legacy') {
     return receiptRlp;
   }
