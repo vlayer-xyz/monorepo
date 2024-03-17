@@ -26,7 +26,7 @@ describe('accountOracle', () => {
       cryptoPunksAccountAddressInNoirFormat
     ]);
     expect(account[OFFSETS.NONCE]).toStrictEqual('0x01');
-    expect(account[OFFSETS.BALANCE]).toStrictEqual('0x313570a84bf378efd25');
+    expect(account[OFFSETS.BALANCE]).toStrictEqual('0x0313570a84bf378efd25');
     expect(account[OFFSETS.ADDRESS]).toStrictEqual(cryptoPunksAccountAddressInNoirFormat);
     expect(account[OFFSETS.DEPTH]).toStrictEqual('0x08');
   });

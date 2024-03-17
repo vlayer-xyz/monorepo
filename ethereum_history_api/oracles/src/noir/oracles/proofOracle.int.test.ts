@@ -38,7 +38,7 @@ describe(
         circleUsdcBalanceStorageKeyInNoirFormat
       ]);
       expect(stateAndStorageProof[OFFSETS.NONCE]).toStrictEqual('0x01');
-      expect(stateAndStorageProof[OFFSETS.BALANCE]).toStrictEqual('0x00');
+      expect(stateAndStorageProof[OFFSETS.BALANCE]).toStrictEqual('0x');
       expect(stateAndStorageProof[OFFSETS.ADDRESS]).toStrictEqual(usdcAccountAddressInNoirFormat);
       expect(stateAndStorageProof[OFFSETS.STATE_PROOF_DEPTH]).toStrictEqual('0x09');
       expect(stateAndStorageProof[OFFSETS.STORAGE_PROOF_DEPTH]).toStrictEqual('0x07');
