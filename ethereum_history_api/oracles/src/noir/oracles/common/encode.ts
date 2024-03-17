@@ -7,6 +7,9 @@ import { BITS_IN_BYTE, BYTES32_LENGTH, MODULUS, PROOF_ONE_LEVEL_LENGTH, ZERO_PAD
 export function encodeField(arg: number | bigint): string {
   assert(arg < MODULUS, 'Field overflow');
   assert(arg >= 0, 'Field underflow');
+  if (arg === 0n || arg === 0) {
+    return '0x';
+  }
   return `0x${arg.toString(16).padStart(BYTE_HEX_LENGTH, '0')}`;
 }
 
