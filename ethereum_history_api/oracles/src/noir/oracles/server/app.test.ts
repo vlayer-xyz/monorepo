@@ -1,3 +1,4 @@
+import { JSONRPCResponse } from 'json-rpc-2.0';
 import { buildOracleServer } from './app.js';
 
 import { describe, it, expect, afterAll } from 'vitest';
@@ -21,7 +22,7 @@ describe('Oracle Server', () => {
     });
 
     expect(response.statusCode).toBe(200);
-    expect(response.body).toMatchSnapshot();
+    expect(response.json<JSONRPCResponse>()).toMatchSnapshot();
   });
 
   it('should handle get_account request', async () => {
@@ -63,6 +64,6 @@ describe('Oracle Server', () => {
     });
 
     expect(response.statusCode).toBe(200);
-    expect(response.body).toMatchSnapshot();
+    expect(response.json<JSONRPCResponse>()).toMatchSnapshot();
   });
 });
