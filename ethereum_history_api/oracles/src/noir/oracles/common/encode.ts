@@ -10,7 +10,11 @@ export function encodeField(arg: number | bigint): Hex {
   if (arg === 0n || arg === 0) {
     return '0x';
   }
-  return `0x${arg.toString(16).padStart(BYTE_HEX_LENGTH, '0')}`;
+  let hex = arg.toString(16);
+  if (hex.length % BYTE_HEX_LENGTH === 1) {
+    hex = `0${hex}`;
+  }
+  return `0x${hex}`;
 }
 
 export function encodeBytes32(value: bigint): Hex[] {
