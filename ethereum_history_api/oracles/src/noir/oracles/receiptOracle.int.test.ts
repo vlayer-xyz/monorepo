@@ -3,7 +3,7 @@ import { createMockClient } from '../../ethereum/mockClient.js';
 import { getReceiptOracle } from './receiptOracle.js';
 import { BYTES32_LENGTH } from './common/const.js';
 
-describe('receiptOracle', () => {
+describe('getReceiptOracle', () => {
   const OFFSETS = {
     BLOB_GAS_USED: 0,
     BLOB_GAS_PRICE: 1,
@@ -12,7 +12,7 @@ describe('receiptOracle', () => {
     CUMULATIVE_GAS_USED: 4,
     LOGS_BLOOM: 5
   };
-  it('getReceiptOracle', async () => {
+  it('success', async () => {
     const cancunBlockNumberInNoirFormat = '0x12884e1';
     const chainLinkTransferTxIdInNoirFormat = '0x08';
     const stateRootInNoirFormat = new Array(BYTES32_LENGTH).fill('0x00');
@@ -64,5 +64,16 @@ describe('receiptOracle', () => {
       "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", 
       "0x00", "0x00", "0x00", "0x00", "0x02", "0x00", "0x00", "0x00"
     ]);
+  });
+
+  it('transaction not found', async () => {
+    const cancunBlockNumberInNoirFormat = '0x12884e1';
+    const nonExistentTxId = '0xffff';
+    const mockFilePaths = ['./fixtures/mainnet/cancun/small_block/alchemy_getTransactionReceipts_19432673.json'];
+    const client = await createMockClient(mockFilePaths);
+
+    await expect(
+      async () => await getReceiptOracle(client, [[cancunBlockNumberInNoirFormat], [nonExistentTxId]])
+    ).rejects.toThrowError(`Transaction receipt not found for txId: ${parseInt(nonExistentTxId, 16)}`);
   });
 });
