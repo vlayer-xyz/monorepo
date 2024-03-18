@@ -1,9 +1,5 @@
-import { Hash, Hex, Log, TransactionReceipt, TransactionType, bytesToHex, concatHex, hexToBytes, hexToRlp } from 'viem';
+import { Hash, Hex, Log, TransactionReceipt, TransactionType, concatHex, toRlp } from 'viem';
 import { toHexString } from './blockHeader.js';
-import { AlchemyClient } from './alchemyClient.js';
-import { Trie } from '@ethereumjs/trie';
-import { encode } from 'rlp';
-import { assert } from '../util/assert.js';
 
 export type RecursiveArray<T> = T | RecursiveArray<T>[];
 
@@ -34,7 +30,7 @@ function isPreByzantium(receipt: TransactionReceipt): receipt is PreByzantiumRec
 }
 
 export function statusToHex(status: 'success' | 'reverted') {
-  return (status === 'reverted' ? '0x00' : '0x01') as Hex;
+  return (status === 'reverted' ? '0x' : '0x01') as Hex;
 }
 
 export function receiptToRlpFields(receipt: TransactionReceipt): RecursiveArray<Hex> {
@@ -51,28 +47,10 @@ export function receiptToRlpFields(receipt: TransactionReceipt): RecursiveArray<
 
 export function encodeReceipt(receipt: TransactionReceipt): Hex {
   const receiptRlpFields = receiptToRlpFields(receipt);
-  const receiptRlp = hexToRlp(receiptRlpFields);
+  const receiptRlp = toRlp(receiptRlpFields);
   if (receipt.type === 'legacy') {
     return receiptRlp;
   }
   const encodedReceipt = concatHex([txTypeToHex(receipt.type), receiptRlp]);
   return encodedReceipt;
-}
-
-export async function getReceiptProof(client: AlchemyClient, blockNumber: bigint, txIdx: number): Promise<Hex[]> {
-  const trie = new Trie();
-
-  const block = await client.getBlock({ blockNumber });
-  const receipts = await client.getTransactionReceipts({ blockNumber });
-
-  for (const [i, receipt] of receipts.entries()) {
-    await trie.put(encode(i), hexToBytes(encodeReceipt(receipt)));
-  }
-
-  assert(
-    block.receiptsRoot === bytesToHex(trie.root()),
-    `receiptsRoot mismatch: ${block.receiptsRoot} !== ${bytesToHex(trie.root())}`
-  );
-
-  return (await trie.createProof(encode(txIdx))).map((value) => bytesToHex(value));
 }

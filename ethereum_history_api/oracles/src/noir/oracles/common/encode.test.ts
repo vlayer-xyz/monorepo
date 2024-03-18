@@ -1,5 +1,32 @@
 import { describe, expect, it } from 'vitest';
-import { encodeAddress, encodeBytes32, encodeHex } from './encode.js';
+import { encodeAddress, encodeBytes32, encodeField, encodeHex } from './encode.js';
+import { MODULUS } from './const.js';
+
+describe('encodeField', () => {
+  it('should throw an error for field overflow', () => {
+    expect(() => encodeField(MODULUS)).toThrow('Field overflow');
+  });
+
+  it('should throw an error for field underflow', () => {
+    expect(() => encodeField(-1)).toThrow('Field underflow');
+  });
+
+  it('should return "0x" for zero', () => {
+    expect(encodeField(0)).toBe('0x');
+  });
+
+  it('should handle even hex values correctly', () => {
+    expect(encodeField(1)).toBe('0x01');
+  });
+
+  it('should handle odd values correctly', () => {
+    expect(encodeField(128)).toBe('0x80');
+  });
+
+  it('should handle large values correctly', () => {
+    expect(encodeField(100500)).toBe('0x018894');
+  });
+});
 
 describe('encodeHex', () => {
   it('small values should be padded', () => {

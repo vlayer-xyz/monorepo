@@ -4490,7 +4490,6 @@ const RAW_RUNTIME_STATE =
           ["lodash.isequal", "npm:4.5.0"],\
           ["pino-pretty", "npm:10.3.1"],\
           ["prettier", "npm:3.2.5"],\
-          ["rlp", "npm:3.0.0"],\
           ["toml", "npm:3.0.0"],\
           ["tsx", "npm:4.7.1"],\
           ["typescript", "patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"],\
@@ -5164,15 +5163,6 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["rimraf", "npm:3.0.2"],\
           ["glob", "npm:7.2.3"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["rlp", [\
-      ["npm:3.0.0", {\
-        "packageLocation": "./.yarn/cache/rlp-npm-3.0.0-a4866551ad-02935f3d37.zip/node_modules/rlp/",\
-        "packageDependencies": [\
-          ["rlp", "npm:3.0.0"]\
         ],\
         "linkType": "HARD"\
       }]\
