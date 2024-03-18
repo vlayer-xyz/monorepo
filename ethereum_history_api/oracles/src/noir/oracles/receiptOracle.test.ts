@@ -30,8 +30,8 @@ describe('receiptOracle', () => {
 
       const noirReceipt = encodeReceipt(legacyReceipt);
 
-      expect(noirReceipt[OFFSETS.BLOB_GAS_USED]).toStrictEqual('0x00');
-      expect(noirReceipt[OFFSETS.BLOB_GAS_PRICE]).toStrictEqual('0x00');
+      expect(noirReceipt[OFFSETS.BLOB_GAS_USED]).toStrictEqual('0x');
+      expect(noirReceipt[OFFSETS.BLOB_GAS_PRICE]).toStrictEqual('0x');
       // prettier-ignore
       expect(noirReceipt[OFFSETS.STATE_ROOT]).toStrictEqual([
         "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00",

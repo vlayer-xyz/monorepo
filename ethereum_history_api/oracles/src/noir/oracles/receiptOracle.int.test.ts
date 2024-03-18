@@ -16,11 +16,11 @@ describe('getReceiptOracle', () => {
       [chainLinkTransferTxIdInNoirFormat]
     ]);
 
-    expect(receiptProof[OFFSETS.BLOB_GAS_USED]).toStrictEqual('0x00');
-    expect(receiptProof[OFFSETS.BLOB_GAS_PRICE]).toStrictEqual('0x00');
+    expect(receiptProof[OFFSETS.BLOB_GAS_USED]).toStrictEqual('0x');
+    expect(receiptProof[OFFSETS.BLOB_GAS_PRICE]).toStrictEqual('0x');
     expect(receiptProof[OFFSETS.STATUS]).toStrictEqual('0x01');
     expect(receiptProof[OFFSETS.STATE_ROOT]).toStrictEqual(stateRootInNoirFormat);
-    expect(receiptProof[OFFSETS.CUMULATIVE_GAS_USED]).toStrictEqual('0xa17e1');
+    expect(receiptProof[OFFSETS.CUMULATIVE_GAS_USED]).toStrictEqual('0x0a17e1');
     // prettier-ignore
     expect(receiptProof[OFFSETS.LOGS_BLOOM]).toStrictEqual([
       "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", 
