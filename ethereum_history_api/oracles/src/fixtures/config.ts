@@ -8,6 +8,7 @@ interface Fixture {
   blockNumber: bigint;
   address?: Address;
   storageKeys?: Hex[];
+  transactionHashes?: Hex[];
 }
 
 type Fixtures = Record<string, Record<string, Record<string, Fixture>>>;
@@ -43,7 +44,8 @@ export const FIXTURES: Fixtures = {
       usdc: {
         blockNumber: 19_000_000n,
         address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-        storageKeys: [CIRCLE_USDC_BALANCE_STORAGE_KEY]
+        storageKeys: [CIRCLE_USDC_BALANCE_STORAGE_KEY],
+        transactionHashes: ['0x71f7584fd8aa8ca97308cc2dca5b776acacfd429449424c3c8b650df44ab0227']
       }
     },
     cancun: {
