@@ -29,7 +29,7 @@ function isPreByzantium(receipt: TransactionReceipt): receipt is PreByzantiumRec
   return receipt.root !== undefined;
 }
 
-function statusToHex(status: 'success' | 'reverted') {
+export function statusToHex(status: 'success' | 'reverted') {
   return (status === 'reverted' ? '0x00' : '0x01') as Hex;
 }
 

@@ -1,21 +1,20 @@
 import { JSONRPCRequest, JSONRPCServer, TypedJSONRPCServer } from 'json-rpc-2.0';
 import Fastify from 'fastify';
 import http from 'http';
-import {
-  getHeaderHandler,
-  getAccountHandler,
-  JSONRPCServerMethods,
-  ServerParams,
-  getProofHandler
-} from './handlers.js';
+import { JSONRPCServerMethods, ServerParams, getOracleHandler } from './handlers.js';
 import { AlchemyClient, createDefaultClient } from '../../../ethereum/client.js';
+import { getHeaderOracle } from '../headerOracle.js';
+import { getAccountOracle } from '../accountOracle.js';
+import { getProofOracle } from '../proofOracle.js';
+import { getReceiptOracle } from '../receiptOracle.js';
 
 const HTTP_STATUS_NO_CONTENT = 204;
 
 const jsonRPCServer: TypedJSONRPCServer<JSONRPCServerMethods, ServerParams> = new JSONRPCServer();
-jsonRPCServer.addMethod('get_header', getHeaderHandler);
-jsonRPCServer.addMethod('get_account', getAccountHandler);
-jsonRPCServer.addMethod('get_proof', getProofHandler);
+jsonRPCServer.addMethod('get_header', getOracleHandler.bind(this, getHeaderOracle));
+jsonRPCServer.addMethod('get_account', getOracleHandler.bind(this, getAccountOracle));
+jsonRPCServer.addMethod('get_proof', getOracleHandler.bind(this, getProofOracle));
+jsonRPCServer.addMethod('get_receipt', getOracleHandler.bind(this, getReceiptOracle));
 
 export function buildOracleServer(
   opts: Fastify.FastifyHttpOptions<http.Server> = {},

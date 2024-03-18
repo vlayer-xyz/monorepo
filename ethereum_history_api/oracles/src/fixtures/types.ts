@@ -1,9 +1,9 @@
 import { GetBlockReturnType, GetProofReturnType, TransactionReceipt } from 'viem';
 
-export interface BaseFixture<T> {
+export interface BaseFixture<TResult> {
   method: string;
   arguments: unknown[];
-  result: T;
+  result: TResult;
 }
 
 export interface GetProofFixture {
