@@ -2,10 +2,9 @@ import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { assert } from '../../util/assert.js';
 import { decodeField } from './common/decode.js';
 import { NoirArguments } from './oracles.js';
-import { TransactionReceipt } from 'viem';
 import { AlchemyClient } from '../../ethereum/client.js';
-import { encodeField, encodeHex } from './common/encode.js';
-import { statusToHex } from '../../ethereum/receipt.js';
+import { getReceiptProof } from '../../ethereum/receiptProof.js';
+import { encodeReceipt, encodeReceiptProof } from './receiptOracle/encode.js';
 
 const GET_RECEIPT_ARGS_COUNT = 2;
 const BLOCK_NUMBER_INDEX = 0;
@@ -29,8 +28,11 @@ export const getReceiptOracle = async (client: AlchemyClient, args: NoirArgument
   if (!receipt) {
     throw new Error(`Transaction receipt not found for txId: ${txId}`);
   }
+  const receiptProof = await getReceiptProof(client, blockNumber, Number(txId));
+
   const encodedReceipt = encodeReceipt(receipt);
-  return [...encodedReceipt];
+  const encodedReceiptProof = encodeReceiptProof(receiptProof, txId);
+  return [...encodedReceipt, ...encodedReceiptProof];
 };
 
 export function decodeGetReceiptArguments(args: NoirArguments): {
@@ -44,15 +46,4 @@ export function decodeGetReceiptArguments(args: NoirArguments): {
   const txId = decodeField(args[TX_ID_INDEX][0]);
 
   return { blockNumber, txId };
-}
-
-export function encodeReceipt(receipt: TransactionReceipt): ForeignCallOutput[] {
-  const blobGasUsed = encodeField(receipt.blobGasUsed ?? 0);
-  const blobGasPrice = encodeField(receipt.blobGasPrice ?? 0);
-  const status = statusToHex(receipt.status);
-  const stateRoot = encodeHex(receipt.root ?? '0x0000000000000000000000000000000000000000000000000000000000000000');
-  const cumulativeGasUsed = encodeField(receipt.cumulativeGasUsed);
-  const logsBloom = encodeHex(receipt.logsBloom);
-
-  return [blobGasUsed, blobGasPrice, status, stateRoot, cumulativeGasUsed, logsBloom];
 }
