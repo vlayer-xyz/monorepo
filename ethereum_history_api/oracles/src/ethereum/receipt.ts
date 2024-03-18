@@ -1,4 +1,4 @@
-import { Hash, Hex, Log, TransactionReceipt, TransactionType, concatHex, hexToRlp } from 'viem';
+import { Hash, Hex, Log, TransactionReceipt, TransactionType, concatHex, toRlp } from 'viem';
 import { toHexString } from './blockHeader.js';
 
 export type RecursiveArray<T> = T | RecursiveArray<T>[];
@@ -30,7 +30,7 @@ function isPreByzantium(receipt: TransactionReceipt): receipt is PreByzantiumRec
 }
 
 export function statusToHex(status: 'success' | 'reverted') {
-  return (status === 'reverted' ? '0x00' : '0x01') as Hex;
+  return (status === 'reverted' ? '0x' : '0x01') as Hex;
 }
 
 export function receiptToRlpFields(receipt: TransactionReceipt): RecursiveArray<Hex> {
@@ -47,7 +47,7 @@ export function receiptToRlpFields(receipt: TransactionReceipt): RecursiveArray<
 
 export function encodeReceipt(receipt: TransactionReceipt): Hex {
   const receiptRlpFields = receiptToRlpFields(receipt);
-  const receiptRlp = hexToRlp(receiptRlpFields);
+  const receiptRlp = toRlp(receiptRlpFields);
   if (receipt.type === 'legacy') {
     return receiptRlp;
   }

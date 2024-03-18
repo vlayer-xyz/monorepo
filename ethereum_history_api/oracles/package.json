@@ -22,6 +22,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@ethereumjs/trie": "^6.1.1",
     "@noir-lang/noir_js": "0.25.0",
     "dotenv": "^16.3.1",
     "fastify": "^4.25.2",
