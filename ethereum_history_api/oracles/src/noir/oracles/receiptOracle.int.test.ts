@@ -1,17 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { createMockClient } from '../../ethereum/mockClient.js';
-import { getReceiptOracle } from './receiptOracle.js';
+import { OFFSETS, getReceiptOracle } from './receiptOracle.js';
 import { BYTES32_LENGTH } from './common/const.js';
 
 describe('getReceiptOracle', () => {
-  const OFFSETS = {
-    BLOB_GAS_USED: 0,
-    BLOB_GAS_PRICE: 1,
-    STATUS: 2,
-    STATE_ROOT: 3,
-    CUMULATIVE_GAS_USED: 4,
-    LOGS_BLOOM: 5
-  };
   it('success', async () => {
     const cancunBlockNumberInNoirFormat = '0x12884e1';
     const chainLinkTransferTxIdInNoirFormat = '0x08';
