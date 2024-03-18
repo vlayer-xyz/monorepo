@@ -1,10 +1,7 @@
 import { ForeignCallResult, ForeignCallParams } from './types.js';
-import { getAccountOracle } from '../accountOracle.js';
-import { getHeaderOracle } from '../headerOracle.js';
 import { decodeNoirArguments, encodeForeignCallResult } from './encode.js';
-import { getProofOracle } from '../proofOracle.js';
-import { getReceiptOracle } from '../receiptOracle.js';
 import { AlchemyClient } from '../../../ethereum/client.js';
+import { Oracle } from '../oracles.js';
 
 /**
  * The format that the Noir oracles server receives the arguments in is slightly different than the format that acvm.js uses.
@@ -25,39 +22,13 @@ export interface ServerParams {
   client: AlchemyClient;
 }
 
-export async function getHeaderHandler(
+export async function getOracleHandler(
+  oracle: Oracle,
   params: ForeignCallParams,
   { client }: ServerParams
 ): Promise<ForeignCallResult> {
   const noirArguments = decodeNoirArguments(params);
-  const noirOutputs = await getHeaderOracle(client, noirArguments);
-  const result = encodeForeignCallResult(noirOutputs);
-  return result;
-}
-
-export async function getAccountHandler(
-  params: ForeignCallParams,
-  { client }: ServerParams
-): Promise<ForeignCallResult> {
-  const noirArguments = decodeNoirArguments(params);
-  const noirOutputs = await getAccountOracle(client, noirArguments);
-  const result = encodeForeignCallResult(noirOutputs);
-  return result;
-}
-
-export async function getProofHandler(params: ForeignCallParams, { client }: ServerParams): Promise<ForeignCallResult> {
-  const noirArguments = decodeNoirArguments(params);
-  const noirOutputs = await getProofOracle(client, noirArguments);
-  const result = encodeForeignCallResult(noirOutputs);
-  return result;
-}
-
-export async function getReceiptHandler(
-  params: ForeignCallParams,
-  { client }: ServerParams
-): Promise<ForeignCallResult> {
-  const noirArguments = decodeNoirArguments(params);
-  const noirOutputs = await getReceiptOracle(client, noirArguments);
+  const noirOutputs = await oracle(client, noirArguments);
   const result = encodeForeignCallResult(noirOutputs);
   return result;
 }
