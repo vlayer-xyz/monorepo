@@ -11,9 +11,10 @@ use crate::fixtures::mainnet::{
     crypto_punks::{
     header::{
     block_header_partial as crypto_punks_block_header_partial,
-    block_header_rlp as crypto_punks_block_header_rlp
+    block_header_rlp as crypto_punks_block_header_rlp, number as crypto_punks_number
 },
-    account::account as crypto_punks_account, state_proof::state_proof as crypto_punks_state_proof
+    account::account as crypto_punks_account, state_proof::state_proof as crypto_punks_state_proof,
+    storage_proof::proofs as crypto_punks_proofs
 }
 }
 };
@@ -37,6 +38,7 @@ fn test_get_account_with_storage_success() {
 
     assert_eq(proofs[0].value, account_with_storage.values[0]);
 }
+
 // TODO: Add a failure message for the tests once the enhancements in PR https://github.com/aragonzkresearch/noir-trie-proofs/pull/15 are integrated.
 #[test(should_fail)]
 fn test_get_account_with_storage_invalid_state_root() {
@@ -55,5 +57,15 @@ fn test_get_account_with_storage_invalid_storage_root() {
 
     let address = crypto_punks_state_proof.key;
     let storage_key = proofs[0].key;
+    let _ = get_account_with_storage(crypto_punks_number, address, storage_key);
+}
+
+#[test(should_fail_with = "Storage key does not match the argument")]
+fn test_get_account_with_storage_storage_key_does_not_match_the_argument() {
+    let _ = OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp));
+    let _ = OracleMock::mock("get_proof").returns((account, state_proof, proofs[0]));
+
+    let address = state_proof.key;
+    let storage_key = crypto_punks_proofs[0].key;
     let _ = get_account_with_storage(number, address, storage_key);
 }
