@@ -45,11 +45,11 @@ export function encodeHex(hexString: string): Hex[] {
   return chunks;
 }
 
-export function encodeProof(proof: string[], length: number): string[] {
-  const encodedUnPaddedProof = proof
-    .map((it) => encodeHex(it))
-    .map((it) => padArray(it, PROOF_ONE_LEVEL_LENGTH, ZERO_PAD_VALUE))
-    .reduce((accumulator, current) => accumulator.concat(current), []);
-  const encodedProof = padArray(encodedUnPaddedProof, length, ZERO_PAD_VALUE);
-  return encodedProof;
+export function encodeProofNode(node: Hex): Hex[] {
+  return padArray(encodeHex(node), PROOF_ONE_LEVEL_LENGTH, ZERO_PAD_VALUE);
+}
+
+export function encodeProof(proof: Hex[], length: number): string[] {
+  const encodedUnPaddedProof = proof.map((node) => encodeProofNode(node)).flat();
+  return padArray(encodedUnPaddedProof, length, ZERO_PAD_VALUE);
 }
