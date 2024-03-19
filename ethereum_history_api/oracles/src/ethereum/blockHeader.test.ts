@@ -63,7 +63,7 @@ describe('headerToRlpFields', () => {
   });
 
   it('paris block', async () => {
-    const block = await loadBlockFixture('mainnet', 'paris', 'usdc');
+    const block = await loadBlockFixture('mainnet', 'paris', 'usdc_circle');
     const header = blockToHeader(block);
     expect(headerToRlpFields(header)).toMatchInlineSnapshot(`
       [

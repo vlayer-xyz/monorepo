@@ -2,10 +2,11 @@ use crate::misc::types::Bytes32;
 use crate::account_with_storage::{StorageProof, get_account_with_storage};
 use crate::fixtures::mainnet::{
     paris::{
-    usdc::{
+    usdc_circle::{
     header::{number, state_root, block_header_partial, block_header_rlp}, account::account,
     state_proof::state_proof, storage_proof::proofs
-}
+},
+    usdc_uniswap::{storage_proof::proofs as usdc_uniswap_proofs}
 },
     london::{
     crypto_punks::{
@@ -13,8 +14,7 @@ use crate::fixtures::mainnet::{
     block_header_partial as crypto_punks_block_header_partial,
     block_header_rlp as crypto_punks_block_header_rlp, number as crypto_punks_number
 },
-    account::account as crypto_punks_account, state_proof::state_proof as crypto_punks_state_proof,
-    storage_proof::proofs as crypto_punks_proofs
+    account::account as crypto_punks_account, state_proof::state_proof as crypto_punks_state_proof
 }
 }
 };
@@ -66,6 +66,6 @@ fn test_get_account_with_storage_storage_key_does_not_match_the_argument() {
     let _ = OracleMock::mock("get_proof").returns((account, state_proof, proofs[0]));
 
     let address = state_proof.key;
-    let storage_key = crypto_punks_proofs[0].key;
+    let storage_key = usdc_uniswap_proofs[0].key;
     let _ = get_account_with_storage(number, address, storage_key);
 }
