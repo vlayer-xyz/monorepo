@@ -5,8 +5,8 @@ import { STATE_PROOF_LENGTH, encodeValue } from '../../noir/oracles/accountOracl
 
 export function createStateProofFixture(stateProof: GetProofReturnType): string {
   const key = encodeHexString(stateProof.address);
-  const value = encodeValue(stateProof.accountProof).map((byte) => parseInt(byte, 16));
-  const proof = encodeProof(stateProof.accountProof, STATE_PROOF_LENGTH).map((byte) => parseInt(byte, 16));
+  const value = encodeValue(stateProof.accountProof);
+  const proof = encodeProof(stateProof.accountProof, STATE_PROOF_LENGTH);
   const depth = stateProof.accountProof.length;
   const stateProofFixture = `use crate::account::StateProof;
 
