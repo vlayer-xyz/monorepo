@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { encodeAddress, encodeArray, encodeBytes32, encodeField, encodeHex } from './encode.js';
+import { encodeAddress, encodeArray, encodeBytes32, encodeField, encodeHex, encodeProofNode } from './encode.js';
 import { MODULUS } from './const.js';
 
 describe('encodeField', () => {
@@ -107,5 +107,15 @@ describe('encodeAddress', () => {
 describe('encodeArray', () => {
   it('simple', () => {
     expect(encodeArray(new Uint8Array([0x00, 0x0a, 0xff]), 5)).toStrictEqual(['0x00', '0x0a', '0xff', '0x00', '0x00']);
+  });
+});
+
+describe('encodeProofNode', () => {
+  it('should pad to PROOF_ONE_LEVEL_LENGTH', () => {
+    const encodedProofNode = encodeProofNode('0x01');
+
+    expect(encodedProofNode[0]).toStrictEqual('0x01');
+    expect(encodedProofNode[1]).toStrictEqual('0x00');
+    expect(encodedProofNode.length).toBe(532);
   });
 });
