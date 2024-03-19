@@ -49,7 +49,7 @@ export function encodeArray(array: Uint8Array, padLength: number) {
   return padArray(
     Array.from(array)
       .map((it) => it.toString(16))
-      .map((it) => `0x${it}`),
+      .map((it) => `0x${it.length < BYTE_HEX_LENGTH ? '0' : ''}${it}`),
     padLength,
     ZERO_PAD_VALUE
   );

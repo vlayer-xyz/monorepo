@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { encodeAddress, encodeBytes32, encodeField, encodeHex } from './encode.js';
+import { encodeAddress, encodeArray, encodeBytes32, encodeField, encodeHex } from './encode.js';
 import { MODULUS } from './const.js';
 
 describe('encodeField', () => {
@@ -101,5 +101,11 @@ describe('encodeAddress', () => {
   it('invalid address', () => {
     // prettier-ignore
     expect(() => encodeAddress('0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbbaa')).toThrow('Invalid address: 0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbbaa');
+  });
+});
+
+describe('encodeArray', () => {
+  it('simple', () => {
+    expect(encodeArray(new Uint8Array([0x00, 0x0a, 0xff]), 5)).toStrictEqual(['0x00', '0x0a', '0xff', '0x00', '0x00']);
   });
 });
