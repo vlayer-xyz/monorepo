@@ -32,8 +32,7 @@ export const FIXTURES: Fixtures = {
     london: {
       crypto_punks: {
         blockNumber: 14_194_126n,
-        address: '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb',
-        storageKeys: []
+        address: '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb'
       },
       vitalik_balance: {
         blockNumber: 12_965_000n,
