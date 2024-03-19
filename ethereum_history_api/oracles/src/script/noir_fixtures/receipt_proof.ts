@@ -1,5 +1,5 @@
 import { encodeHexString } from '../../noir/noir_js/encode.js';
-import { encodeArray, encodeBytes32, encodeProof } from '../../noir/oracles/common/encode.js';
+import { encodeArray, encodeProof } from '../../noir/oracles/common/encode.js';
 import {
   MAX_RECEIPT_PROOF_LENGTH,
   MAX_RECEIPT_RLP_LENGTH,
