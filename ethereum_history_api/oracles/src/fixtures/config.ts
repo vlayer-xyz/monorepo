@@ -3,6 +3,7 @@ import { Address, Hex } from 'viem';
 export const JS_FIXTURES_DIRECTORY = 'fixtures';
 export const CIRCLE_USDC_BALANCE_STORAGE_KEY = '0x57d18af793d7300c4ba46d192ec7aa095070dde6c52c687c6d0d92fb8532b305';
 export const UNISWAP_V3_USDC_BALANCE_STORAGE_KEY = '0x1f21a62c4538bacf2aabeca410f0fe63151869f172e03c0e00357ba26a341eff';
+export const PUNK_INDEX_TO_ADDRESS_1_STORAGE_KEY = '0xbbc70db1b6c7afd11e79c0fb0051300458f1a3acb8ee9789d9b6b26c61ad9bc7';
 
 interface Fixture {
   blockNumber: bigint;
@@ -32,7 +33,8 @@ export const FIXTURES: Fixtures = {
     london: {
       crypto_punks: {
         blockNumber: 14_194_126n,
-        address: '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb'
+        address: '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb',
+        storageKeys: [PUNK_INDEX_TO_ADDRESS_1_STORAGE_KEY]
       },
       vitalik_balance: {
         blockNumber: 12_965_000n,
