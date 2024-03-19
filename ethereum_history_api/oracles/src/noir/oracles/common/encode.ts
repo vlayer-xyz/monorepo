@@ -49,7 +49,7 @@ export function encodeProofNode(node: Hex): Hex[] {
   return padArray(encodeHex(node), PROOF_ONE_LEVEL_LENGTH, ZERO_PAD_VALUE);
 }
 
-export function encodeProof(proof: Hex[], length: number): string[] {
+export function encodeProof(proof: Hex[], length: number): Hex[] {
   const encodedUnPaddedProof = proof.map((node) => encodeProofNode(node)).flat();
   return padArray(encodedUnPaddedProof, length, ZERO_PAD_VALUE);
 }
