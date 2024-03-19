@@ -50,6 +50,6 @@ export function encodeProofNode(node: Hex): Hex[] {
 }
 
 export function encodeProof(proof: Hex[], length: number): Hex[] {
-  const encodedUnPaddedProof = proof.map((node) => encodeProofNode(node)).flat();
+  const encodedUnPaddedProof = proof.map(encodeProofNode).flat();
   return padArray(encodedUnPaddedProof, length, ZERO_PAD_VALUE);
 }
