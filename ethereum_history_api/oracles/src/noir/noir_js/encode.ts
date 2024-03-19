@@ -1,8 +1,19 @@
-import { isHex } from 'viem';
+import { Hex, isHex } from 'viem';
 import { BYTE_HEX_LENGTH } from '../../util/const.js';
 
 // ENCODERS
-export function encodeHexString(value: string): Uint8Array {
+export function encodeHexString(value: string): Hex[] {
+  if (!isHex(value)) {
+    throw new Error(`Invalid hexstring: ${value}`);
+  }
+  const chunks: Hex[] = [];
+  for (let i = 2; i < value.length; i += BYTE_HEX_LENGTH) {
+    chunks.push(`0x${value.substr(i, BYTE_HEX_LENGTH)}`);
+  }
+  return chunks;
+}
+
+export function encodeHexStringToArray(value: string): Uint8Array {
   if (!isHex(value)) {
     throw new Error(`Invalid hexstring: ${value}`);
   }
