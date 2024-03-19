@@ -1,16 +1,10 @@
 import { Hex, isHex } from 'viem';
 import { BYTE_HEX_LENGTH } from '../../util/const.js';
+import { encodeField } from '../oracles/common/encode.js';
 
 // ENCODERS
 export function encodeHexString(value: string): Hex[] {
-  if (!isHex(value)) {
-    throw new Error(`Invalid hexstring: ${value}`);
-  }
-  const chunks: Hex[] = [];
-  for (let i = 2; i < value.length; i += BYTE_HEX_LENGTH) {
-    chunks.push(`0x${value.substr(i, BYTE_HEX_LENGTH)}`);
-  }
-  return chunks;
+  return Array.from(encodeHexStringToArray(value)).map((byte) => encodeField(byte));
 }
 
 export function encodeHexStringToArray(value: string): Uint8Array {
