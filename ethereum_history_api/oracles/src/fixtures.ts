@@ -11,17 +11,17 @@ export async function loadFixture<T>(chain: string, hardFork: string, fixtureNam
   return fixture.result;
 }
 
-export async function loadBlockFixture(
+export async function loadBlockFixture<TIncludeTransactions extends boolean = false>(
   chain: string,
   hardFork: string,
   fixtureName: string,
-  includeTransactions = false
-): Promise<Block> {
+  includeTransactions: TIncludeTransactions
+): Promise<Block<TIncludeTransactions>> {
   const blockNumber = FIXTURES[chain][hardFork][fixtureName].blockNumber;
   if (includeTransactions) {
-    return loadFixture<Block>(chain, hardFork, fixtureName, `eth_getBlockByHash_${blockNumber}_includeTransactions`);
+    return loadFixture(chain, hardFork, fixtureName, `eth_getBlockByHash_${blockNumber}_includeTransactions`);
   } else {
-    return loadFixture<Block>(chain, hardFork, fixtureName, `eth_getBlockByHash_${blockNumber}`);
+    return loadFixture(chain, hardFork, fixtureName, `eth_getBlockByHash_${blockNumber}`);
   }
 }
 
@@ -54,12 +54,14 @@ export async function loadReceiptFixture(
   return txReceipt;
 }
 
-export async function loadBlockFixtures(): Promise<Block[]> {
-  const blocks: Block[] = [];
+export async function loadBlockFixtures<TIncludeTransactions extends boolean = false>(
+  includeTransactions: TIncludeTransactions
+): Promise<Block<TIncludeTransactions>[]> {
+  const blocks: Block<TIncludeTransactions>[] = [];
   for (const chain in FIXTURES) {
     for (const hardFork in FIXTURES[chain]) {
       for (const fixtureName in FIXTURES[chain][hardFork]) {
-        blocks.push(await loadBlockFixture(chain, hardFork, fixtureName));
+        blocks.push(await loadBlockFixture(chain, hardFork, fixtureName, includeTransactions));
       }
     }
   }

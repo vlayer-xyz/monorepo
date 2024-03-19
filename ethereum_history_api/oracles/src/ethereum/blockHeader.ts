@@ -72,10 +72,11 @@ export function toHexString(arg: number | bigint): Hex {
   return `0x${arg.toString(16)}`;
 }
 
-/* Can be removed after Dencun hardfork */
-export type Block = GetBlockReturnType & {
-  blobGasUsed?: bigint;
-  excessBlobGas?: bigint;
+/* Can be removed after viem adds  parentBeaconBlockRoot */
+export type Block<TIncludeTransactions extends boolean = false> = GetBlockReturnType<
+  undefined,
+  TIncludeTransactions
+> & {
   parentBeaconBlockRoot?: Hex;
 };
 
