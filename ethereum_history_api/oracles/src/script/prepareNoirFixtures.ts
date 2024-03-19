@@ -5,7 +5,9 @@ import { createHeaderFixture } from './noir_fixtures/header.js';
 import { createStateProofFixture } from './noir_fixtures/state_proof.js';
 import { createAccountFixture } from './noir_fixtures/account.js';
 import { createStorageProofFixture } from './noir_fixtures/storage_proof.js';
+import { createReceiptProofFixture } from './noir_fixtures/receipt_proof.js';
 import { FIXTURES } from '../fixtures/config.js';
+import { getReceiptProof } from '../ethereum/receiptProof.js';
 
 const NOIR_FIXTURES_DIRECTORY = '../circuits/lib/src/fixtures';
 await rm(NOIR_FIXTURES_DIRECTORY, { recursive: true, force: true });
@@ -20,7 +22,7 @@ for (const chain in FIXTURES) {
     const hardforkModuleFile = `${NOIR_FIXTURES_DIRECTORY}/${chain}/${hardFork}.nr`;
 
     for (const fixtureName in FIXTURES[chain][hardFork]) {
-      const { blockNumber, address, storageKeys } = FIXTURES[chain][hardFork][fixtureName];
+      const { blockNumber, address, storageKeys, transactionHashes } = FIXTURES[chain][hardFork][fixtureName];
       const modulePath = `${NOIR_FIXTURES_DIRECTORY}/${chain}/${hardFork}/${fixtureName}`;
       await mkdir(modulePath, { recursive: true });
       const fixtureModules: string[] = [];
@@ -42,6 +44,16 @@ for (const chain in FIXTURES) {
         if (storageKeys) {
           await writeFile(join(modulePath, 'storage_proof.nr'), createStorageProofFixture(stateProof.storageProof));
           fixtureModules.push('storage_proof');
+        }
+
+        if (transactionHashes) {
+          const transactionIndexes = transactionHashes.map((hash) => block.transactions.indexOf(hash));
+          const receiptProofs = await Promise.all(
+            transactionIndexes.map(async (txIdx) => await getReceiptProof(client, blockNumber, txIdx))
+          );
+
+          await writeFile(join(modulePath, 'receipt_proof.nr'), createReceiptProofFixture(receiptProofs));
+          fixtureModules.push('receipt_proof');
         }
       }
 
