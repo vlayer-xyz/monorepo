@@ -45,6 +45,16 @@ export function encodeHex(hexString: string): Hex[] {
   return chunks;
 }
 
+export function encodeArray(array: Uint8Array, padLength: number) {
+  return padArray(
+    Array.from(array)
+      .map((it) => it.toString(16))
+      .map((it) => `0x${it}`),
+    padLength,
+    ZERO_PAD_VALUE
+  );
+}
+
 export function encodeProof(proof: string[], length: number): string[] {
   const encodedUnPaddedProof = proof
     .map((it) => encodeHex(it))
