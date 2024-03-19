@@ -8,8 +8,8 @@ describe('getReceiptProof', () => {
   it('getReceiptProof success', async () => {
     const blockNumber = 19_000_000n;
     const mockFilePaths = [
-      './fixtures/mainnet/paris/usdc/eth_getBlockByHash_19000000.json',
-      './fixtures/mainnet/paris/usdc/alchemy_getTransactionReceipts_19000000.json'
+      './fixtures/mainnet/paris/usdc_circle/eth_getBlockByHash_19000000.json',
+      './fixtures/mainnet/paris/usdc_circle/alchemy_getTransactionReceipts_19000000.json'
     ];
     const mockingClient = await createMockClient(mockFilePaths);
     const receiptProof = await getReceiptProof(mockingClient, blockNumber, 0);
@@ -26,8 +26,8 @@ describe('getReceiptProof', () => {
   it('getReceiptProof fail: receiptsRoot mismatch', async () => {
     const blockNumber = 19_000_000n;
     const mockFilePaths = [
-      './fixtures/mainnet/paris/usdc/eth_getBlockByHash_19000000.json',
-      './fixtures/mainnet/paris/usdc/alchemy_getTransactionReceipts_19000000.json'
+      './fixtures/mainnet/paris/usdc_circle/eth_getBlockByHash_19000000.json',
+      './fixtures/mainnet/paris/usdc_circle/alchemy_getTransactionReceipts_19000000.json'
     ];
 
     const modifyReceipt = (call: Call): Call => {

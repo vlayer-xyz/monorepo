@@ -11,8 +11,8 @@ use crate::fixtures::mainnet::{
     block_header_partial as frontier_first_block_header_partial,
     block_header_rlp as frontier_first_block_header_rlp
 },
-    paris::usdc::header::{block_header_partial as paris_block_header_partial, block_header_rlp as paris_block_header_rlp},
-    paris::usdc::header::{hash, number, state_root, transactions_root, receipts_root},
+    paris::usdc_circle::header::{block_header_partial as paris_block_header_partial, block_header_rlp as paris_block_header_rlp},
+    paris::usdc_circle::header::{hash, number, state_root, transactions_root, receipts_root},
     cancun::small_block::header::{
     block_header_partial as cancun_small_block_header_partial,
     block_header_rlp as cancun_small_block_header_rlp, hash as cancun_hash,
