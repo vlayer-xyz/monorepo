@@ -12,7 +12,7 @@ describe('encodeHexStringToArray', () => {
 
 describe('encodeHexString', () => {
   it('encodes hex string', () => {
-    expect(encodeHexString('0x1234')).toStrictEqual(['0x12', '0x34']);
+    expect(encodeHexString('0x000123')).toStrictEqual(['0x00', '0x01', '0x23']);
   });
 });
 
