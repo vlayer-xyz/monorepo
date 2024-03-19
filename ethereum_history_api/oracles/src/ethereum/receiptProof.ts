@@ -1,7 +1,7 @@
 import { TransactionReceipt, Hex } from 'viem';
 import { assert } from 'vitest';
 import { AlchemyClient } from './client.js';
-import { ReceiptTrie } from './receiptTrie.js';
+import { ReceiptTrie } from './trie.js';
 
 export async function getReceiptTrie(receipts: TransactionReceipt[], expectedRoot: Hex): Promise<ReceiptTrie> {
   const trie = new ReceiptTrie();
