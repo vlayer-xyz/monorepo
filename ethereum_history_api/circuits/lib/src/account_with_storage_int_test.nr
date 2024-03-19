@@ -45,7 +45,7 @@ fn test_get_account_with_storage_invalid_state_root() {
 
     let address = state_proof.key;
     let storage_key = proofs[0].key;
-    let _ = get_account_with_storage(number, address, storage_key);
+    let _ = get_account_with_storage(crypto_punks_number, address, storage_key);
 }
 
 #[test(should_fail_with = "Middle node hash does not match the hash extracted from the preceding node")]

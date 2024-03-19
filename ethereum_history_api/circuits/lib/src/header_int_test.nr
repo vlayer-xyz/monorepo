@@ -16,9 +16,7 @@ fn test_get_header_success() {
     assert_eq(paris_block_header_partial.receipts_root, header.receipts_root);
 }
 
-// TODO: This test should fail with the message "block number does not match the argument". Change after the assertion is uncommented.
-// #[test(should_fail_with = "block number does not match the argument")]
-#[test]
+#[test(should_fail_with = "Block number does not match the argument")]
 fn test_get_header_invalid_block_number() {
     let wrong_block_number = number + 1;
     let _ = OracleMock::mock("get_header").returns((paris_block_header_partial, paris_block_header_rlp));
