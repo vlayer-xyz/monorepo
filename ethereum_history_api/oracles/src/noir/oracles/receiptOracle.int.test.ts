@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createMockClient } from '../../ethereum/mockClient.js';
-import { OFFSETS, getReceiptOracle } from './receiptOracle.js';
+import { OFFSETS, OFFSETS_PROOF, getReceiptOracle } from './receiptOracle.js';
 import { BYTES32_LENGTH } from './common/const.js';
 
 describe('getReceiptOracle', () => {
@@ -8,21 +8,30 @@ describe('getReceiptOracle', () => {
     const cancunBlockNumberInNoirFormat = '0x12884e1';
     const chainLinkTransferTxIdInNoirFormat = '0x08';
     const stateRootInNoirFormat = new Array(BYTES32_LENGTH).fill('0x00');
-    const mockFilePaths = ['./fixtures/mainnet/cancun/small_block/alchemy_getTransactionReceipts_19432673.json'];
+    const mockFilePaths = [
+      './fixtures/mainnet/cancun/small_block/alchemy_getTransactionReceipts_19432673.json',
+      './fixtures/mainnet/cancun/small_block/eth_getBlockByHash_19432673.json'
+    ];
     const client = await createMockClient(mockFilePaths);
 
-    const receiptProof = await getReceiptOracle(client, [
+    const result = await getReceiptOracle(client, [
       [cancunBlockNumberInNoirFormat],
       [chainLinkTransferTxIdInNoirFormat]
     ]);
 
-    expect(receiptProof[OFFSETS.BLOB_GAS_USED]).toStrictEqual('0x');
-    expect(receiptProof[OFFSETS.BLOB_GAS_PRICE]).toStrictEqual('0x');
-    expect(receiptProof[OFFSETS.STATUS]).toStrictEqual('0x01');
-    expect(receiptProof[OFFSETS.STATE_ROOT]).toStrictEqual(stateRootInNoirFormat);
-    expect(receiptProof[OFFSETS.CUMULATIVE_GAS_USED]).toStrictEqual('0x0a17e1');
+    const receipt = result.slice(0, 6);
+    const proof = result.slice(6, 10);
+
+    expect(proof[OFFSETS_PROOF.KEY]).toStrictEqual(['0x00', '0x00', '0x00', '0x00', '0x00', '0x00', '0x08']);
+    expect(proof[OFFSETS_PROOF.DEPTH]).toStrictEqual('0x03');
+
+    expect(receipt[OFFSETS.BLOB_GAS_USED]).toStrictEqual('0x');
+    expect(receipt[OFFSETS.BLOB_GAS_PRICE]).toStrictEqual('0x');
+    expect(receipt[OFFSETS.STATUS]).toStrictEqual('0x01');
+    expect(receipt[OFFSETS.STATE_ROOT]).toStrictEqual(stateRootInNoirFormat);
+    expect(receipt[OFFSETS.CUMULATIVE_GAS_USED]).toStrictEqual('0x0a17e1');
     // prettier-ignore
-    expect(receiptProof[OFFSETS.LOGS_BLOOM]).toStrictEqual([
+    expect(receipt[OFFSETS.LOGS_BLOOM]).toStrictEqual([
       "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", 
       "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x10", "0x00",
       "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", 
