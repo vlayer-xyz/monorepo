@@ -4,16 +4,16 @@ TypeScript oracle server that provides data for circuits.
 
 There are three oracles:
 
-- Header Oracle - fetches Ethereum block header
-- Account Oracle - fetches Ethereum account state with state proof
-- Proof Oracle - fetches Ethereum storage value with both storage & state proof
+- **Header** Oracle - fetches Ethereum block header
+- **Account** Oracle - fetches Ethereum account state with state proof
+- **Proof** Oracle - fetches Ethereum storage value with both storage & state proof
 
 Below are headers for respective functions in Noir:
 
 ```rust
-fn get_header(block_no: Field) -> (BlockHeaderPartial, BlockHeaderRlp);
-fn get_account(block_no: Field, address: Address) -> AccountWithStateProof;
-fn get_proof(block_no: Field, address: Address, storage_key: Bytes32) -> StateAndStorageProof;
+fn get_header_oracle(block_no: Field) -> (BlockHeaderPartial, BlockHeaderRlp);
+fn get_account_oracle(block_no: Field, address: Address) -> AccountWithStateProof;
+fn get_proof_oracle(block_no: Field, address: Address, storage_key: Bytes32) -> StateAndStorageProof;
 ```
 
 ## Starting oracle server
@@ -29,56 +29,66 @@ To start oracle server run:
 yarn oracle-server
 ```
 
-You can also run the server in watch mode:
+or in watch mode:
 
 ```sh
 yarn oracle-server:watch
 ```
 
+This will start the server listening at `http://127.0.0.1:5555`.
+
+You can pass this URL to `nargo` commands using `--oracle-resolver=http://127.0.0.1:5555` flag.
+
 ## Testing
 
-To test oracles run:
+To run unit & integration tests:
 
 ```sh
 yarn test:unit
 ```
 
-To be able to additionally see the coverage of tests, run:
+or with coverage report:
 
 ```sh
 yarn test:unit:coverage
 ```
 
-After running these commands unit tests, but also integration tests of oracles are run.
-
 ### Fixtures
 
-A few projects in this monorepo use fixtures for testing. Fixtures are precached data from JSON RPC node, saved for later use. There are two formats to which fixtures are generated: Noir and js. Both described below.
+Fixtures are saved data from `JSON RPC` node to be used in tests. They allow our tests to run offline and be deterministic. There are two formats to which fixtures are generated: `Noir` and `JS`.
 
-#### Noir Fixtures
-
-Noir fixtures are generated as Noir modules (i.e. `.nr` files) and consumed in Noir tests.
-
-To generate data for Noir tests run:
+To generate fixtures run:
 
 ```sh
-yarn prepare-noir-fixtures
+yarn prepare-fixtures
 ```
 
-Files will be generated in `ethereum_history_api/circuits/lib/src/fixtures`.
+This prepares both `JS` and `Noir` fixtures
 
 #### JavaScript Fixtures
 
-JavaScript fixtures are JSON files which cache JSON RPC request/responses pairs.
-JavaScript fixtures are consumed either directly in unit tests or through a Mock client in integration tests.
+`JavaScript` fixtures are JSON files which cache JSON RPC request/responses pairs.
+`JavaScript` fixtures are consumed either directly in unit tests or through a `Mock client` in integration tests.
 
-To generate data for JavaScript tests run:
+To generate `JS` fixtures:
 
 ```sh
 yarn prepare-js-fixtures
 ```
 
 Files will be generated in `ethereum_history_api/oracles/fixtures`.
+
+#### Noir Fixtures
+
+Noir fixtures are generated as Noir modules (i.e. `.nr` files) and consumed in `Noir` tests.
+
+To generate `Noir` fixtures:
+
+```sh
+yarn prepare-noir-fixtures
+```
+
+Files will be generated in `ethereum_history_api/circuits/lib/src/fixtures`.
 
 #### Configuration of Fixtures
 
@@ -89,14 +99,14 @@ Examples of fixtures:
 - Crypto punk account state at london block
 - USDC Circle balance as paris block
 
-To configure the data that will be prepared, manipulate `oracles/src/fixtures/config.ts` file. To add a certain Account enter block number and account address. To additionally add Storage slots from that account enter chosen storage keys. New configuration data needs to adhere to the format below:
+Fixture config is located at [`config.ts`](src/fixtures/config.ts) file. To add a certain Account enter `block number` and `account address`. To additionally add Storage slots from that account enter chosen `storage keys`. New configuration data needs to adhere to the format below:
 
 ```
 interface Fixture {
   blockNumber: bigint;
-  address: Address;
+  address?: Address;
   storageKeys?: Hex[];
 }
 ```
 
-Note: storageKeys field can be omitted if generating storage slots is not expected.
+Note: both `address` & `storageKeys` fields are optional.
