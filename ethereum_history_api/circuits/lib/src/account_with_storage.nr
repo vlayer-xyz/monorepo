@@ -54,6 +54,8 @@ pub fn get_account_with_storage(
     verify_account(address, account, state_proof, state_root);
     verify_storage_values(account.storage_root, [storage_proof]);
 
+    assert(storage_key == storage_proof.key, "Storage key does not match the argument");
+
     StorageWithinBlock { block_hash: hash, account, values: [storage_proof.value] }
 }
 

@@ -1,13 +1,13 @@
 use crate::account::get_account;
 use crate::fixtures::mainnet::{
     paris::{
-    usdc::{
+    usdc_circle::{
     header::{number, state_root, block_header_partial, block_header_rlp}, account::account,
     state_proof::state_proof
 }
 },
     london::vitalik_balance::{
-    account::{account as account_from_different_header},
+    account::account as account_from_different_header,
     header::state_root as state_root_from_different_header,
     state_proof::state_proof as state_proof_from_different_header
 }

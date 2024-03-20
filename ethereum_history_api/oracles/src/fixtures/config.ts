@@ -42,10 +42,15 @@ export const FIXTURES: Fixtures = {
       }
     },
     paris: {
-      usdc: {
+      usdc_circle: {
         blockNumber: 19_000_000n,
         address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
         storageKeys: [CIRCLE_USDC_BALANCE_STORAGE_KEY]
+      },
+      usdc_uniswap: {
+        blockNumber: 19_000_000n,
+        address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+        storageKeys: [UNISWAP_V3_USDC_BALANCE_STORAGE_KEY]
       }
     },
     cancun: {
