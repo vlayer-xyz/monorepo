@@ -3,6 +3,7 @@ import { encodeHexString } from '../../noir/noir_js/encode.js';
 import { blockToHeader, headerToRlp } from '../../ethereum/blockHeader.js';
 import { padArray } from '../../util/array.js';
 import { MAX_HEADER_RLP_SIZE } from '../../noir/oracles/headerOracle/encode.js';
+import { ZERO_PAD_VALUE } from '../../noir/oracles/common/const.js';
 
 export function createHeaderFixture(block: GetBlockReturnType): string {
   const blockHash = encodeHexString(block.hash);
@@ -12,8 +13,8 @@ export function createHeaderFixture(block: GetBlockReturnType): string {
 
   const header = blockToHeader(block);
   const headerHex = headerToRlp(header);
-  const headerUint8Array = encodeHexString(headerHex);
-  const headerData = JSON.stringify(padArray(Array.from(headerUint8Array), MAX_HEADER_RLP_SIZE, 0));
+  const headerHexArray = encodeHexString(headerHex);
+  const headerData = padArray(Array.from(headerHexArray), MAX_HEADER_RLP_SIZE, ZERO_PAD_VALUE);
 
   const headerFixture = `use crate::header::{BlockHeaderPartial, BlockHeaderRlp};
 
@@ -31,8 +32,8 @@ global receipts_root = [
     ${receiptsRoot.join(',')}
 ];
 
-global encoded_length: Field = ${headerUint8Array.length};
-global encoded_data = ${headerData};
+global encoded_length: Field = ${headerHexArray.length};
+global encoded_data = [${headerData.join(',')}];
 
 global block_header_partial = BlockHeaderPartial { number, hash, state_root, transactions_root, receipts_root };
 global block_header_rlp = BlockHeaderRlp { length: encoded_length, data: encoded_data};
