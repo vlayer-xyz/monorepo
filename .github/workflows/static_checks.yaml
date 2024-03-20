@@ -66,3 +66,6 @@ jobs:
           cd ..
           git diff --exit-code ./oracles/fixtures
           git diff --exit-code ./circuits/lib/src/fixtures
+
+      - name: Run nargo format
+        run: nargo fmt --check
