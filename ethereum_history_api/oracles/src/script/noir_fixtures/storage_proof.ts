@@ -21,7 +21,7 @@ global proofs = [${storageProofsNoir.join(',')}
 function createSingleStorageProofFixture(storageProof: StorageProof): string {
   const key = encodeHexString(storageProof.key);
   const value = encodeBytes32(storageProof.value);
-  const proof = encodeProof(storageProof.proof, STORAGE_PROOF_LENGTH).map((byte) => parseInt(byte, 16));
+  const proof = encodeProof(storageProof.proof, STORAGE_PROOF_LENGTH);
   const depth = storageProof.proof.length;
   const storageProofFixture = `
   StorageProof {

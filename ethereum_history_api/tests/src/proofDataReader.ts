@@ -2,7 +2,7 @@ import { promises as fs } from 'fs';
 
 import toml from 'toml';
 
-import { encodeHexString } from 'noir-ethereum-api-oracles';
+import { encodeHexStringToArray } from 'noir-ethereum-api-oracles';
 import { type InputMap } from '@noir-lang/noirc_abi';
 
 interface ProofData {
@@ -12,7 +12,7 @@ interface ProofData {
 
 async function readProof(path: string): Promise<Uint8Array> {
   const proofHex = await fs.readFile(path, 'utf-8');
-  return encodeHexString('0x' + proofHex);
+  return encodeHexStringToArray('0x' + proofHex);
 }
 
 async function readInputMap(path: string): Promise<InputMap> {
