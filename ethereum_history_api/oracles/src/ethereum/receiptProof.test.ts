@@ -5,7 +5,7 @@ import { Call } from './recordingClient.js';
 import { TransactionReceipt, toRlp } from 'viem';
 
 describe('getReceiptProof', () => {
-  it('getReceiptProof success', async () => {
+  it('success', async () => {
     const blockNumber = 19_000_000n;
     const txIdx = 0;
     const mockFilePaths = [
@@ -28,7 +28,7 @@ describe('getReceiptProof', () => {
     );
   });
 
-  it('getReceiptProof fail: receiptsRoot mismatch', async () => {
+  it('fail: receiptsRoot mismatch', async () => {
     const blockNumber = 19_000_000n;
     const mockFilePaths = [
       './fixtures/mainnet/paris/usdc_circle/eth_getBlockByHash_19000000.json',

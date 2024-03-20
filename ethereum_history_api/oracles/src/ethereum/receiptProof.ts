@@ -1,6 +1,6 @@
 import { TransactionReceipt, Hex } from 'viem';
 import { AlchemyClient } from './client.js';
-import { ReceiptTrie } from './receiptTrie.js';
+import { ReceiptTrie } from './trie.js';
 import { encodeReceipt } from './receipt.js';
 import { assert } from '../util/assert.js';
 

@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { GetProofReturnType, Hash, TransactionReceipt } from 'viem';
+import { GetProofReturnType, Hash, Transaction, TransactionReceipt } from 'viem';
 import { FIXTURES, JS_FIXTURES_DIRECTORY } from './fixtures/config.js';
 import { BaseFixture } from './fixtures/types.js';
 import { readObject } from './util/file.js';
@@ -32,6 +32,20 @@ export async function loadProofFixture(
 ): Promise<GetProofReturnType> {
   const blockNumber = FIXTURES[chain][hardFork][fixtureName].blockNumber;
   return loadFixture<GetProofReturnType>(chain, hardFork, fixtureName, `eth_getProof_${blockNumber}`);
+}
+
+export async function loadTxFixture(
+  chain: string,
+  hardFork: string,
+  fixtureName: string,
+  txHash: Hash
+): Promise<Transaction> {
+  const blockWithTransactions = await loadBlockFixture(chain, hardFork, fixtureName, true);
+  const tx = blockWithTransactions.transactions.find((tx) => tx.hash === txHash);
+  if (!tx) {
+    throw new Error(`Transaction ${txHash} not found in fixture ${fixtureName}`);
+  }
+  return tx;
 }
 
 export async function loadReceiptFixture(
