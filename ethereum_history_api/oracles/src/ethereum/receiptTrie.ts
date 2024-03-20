@@ -11,18 +11,22 @@ export class ReceiptTrie {
   }
 
   public async put(txIdx: number, receipt: TransactionReceipt) {
-    const key = ReceiptTrie.keyFromIdx(txIdx);
+    const key = ReceiptTrie.keyFromIdxBytes(txIdx);
     const value = hexToBytes(encodeReceipt(receipt));
     await this.trie.put(key, value);
   }
 
   public async createProof(txIdx: number): Promise<Hex[]> {
-    const key = ReceiptTrie.keyFromIdx(txIdx);
+    const key = ReceiptTrie.keyFromIdxBytes(txIdx);
     const proof = await this.trie.createProof(key);
     return proof.map((node) => bytesToHex(node));
   }
 
-  public static keyFromIdx(txIdx: number): Uint8Array {
+  private static keyFromIdxBytes(txIdx: number): Uint8Array {
     return toRlp(encodeField(txIdx), 'bytes');
+  }
+
+  public static keyFromIdx(txIdx: number): Hex {
+    return toRlp(encodeField(txIdx));
   }
 }
