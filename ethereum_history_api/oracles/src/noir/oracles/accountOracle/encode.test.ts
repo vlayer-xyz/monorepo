@@ -9,21 +9,21 @@ import { encodeAccount, encodeStateProof, encodeStorageProof } from './encode.js
 describe('AccountOracle encode', () => {
   describe('encodeAccount', () => {
     it('encode account', async () => {
-      const proofFixture = await loadProofFixture('mainnet', 'paris', 'usdc');
+      const proofFixture = await loadProofFixture('mainnet', 'paris', 'usdc_circle');
       expect(encodeAccount(proofFixture)).toStrictEqual(serializeAccount(accountAsFields));
     });
   });
 
   describe('encodeStateProof', () => {
     it('encode state proof', async () => {
-      const proofFixture = await loadProofFixture('mainnet', 'paris', 'usdc');
+      const proofFixture = await loadProofFixture('mainnet', 'paris', 'usdc_circle');
       expect(encodeStateProof(proofFixture)).toStrictEqual(serializeStateProof(stateProofAsFields));
     });
   });
 
   describe('encodeStorageProof', () => {
     it('encode storage proof', async () => {
-      const proofFixture = await loadProofFixture('mainnet', 'paris', 'usdc');
+      const proofFixture = await loadProofFixture('mainnet', 'paris', 'usdc_circle');
       const usdcCircleStorageKey = '0x57d18af793d7300c4ba46d192ec7aa095070dde6c52c687c6d0d92fb8532b305';
       expect(encodeStorageProof(usdcCircleStorageKey, proofFixture.storageProof[0])).toStrictEqual(
         serializeStorageProof(storageProofAsFields)
