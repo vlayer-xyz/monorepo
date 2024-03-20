@@ -1,12 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { TransactionEIP1559, TransactionEIP2930, TransactionEIP4844, TransactionLegacy } from 'viem';
 import { loadTxFixture } from '../fixtures.js';
-import {
-  eip1559TransactionToRlpFields,
-  eip2930TransactionToRlpFields,
-  eip4844TransactionToRlpFields,
-  legacyTransactionToRlpFields
-} from './transaction.js';
+import { TxRlpEncoder } from './transaction.js';
 import { assert } from '../util/assert.js';
 
 describe('transactionToRpFields', () => {
@@ -19,7 +14,7 @@ describe('transactionToRpFields', () => {
     )) as TransactionLegacy;
     assert(legacyTx.type === 'legacy', 'Expected legacy transaction');
 
-    expect(legacyTransactionToRlpFields(legacyTx)).toMatchInlineSnapshot(`
+    expect(TxRlpEncoder.legacyToFields(legacyTx)).toMatchInlineSnapshot(`
       [
         "0x03",
         "0x0c76bbf5fb",
@@ -43,7 +38,7 @@ describe('transactionToRpFields', () => {
     )) as TransactionEIP2930;
     assert(eip2930Tx.type === 'eip2930', 'Expected eip2930 transaction');
 
-    expect(eip2930TransactionToRlpFields(eip2930Tx)).toMatchInlineSnapshot(`
+    expect(TxRlpEncoder.eip2930ToFields(eip2930Tx)).toMatchInlineSnapshot(`
       [
         "0x01",
         "0x035f",
@@ -129,7 +124,7 @@ describe('transactionToRpFields', () => {
     )) as TransactionEIP1559;
     assert(eip1559Tx.type === 'eip1559', 'Expected eip1559 transaction');
 
-    expect(eip1559TransactionToRlpFields(eip1559Tx)).toMatchInlineSnapshot(`
+    expect(TxRlpEncoder.eip1559ToFields(eip1559Tx)).toMatchInlineSnapshot(`
       [
         "0x01",
         "0x485a",
@@ -156,7 +151,7 @@ describe('transactionToRpFields', () => {
     )) as TransactionEIP4844;
     assert(eip4844Tx.type === 'eip4844', 'Expected eip4844 transaction');
 
-    expect(eip4844TransactionToRlpFields(eip4844Tx)).toMatchInlineSnapshot(`
+    expect(TxRlpEncoder.eip4844ToFields(eip4844Tx)).toMatchInlineSnapshot(`
       [
         "0x01",
         "0x0954d2",

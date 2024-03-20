@@ -13,87 +13,89 @@ import {
 import { RecursiveArray, txTypeToHex } from './receipt.js';
 import { encodeField } from '../noir/oracles/common/encode.js';
 
-export function accessListToRlpFields(accessList: AccessList): RecursiveArray<Hex> {
-  return accessList.map(({ address, storageKeys }) => [address, storageKeys]);
-}
-
 type TxBase = Omit<TransactionBase, 'yParity'>;
 
-export function signatureToRlpFields(baseTx: TxBase): Hex[] {
-  return [encodeField(baseTx.v), baseTx.r, baseTx.s];
-}
+export class TxRlpEncoder {
+  public static txToFields(tx: Transaction): RecursiveArray<Hex> {
+    switch (tx.type) {
+      case 'legacy':
+        return this.legacyToFields(tx as TransactionLegacy);
+      case 'eip2930':
+        return this.eip2930ToFields(tx as TransactionEIP2930);
+      case 'eip1559':
+        return this.eip1559ToFields(tx as TransactionEIP1559);
+      case 'eip4844':
+        return this.eip4844ToFields(tx as TransactionEIP4844);
+      default:
+        throw new Error(`Unknown transaction type: ${(tx as Transaction).type}`);
+    }
+  }
 
-export function toValueInputTxToRlpFields(tx: TxBase): Hex[] {
-  return [tx.to ?? '0x', encodeField(tx.value), tx.input];
-}
+  public static legacyToFields(tx: TransactionLegacy): RecursiveArray<Hex> {
+    return [
+      encodeField(tx.nonce),
+      encodeField(tx.gasPrice),
+      encodeField(tx.gas),
+      ...this.toValueInputToFields(tx),
+      ...this.signatureToFields(tx)
+    ];
+  }
 
-export function legacyTransactionToRlpFields(tx: TransactionLegacy): RecursiveArray<Hex> {
-  return [
-    encodeField(tx.nonce),
-    encodeField(tx.gasPrice),
-    encodeField(tx.gas),
-    ...toValueInputTxToRlpFields(tx),
-    ...signatureToRlpFields(tx)
-  ];
-}
+  public static eip2930ToFields(tx: TransactionEIP2930): RecursiveArray<Hex> {
+    return [
+      encodeField(tx.chainId),
+      encodeField(tx.nonce),
+      encodeField(tx.gasPrice),
+      encodeField(tx.gas),
+      ...this.toValueInputToFields(tx),
+      this.accessListToFields(tx.accessList),
+      ...this.signatureToFields(tx)
+    ];
+  }
 
-export function eip2930TransactionToRlpFields(tx: TransactionEIP2930): RecursiveArray<Hex> {
-  return [
-    encodeField(tx.chainId),
-    encodeField(tx.nonce),
-    encodeField(tx.gasPrice),
-    encodeField(tx.gas),
-    ...toValueInputTxToRlpFields(tx),
-    accessListToRlpFields(tx.accessList),
-    ...signatureToRlpFields(tx)
-  ];
-}
+  public static eip1559ToFields(tx: TransactionEIP1559): RecursiveArray<Hex> {
+    return [
+      encodeField(tx.chainId),
+      encodeField(tx.nonce),
+      encodeField(tx.maxPriorityFeePerGas),
+      encodeField(tx.maxFeePerGas),
+      encodeField(tx.gas),
+      ...this.toValueInputToFields(tx),
+      this.accessListToFields(tx.accessList),
+      ...this.signatureToFields(tx)
+    ];
+  }
 
-export function eip1559TransactionToRlpFields(tx: TransactionEIP1559): RecursiveArray<Hex> {
-  return [
-    encodeField(tx.chainId),
-    encodeField(tx.nonce),
-    encodeField(tx.maxPriorityFeePerGas),
-    encodeField(tx.maxFeePerGas),
-    encodeField(tx.gas),
-    ...toValueInputTxToRlpFields(tx),
-    accessListToRlpFields(tx.accessList),
-    ...signatureToRlpFields(tx)
-  ];
-}
+  public static eip4844ToFields(tx: TransactionEIP4844): RecursiveArray<Hex> {
+    return [
+      encodeField(tx.chainId),
+      encodeField(tx.nonce),
+      encodeField(tx.maxPriorityFeePerGas),
+      encodeField(tx.maxFeePerGas),
+      encodeField(tx.gas),
+      ...this.toValueInputToFields(tx),
+      this.accessListToFields(tx.accessList),
+      encodeField(tx.maxFeePerBlobGas),
+      tx.blobVersionedHashes,
+      ...this.signatureToFields(tx)
+    ];
+  }
 
-export function eip4844TransactionToRlpFields(tx: TransactionEIP4844): RecursiveArray<Hex> {
-  return [
-    encodeField(tx.chainId),
-    encodeField(tx.nonce),
-    encodeField(tx.maxPriorityFeePerGas),
-    encodeField(tx.maxFeePerGas),
-    encodeField(tx.gas),
-    ...toValueInputTxToRlpFields(tx),
-    accessListToRlpFields(tx.accessList),
-    encodeField(tx.maxFeePerBlobGas),
-    tx.blobVersionedHashes,
-    ...signatureToRlpFields(tx)
-  ];
-}
+  private static accessListToFields(accessList: AccessList): RecursiveArray<Hex> {
+    return accessList.map(({ address, storageKeys }) => [address, storageKeys]);
+  }
 
-export function transactionToRlpFields(tx: Transaction): RecursiveArray<Hex> {
-  switch (tx.type) {
-    case 'legacy':
-      return legacyTransactionToRlpFields(tx as TransactionLegacy);
-    case 'eip2930':
-      return eip2930TransactionToRlpFields(tx as TransactionEIP2930);
-    case 'eip1559':
-      return eip1559TransactionToRlpFields(tx as TransactionEIP1559);
-    case 'eip4844':
-      return eip4844TransactionToRlpFields(tx as TransactionEIP4844);
-    default:
-      throw new Error(`Unknown transaction type: ${(tx as Transaction).type}`);
+  private static signatureToFields(baseTx: TxBase): Hex[] {
+    return [encodeField(baseTx.v), baseTx.r, baseTx.s];
+  }
+
+  private static toValueInputToFields(tx: TxBase): Hex[] {
+    return [tx.to ?? '0x', encodeField(tx.value), tx.input];
   }
 }
 
 export function encodeTx(tx: Transaction): Hex {
-  const txRlp = toRlp(transactionToRlpFields(tx));
+  const txRlp = toRlp(TxRlpEncoder.txToFields(tx));
   if (tx.type === 'legacy') {
     return txRlp;
   }
