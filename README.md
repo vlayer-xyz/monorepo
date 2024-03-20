@@ -1,6 +1,20 @@
 # noir-ethereum-history-api
 
-_noir-ethereum-history-api_ is a [Noir](https://noir-lang.org) library for proving and verifying account balances and smart contracts storage slots on the Ethereum blockchain and other EVMs.
+**noir-ethereum-history-api** is a [Noir](https://noir-lang.org) library for proving and verifying historical data on the Ethereum blockchain and other EVMs.
+
+It allows you to prove:
+
+- Account state
+  - `balance`, `nonce`, `codeHash`, `storageRoot`
+  - Exmaple: _`Vitalik's` balance was `5 ETH` at block `N`_
+- Storage values by key
+  - Example: _`Uniswap` contract had value `5` at storage slot `0` at block `N`_
+- Transaction inclusion
+  - Example: _Transaction number `115` in block `N` was sending `3 ETH` to address `to`_
+- Receipt inclusion
+  - Example: _Transaction number `115` in block `N` succeeded (`status == 1`) and used `100k` gas_
+- Log inclusion
+  - Example: _Log number `0` within transaction number `115` in block `N` has `topic0 === 0x...`_
 
 As for now, it allows for proving and verifying last 256 blocks.
 
