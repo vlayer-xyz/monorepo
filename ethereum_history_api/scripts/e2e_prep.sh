@@ -15,5 +15,3 @@ echo "Codegen get_account"
 nargo codegen-verifier --package get_account
 echo "Codegen get_storage"
 nargo codegen-verifier --package get_storage
-
-(cd ethereum_history_api/contracts && forge compile)
