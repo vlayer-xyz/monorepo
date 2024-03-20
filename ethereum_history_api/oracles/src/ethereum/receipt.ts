@@ -10,7 +10,6 @@ export function logToRlpFields(log: Log): RecursiveArray<Hex> {
 export function txTypeToHex(type: TransactionType): Hex {
   switch (type) {
     case 'legacy':
-    case 'eip155':
       return '0x00';
     case 'eip2930':
       return '0x01';

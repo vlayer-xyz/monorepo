@@ -40,10 +40,6 @@ describe('txTypeToHex', () => {
     expect(txTypeToHex('legacy')).toEqual('0x00');
   });
 
-  it(`eip155`, () => {
-    expect(txTypeToHex('eip155')).toEqual('0x00');
-  });
-
   it(`eip2930`, () => {
     expect(txTypeToHex('eip2930')).toEqual('0x01');
   });
