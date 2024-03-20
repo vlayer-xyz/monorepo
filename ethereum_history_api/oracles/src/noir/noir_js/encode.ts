@@ -1,11 +1,10 @@
 import { Hex, isHex } from 'viem';
 import { BYTE_HEX_LENGTH } from '../../util/const.js';
+import { encodeByte } from '../oracles/common/encode.js';
 
 // ENCODERS
 export function encodeHexString(value: string): Hex[] {
-  return Array.from(encodeHexStringToArray(value)).map(
-    (byte) => `0x${byte.toString(16).padStart(BYTE_HEX_LENGTH, '0')}`
-  ) as Hex[];
+  return Array.from(encodeHexStringToArray(value)).map(encodeByte);
 }
 
 export function encodeHexStringToArray(value: string): Uint8Array {

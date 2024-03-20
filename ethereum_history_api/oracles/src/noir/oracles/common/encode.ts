@@ -4,6 +4,12 @@ import { BYTE_HEX_LENGTH } from '../../../util/const.js';
 import { padArray } from '../../../util/array.js';
 import { BITS_IN_BYTE, BYTES32_LENGTH, MODULUS, PROOF_ONE_LEVEL_LENGTH, ZERO_PAD_VALUE } from './const.js';
 
+export function encodeByte(byte: number): Hex {
+  assert(byte >= 0, 'Byte underflow');
+  assert(byte < 256, 'Byte overflow');
+  return `0x${byte.toString(16).padStart(BYTE_HEX_LENGTH, '0')}`;
+}
+
 export function encodeField(arg: number | bigint): Hex {
   assert(arg < MODULUS, 'Field overflow');
   assert(arg >= 0, 'Field underflow');
