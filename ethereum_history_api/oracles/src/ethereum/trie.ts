@@ -12,19 +12,23 @@ export class BaseTrie {
   }
 
   protected async putHexValue(txIdx: number, valueHex: Hex) {
-    const key = BaseTrie.keyFromIdx(txIdx);
+    const key = BaseTrie.keyFromIdxBytes(txIdx);
     const value = hexToBytes(valueHex);
     await this.trie.put(key, value);
   }
 
   public async createProof(txIdx: number): Promise<Hex[]> {
-    const key = BaseTrie.keyFromIdx(txIdx);
+    const key = BaseTrie.keyFromIdxBytes(txIdx);
     const proof = await this.trie.createProof(key);
     return proof.map((node) => bytesToHex(node));
   }
 
-  public static keyFromIdx(txIdx: number): Uint8Array {
+  private static keyFromIdxBytes(txIdx: number): Uint8Array {
     return toRlp(encodeField(txIdx), 'bytes');
+  }
+
+  public static keyFromIdx(txIdx: number): Hex {
+    return toRlp(encodeField(txIdx));
   }
 }
 
