@@ -24,12 +24,12 @@ It is currently in a development stage.
 
 This monorepo consists of the following sub-projects:
 
-| Package                                          | Description                                                                     |
-| ------------------------------------------------ | ------------------------------------------------------------------------------- |
-| [`Circuits`](ethereum_history_api/circuits/lib/) | Noir circuits to generate account and storage proofs for historical blocks data |
-| [`Contracts`](ethereum_history_api/contracts/)   | Related Solidity contracts with tests                                           |
-| [`Oracles`](ethereum_history_api/oracles/)       | TypeScript oracle server that provides data for circuits                        |
-| [`Tests`](ethereum_history_api/tests/)           | E2E tests in TypeScript                                                         |
+| Package                                          | Description                                                                     | Docs                                                |
+| ------------------------------------------------ | ------------------------------------------------------------------------------- | --------------------------------------------------- |
+| [`Circuits`](ethereum_history_api/circuits/lib/) | Noir circuits to generate account and storage proofs for historical blocks data | [Docs](ethereum_history_api/circuits/lib/README.md) |
+| [`Contracts`](ethereum_history_api/contracts/)   | Related Solidity contracts with tests                                           | [Docs](ethereum_history_api/contracts/README.md)    |
+| [`Oracles`](ethereum_history_api/oracles/)       | TypeScript oracle server that provides data for circuits                        | [Docs](ethereum_history_api/oracles/README.md)      |
+| [`Tests`](ethereum_history_api/tests/)           | E2E tests in TypeScript                                                         | [Docs](ethereum_history_api/tests/README.md)        |
 
 ## Prerequisites
 
@@ -67,8 +67,8 @@ Compilation and testing instructions for individual projects:
 
 - [Circuits](ethereum_history_api/circuits/lib/README.md#compilation)
 - [Contracts](ethereum_history_api/contracts/README.md#build)
-- [Oracles](ethereum_history_api/oracles/README.md)
-- [Tests](ethereum_history_api/tests/README.md)
+- [Oracles](ethereum_history_api/oracles/README.md#testing)
+- [Tests](ethereum_history_api/tests/README.md#running-e2e-tests)
 
 ### CI workflows
 
