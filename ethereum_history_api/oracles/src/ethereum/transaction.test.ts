@@ -4,8 +4,8 @@ import { loadTxFixture } from '../fixtures.js';
 import { TxRlpEncoder } from './transaction.js';
 import { assert } from '../util/assert.js';
 
-describe('transactionToRpFields', () => {
-  it(`legacyTransactionToRpFields`, async () => {
+describe('transactionToRlpFields', () => {
+  it(`legacyTransactionToRlpFields`, async () => {
     const legacyTx = (await loadTxFixture(
       'mainnet',
       'cancun',
