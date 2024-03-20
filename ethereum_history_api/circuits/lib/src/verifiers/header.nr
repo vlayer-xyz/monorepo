@@ -33,7 +33,7 @@ pub(crate) fn get_header_fields_count(chain_id: Field, block_number: u64) -> u64
     fields_count
 }
 
-pub(crate) fn verify_header(
+pub fn verify_header(
     chain_id: Field,
     block_header_partial: BlockHeaderPartial,
     block_header_rlp: BlockHeaderRlp
