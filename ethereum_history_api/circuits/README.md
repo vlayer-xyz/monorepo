@@ -11,9 +11,10 @@ nargo compile --workspace
 ```
 
 To compile a single package run:
+
 ```sh
 nargo compile --package package_name
-``` 
+```
 
 ## Generating proofs
 
@@ -38,9 +39,10 @@ To generate a Solidity verifier for a package run:
 
 ```sh
 nargo codegen-verifier --package package_name
-``` 
+```
 
 For example, for `get_account` package run:
+
 ```sh
 nargo codegen-verifier --package get_account
 ```
