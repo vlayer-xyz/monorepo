@@ -12,6 +12,8 @@ import { assert } from '../main.js';
 import { Block } from '../ethereum/blockHeader.js';
 import { Hex } from 'viem';
 
+const INDEX_NOT_FOUND = -1;
+
 const NOIR_FIXTURES_DIRECTORY = '../circuits/lib/src/fixtures';
 await rm(NOIR_FIXTURES_DIRECTORY, { recursive: true, force: true });
 
@@ -48,13 +50,13 @@ for (const chain in FIXTURES) {
           await writeFile(join(modulePath, 'storage_proof.nr'), createStorageProofFixture(stateProof.storageProof));
           fixtureModules.push('storage_proof');
         }
+      }
 
-        if (transactionHash) {
-          const txIdx = getTxIdx(block, transactionHash);
-          const txProof = await getReceiptProof(client, block.number, txIdx);
-          await writeFile(join(modulePath, 'receipt_proof.nr'), createReceiptProofFixture(txProof));
-          fixtureModules.push('receipt_proof');
-        }
+      if (transactionHash) {
+        const txIdx = getTxIdx(block, transactionHash);
+        const txProof = await getReceiptProof(client, block.number, txIdx);
+        await writeFile(join(modulePath, 'receipt_proof.nr'), createReceiptProofFixture(txProof));
+        fixtureModules.push('receipt_proof');
       }
 
       const declareFixtureModules = fixtureModules.map((name) => `mod ${name};`).join('\n') + '\n';
@@ -67,8 +69,6 @@ for (const chain in FIXTURES) {
   }
   await writeFile(chainModuleFile, chainModule);
 }
-
-const INDEX_NOT_FOUND = -1;
 
 function getTxIdx(block: Block, transactionHash: Hex) {
   const txIdx = block.transactions.indexOf(transactionHash);

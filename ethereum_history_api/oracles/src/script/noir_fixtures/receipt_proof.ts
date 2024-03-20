@@ -19,16 +19,16 @@ export function createReceiptProofFixture(receiptProof: ReceiptProof): string {
   const depth = receiptProof.proof.length;
   return `use crate::receipt::TxReceiptProof;
 
-  global proof = TxReceiptProof {
-    key: [
-      ${key.join(',')}
-    ],
-    value: [
-      ${value.join(',')}
-    ],
-    proof: [
-      ${proof.join(',')}
-    ],
-    depth: ${depth}
-  };`;
+global proof = TxReceiptProof {
+  key: [
+    ${key.join(',')}
+  ],
+  value: [
+    ${value.join(',')}
+  ],
+  proof: [
+    ${proof.join(',')}
+  ],
+  depth: ${depth}
+};`;
 }
