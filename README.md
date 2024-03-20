@@ -22,7 +22,7 @@ It is currently in a development stage.
 
 ### Repository structure
 
-This monorepo consists of four sub-projects:
+This monorepo consists of the following sub-projects:
 
 | Package                                          | Description                                                                     |
 | ------------------------------------------------ | ------------------------------------------------------------------------------- |

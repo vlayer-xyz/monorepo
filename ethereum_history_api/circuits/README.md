@@ -1,22 +1,67 @@
 # Noir Ethereum history api circuits
 
-Noir circuits to generate account and storage proofs for historical blocks.
+Noir circuits for proving and verifying historical data on the Ethereum blockchain and other EVMs.
 
-## Compilation
+## Monorepo structure
 
-To compile circuit files and install dependencies run:
+| Package                         | Description                                 |
+| ------------------------------- | ------------------------------------------- |
+| [`lib`](./lib/)                 | Main library containing oracles & verifiers |
+| [`get_header`](./get_header/)   | Binary crate for generating header proofs   |
+| [`get_account`](./get_header/)  | Binary crate for generating account proofs  |
+| [`get_storage`](./get_storage/) | Binary crate for generating storage proofs  |
+
+## Compile
 
 ```sh
 nargo compile --workspace
 ```
 
-To compile a single package run:
+or a single package:
 
 ```sh
-nargo compile --package package_name
+nargo compile --package ${package_name}
 ```
 
-## Generating proofs
+## Test
+
+```sh
+nargo test
+```
+
+Note: _New `nargo` runs tests in parallel and prints the whole test output at the end, so it's expected to not see any output for the first couple of seconds._
+
+## Profile
+
+```sh
+nargo info --workspace
+```
+
+or a single package:
+
+```sh
+nargo info --package ${package_name}
+```
+
+## Generate Solidity verifiers
+
+```sh
+nargo codegen-verifier --workspace
+```
+
+or a single package:
+
+```sh
+nargo codegen-verifier --package ${package_name}
+```
+
+Note: _This step may take up to several minutes._
+
+Generated verifier will be placed in `contract/${package_name}/plonk_vk.sol`.
+
+It's `verify(bytes proof, bytes32[] publicInputs) (bool)` function can be used to verify proofs.
+
+## Generate proofs
 
 This circuit uses oracles and therefore you need to run the oracle server before generating proofs.
 Oracle server is located in [packages/noir-ethereum-api](../packages/noir-ethereum-api) and can be run by:
@@ -32,29 +77,3 @@ nargo prove --oracle-resolver http://localhost:5555
 ```
 
 More details on Noir Ethereum history api oracles in [project directory](ethereum_history_api/oracles/) and oracle feature in [noir docs](https://noir-lang.org/docs/how_to/how-to-oracles/#step-3---usage-with-nargo).
-
-## Generating verifiers
-
-To generate a Solidity verifier for a package run:
-
-```sh
-nargo codegen-verifier --package package_name
-```
-
-For example, for `get_account` package run:
-
-```sh
-nargo codegen-verifier --package get_account
-```
-
-Note: When run for the first time this step may take several minutes. Also, it is not recommended to use VSCode terminal for this command as it seems to run slowly.
-
-After generating a verifier (`contract/package_name/plonk_vk.sol`) its `verify` function can be used to verify proofs.
-
-## Testing
-
-To test Noir circuit files run:
-
-```sh
-nargo test
-```
