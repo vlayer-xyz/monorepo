@@ -3,7 +3,7 @@ import { calculateBlockHash, calculateBlockHeaderHash, headerToRlpFields, blockT
 import { loadBlockFixture, loadBlockFixtures } from '../fixtures.js';
 
 describe('calculateBlockHeaderHash', async () => {
-  const blocks = await loadBlockFixtures();
+  const blocks = await loadBlockFixtures(false);
   for (const block of blocks) {
     it(`block #${block.number}`, () => {
       const header = blockToHeader(block);
@@ -14,7 +14,7 @@ describe('calculateBlockHeaderHash', async () => {
 
 describe('headerToRlpFields', () => {
   it('frontier block', async () => {
-    const block = await loadBlockFixture('mainnet', 'frontier', 'first');
+    const block = await loadBlockFixture('mainnet', 'frontier', 'first', false);
     const header = blockToHeader(block);
     expect(headerToRlpFields(header)).toMatchInlineSnapshot(`
       [
@@ -38,7 +38,7 @@ describe('headerToRlpFields', () => {
   });
 
   it('london block', async () => {
-    const block = await loadBlockFixture('mainnet', 'london', 'crypto_punks');
+    const block = await loadBlockFixture('mainnet', 'london', 'crypto_punks', false);
     const header = blockToHeader(block);
     expect(headerToRlpFields(header)).toMatchInlineSnapshot(`
       [
@@ -63,7 +63,7 @@ describe('headerToRlpFields', () => {
   });
 
   it('paris block', async () => {
-    const block = await loadBlockFixture('mainnet', 'paris', 'usdc_circle');
+    const block = await loadBlockFixture('mainnet', 'paris', 'usdc_circle', false);
     const header = blockToHeader(block);
     expect(headerToRlpFields(header)).toMatchInlineSnapshot(`
       [
@@ -89,7 +89,7 @@ describe('headerToRlpFields', () => {
   });
 
   it('cancun block', async () => {
-    const block = await loadBlockFixture('mainnet', 'cancun', 'small_block');
+    const block = await loadBlockFixture('mainnet', 'cancun', 'small_block', false);
     const header = blockToHeader(block);
     expect(headerToRlpFields(header)).toMatchInlineSnapshot(`
       [
@@ -118,7 +118,7 @@ describe('headerToRlpFields', () => {
   });
 
   it('cancun block with blobGasUsed', async () => {
-    const block = await loadBlockFixture('mainnet', 'cancun', 'with_blob');
+    const block = await loadBlockFixture('mainnet', 'cancun', 'with_blob', false);
     const header = blockToHeader(block);
     expect(headerToRlpFields(header)).toMatchInlineSnapshot(`
       [
@@ -148,7 +148,7 @@ describe('headerToRlpFields', () => {
 });
 
 describe('calculateBlockHash', async () => {
-  const blocks = await loadBlockFixtures();
+  const blocks = await loadBlockFixtures(false);
   for (const block of blocks) {
     it(`block #${block.number}`, () => {
       expect(calculateBlockHash(block)).toBe(block.hash);
