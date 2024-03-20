@@ -23,6 +23,8 @@ or a single package:
 nargo compile --package ${package_name}
 ```
 
+Compiled artifacts will be placed in [target](../../target/) folder.
+
 ## Test
 
 ```sh
@@ -57,23 +59,19 @@ nargo codegen-verifier --package ${package_name}
 
 Note: _This step may take up to several minutes._
 
-Generated verifier will be placed in `contract/${package_name}/plonk_vk.sol`.
+Generated verifiers will be placed in [`contract/${package_name}/plonk_vk.sol`](../../contract/) folder.
 
-It's `verify(bytes proof, bytes32[] publicInputs) (bool)` function can be used to verify proofs.
+Each one will have a `verify(bytes proof, bytes32[] publicInputs) (bool)` function that can be used to verify proofs.
 
 ## Generate proofs
 
-This circuit uses oracles and therefore you need to run the oracle server before generating proofs.
-Oracle server is located in [packages/noir-ethereum-api](../packages/noir-ethereum-api) and can be run by:
+### Prerequisites
+
+We use oracles and therefore you need to run the `Oracle server` before generating proofs.
+Please consult [Oracle server](../oracles/README.md#starting-oracle-server) docs on how to start it or [noir docs](https://noir-lang.org/docs/how_to/how-to-oracles/#step-3---usage-with-nargo) for detailed docs on oracle usage.
 
 ```sh
-yarn oracle-server
+nargo prove --package ${package_name} --oracle-resolver http://localhost:5555
 ```
 
-Then, to generate proofs, run:
-
-```sh
-nargo prove --oracle-resolver http://localhost:5555
-```
-
-More details on Noir Ethereum history api oracles in [project directory](ethereum_history_api/oracles/) and oracle feature in [noir docs](https://noir-lang.org/docs/how_to/how-to-oracles/#step-3---usage-with-nargo).
+Generated proofs will be placed in [proofs](../../proofs/) folder.
