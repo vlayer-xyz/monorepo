@@ -5,7 +5,7 @@ import { encodeReceipt } from './receipt.js';
 import { assert } from '../util/assert.js';
 
 export interface ReceiptProof {
-  key: Uint8Array;
+  key: Hex;
   proof: Hex[];
   value: Hex;
 }
