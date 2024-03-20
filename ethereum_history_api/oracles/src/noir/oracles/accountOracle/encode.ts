@@ -13,7 +13,7 @@ export const STORAGE_PROOF_LENGTH = PROOF_ONE_LEVEL_LENGTH * MAX_STORAGE_PROOF_L
 export const MAX_RECEIPT_TREE_DEPTH = 6;
 const MAX_RECEIPT_TRIE_NODE_LENGTH = 515;
 export const MAX_RECEIPT_PROOF_LENGTH = MAX_RECEIPT_TRIE_NODE_LENGTH * MAX_RECEIPT_TREE_DEPTH;
-export const MAX_RECEIPT_RLP_LENGTH = 512; // TODO: Put the real value here
+export const MAX_RECEIPT_RLP_LENGTH = MAX_RECEIPT_TRIE_NODE_LENGTH;
 const RLP_VALUE_INDEX = 1;
 
 export function encodeAccount(ethProof: GetProofReturnType): ForeignCallOutput[] {
