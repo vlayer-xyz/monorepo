@@ -4,7 +4,7 @@ import { encodeByte } from '../oracles/common/encode.js';
 
 // ENCODERS
 export function encodeHexString(value: string): Hex[] {
-  return Array.from(encodeHexStringToArray(value)).map(encodeByte);
+  return Array.from(encodeHexStringToArray(value)).map((byte) => encodeByte(byte));
 }
 
 export function encodeHexStringToArray(value: string): Uint8Array {
