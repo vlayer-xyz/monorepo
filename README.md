@@ -24,14 +24,16 @@ It is currently in a development stage.
 
 This monorepo consists of four sub-projects:
 
-- [Circuits](ethereum_history_api/circuits/lib/) - Noir circuits to generate account and storage proofs for historical blocks data
-- [Contracts](ethereum_history_api/contracts/) - related Solidity contracts with tests
-- [Oracles](ethereum_history_api/oracles/) - TypeScript oracle server that provides data for circuits
-- [Tests](ethereum_history_api/tests/) - e2e tests in TypeScript
+| Package                                          | Description                                                                     |
+| ------------------------------------------------ | ------------------------------------------------------------------------------- |
+| [`Circuits`](ethereum_history_api/circuits/lib/) | Noir circuits to generate account and storage proofs for historical blocks data |
+| [`Contracts`](ethereum_history_api/contracts/)   | Related Solidity contracts with tests                                           |
+| [`Oracles`](ethereum_history_api/oracles/)       | TypeScript oracle server that provides data for circuits                        |
+| [`Tests`](ethereum_history_api/tests/)           | E2E tests in TypeScript                                                         |
 
 ## Prerequisites
 
-_nargo_ and _foundry_ must be installed in order to compile and test code in this repository.
+**nargo** and **foundry** must be installed in order to compile and test code in this repository.
 
 - [nargo installation](https://noir-lang.org/docs/getting_started/installation/)
 - [foundry installation](https://book.getfoundry.sh/getting-started/installation)
