@@ -15,7 +15,7 @@ describe('getReceiptProof', () => {
     const mockingClient = await createMockClient(mockFilePaths);
     const receiptProof = await getReceiptProof(mockingClient, blockNumber, txIdx);
 
-    expect(receiptProof.key).toStrictEqual(new Uint8Array([parseInt(toRlp('0x'), 16)])); //toRlp('0x')]));
+    expect(receiptProof.key).toStrictEqual(toRlp('0x'));
     expect(receiptProof.proof).toMatchInlineSnapshot(`
       [
         "0xf90131a01a539af3c7639212a2109c66df8d5984d88440276c3af01e6d0749bd8013a482a0d3e6f6dbfbd3d547ad1136fb9153ecd804b289f315414dc3c84ec8727a71fdb0a099db7c25dbf88d039d315fd0b16f427fe687bbabdfca139a148b14cd3588f332a09778e105ad5b550e9c5d770f894cd14b81450bf1fe70bb8e7ca119838840c1a5a0188669b302d2e014b3da157d77431d02a7714a3e4e4da3c1d41221b37136809ca02bb3d322a2e1eec007869f92260cf2caaba0d99a7e061908697e6bbbaadb5f26a0252fe4fdd2f3f723caf31fae605557b604d62780ad5a0316f2298cb69d00e29da0824b16f624c82d183df3f714a7c8f88142f2b49765193043416249ec977ce28aa04008d1609126f1ac821912ad65b32ff0ed11c3d90036fb7da77e012c9043b99b8080808080808080",
