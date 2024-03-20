@@ -4,12 +4,12 @@ Noir circuits for proving and verifying historical data on the Ethereum blockcha
 
 ## Monorepo structure
 
-| Package                         | Description                                 |
-| ------------------------------- | ------------------------------------------- |
-| [`lib`](./lib/)                 | Main library containing oracles & verifiers |
-| [`get_header`](./get_header/)   | Binary crate for generating header proofs   |
-| [`get_account`](./get_header/)  | Binary crate for generating account proofs  |
-| [`get_storage`](./get_storage/) | Binary crate for generating storage proofs  |
+| Package                         | Description                                 | Docs                            |
+| ------------------------------- | ------------------------------------------- | ------------------------------- |
+| [`lib`](./lib/)                 | Main library containing oracles & verifiers | [Docs](./lib/README.md)         |
+| [`get_header`](./get_header/)   | Binary crate for generating header proofs   | [Docs](./get_header/README.md)  |
+| [`get_account`](./get_header/)  | Binary crate for generating account proofs  | [Docs](./get_account/README.md) |
+| [`get_storage`](./get_storage/) | Binary crate for generating storage proofs  | [Docs](./get_storage/README.md) |
 
 ## Compile
 
