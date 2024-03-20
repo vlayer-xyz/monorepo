@@ -30,5 +30,6 @@ global proof = TxReceiptProof {
     ${proof.join(',')}
   ],
   depth: ${depth}
-};`;
+};
+`;
 }
