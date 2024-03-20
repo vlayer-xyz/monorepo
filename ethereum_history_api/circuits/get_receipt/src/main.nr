@@ -1,4 +1,4 @@
-use dep::ethereum_history_api::receipt::{get_receipt, TxReceiptWithinBlock, PhantomReceiptProofLen, PhantomReceiptRlpLen};
+use dep::ethereum_history_api::receipt::{get_receipt, TxReceiptWithinBlock, PhantomReceiptProofLen, PhantomReceiptRlpLen, TxReceiptProof};
 
 global LOG_NUM = 1;
 global MAX_LOG_DATA_SIZE = 128; // 4 * 32 (Eth word length)
@@ -12,13 +12,13 @@ global MAX_LOG_DATA_SIZE = 128; // 4 * 32 (Eth word length)
 // LENGTH_OF_NULL_ELEMENT = 1
 // MAX_BRANCH_LENGTH = 3 + 16 * 32 + 1 = 516
 global MAX_RECEIPT_TRIE_NODE_LENGTH = 516;
-global MAX_RECEIPT_PROOF_LENGTH = 3090; // MAX_RECEIPT_TRIE_NODE_LENGTH * MAX_RECEIPT_TREE_DEPTH
+global MAX_RECEIPT_PROOF_LENGTH = 3612; // MAX_RECEIPT_TRIE_NODE_LENGTH * MAX_RECEIPT_TREE_DEPTH
 global MAX_RECEIPT_RLP_LENGTH = 512; // TODO: Put the real value here
 
 fn main(
     block_number: pub Field,
     tx_idx: pub Field
-) -> pub TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_SIZE> {
+) -> pub (TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_SIZE>, TxReceiptProof<MAX_RECEIPT_PROOF_LENGTH, MAX_RECEIPT_RLP_LENGTH>) {
     let max_receipt_proof_len: PhantomReceiptProofLen<MAX_RECEIPT_PROOF_LENGTH> = PhantomReceiptProofLen {};
     let max_receipt_rlp_length: PhantomReceiptRlpLen<MAX_RECEIPT_RLP_LENGTH> = PhantomReceiptRlpLen {};
     get_receipt(

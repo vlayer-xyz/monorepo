@@ -4,7 +4,7 @@ use crate::verifiers::receipt::verify_receipt;
 use dep::std::unsafe::zeroed;
 
 global BLOOM_FILTER_SIZE = 256;
-global MAX_RECEIPT_TREE_DEPTH = 6;
+global MAX_RECEIPT_TREE_DEPTH = 7;
 
 struct Log<MAX_LOG_DATA_SIZE> {
     address: Address,
@@ -19,7 +19,7 @@ struct TxReceipt<LOG_NUM, MAX_LOG_DATA_SIZE> {
     state_root: Bytes32,
     cumulative_gas_used: Field,
     logs_bloom: [u8; BLOOM_FILTER_SIZE],
-    logs: [Log<MAX_LOG_DATA_SIZE>; LOG_NUM]
+    // logs: [Log<MAX_LOG_DATA_SIZE>; LOG_NUM]
 }
 
 struct PhantomReceiptProofLen<MAX_RECEIPT_PROOF_LENGTH> {}
@@ -42,29 +42,23 @@ pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_SIZE, MAX_RECEIPT_PROOF_LENGTH, MAX_REC
     tx_idx: Field,
     _max_receipt_proof_len: PhantomReceiptProofLen<MAX_RECEIPT_PROOF_LENGTH>,
     _max_receipt_rlp_len: PhantomReceiptRlpLen<MAX_RECEIPT_RLP_LENGTH>
-) -> TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_SIZE> {
-    assert(false, "Not implemented");
+) -> (TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_SIZE>, TxReceiptProof<MAX_RECEIPT_PROOF_LENGTH, MAX_RECEIPT_RLP_LENGTH>){
+    let (receipt, proof): (TxReceipt<LOG_NUM, MAX_LOG_DATA_SIZE>, TxReceiptProof<MAX_RECEIPT_PROOF_LENGTH, MAX_RECEIPT_RLP_LENGTH>) = get_receipt_unconstrained(block_number, tx_idx);
     zeroed()
 }
 
 #[oracle(get_receipt)]
 unconstrained fn get_receipt_oracle<LOG_NUM, MAX_LOG_DATA_SIZE, MAX_RECEIPT_PROOF_LENGTH, MAX_RECEIPT_RLP_LENGTH>(
     _block_number: Field,
-    _tx_idx: Field,
-    _max_receipt_proof_len: PhantomReceiptProofLen<MAX_RECEIPT_PROOF_LENGTH>,
-    _max_receipt_rlp_len: PhantomReceiptRlpLen<MAX_RECEIPT_RLP_LENGTH>
+    _tx_idx: Field
 ) -> (TxReceipt<LOG_NUM, MAX_LOG_DATA_SIZE>, TxReceiptProof<MAX_RECEIPT_PROOF_LENGTH, MAX_RECEIPT_RLP_LENGTH>) {}
 
 unconstrained fn get_receipt_unconstrained<LOG_NUM, MAX_LOG_DATA_SIZE, MAX_RECEIPT_PROOF_LENGTH, MAX_RECEIPT_RLP_LENGTH>(
     block_number: Field,
-    tx_idx: Field,
-    _max_receipt_proof_len: PhantomReceiptProofLen<MAX_RECEIPT_PROOF_LENGTH>,
-    _max_receipt_rlp_len: PhantomReceiptRlpLen<MAX_RECEIPT_RLP_LENGTH>
+    tx_idx: Field
 ) -> (TxReceipt<LOG_NUM, MAX_LOG_DATA_SIZE>, TxReceiptProof<MAX_RECEIPT_PROOF_LENGTH, MAX_RECEIPT_RLP_LENGTH>) {
     get_receipt_oracle(
         block_number,
-        tx_idx,
-        _max_receipt_proof_len,
-        _max_receipt_rlp_len
+        tx_idx
     )
 }

@@ -1,11 +1,15 @@
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { TransactionReceipt, Hex } from 'viem';
-import { statusToHex } from '../../../ethereum/receipt.js';
-import { encodeField, encodeHex, encodeProof, encodeBytes32 } from '../common/encode.js';
+import { encodeReceiptToRlp, statusToHex } from '../../../ethereum/receipt.js';
+import { padArray } from '../../../util/array.js';
+import { encodeField, encodeHex, encodeProof, encodeBytes } from '../common/encode.js';
+import { ZERO_PAD_VALUE } from '../common/const.js';
 
-const MAX_RECEIPT_PROOF_LEVELS = 6;
+const MAX_RECEIPT_PROOF_LEVELS = 7;
 const MAX_RECEIPT_LENGTH = 516;
-const RECEIPT_PROOF_LENGTH = MAX_RECEIPT_LENGTH * MAX_RECEIPT_PROOF_LEVELS;
+const MAX_RECEIPT_RLP_LENGTH = 512;
+const MAX_RECEIPT_PROOF_LENGTH = MAX_RECEIPT_LENGTH * MAX_RECEIPT_PROOF_LEVELS;
+const KEY_LENGTH = MAX_RECEIPT_PROOF_LEVELS;
 
 export function encodeReceipt(receipt: TransactionReceipt): ForeignCallOutput[] {
   const blobGasUsed = encodeField(receipt.blobGasUsed ?? 0);
@@ -18,10 +22,14 @@ export function encodeReceipt(receipt: TransactionReceipt): ForeignCallOutput[] 
   return [blobGasUsed, blobGasPrice, status, stateRoot, cumulativeGasUsed, logsBloom];
 }
 
-export function encodeReceiptProof(receiptProof: Hex[], txId: bigint): ForeignCallOutput[] {
-  const key = encodeBytes32(txId);
-  const value = encodeHex(receiptProof[0]);
-  const proof = encodeProof(receiptProof, RECEIPT_PROOF_LENGTH);
+export function encodeReceiptProof(
+  receiptProof: Hex[],
+  txId: bigint,
+  receipt: TransactionReceipt
+): ForeignCallOutput[] {
+  const key = encodeBytes(txId, KEY_LENGTH);
+  const value = padArray(encodeHex(encodeReceiptToRlp(receipt)), MAX_RECEIPT_RLP_LENGTH, ZERO_PAD_VALUE);
+  const proof = encodeProof(receiptProof, MAX_RECEIPT_PROOF_LENGTH);
   const depth = encodeField(receiptProof.length);
 
   return [key, value, proof, depth];

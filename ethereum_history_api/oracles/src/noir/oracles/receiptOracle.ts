@@ -19,6 +19,13 @@ export const OFFSETS = {
   LOGS_BLOOM: 5
 };
 
+export const OFFSETS_PROOF = {
+  KEY: 0,
+  VALUE: 1,
+  PROOF: 2,
+  DEPTH: 3
+};
+
 export const getReceiptOracle = async (client: AlchemyClient, args: NoirArguments): Promise<ForeignCallOutput[]> => {
   const { blockNumber, txId } = decodeGetReceiptArguments(args);
   const blockReceipts = await client.getTransactionReceipts({
@@ -31,7 +38,7 @@ export const getReceiptOracle = async (client: AlchemyClient, args: NoirArgument
   const receiptProof = await getReceiptProof(client, blockNumber, Number(txId));
 
   const encodedReceipt = encodeReceipt(receipt);
-  const encodedReceiptProof = encodeReceiptProof(receiptProof, txId);
+  const encodedReceiptProof = encodeReceiptProof(receiptProof, txId, receipt);
   return [...encodedReceipt, ...encodedReceiptProof];
 };
 
