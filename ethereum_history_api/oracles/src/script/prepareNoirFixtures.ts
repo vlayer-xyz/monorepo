@@ -50,11 +50,11 @@ for (const chain in FIXTURES) {
           await writeFile(join(modulePath, 'storage_proof.nr'), createStorageProofFixture(stateProof.storageProof));
           fixtureModules.push('storage_proof');
         }
+      }
 
-        if (transactionHash) {
-          await prepareReceiptProofFixture(client, block, transactionHash, modulePath);
-          fixtureModules.push('receipt_proof');
-        }
+      if (transactionHash) {
+        await prepareReceiptProofFixture(client, block, transactionHash, modulePath);
+        fixtureModules.push('receipt_proof');
       }
 
       const declareFixtureModules = fixtureModules.map((name) => `mod ${name};`).join('\n') + '\n';
