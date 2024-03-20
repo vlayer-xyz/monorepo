@@ -45,7 +45,7 @@ export function receiptToRlpFields(receipt: TransactionReceipt): RecursiveArray<
   return fields;
 }
 
-export function encodeReceipt(receipt: TransactionReceipt): Hex {
+export function encodeReceiptToRlp(receipt: TransactionReceipt): Hex {
   const receiptRlpFields = receiptToRlpFields(receipt);
   const receiptRlp = toRlp(receiptRlpFields);
   if (receipt.type === 'legacy') {

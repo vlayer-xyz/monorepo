@@ -1,7 +1,7 @@
 import { Trie } from '@ethereumjs/trie';
 import { Hex, bytesToHex, TransactionReceipt, hexToBytes, toRlp } from 'viem';
 import { encodeField } from '../noir/oracles/common/encode.js';
-import { encodeReceipt } from './receipt.js';
+import { encodeReceiptToRlp } from './receipt.js';
 
 export class ReceiptTrie {
   private trie: Trie = new Trie();
@@ -12,7 +12,7 @@ export class ReceiptTrie {
 
   public async put(txIdx: number, receipt: TransactionReceipt) {
     const key = ReceiptTrie.keyFromIdx(txIdx);
-    const value = hexToBytes(encodeReceipt(receipt));
+    const value = hexToBytes(encodeReceiptToRlp(receipt));
     await this.trie.put(key, value);
   }
 
