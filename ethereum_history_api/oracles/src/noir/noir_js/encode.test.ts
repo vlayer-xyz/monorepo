@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { decodeHexString, encodeHexString, encodeHexStringToArray } from './encode.js';
+import { decodeHexString, encodeHexString, encodeHexStringToArray, encodeNullable, formatArray } from './encode.js';
 
 describe('encodeHexStringToArray', () => {
   it('throws on invalid input', () => {
@@ -13,6 +13,22 @@ describe('encodeHexStringToArray', () => {
 describe('encodeHexString', () => {
   it('encodes hex string', () => {
     expect(encodeHexString('0x000123')).toStrictEqual(['0x00', '0x01', '0x23']);
+  });
+});
+
+describe('encodeNullable', () => {
+  it('encodes nullable', () => {
+    expect(encodeNullable('0x1234')).toBe('Option::some(0x1234)');
+    expect(encodeNullable(null)).toBe('Option::none()');
+  });
+});
+
+describe('formatArray', () => {
+  it('formats array', () => {
+    const expectedFormattedArray = `[
+    0x12,0x34
+  ]`;
+    expect(formatArray(['0x12', '0x34'])).toBe(expectedFormattedArray);
   });
 });
 
