@@ -86,3 +86,67 @@ For now - just remember that it's your responsibility to prove block hash. Other
         ├── account.nr
         └── storage.nr
 ```
+
+## Generic parameters
+
+We use generics so that your circuits can be the exact size they need to be.
+
+Let's say - you need to prove some storage values. We could give you a function that proves up to 5 storage values and you can call it with one real key and 4 fake keys that would be proven to be zero, but it would be wasteful.
+Or we could give you a set of functions:
+`get_account_with_storage1`, `get_account_with_storage2`, ...
+That's also not a nice solution. Instead - we try to introduce generic parameters for sizes where we can and ask you to provide them before generating actual proof.
+
+Unfortunately generics are limited:
+
+- We can't do any [arithmetic](https://github.com/noir-lang/noir/issues/1837) on them. It's impossible to create `array: [u8; N * M]` where N and M are generic type parameters
+- [Turbofish syntax](https://github.com/orgs/noir-lang/discussions/3413) is not supported. You can only specify generics that are used in input/output values. So if we need you to provide proof size - we need to resort to phantom arguments
+
+## Types
+
+This section describes the types that are used in function signatures above. Please consult the section above for generics motivation.
+
+```rust
+type Address = [u8; 20];
+type Bytes32 = [u8; 32];
+```
+
+```rust
+struct BlockHeaderPartial {
+    number: Field,
+    hash: Bytes32,
+    state_root: Bytes32,
+    transactions_root: Bytes32,
+    receipts_root: Bytes32,
+}
+```
+
+```rust
+struct Account {
+    nonce: Field,
+    balance: Field,
+    storage_root: Bytes32,
+    code_hash: Bytes32,
+}
+```
+
+```rust
+struct AccountWithinBlock {
+    account: Account,
+    block_hash: Bytes32,
+}
+```
+
+```rust
+struct StorageWithinBlock<N> {
+    block_hash: Bytes32,
+    account: Account,
+    values: [Bytes32; N],
+}
+```
+
+```rust
+struct TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_SIZE> {
+    receipt: TxReceipt<LOG_NUM, MAX_LOG_DATA_SIZE>,
+    block_hash: Bytes32
+}
+```
