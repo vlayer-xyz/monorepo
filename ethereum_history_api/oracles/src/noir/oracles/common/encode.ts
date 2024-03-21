@@ -1,13 +1,13 @@
 import { type Address, isAddress, isHex, Hex } from 'viem';
 import { assert } from '../../../util/assert.js';
-import { BYTE_HEX_LENGTH } from '../../../util/const.js';
+import { BYTE_HEX_LEN } from '../../../util/const.js';
 import { padArray } from '../../../util/array.js';
-import { BITS_IN_BYTE, BYTES32_LENGTH, MODULUS, PROOF_ONE_LEVEL_LENGTH, ZERO_PAD_VALUE } from './const.js';
+import { BITS_IN_BYTE, BYTES32_LEN, MODULUS, PROOF_ONE_LEVEL_LEN, ZERO_PAD_VALUE } from './const.js';
 
 export function encodeByte(byte: number): Hex {
   assert(byte < 256, 'Byte overflow');
   assert(byte >= 0, 'Byte underflow');
-  return `0x${byte.toString(16).padStart(BYTE_HEX_LENGTH, '0')}`;
+  return `0x${byte.toString(16).padStart(BYTE_HEX_LEN, '0')}`;
 }
 
 export function encodeField(arg: number | bigint): Hex {
@@ -17,14 +17,14 @@ export function encodeField(arg: number | bigint): Hex {
     return '0x';
   }
   let hex = arg.toString(16);
-  if (hex.length % BYTE_HEX_LENGTH === 1) {
+  if (hex.length % BYTE_HEX_LEN === 1) {
     hex = `0${hex}`;
   }
   return `0x${hex}`;
 }
 
 export function encodeBytes32(value: bigint): Hex[] {
-  return encodeBytes(value, BYTES32_LENGTH);
+  return encodeBytes(value, BYTES32_LEN);
 }
 
 export function encodeAddress(value: Address): Hex[] {
@@ -35,7 +35,7 @@ export function encodeAddress(value: Address): Hex[] {
 export function encodeBytes(value: bigint, length: number): Hex[] {
   assert(value >= 0n, 'Invalid Bytes32: Negative');
   assert(value < 1n << (BITS_IN_BYTE * BigInt(length)), 'Invalid Bytes32: Overflow');
-  const hexValue = value.toString(16).padStart(length * BYTE_HEX_LENGTH, '0');
+  const hexValue = value.toString(16).padStart(length * BYTE_HEX_LEN, '0');
   return encodeHex(`0x${hexValue}`);
 }
 
@@ -44,9 +44,9 @@ export function encodeHex(hexString: string): Hex[] {
     throw new Error(`Invalid hex string: ${hexString}`);
   }
   const chunks: Hex[] = [];
-  for (let i = BYTE_HEX_LENGTH; i < hexString.length; i += BYTE_HEX_LENGTH) {
-    const chunk = hexString.substring(i, i + BYTE_HEX_LENGTH);
-    chunks.push(`0x${chunk.padStart(BYTE_HEX_LENGTH, '0')}`);
+  for (let i = BYTE_HEX_LEN; i < hexString.length; i += BYTE_HEX_LEN) {
+    const chunk = hexString.substring(i, i + BYTE_HEX_LEN);
+    chunks.push(`0x${chunk.padStart(BYTE_HEX_LEN, '0')}`);
   }
   return chunks;
 }
@@ -54,10 +54,10 @@ export function encodeHex(hexString: string): Hex[] {
 export function encodeProofNode(node: Hex): Hex[] {
   const encodedNode = encodeHex(node);
   assert(
-    encodedNode.length <= PROOF_ONE_LEVEL_LENGTH,
-    `Proof node length: ${encodedNode.length} is too large. Max proof node length: ${PROOF_ONE_LEVEL_LENGTH}`
+    encodedNode.length <= PROOF_ONE_LEVEL_LEN,
+    `Proof node length: ${encodedNode.length} is too large. Max proof node length: ${PROOF_ONE_LEVEL_LEN}`
   );
-  return padArray(encodeHex(node), PROOF_ONE_LEVEL_LENGTH, ZERO_PAD_VALUE);
+  return padArray(encodeHex(node), PROOF_ONE_LEVEL_LEN, ZERO_PAD_VALUE);
 }
 
 export function encodeProof(proof: Hex[], length: number): Hex[] {

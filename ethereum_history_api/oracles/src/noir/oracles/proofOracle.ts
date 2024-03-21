@@ -7,7 +7,7 @@ import { Hex } from 'viem';
 import { AlchemyClient } from '../../ethereum/client.js';
 
 const GET_PROOF_ARGS_COUNT = 3;
-const BLOCK_NUMBER_INDEX = 0;
+const BLOCK_NUM_INDEX = 0;
 const ADDRESS_INDEX = 1;
 const STORAGE_KEY_INDEX = 2;
 
@@ -31,8 +31,8 @@ export function decodeGetProofArguments(args: NoirArguments): {
 } {
   assert(args.length === GET_PROOF_ARGS_COUNT, `get_proof requires ${GET_PROOF_ARGS_COUNT} arguments`);
 
-  assert(args[BLOCK_NUMBER_INDEX].length === 1, 'blockNumber should be a single value');
-  const blockNumber = decodeField(args[BLOCK_NUMBER_INDEX][0]);
+  assert(args[BLOCK_NUM_INDEX].length === 1, 'blockNumber should be a single value');
+  const blockNumber = decodeField(args[BLOCK_NUM_INDEX][0]);
   const address = decodeAddress(args[ADDRESS_INDEX]);
   const storageKey = decodeBytes32(args[STORAGE_KEY_INDEX]);
 

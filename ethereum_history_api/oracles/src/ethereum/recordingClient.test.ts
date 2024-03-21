@@ -5,23 +5,23 @@ import { createMockClient } from './mockClient.js';
 import { GetBlockParameters, GetProofParameters, Hex } from 'viem';
 import { AlchemyClient } from './client.js';
 
-export const LONDON_BLOCK_NUMBER = 14194126n;
+export const LONDON_BLOCK_NUM = 14194126n;
 export const CRYPTO_PUNKS_ADDRESS: Hex = '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb';
 const BLOCK_HASH: Hex = '0xbe8aa5945d3377e65ed06757555d0d4babe269097574c210133e59cf6bc17d18';
 const STORAGE_ROOT: Hex = '0xae2792244417bc1749b9cd9a0bdc1c4a6cf32f147b37202c8cb3590777659aec';
 
 export const LONDON_CRYPTO_PUNKS_GET_PROOF_PARAMETERS = {
-  blockNumber: LONDON_BLOCK_NUMBER,
+  blockNumber: LONDON_BLOCK_NUM,
   storageKeys: [],
   address: CRYPTO_PUNKS_ADDRESS
 } as GetProofParameters;
-export const LONDON_CRYPTO_PUNKS_GET_BLOCK_PARAMETERS = { blockNumber: LONDON_BLOCK_NUMBER } as GetBlockParameters;
+export const LONDON_CRYPTO_PUNKS_GET_BLOCK_PARAMETERS = { blockNumber: LONDON_BLOCK_NUM } as GetBlockParameters;
 const EXPECTED_CALLS = [
   {
     method: 'getBlock',
-    arguments: [{ blockNumber: LONDON_BLOCK_NUMBER }],
+    arguments: [{ blockNumber: LONDON_BLOCK_NUM }],
     result: {
-      number: LONDON_BLOCK_NUMBER,
+      number: LONDON_BLOCK_NUM,
       hash: BLOCK_HASH
     }
   },
@@ -29,7 +29,7 @@ const EXPECTED_CALLS = [
     method: 'getProof',
     arguments: [
       {
-        blockNumber: LONDON_BLOCK_NUMBER,
+        blockNumber: LONDON_BLOCK_NUM,
         storageKeys: [],
         address: CRYPTO_PUNKS_ADDRESS
       }
@@ -69,7 +69,7 @@ describe('recordingClient', () => {
       const block = await mockingClient.getBlock(LONDON_CRYPTO_PUNKS_GET_BLOCK_PARAMETERS);
       const proof = await mockingClient.getProof(LONDON_CRYPTO_PUNKS_GET_PROOF_PARAMETERS);
 
-      expect(block.number).toBe(LONDON_BLOCK_NUMBER);
+      expect(block.number).toBe(LONDON_BLOCK_NUM);
       expect(block.hash).toBe(BLOCK_HASH);
 
       expect(proof.storageHash).toBe(STORAGE_ROOT);

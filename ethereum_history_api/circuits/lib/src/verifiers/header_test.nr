@@ -1,5 +1,5 @@
-use crate::header::{BlockHeaderPartial, BlockHeaderRlp, ETHEREUM_MAINNET_ID, MAX_HEADER_RLP_SIZE};
-use crate::verifiers::header::{get_header_fields_count, verify_header, LONDON_BLOCK_NUMBER, PARIS_BLOCK_NUMBER, CANCUN_BLOCK_NUMBER};
+use crate::header::{BlockHeaderPartial, BlockHeaderRlp, ETHEREUM_MAINNET_ID, MAX_HEADER_RLP_LEN};
+use crate::verifiers::header::{get_header_fields_count, verify_header, LONDON_BLOCK_NUM, PARIS_BLOCK_NUM, CANCUN_BLOCK_NUM};
 use crate::misc::arrays::alter_array;
 use crate::fixtures::mainnet::{
     london::crypto_punks::header::{block_header_partial as london_block_header_partial, block_header_rlp as london_block_header_rlp},
@@ -157,7 +157,7 @@ global RLP_SHORT_STRING_TYPE = 0x80;
 // TODO: Add correct assertion message when noir-trie-proofs is updated
 #[test(should_fail)]
 fn test_verify_header_invalid_rlp() {
-    let mut rlp_empty_string_encoding = [0; MAX_HEADER_RLP_SIZE];
+    let mut rlp_empty_string_encoding = [0; MAX_HEADER_RLP_LEN];
     rlp_empty_string_encoding[0] = RLP_SHORT_STRING_TYPE;
     let malformed_block_header_rlp = BlockHeaderRlp { data: rlp_empty_string_encoding, length: 1 };
     let paris_block_header_partial = BlockHeaderPartial { number, hash, state_root, transactions_root, receipts_root };
@@ -185,10 +185,10 @@ fn test_get_header_fields_count() {
     let cancun_block_number = 19_432_540;
 
     assert_eq(get_header_fields_count(ETHEREUM_MAINNET_ID, frontier_block_number), 15);
-    assert_eq(get_header_fields_count(ETHEREUM_MAINNET_ID, LONDON_BLOCK_NUMBER), 16);
+    assert_eq(get_header_fields_count(ETHEREUM_MAINNET_ID, LONDON_BLOCK_NUM), 16);
     assert_eq(get_header_fields_count(ETHEREUM_MAINNET_ID, london_block_number), 16);
-    assert_eq(get_header_fields_count(ETHEREUM_MAINNET_ID, PARIS_BLOCK_NUMBER), 17);
+    assert_eq(get_header_fields_count(ETHEREUM_MAINNET_ID, PARIS_BLOCK_NUM), 17);
     assert_eq(get_header_fields_count(ETHEREUM_MAINNET_ID, paris_block_number), 17);
-    assert_eq(get_header_fields_count(ETHEREUM_MAINNET_ID, CANCUN_BLOCK_NUMBER), 20);
+    assert_eq(get_header_fields_count(ETHEREUM_MAINNET_ID, CANCUN_BLOCK_NUM), 20);
     assert_eq(get_header_fields_count(ETHEREUM_MAINNET_ID, cancun_block_number), 20);
 }

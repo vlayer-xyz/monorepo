@@ -127,7 +127,7 @@ describe('encodeAddress', () => {
 });
 
 describe('encodeProofNode', () => {
-  it('should pad to PROOF_ONE_LEVEL_LENGTH', () => {
+  it('should pad to PROOF_ONE_LEVEL_LEN', () => {
     const encodedProofNode = encodeProofNode('0x01');
 
     expect(encodedProofNode[0]).toStrictEqual('0x01');

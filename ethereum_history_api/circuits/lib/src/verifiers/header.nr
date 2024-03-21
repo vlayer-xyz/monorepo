@@ -9,22 +9,22 @@ global MAX_HEADER_FIELDS_COUNT = 20;
 global STATE_ROOT_INDEX = 3;
 global TRANSACTIONS_ROOT_INDEX = 4;
 global RECEIPTS_ROOT_INDEX = 5;
-global BLOCK_NUMBER_INDEX = 8;
+global BLOCK_NUM_INDEX = 8;
 
-global LONDON_BLOCK_NUMBER: u64 = 12_965_000;
-global PARIS_BLOCK_NUMBER: u64 = 15_537_394;
-global CANCUN_BLOCK_NUMBER: u64 = 19_426_587;
+global LONDON_BLOCK_NUM: u64 = 12_965_000;
+global PARIS_BLOCK_NUM: u64 = 15_537_394;
+global CANCUN_BLOCK_NUM: u64 = 19_426_587;
 
 pub(crate) fn get_header_fields_count(chain_id: Field, block_number: u64) -> u64 {
     let mut fields_count = 15;
     if chain_id == ETHEREUM_MAINNET_ID {
-        if block_number >= LONDON_BLOCK_NUMBER {
+        if block_number >= LONDON_BLOCK_NUM {
             fields_count += 1;
         }
-        if block_number >= PARIS_BLOCK_NUMBER {
+        if block_number >= PARIS_BLOCK_NUM {
             fields_count += 1;
         }
-        if block_number >= CANCUN_BLOCK_NUMBER {
+        if block_number >= CANCUN_BLOCK_NUM {
             fields_count += 3;
         }
     } else if chain_id == ETHEREUM_SEPOLIA_ID {
@@ -49,12 +49,12 @@ pub fn verify_header(
     let block_number = u64_to_u8(block_header_partial.number as u64);
     let (block_number, block_number_length) = byte_value(block_number);
 
-    assert(rlp_list.length[BLOCK_NUMBER_INDEX] == block_number_length, "block number length does not match");
+    assert(rlp_list.length[BLOCK_NUM_INDEX] == block_number_length, "block number length does not match");
     assert(
         sub_array_equals_up_to_length(
             block_number,
             block_header_rlp.data,
-            rlp_list.offset[BLOCK_NUMBER_INDEX],
+            rlp_list.offset[BLOCK_NUM_INDEX],
             block_number_length as u64
         ), "block number does not match"
     );
