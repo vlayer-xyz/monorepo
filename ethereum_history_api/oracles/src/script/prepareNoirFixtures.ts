@@ -55,7 +55,7 @@ for (const chain in FIXTURES) {
       }
 
       const txIdx = transactionIdx ?? (transactionHash && getTxIdx(block, transactionHash));
-      if (txIdx) {
+      if (txIdx !== undefined) {
         const txReceiptProof = await getReceiptProof(client, block.number, txIdx);
         await writeFile(join(modulePath, 'receipt_proof.nr'), createReceiptProofFixture(txReceiptProof));
         fixtureModules.push('receipt_proof');
