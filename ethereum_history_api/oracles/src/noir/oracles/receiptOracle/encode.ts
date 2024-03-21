@@ -4,12 +4,13 @@ import { encodeReceipt as encodeReceiptToRlp, statusToHex } from '../../../ether
 import { padArray } from '../../../util/array.js';
 import { encodeField, encodeHex, encodeProof, encodeBytes } from '../common/encode.js';
 import { ZERO_PAD_VALUE } from '../common/const.js';
+import { ReceiptProof } from '../../../ethereum/receiptProof.js';
 
 const MAX_RECEIPT_PROOF_LEVELS = 7;
-const MAX_RECEIPT_LENGTH = 516;
-export const MAX_RECEIPT_RLP_LENGTH = 512;
+const MAX_RECEIPT_LENGTH = 532;
+export const MAX_RECEIPT_RLP_LENGTH = 532;
 const MAX_RECEIPT_PROOF_LENGTH = MAX_RECEIPT_LENGTH * MAX_RECEIPT_PROOF_LEVELS;
-const KEY_LENGTH = MAX_RECEIPT_PROOF_LEVELS;
+export const KEY_LENGTH = 4;
 
 export function encodeReceipt(receipt: TransactionReceipt): ForeignCallOutput[] {
   const blobGasUsed = encodeField(receipt.blobGasUsed ?? 0);
@@ -22,15 +23,11 @@ export function encodeReceipt(receipt: TransactionReceipt): ForeignCallOutput[] 
   return [blobGasUsed, blobGasPrice, status, stateRoot, cumulativeGasUsed, logsBloom];
 }
 
-export function encodeReceiptProof(
-  receiptProof: Hex[],
-  txId: number,
-  receipt: TransactionReceipt
-): ForeignCallOutput[] {
-  const key = encodeBytes(BigInt(txId), KEY_LENGTH);
-  const value = padArray(encodeHex(encodeReceiptToRlp(receipt)), MAX_RECEIPT_RLP_LENGTH, ZERO_PAD_VALUE);
-  const proof = encodeProof(receiptProof, MAX_RECEIPT_PROOF_LENGTH);
-  const depth = encodeField(receiptProof.length);
+export function encodeReceiptProof(receiptProof: ReceiptProof): ForeignCallOutput[] {
+  const key = encodeBytes(BigInt(receiptProof.key), KEY_LENGTH);
+  const value = padArray(encodeHex(receiptProof.value), MAX_RECEIPT_RLP_LENGTH, ZERO_PAD_VALUE);
+  const proof = encodeProof(receiptProof.proof, MAX_RECEIPT_PROOF_LENGTH);
+  const depth = encodeField(receiptProof.proof.length);
 
   return [key, value, proof, depth];
 }

@@ -6,7 +6,7 @@ describe('receiptOracle', () => {
     it('success', () => {
       expect(decodeGetReceiptArguments([['0xf'], ['0xb4']])).toStrictEqual({
         blockNumber: 15n,
-        txId: 180n
+        txId: 180
       });
     });
     it('get_receipt requires 2 arguments', () => {

@@ -35,7 +35,7 @@ export const getReceiptOracle = async (client: AlchemyClient, args: NoirArgument
   const receiptProof = await getReceiptProof(client, blockNumber, txId);
 
   const encodedReceipt = encodeReceipt(receipt);
-  const encodedReceiptProof = encodeReceiptProof(receiptProof, txId, receipt);
+  const encodedReceiptProof = encodeReceiptProof(receiptProof);
   return [...encodedReceipt, ...encodedReceiptProof];
 };
 
