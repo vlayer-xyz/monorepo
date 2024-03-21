@@ -1,0 +1,1 @@
+export const MAX_TRANSACTION_DATA_SIZE = 1024;
