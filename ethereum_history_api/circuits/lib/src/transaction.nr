@@ -2,7 +2,7 @@ use crate::misc::types::{Bytes32, Address};
 use dep::std::unsafe::zeroed;
 
 global MAX_TRANSACTION_TREE_DEPTH = 6;
-global MAX_TRANSACTION_DATA_LEN = 1024;
+global MAX_TRANSACTION_DATA_LEN = 1024; // TODO: Determine and set an appropriate maximum limit value.
 
 struct Transaction {
     nonce: Field,
