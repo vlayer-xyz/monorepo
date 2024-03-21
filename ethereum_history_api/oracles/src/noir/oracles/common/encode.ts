@@ -52,6 +52,11 @@ export function encodeHex(hexString: string): Hex[] {
 }
 
 export function encodeProofNode(node: Hex): Hex[] {
+  const encodedNode = encodeHex(node);
+  assert(
+    encodedNode.length <= PROOF_ONE_LEVEL_LENGTH,
+    `Proof node length: ${encodedNode.length} is too large. Max proof node length: ${PROOF_ONE_LEVEL_LENGTH}`
+  );
   return padArray(encodeHex(node), PROOF_ONE_LEVEL_LENGTH, ZERO_PAD_VALUE);
 }
 
