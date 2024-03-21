@@ -8,5 +8,6 @@ mod misc;
 mod fixtures;
 mod verifiers;
 mod receipt;
+mod transaction;
 
 global HASH_LENGTH = 32;
