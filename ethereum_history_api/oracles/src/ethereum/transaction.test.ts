@@ -1,0 +1,175 @@
+import { describe, expect, it } from 'vitest';
+import { TransactionEIP1559, TransactionEIP2930, TransactionEIP4844, TransactionLegacy } from 'viem';
+import { loadTxFixture } from '../fixtures.js';
+import { TxRlpEncoder } from './transaction.js';
+import { assert } from '../util/assert.js';
+
+describe('transactionToRlpFields', () => {
+  it(`legacyTransactionToRlpFields`, async () => {
+    const legacyTx = (await loadTxFixture(
+      'mainnet',
+      'cancun',
+      'small_block',
+      '0x94a8715a083008845fc4983e89627e6a99de9f15d8455cc3fb2c1583f594932a'
+    )) as TransactionLegacy;
+    assert(legacyTx.type === 'legacy', 'Expected legacy transaction');
+
+    expect(TxRlpEncoder.legacyToFields(legacyTx)).toMatchInlineSnapshot(`
+      [
+        "0x03",
+        "0x0c76bbf5fb",
+        "0x01d4c0",
+        "0x405154cfaf5ea4ef57b65b86959c73dd079fa312",
+        "0x",
+        "0x095ea7b3000000000000000000000000c465cc50b7d5a29b9308968f870a4b242a8e1873ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "0x26",
+        "0x6275638abb413db6e3405f9c4ef85e35a531abc30b741b93150956f9f2eaf44c",
+        "0x6367d766b483089323b5e9e64fe2bbf00711a976a23c91d35ec55744b80aaa3a",
+      ]
+    `);
+  });
+
+  it(`eip2930TransactionToRlpFields`, async () => {
+    const eip2930Tx = (await loadTxFixture(
+      'mainnet',
+      'cancun',
+      'access_list',
+      '0x702385c4922ef4476df045495d122c87294de15ad8abad104991458d98765978'
+    )) as TransactionEIP2930;
+    assert(eip2930Tx.type === 'eip2930', 'Expected eip2930 transaction');
+
+    expect(TxRlpEncoder.eip2930ToFields(eip2930Tx)).toMatchInlineSnapshot(`
+      [
+        "0x01",
+        "0x035f",
+        "0x1e42b6aa24",
+        "0x0487f8",
+        "0x6a5ef39f58c80e42642b9210bf74f20666a2e6b6",
+        "0x",
+        "0x0788e6a0c2ddd26feeb64f039a2c41296fcb3f5640000000000000634af7b89848fc8d00007e9b0e1f87fb6d000000000000000000000000000000000000000086c3d03e4f041fd4cd388c549ee2a29a9e5075882f5777d92f208679db4b9778590fa3cab3ac9e216800000000000062cc5caa78c10120",
+        [
+          [
+            "0x43506849d7c04f9138d1a2050bbf3a0c054402dd",
+            [],
+          ],
+          [
+            "0x5777d92f208679db4b9778590fa3cab3ac9e2168",
+            [
+              "0x0000000000000000000000000000000000000000000000000000000000000000",
+              "0x0000000000000000000000000000000000000000000000000000000000000001",
+              "0x0000000000000000000000000000000000000000000000000000000000000004",
+              "0xa25a49481d75e69e4962ae09926f4d34f733fd60e6d3abe86eec7bb377335f11",
+            ],
+          ],
+          [
+            "0x6b175474e89094c44da98b954eedeac495271d0f",
+            [
+              "0x0c851915448d0d1d564ff8d739c8d78544db77078755e108c40f2957369677fa",
+              "0x10933ad3d107402095038bcbfc2bd3b46296d4d1c93c9845f3b25d11c61e15ce",
+            ],
+          ],
+          [
+            "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
+            [
+              "0x0000000000000000000000000000000000000000000000000000000000000000",
+              "0x0000000000000000000000000000000000000000000000000000000000000001",
+              "0x0000000000000000000000000000000000000000000000000000000000000004",
+              "0x00000000000000000000000000000000000000000000000000000000000000e4",
+              "0x020c72644b6d1ac052ff0fc75ce872138c9c3684978ace385f3ce79ec651e607",
+            ],
+          ],
+          [
+            "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+            [
+              "0x0000000000000000000000000000000000000000000000000000000000000001",
+              "0x10d6a54a4754c8869d6886b5f5d7fbfa5b4522237ea5c60d11bc4e7a1ff9390b",
+              "0x1f21a62c4538bacf2aabeca410f0fe63151869f172e03c0e00357ba26a341eff",
+              "0x4dd1725f464fafcddf286deb01aabcbb4bf8a538bad59c775b5dcdb2fbc3c71a",
+              "0x7050c9e0f4ca769c69bd3a8ef740bc37934f8e2c036e5a723fd8ee048ed3f8c3",
+            ],
+          ],
+          [
+            "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            [
+              "0x032f69cff4e4fe07a78359f66aa96f7ea097a85422369312f4fe91caa536923d",
+              "0x390f6178407c9b8e95802b8659e6df8e34c1e3d4f8d6a49e6132bbcdd937b63a",
+              "0xa06e44591f7f0cf45a5722b083b94076cf3a4b4b5fccd5c6ccc59cf234400ce5",
+            ],
+          ],
+          [
+            "0xc3d03e4f041fd4cd388c549ee2a29a9e5075882f",
+            [
+              "0x0000000000000000000000000000000000000000000000000000000000000006",
+              "0x0000000000000000000000000000000000000000000000000000000000000007",
+              "0x0000000000000000000000000000000000000000000000000000000000000008",
+              "0x0000000000000000000000000000000000000000000000000000000000000009",
+              "0x000000000000000000000000000000000000000000000000000000000000000a",
+              "0x000000000000000000000000000000000000000000000000000000000000000c",
+            ],
+          ],
+        ],
+        "0x",
+        "0xc4f3733ab47b59cbd9000b2ae91c5df57236663dec79a1a0a9b7c51d8f0ec8ae",
+        "0x71b0b088bdd2deb915a45941433e82c5946f56dec6379586917801613b876d0e",
+      ]
+    `);
+  });
+
+  it('eip1559TransactionToRlpFields', async () => {
+    const eip1559Tx = (await loadTxFixture(
+      'mainnet',
+      'cancun',
+      'small_block',
+      '0x98e19df80eb8feae436896cc7cc6d4a97818e6010b56a249352b9ac2caf0d573'
+    )) as TransactionEIP1559;
+    assert(eip1559Tx.type === 'eip1559', 'Expected eip1559 transaction');
+
+    expect(TxRlpEncoder.eip1559ToFields(eip1559Tx)).toMatchInlineSnapshot(`
+      [
+        "0x01",
+        "0x485a",
+        "0x012a05f200",
+        "0x2e90edd000",
+        "0x0493e0",
+        "0x514910771af9ca656af840dff83e8264ecf986ca",
+        "0x",
+        "0xa9059cbb000000000000000000000000125f660239707c9de3462d3fa633f2723ad0b88400000000000000000000000000000000000000000000003f44127fb43fa10000",
+        [],
+        "0x01",
+        "0x15e6113416b794b11a4e5fbccd99081feeecc4d213e83bee922370b9b5c0d84a",
+        "0x450f277650e5b72e4595d1d986dc056961f1aabd4c9eb5a551d0f486d81866f7",
+      ]
+    `);
+  });
+
+  it('eip4844TransactionToRlpFields', async () => {
+    const eip4844Tx = (await loadTxFixture(
+      'mainnet',
+      'cancun',
+      'with_blob',
+      '0xd76ce9d036dc7e8491d134f9bc953ebb204545950821d8ada25968fea779a4b2'
+    )) as TransactionEIP4844;
+    assert(eip4844Tx.type === 'eip4844', 'Expected eip4844 transaction');
+
+    expect(TxRlpEncoder.eip4844ToFields(eip4844Tx)).toMatchInlineSnapshot(`
+      [
+        "0x01",
+        "0x0954d2",
+        "0x05f5e100",
+        "0x22ecb25c00",
+        "0x53ec60",
+        "0xc662c410c0ecf747543f5ba90660f6abebd9c8c4",
+        "0x",
+        "0xb72d42a100000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000d045f0b3b844a6512abe289184c2f1c762ba9cc656bf2803bb007e0942c08a56205e36c6369de7046251778fe3c00d6b80e35ecf1d7f3430190a83c750a176cf500000000000000000000000000000000000000000000000000000000000954d10511cbb57aeb9baa65ae2554072616eb542add0bef98b2d27aabe30aa8a79c4d05ba2078240f1585f96424c2d1ee48211da3b3f9177bf2b9880b4fc91d59e9a20000000000000000000000000000000000000000000000000000000000000001000000000000000040f5a7cd992df9fabbba63e11c35eb4c6901a42ddf20a5f400000000000000008f1cbc260196aecf6a52e65b1c44bb3bd65a91a09cc31d3602d933996d205e3142e37fc63fbaa0ceb775ead558936e6abef3388f72129d1400000000000000000000000000000000497d141060f9b93415ad9fc9097c0f82000000000000000000000000000000005018c8f647bc84dfad4b4deb5f9fa42d00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003095bfc3e11bdd443a8ceede87e7b61f3760075fdc17dd9ca1cd3ea73292b4507872a173cde8b3f830ec5fe0befda0666e00000000000000000000000000000000",
+        [],
+        "0x22ecb25c00",
+        [
+          "0x013f9362b77217b8eda3412ab519749238a233386e6864ca4af587f37a4fa2c8",
+        ],
+        "0x",
+        "0x111edc8443cda6a2918d952ed42346712812424b8b0986f43e113eb6c01c42",
+        "0x4152faa039fe59e36c9cea46fbec8b9b85019650875b3896a0dd28b79783669f",
+      ]
+    `);
+  });
+});

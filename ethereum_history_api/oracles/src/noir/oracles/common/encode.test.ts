@@ -1,6 +1,28 @@
 import { describe, expect, it } from 'vitest';
-import { encodeAddress, encodeBytes32, encodeField, encodeHex } from './encode.js';
+import { encodeAddress, encodeByte, encodeBytes32, encodeField, encodeHex, encodeProofNode } from './encode.js';
 import { MODULUS } from './const.js';
+
+describe('encodeByte', () => {
+  it('should throw an error for byte overflow', () => {
+    expect(() => encodeByte(256)).toThrow('Byte overflow');
+  });
+
+  it('should throw an error for byte underflow', () => {
+    expect(() => encodeByte(-1)).toThrow('Byte underflow');
+  });
+
+  it('should return "0x00" for zero', () => {
+    expect(encodeByte(0)).toBe('0x00');
+  });
+
+  it('one nibble', () => {
+    expect(encodeByte(15)).toBe('0x0f');
+  });
+
+  it('two nibbles', () => {
+    expect(encodeByte(255)).toBe('0xff');
+  });
+});
 
 describe('encodeField', () => {
   it('should throw an error for field overflow', () => {
@@ -101,5 +123,15 @@ describe('encodeAddress', () => {
   it('invalid address', () => {
     // prettier-ignore
     expect(() => encodeAddress('0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbbaa')).toThrow('Invalid address: 0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbbaa');
+  });
+});
+
+describe('encodeProofNode', () => {
+  it('should pad to PROOF_ONE_LEVEL_LENGTH', () => {
+    const encodedProofNode = encodeProofNode('0x01');
+
+    expect(encodedProofNode[0]).toStrictEqual('0x01');
+    expect(encodedProofNode[1]).toStrictEqual('0x00');
+    expect(encodedProofNode.length).toBe(532);
   });
 });

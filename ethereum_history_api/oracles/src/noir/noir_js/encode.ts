@@ -1,8 +1,13 @@
-import { isHex } from 'viem';
+import { Hex, isHex } from 'viem';
 import { BYTE_HEX_LENGTH } from '../../util/const.js';
+import { encodeByte } from '../oracles/common/encode.js';
 
 // ENCODERS
-export function encodeHexString(value: string): Uint8Array {
+export function encodeHexString(value: string): Hex[] {
+  return Array.from(encodeHexStringToArray(value)).map((byte) => encodeByte(byte));
+}
+
+export function encodeHexStringToArray(value: string): Uint8Array {
   if (!isHex(value)) {
     throw new Error(`Invalid hexstring: ${value}`);
   }

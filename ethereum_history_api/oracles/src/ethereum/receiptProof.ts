@@ -1,7 +1,14 @@
 import { TransactionReceipt, Hex } from 'viem';
-import { assert } from '../util/assert.js';
 import { AlchemyClient } from './client.js';
-import { ReceiptTrie } from './receiptTrie.js';
+import { ReceiptTrie } from './trie.js';
+import { encodeReceipt } from './receipt.js';
+import { assert } from '../util/assert.js';
+
+export interface ReceiptProof {
+  key: Hex;
+  proof: Hex[];
+  value: Hex;
+}
 
 export async function getReceiptTrie(receipts: TransactionReceipt[], expectedRoot: Hex): Promise<ReceiptTrie> {
   const trie = new ReceiptTrie();
@@ -12,10 +19,20 @@ export async function getReceiptTrie(receipts: TransactionReceipt[], expectedRoo
   return trie;
 }
 
-export async function getReceiptProof(client: AlchemyClient, blockNumber: bigint, txIdx: number): Promise<Hex[]> {
+export async function getReceiptProof(
+  client: AlchemyClient,
+  blockNumber: bigint,
+  txIdx: number
+): Promise<ReceiptProof> {
   const block = await client.getBlock({ blockNumber });
   const receipts = await client.getTransactionReceipts({ blockNumber });
   const trie = await getReceiptTrie(receipts, block.receiptsRoot);
 
-  return await trie.createProof(txIdx);
+  const proof = await trie.createProof(txIdx);
+
+  return {
+    key: ReceiptTrie.keyFromIdx(txIdx),
+    proof,
+    value: encodeReceipt(receipts[txIdx])
+  };
 }

@@ -4,6 +4,7 @@ use crate::verifiers::receipt::verify_receipt;
 use dep::std::unsafe::zeroed;
 
 global BLOOM_FILTER_SIZE = 256;
+global MAX_RECEIPT_KEY_LEN = 3;
 global MAX_RECEIPT_TREE_DEPTH = 7;
 
 struct Log<MAX_LOG_DATA_SIZE> {
@@ -25,7 +26,7 @@ struct PhantomReceiptProofLen<MAX_RECEIPT_PROOF_LENGTH> {}
 struct PhantomReceiptRlpLen<MAX_RECEIPT_RLP_LENGTH> {}
 
 struct TxReceiptProof<MAX_RECEIPT_PROOF_LENGTH, MAX_RECEIPT_RLP_LENGTH> {
-    key: [u8; MAX_RECEIPT_TREE_DEPTH],
+    key: [u8; MAX_RECEIPT_KEY_LEN],
     value: [u8; MAX_RECEIPT_RLP_LENGTH],
     proof: [u8; MAX_RECEIPT_PROOF_LENGTH],
     depth: u64
