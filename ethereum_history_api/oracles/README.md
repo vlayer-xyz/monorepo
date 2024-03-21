@@ -7,6 +7,7 @@ There are three oracles:
 - **Header** Oracle - fetches Ethereum block header
 - **Account** Oracle - fetches Ethereum account state with state proof
 - **Proof** Oracle - fetches Ethereum storage value with both storage & state proof
+- **Receipt** Oracle - fetches Ethereum receipt with receipt proof
 
 Below are headers for respective functions in Noir:
 

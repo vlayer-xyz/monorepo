@@ -16,11 +16,9 @@ It allows you to prove:
 - Log inclusion
   - Example: _Log number `0` within transaction number `115` in block `N` has `topic0 === 0x...`_
 
-As of now, it allows for proving and verifying last 256 blocks.
+Additionally, we provide [smart contracts](./ethereum_history_api/contracts/src/EthereumHistoryVerifier.sol) that allow to verify inclusion of block in the chain for last 256 blocks.
 
-It is currently under development.
-
-### Repository structure
+## Repository structure
 
 This monorepo consists of the following sub-projects:
 
@@ -73,3 +71,7 @@ Compilation and testing instructions for individual projects:
 ### CI workflows
 
 We use Github actions to run tests on CI. For a detailed description of what does each workflow do consult [Workflow Docs](./.github/workflows/README.md)
+
+## DISCLAIMER
+
+This library is in active development and subject to breaking changes. Use at your own risk. No responsibility is assumed for any potential issues arising from its use.
