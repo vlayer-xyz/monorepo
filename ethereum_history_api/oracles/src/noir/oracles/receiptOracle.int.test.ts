@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { createMockClient } from '../../ethereum/mockClient.js';
-import { OFFSETS, OFFSETS_PROOF, getReceiptOracle } from './receiptOracle.js';
-import { BYTES32_LENGTH } from './common/const.js';
+import { OFFSETS, getReceiptOracle } from './receiptOracle.js';
+import { BYTES32_LENGTH, ZERO_PAD_VALUE } from './common/const.js';
+import { padArray } from '../../util/array.js';
+import { MAX_RECEIPT_RLP_LENGTH } from './receiptOracle/encode.js';
 
 describe('getReceiptOracle', () => {
   it('success', async () => {
@@ -14,24 +16,18 @@ describe('getReceiptOracle', () => {
     ];
     const client = await createMockClient(mockFilePaths);
 
-    const result = await getReceiptOracle(client, [
+    const receiptWithProof = await getReceiptOracle(client, [
       [cancunBlockNumberInNoirFormat],
       [chainLinkTransferTxIdInNoirFormat]
     ]);
 
-    const receipt = result.slice(0, 6);
-    const proof = result.slice(6, 10);
-
-    expect(proof[OFFSETS_PROOF.KEY]).toStrictEqual(['0x00', '0x00', '0x00', '0x00', '0x00', '0x00', '0x08']);
-    expect(proof[OFFSETS_PROOF.DEPTH]).toStrictEqual('0x03');
-
-    expect(receipt[OFFSETS.BLOB_GAS_USED]).toStrictEqual('0x');
-    expect(receipt[OFFSETS.BLOB_GAS_PRICE]).toStrictEqual('0x');
-    expect(receipt[OFFSETS.STATUS]).toStrictEqual('0x01');
-    expect(receipt[OFFSETS.STATE_ROOT]).toStrictEqual(stateRootInNoirFormat);
-    expect(receipt[OFFSETS.CUMULATIVE_GAS_USED]).toStrictEqual('0x0a17e1');
+    expect(receiptWithProof[OFFSETS.BLOB_GAS_USED]).toStrictEqual('0x');
+    expect(receiptWithProof[OFFSETS.BLOB_GAS_PRICE]).toStrictEqual('0x');
+    expect(receiptWithProof[OFFSETS.STATUS]).toStrictEqual('0x01');
+    expect(receiptWithProof[OFFSETS.STATE_ROOT]).toStrictEqual(stateRootInNoirFormat);
+    expect(receiptWithProof[OFFSETS.CUMULATIVE_GAS_USED]).toStrictEqual('0x0a17e1');
     // prettier-ignore
-    expect(receipt[OFFSETS.LOGS_BLOOM]).toStrictEqual([
+    expect(receiptWithProof[OFFSETS.LOGS_BLOOM]).toStrictEqual([
       "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", 
       "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x10", "0x00",
       "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", 
@@ -65,6 +61,11 @@ describe('getReceiptOracle', () => {
       "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", 
       "0x00", "0x00", "0x00", "0x00", "0x02", "0x00", "0x00", "0x00"
     ]);
+
+    expect(receiptWithProof[OFFSETS.PROOF_KEY]).toStrictEqual(
+      padArray(['0x08'], MAX_RECEIPT_RLP_LENGTH, ZERO_PAD_VALUE)
+    );
+    expect(receiptWithProof[OFFSETS.PROOF_DEPTH]).toStrictEqual('0x03');
   });
 
   it('transaction not found', async () => {

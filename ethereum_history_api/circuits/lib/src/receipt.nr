@@ -18,8 +18,7 @@ struct TxReceipt<LOG_NUM, MAX_LOG_DATA_SIZE> {
     status: u1,
     state_root: Bytes32,
     cumulative_gas_used: Field,
-    logs_bloom: [u8; BLOOM_FILTER_SIZE],
-    // logs: [Log<MAX_LOG_DATA_SIZE>; LOG_NUM]
+    logs_bloom: [u8; BLOOM_FILTER_SIZE]
 }
 
 struct PhantomReceiptProofLen<MAX_RECEIPT_PROOF_LENGTH> {}
@@ -42,7 +41,7 @@ pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_SIZE, MAX_RECEIPT_PROOF_LENGTH, MAX_REC
     tx_idx: Field,
     _max_receipt_proof_len: PhantomReceiptProofLen<MAX_RECEIPT_PROOF_LENGTH>,
     _max_receipt_rlp_len: PhantomReceiptRlpLen<MAX_RECEIPT_RLP_LENGTH>
-) -> (TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_SIZE>, TxReceiptProof<MAX_RECEIPT_PROOF_LENGTH, MAX_RECEIPT_RLP_LENGTH>){
+) -> TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_SIZE> {
     let (receipt, proof): (TxReceipt<LOG_NUM, MAX_LOG_DATA_SIZE>, TxReceiptProof<MAX_RECEIPT_PROOF_LENGTH, MAX_RECEIPT_RLP_LENGTH>) = get_receipt_unconstrained(block_number, tx_idx);
     zeroed()
 }

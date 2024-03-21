@@ -16,14 +16,11 @@ export const OFFSETS = {
   STATUS: 2,
   STATE_ROOT: 3,
   CUMULATIVE_GAS_USED: 4,
-  LOGS_BLOOM: 5
-};
-
-export const OFFSETS_PROOF = {
-  KEY: 0,
-  VALUE: 1,
-  PROOF: 2,
-  DEPTH: 3
+  LOGS_BLOOM: 5,
+  PROOF_KEY: 6,
+  PROOF_VALUE: 7,
+  PROOF: 8,
+  PROOF_DEPTH: 9
 };
 
 export const getReceiptOracle = async (client: AlchemyClient, args: NoirArguments): Promise<ForeignCallOutput[]> => {
@@ -31,11 +28,11 @@ export const getReceiptOracle = async (client: AlchemyClient, args: NoirArgument
   const blockReceipts = await client.getTransactionReceipts({
     blockNumber
   });
-  const receipt = blockReceipts.find((receipt) => receipt.transactionIndex === Number(txId));
+  const receipt = blockReceipts.find((receipt) => receipt.transactionIndex === txId);
   if (!receipt) {
     throw new Error(`Transaction receipt not found for txId: ${txId}`);
   }
-  const receiptProof = await getReceiptProof(client, blockNumber, Number(txId));
+  const receiptProof = await getReceiptProof(client, blockNumber, txId);
 
   const encodedReceipt = encodeReceipt(receipt);
   const encodedReceiptProof = encodeReceiptProof(receiptProof, txId, receipt);
@@ -44,13 +41,13 @@ export const getReceiptOracle = async (client: AlchemyClient, args: NoirArgument
 
 export function decodeGetReceiptArguments(args: NoirArguments): {
   blockNumber: bigint;
-  txId: bigint;
+  txId: number;
 } {
   assert(args.length === GET_RECEIPT_ARGS_COUNT, `get_receipt requires ${GET_RECEIPT_ARGS_COUNT} arguments`);
 
   assert(args[BLOCK_NUMBER_INDEX].length === 1, 'blockNumber should be a single value');
   const blockNumber = decodeField(args[BLOCK_NUMBER_INDEX][0]);
-  const txId = decodeField(args[TX_ID_INDEX][0]);
+  const txId = Number(decodeField(args[TX_ID_INDEX][0]));
 
   return { blockNumber, txId };
 }

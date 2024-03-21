@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { encodeReceiptToRlp, logToRlpFields, receiptToRlpFields, statusToHex, txTypeToHex } from './receipt.js';
+import { encodeReceipt, logToRlpFields, receiptToRlpFields, statusToHex, txTypeToHex } from './receipt.js';
 import { toEventSelector } from 'viem';
 import { assert } from '../util/assert.js';
 import { loadReceiptFixture } from '../fixtures.js';
@@ -121,7 +121,7 @@ describe('encodeReceipt', () => {
     );
     assert(legacyReceipt.type === 'legacy', 'Expected legacy receipt type. Please check the fixtures');
 
-    const encodedReceipt = encodeReceiptToRlp(legacyReceipt);
+    const encodedReceipt = encodeReceipt(legacyReceipt);
 
     expect(encodedReceipt.startsWith('0x00')).toBeFalsy();
   });
@@ -135,7 +135,7 @@ describe('encodeReceipt', () => {
     );
     assert(eip2930Receipt.type === 'eip2930', 'Expected eip2930 receipt type. Please check the fixtures');
 
-    const encodedReceipt = encodeReceiptToRlp(eip2930Receipt);
+    const encodedReceipt = encodeReceipt(eip2930Receipt);
 
     expect(encodedReceipt.startsWith('0x01')).toBeTruthy();
   });
@@ -149,7 +149,7 @@ describe('encodeReceipt', () => {
     );
     assert(eip1559Receipt.type === 'eip1559', 'Expected eip1559 receipt type. Please check the fixtures');
 
-    const encodedReceipt = encodeReceiptToRlp(eip1559Receipt);
+    const encodedReceipt = encodeReceipt(eip1559Receipt);
 
     expect(encodedReceipt.startsWith('0x02')).toBeTruthy();
   });
@@ -163,7 +163,7 @@ describe('encodeReceipt', () => {
     );
     assert(eip4344Receipt.type === 'eip4844', 'Expected eip4844 receipt type. Please check the fixtures');
 
-    const encodedReceipt = encodeReceiptToRlp(eip4344Receipt);
+    const encodedReceipt = encodeReceipt(eip4344Receipt);
 
     expect(encodedReceipt.startsWith('0x03')).toBeTruthy();
   });
