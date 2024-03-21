@@ -6,7 +6,7 @@ global MAX_TRANSACTION_TREE_DEPTH = 6;
 struct Transaction<MAX_TRANSACTION_DATA_LEN> {
     nonce: Field,
     gas_price: Option<Field>,
-    gas_limit: Option<Field>,
+    gas_limit: Field,
     to: Option<Address>,
     value: Field,
     data: [u8; MAX_TRANSACTION_DATA_LEN],
