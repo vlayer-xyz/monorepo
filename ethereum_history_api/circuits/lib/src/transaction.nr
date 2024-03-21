@@ -20,15 +20,15 @@ struct PhantomTransactionProofLen<MAX_TRANSACTION_PROOF_LENGTH> {}
 struct PhantomTransactionRlpLen<MAX_TRANSACTION_RLP_LENGTH> {}
 
 struct TransactionProof<MAX_TRANSACTION_PROOF_LENGTH, MAX_TRANSACTION_RLP_LENGTH> {
-	key: [u8; MAX_TRANSACTION_TREE_DEPTH],
+    key: [u8; MAX_TRANSACTION_TREE_DEPTH],
     value: [u8; MAX_TRANSACTION_RLP_LENGTH],
     proof: [u8; MAX_TRANSACTION_PROOF_LENGTH],
     depth: u64
 }
 
 struct TransactionWithinBlock<MAX_TRANSACTION_DATA_SIZE> {
-	transation: Transaction<MAX_TRANSACTION_DATA_SIZE>,
-	block_hash: Bytes32
+    transation: Transaction<MAX_TRANSACTION_DATA_SIZE>,
+    block_hash: Bytes32
 }
 
 pub fn get_transaction<MAX_TRANSACTION_DATA_SIZE, MAX_TRANSACTION_PROOF_LENGTH, MAX_TRANSACTION_RLP_LENGTH>(
