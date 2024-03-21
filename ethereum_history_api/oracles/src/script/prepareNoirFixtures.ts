@@ -27,7 +27,8 @@ for (const chain in FIXTURES) {
     const hardforkModuleFile = `${NOIR_FIXTURES_DIRECTORY}/${chain}/${hardFork}.nr`;
 
     for (const fixtureName in FIXTURES[chain][hardFork]) {
-      const { blockNumber, address, storageKeys, transactionHash } = FIXTURES[chain][hardFork][fixtureName];
+      const { blockNumber, address, storageKeys, transactionHash, transactionIdx } =
+        FIXTURES[chain][hardFork][fixtureName];
       const modulePath = `${NOIR_FIXTURES_DIRECTORY}/${chain}/${hardFork}/${fixtureName}`;
       await mkdir(modulePath, { recursive: true });
       const fixtureModules: string[] = [];
@@ -52,8 +53,8 @@ for (const chain in FIXTURES) {
         }
       }
 
-      if (transactionHash) {
-        const txIdx = getTxIdx(block, transactionHash);
+      const txIdx = transactionIdx ?? (transactionHash && getTxIdx(block, transactionHash));
+      if (txIdx) {
         const txProof = await getReceiptProof(client, block.number, txIdx);
         await writeFile(join(modulePath, 'receipt_proof.nr'), createReceiptProofFixture(txProof));
         fixtureModules.push('receipt_proof');
@@ -70,7 +71,7 @@ for (const chain in FIXTURES) {
   await writeFile(chainModuleFile, chainModule);
 }
 
-function getTxIdx(block: Block, transactionHash: Hex) {
+function getTxIdx(block: Block, transactionHash: Hex): number {
   const txIdx = block.transactions.indexOf(transactionHash);
   assert(txIdx !== INDEX_NOT_FOUND, `Transaction with hash: ${transactionHash} not found in block #${block.number}`);
   return txIdx;
