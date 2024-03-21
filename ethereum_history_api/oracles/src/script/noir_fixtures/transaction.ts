@@ -15,7 +15,7 @@ export function createTransactionFixture(tx: GetTransactionReturnType): string {
   const s = encodeHexString(tx.s);
 
   return `use crate::transaction::Transaction;
-  
+
 global transaction = Transaction {
   nonce: ${nonce},
   gas_price: ${gasPrice},

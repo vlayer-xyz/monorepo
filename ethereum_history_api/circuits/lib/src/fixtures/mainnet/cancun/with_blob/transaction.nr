@@ -1,5 +1,5 @@
 use crate::transaction::Transaction;
-  
+
 global transaction = Transaction {
   nonce: 0xceeb,
   gas_price: Option::some(0x0fa9252b6e),
