@@ -13,7 +13,7 @@ global MAX_LOG_DATA_SIZE = 128; // 4 * 32 (Eth word length)
 // MAX_BRANCH_LENGTH = 3 + 16 * 32 + 1 = 515
 global MAX_RECEIPT_TRIE_NODE_LENGTH = 515;
 global MAX_RECEIPT_PROOF_LENGTH = 3090; // MAX_RECEIPT_TRIE_NODE_LENGTH * MAX_RECEIPT_TREE_DEPTH
-global MAX_RECEIPT_RLP_LENGTH = 512; // TODO: Put the real value here
+global MAX_RECEIPT_RLP_LENGTH = 515; // TODO: Put the real value here
 
 fn main(
     block_number: pub Field,
