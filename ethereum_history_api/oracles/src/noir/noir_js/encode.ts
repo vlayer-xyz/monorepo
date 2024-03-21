@@ -18,6 +18,13 @@ export function encodeHexStringToArray(value: string): Uint8Array {
   return new Uint8Array(arr);
 }
 
+export const encodeNullable = (value: string | null): string =>
+  'Option::' + (value !== null ? `some(${value})` : 'none()');
+
+export const formatArray = (value: string[]): string => `[
+    ${value.join(',')}
+  ]`;
+
 // DECODERS
 export function decodeHexString(proof: Uint8Array): string {
   return (

@@ -4,14 +4,14 @@ use dep::std::unsafe::zeroed;
 global MAX_TRANSACTION_TREE_DEPTH = 6;
 
 struct Transaction<MAX_TRANSACTION_DATA_LEN> {
-    nonce: Bytes32,
-    gas_price: Bytes32,
-    gas_limit: Bytes32,
-    to: Address,
-    value: Bytes32,
+    nonce: Field,
+    gas_price: Option<Field>,
+    gas_limit: Option<Field>,
+    to: Option<Address>,
+    value: Field,
     data: [u8; MAX_TRANSACTION_DATA_LEN],
     data_len: Field,
-    v: Bytes32,  // ECDSA recovery id
+    v: Field,  // ECDSA recovery id
     r: Bytes32,  // ECDSA signature part
     s: Bytes32,  // ECDSA signature part
 }
