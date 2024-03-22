@@ -1,5 +1,4 @@
-import { TransactionReceipt, Hex } from 'viem';
-import { AlchemyClient } from './client.js';
+import { TransactionReceipt, Hex, Block } from 'viem';
 import { ReceiptTrie } from './trie.js';
 import { encodeReceipt } from './receipt.js';
 import { assert } from '../util/assert.js';
@@ -20,12 +19,10 @@ export async function getReceiptTrie(receipts: TransactionReceipt[], expectedRoo
 }
 
 export async function getReceiptProof(
-  client: AlchemyClient,
-  blockNumber: bigint,
+  block: Block,
+  receipts: TransactionReceipt[],
   txIdx: number
 ): Promise<ReceiptProof> {
-  const block = await client.getBlock({ blockNumber });
-  const receipts = await client.getTransactionReceipts({ blockNumber });
   const trie = await getReceiptTrie(receipts, block.receiptsRoot);
 
   const proof = await trie.createProof(txIdx);
