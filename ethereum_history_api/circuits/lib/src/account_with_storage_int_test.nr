@@ -50,7 +50,7 @@ fn test_get_account_with_storage_invalid_state_root() {
     let _ = get_account_with_storage(crypto_punks_number, address, storage_key);
 }
 
-#[test(should_fail_with = "Middle node hash does not match the hash extracted from the preceding node")]
+#[test(should_fail_with = "Internal node hash does not match the hash extracted from the preceding node")]
 fn test_get_account_with_storage_invalid_storage_root() {
     let _ = OracleMock::mock("get_header").returns((crypto_punks_block_header_partial, crypto_punks_block_header_rlp));
     let _ = OracleMock::mock("get_proof").returns((crypto_punks_account, crypto_punks_state_proof, proofs[0]));
