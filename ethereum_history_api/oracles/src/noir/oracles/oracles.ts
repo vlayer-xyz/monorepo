@@ -3,6 +3,7 @@ import { AlchemyClient, createDefaultClient } from '../../ethereum/client.js';
 import { getAccountOracle } from './accountOracle.js';
 import { getHeaderOracle } from './headerOracle.js';
 import { getProofOracle } from './proofOracle.js';
+import { getReceiptOracle } from './receiptOracle.js';
 
 export type NoirArgument = string[];
 export type NoirArguments = NoirArgument[];
@@ -27,7 +28,8 @@ export const createOracles =
 export const defaultOraclesMap: OracleMap = {
   get_account: getAccountOracle,
   get_header: getHeaderOracle,
-  get_proof: getProofOracle
+  get_proof: getProofOracle,
+  get_receipt: getReceiptOracle
 };
 
 export const defaultOracles = createOracles(createDefaultClient())(defaultOraclesMap);
