@@ -26,7 +26,7 @@ export function encodeNullable(value: string | null): string {
   }
 }
 
-export function formatArray(value: string[]): string {
+export function joinArray(value: string[]): string {
   return `[
     ${value.join(', ')}
   ]`;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { decodeHexString, encodeHexString, encodeHexStringToArray, encodeNullable, formatArray } from './encode.js';
+import { decodeHexString, encodeHexString, encodeHexStringToArray, encodeNullable, joinArray } from './encode.js';
 
 describe('encodeHexStringToArray', () => {
   it('throws on invalid input', () => {
@@ -28,7 +28,7 @@ describe('formatArray', () => {
     const expectedFormattedArray = `[
     0x12,0x34
   ]`;
-    expect(formatArray(['0x12', '0x34'])).toBe(expectedFormattedArray);
+    expect(joinArray(['0x12', '0x34'])).toBe(expectedFormattedArray);
   });
 });
 
