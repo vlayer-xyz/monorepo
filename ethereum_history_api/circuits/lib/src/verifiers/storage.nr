@@ -1,4 +1,4 @@
-use dep::proof::TrieProof;
+use dep::proof::trie_proof::TrieProof;
 
 use crate::misc::types::Bytes32;
 use crate::account_with_storage::StorageProof;

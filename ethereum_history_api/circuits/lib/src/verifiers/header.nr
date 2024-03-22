@@ -1,4 +1,4 @@
-use dep::proof::{rlp::{decode1, RLP_List}, byte_value};
+use dep::proof::{rlp::{decode1, RLP_List}, utils::byte_value};
 use dep::std::hash::keccak256;
 use dep::u2b::u64_to_u8;
 
