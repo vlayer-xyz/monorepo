@@ -2,7 +2,7 @@ use crate::misc::types::{Bytes32, Address};
 use crate::header::get_header;
 use crate::verifiers::receipt::verify_receipt;
 use dep::std::unsafe::zeroed;
-use dep::proof::{ MAX_TRIE_NODE_LENGTH };
+use dep::proof::{MAX_TRIE_NODE_LENGTH};
 
 global BLOOM_FILTER_LEN = 256;
 global MAX_RECEIPT_KEY_LEN = 4;
@@ -24,7 +24,6 @@ struct TxReceipt<LOG_NUM, MAX_LOG_DATA_LEN> {
     logs_bloom: [u8; BLOOM_FILTER_LEN]
 }
 
-
 struct TxReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN> {
     key: [u8; MAX_RECEIPT_KEY_LEN],
     value: [u8; MAX_RECEIPT_RLP_LEN],
@@ -37,10 +36,7 @@ struct TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_LEN> {
     block_hash: Bytes32
 }
 
-pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_LEN>(
-    block_number: Field,
-    tx_idx: Field
-) -> TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_LEN> {
+pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_LEN>(block_number: Field, tx_idx: Field) -> TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_LEN> {
     let (receipt, proof): (TxReceipt<LOG_NUM, MAX_LOG_DATA_LEN>, TxReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_TRIE_NODE_LENGTH>) = get_receipt_unconstrained(block_number, tx_idx);
     zeroed()
 }
