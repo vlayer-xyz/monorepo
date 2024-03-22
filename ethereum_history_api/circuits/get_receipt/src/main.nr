@@ -13,7 +13,8 @@ global MAX_LOG_DATA_SIZE = 128; // 4 * 32 (Eth word length)
 // MAX_BRANCH_LENGTH = 3 + 16 * 32 + 1 = 515
 global MAX_RECEIPT_TRIE_NODE_LENGTH = 515;
 global MAX_RECEIPT_PROOF_LENGTH = 3090; // MAX_RECEIPT_TRIE_NODE_LENGTH * MAX_RECEIPT_TREE_DEPTH
-global MAX_RECEIPT_RLP_LENGTH = 512; // TODO: Put the real value here
+// TODO: Handle the case where receipt is longer than the branch node
+global MAX_RECEIPT_RLP_LENGTH = 515; // == MAX_RECEIPT_TRIE_NODE_LENGTH 
 
 fn main(
     block_number: pub Field,
