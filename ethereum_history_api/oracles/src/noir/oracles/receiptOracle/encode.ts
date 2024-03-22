@@ -11,12 +11,13 @@ const MAX_RECEIPT_LENGTH = 532;
 export const MAX_RECEIPT_RLP_LENGTH = 532;
 const MAX_RECEIPT_PROOF_LENGTH = MAX_RECEIPT_LENGTH * MAX_RECEIPT_PROOF_LEVELS;
 export const KEY_LENGTH = 4;
+const BYTES_32_ZERO = '0x0000000000000000000000000000000000000000000000000000000000000000';
 
 export function encodeReceipt(receipt: TransactionReceipt): ForeignCallOutput[] {
   const blobGasUsed = encodeField(receipt.blobGasUsed ?? 0);
   const blobGasPrice = encodeField(receipt.blobGasPrice ?? 0);
   const status = statusToHex(receipt.status);
-  const stateRoot = encodeHex(receipt.root ?? '0x0000000000000000000000000000000000000000000000000000000000000000');
+  const stateRoot = encodeHex(receipt.root ?? BYTES_32_ZERO);
   const cumulativeGasUsed = encodeField(receipt.cumulativeGasUsed);
   const logsBloom = encodeHex(receipt.logsBloom);
 
