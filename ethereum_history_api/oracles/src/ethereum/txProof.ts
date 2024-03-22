@@ -1,7 +1,9 @@
 import { Hex, Transaction } from 'viem';
-import { assert } from 'vitest';
+import { assert } from '../util/assert.js';
 import { AlchemyClient } from './client.js';
-import { TxTrie } from './trie.js';
+import { Proof } from './proof.js';
+import { encodeTx } from './transaction.js';
+import { BaseTrie, TxTrie } from './trie.js';
 
 export async function getTxTrie(txs: Transaction[], expectedRoot: Hex): Promise<TxTrie> {
   const trie = new TxTrie();
@@ -12,9 +14,15 @@ export async function getTxTrie(txs: Transaction[], expectedRoot: Hex): Promise<
   return trie;
 }
 
-export async function getTxProof(client: AlchemyClient, blockNumber: bigint, txIdx: number): Promise<Hex[]> {
+export async function getTxProof(client: AlchemyClient, blockNumber: bigint, txIdx: number): Promise<Proof> {
   const block = await client.getBlock({ blockNumber, includeTransactions: true });
   const trie = await getTxTrie(block.transactions, block.transactionsRoot);
 
-  return await trie.createProof(txIdx);
+  const proof = await trie.createProof(txIdx);
+
+  return {
+    key: BaseTrie.keyFromIdx(txIdx),
+    proof: proof,
+    value: encodeTx(block.transactions[txIdx])
+  };
 }
