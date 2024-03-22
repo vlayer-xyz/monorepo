@@ -99,7 +99,7 @@ That's also not a nice solution. Instead - we try to introduce generic parameter
 Unfortunately generics are limited:
 
 - We can't do any [arithmetic](https://github.com/noir-lang/noir/issues/1837) on them. It's impossible to create `array: [u8; N * M]` where N and M are generic type parameters
-- [Turbofish syntax](https://github.com/orgs/noir-lang/discussions/3413) is not supported. You can only specify generics that are used in input/output values. So if we need you to provide proof size - we need to resort to phantom arguments
+- [Turbofish syntax](https://github.com/orgs/noir-lang/discussions/3413) is not supported. You can only specify generics that are used in input/output values. So if we need you to provide proof size - we need to resort to [phantom arguments](https://github.com/orgs/noir-lang/discussions/3413#discussioncomment-8774114)
 
 ## Types
 
