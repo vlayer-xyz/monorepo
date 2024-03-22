@@ -5,15 +5,12 @@ export const CIRCLE_USDC_BALANCE_STORAGE_KEY = '0x57d18af793d7300c4ba46d192ec7aa
 export const UNISWAP_V3_USDC_BALANCE_STORAGE_KEY = '0x1f21a62c4538bacf2aabeca410f0fe63151869f172e03c0e00357ba26a341eff';
 export const CHAIN_LINK_TRANSFER_TX_HASH = '0x98e19df80eb8feae436896cc7cc6d4a97818e6010b56a249352b9ac2caf0d573';
 
-type Fixture = {
+interface Fixture {
   blockNumber: bigint;
   address?: Address;
   storageKeys?: Hex[];
-} & TransactionHashOrIdx;
-
-type TransactionHashOrIdx =
-  | { transactionHash?: Hex; transactionIdx?: never }
-  | { transactionHash?: never; transactionIdx?: number };
+  transactionHash?: Hex;
+}
 
 type Fixtures = Record<string, Record<string, Record<string, Fixture>>>;
 
@@ -63,7 +60,7 @@ export const FIXTURES: Fixtures = {
       },
       with_blob: {
         blockNumber: 19_432_087n,
-        transactionIdx: 1
+        transactionHash: '0x8e5ea19599c8d9aea971a4a48b9f23a61bcc3735f6234e9696aa6b66da41c24b' // txIdx: 1
       },
       access_list: {
         blockNumber: 19_439_366n

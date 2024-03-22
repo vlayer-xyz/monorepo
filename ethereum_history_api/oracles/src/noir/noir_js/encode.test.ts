@@ -23,8 +23,8 @@ describe('encodeNullable', () => {
   });
 });
 
-describe('formatArray', () => {
-  it('formats array', () => {
+describe('joinArray', () => {
+  it('joins array', () => {
     const expectedFormattedArray = `[
     0x12,0x34
   ]`;
