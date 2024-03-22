@@ -19,12 +19,16 @@ export function encodeHexStringToArray(value: string): Uint8Array {
 }
 
 export function encodeNullable(value: string | null): string {
-  return 'Option::' + (value !== null ? `some(${value})` : 'none()');
+  if (value !== null) {
+    return `Option::some(${value})`;
+  } else {
+    return 'Option::none()';
+  }
 }
 
 export function formatArray(value: string[]): string {
   return `[
-    ${value.join(',')}
+    ${value.join(', ')}
   ]`;
 }
 
