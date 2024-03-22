@@ -10,4 +10,4 @@ mod verifiers;
 mod receipt;
 mod transaction;
 
-global HASH_LENGTH = 32;
+global HASH_LEN = 32;

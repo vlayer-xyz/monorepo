@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { withMockOracleServer } from './server.js';
 
-const LONDON_BLOCK_NUMBER_HEX = 'd895ce';
+const LONDON_BLOCK_NUM_HEX = 'd895ce';
 
 const JSON_RPC_PAYLOAD = {
   jsonrpc: '2.0',
   method: 'get_header',
-  params: [{ Single: { inner: LONDON_BLOCK_NUMBER_HEX } }],
+  params: [{ Single: { inner: LONDON_BLOCK_NUM_HEX } }],
   id: 1
 };
 
