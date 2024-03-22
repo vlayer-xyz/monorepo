@@ -1,23 +1,39 @@
 # Noir Ethereum history api e2e tests
 
-E2e tests in TypeScript.
+This package ties together all the pieces. It takes proofs, input data, verifier contracts and checks that verifier contracts can in fact accept valid proofs and reject invalid proofs.
 
-Before running tests start oracle server
+## Prerequisites
+
+### Oracle server
+
+Before running tests start oracle server in a separate terminal
 
 ```sh
-cd ethereum_history_api/oracles
-yarn oracle-server
+(cd ../oracles && yarn oracle-server)
 ```
 
-and run e2e prep script:
+### Generating proofs & verifier contracts
 
 ```sh
-../scripts/e2e_prep.sh
+(cd ../scripts && ./e2e_prep.sh)
 ```
 
-To run tests run:
+This takes a couple of minutes as it generates proofs for all packages
+
+### Compiling verifier contracts
 
 ```sh
-cd ethereum_history_api/tests
+(cd ../contracts && forge compile)
+```
+
+## Running e2e tests
+
+```sh
 yarn test:e2e
 ```
+
+Under the hood it will:
+
+- run `anvil` development node
+- deploy verifier contracts
+- call `verify(proof, inputData)`

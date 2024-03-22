@@ -4,7 +4,7 @@ use dep::u2b::u64_to_u8;
 use crate::account::{Account, StateProof};
 use crate::misc::{arrays::{sub_array_equals_up_to_length, array_equals}, types::{Address, Bytes32}};
 
-use crate::HASH_LENGTH;
+use crate::HASH_LEN;
 
 global ACCOUNT_FIELDS_COUNT = 4;
 global NONCE_INDEX  = 0;
@@ -42,23 +42,23 @@ pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_ST
         ), "Balance mismatch"
     );
 
-    assert(account_rlp.length[STORAGE_ROOT_INDEX] == HASH_LENGTH, "Storage root length mismatch");
+    assert(account_rlp.length[STORAGE_ROOT_INDEX] == HASH_LEN, "Storage root length mismatch");
     assert(
         sub_array_equals_up_to_length(
             account.storage_root,
             account_rlp_right_padded,
             account_rlp.offset[STORAGE_ROOT_INDEX],
-            HASH_LENGTH as u64
+            HASH_LEN as u64
         ), "Storage root mismatch"
     );
 
-    assert(account_rlp.length[CODE_HASH_INDEX] == HASH_LENGTH, "Code hash length mismatch");
+    assert(account_rlp.length[CODE_HASH_INDEX] == HASH_LEN, "Code hash length mismatch");
     assert(
         sub_array_equals_up_to_length(
             account.code_hash,
             account_rlp_right_padded,
             account_rlp.offset[CODE_HASH_INDEX],
-            HASH_LENGTH as u64
+            HASH_LEN as u64
         ), "Code hash mismatch"
     );
 }

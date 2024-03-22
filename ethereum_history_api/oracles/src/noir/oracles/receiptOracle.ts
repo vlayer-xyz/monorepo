@@ -7,7 +7,7 @@ import { getReceiptProof } from '../../ethereum/receiptProof.js';
 import { encodeReceipt, encodeReceiptProof } from './receiptOracle/encode.js';
 
 const GET_RECEIPT_ARGS_COUNT = 2;
-const BLOCK_NUMBER_INDEX = 0;
+const BLOCK_NUM_INDEX = 0;
 const TX_ID_INDEX = 1;
 
 export const OFFSETS = {
@@ -45,8 +45,8 @@ export function decodeGetReceiptArguments(args: NoirArguments): {
 } {
   assert(args.length === GET_RECEIPT_ARGS_COUNT, `get_receipt requires ${GET_RECEIPT_ARGS_COUNT} arguments`);
 
-  assert(args[BLOCK_NUMBER_INDEX].length === 1, 'blockNumber should be a single value');
-  const blockNumber = decodeField(args[BLOCK_NUMBER_INDEX][0]);
+  assert(args[BLOCK_NUM_INDEX].length === 1, 'blockNumber should be a single value');
+  const blockNumber = decodeField(args[BLOCK_NUM_INDEX][0]);
   const txId = Number(decodeField(args[TX_ID_INDEX][0]));
 
   return { blockNumber, txId };

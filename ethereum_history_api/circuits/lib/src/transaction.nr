@@ -3,40 +3,40 @@ use dep::std::unsafe::zeroed;
 
 global MAX_TRANSACTION_TREE_DEPTH = 6;
 
-struct Transaction<MAX_TRANSACTION_DATA_SIZE> {
+struct Transaction<MAX_TRANSACTION_DATA_LEN> {
     nonce: Bytes32,
     gas_price: Bytes32,
     gas_limit: Bytes32,
     to: Address,
     value: Bytes32,
-    data: [u8; MAX_TRANSACTION_DATA_SIZE],
+    data: [u8; MAX_TRANSACTION_DATA_LEN],
     data_len: Field,
     v: Bytes32,  // ECDSA recovery id
     r: Bytes32,  // ECDSA signature part
     s: Bytes32,  // ECDSA signature part
 }
 
-struct PhantomTransactionProofLen<MAX_TRANSACTION_PROOF_LENGTH> {}
-struct PhantomTransactionRlpLen<MAX_TRANSACTION_RLP_LENGTH> {}
+struct PhantomTransactionProofLen<MAX_TRANSACTION_PROOF_LEN> {}
+struct PhantomTransactionRlpLen<MAX_TRANSACTION_RLP_LEN> {}
 
-struct TransactionProof<MAX_TRANSACTION_PROOF_LENGTH, MAX_TRANSACTION_RLP_LENGTH> {
+struct TransactionProof<MAX_TRANSACTION_PROOF_LEN, MAX_TRANSACTION_RLP_LEN> {
     key: [u8; MAX_TRANSACTION_TREE_DEPTH],
-    value: [u8; MAX_TRANSACTION_RLP_LENGTH],
-    proof: [u8; MAX_TRANSACTION_PROOF_LENGTH],
+    value: [u8; MAX_TRANSACTION_RLP_LEN],
+    proof: [u8; MAX_TRANSACTION_PROOF_LEN],
     depth: u64
 }
 
-struct TransactionWithinBlock<MAX_TRANSACTION_DATA_SIZE> {
-    transation: Transaction<MAX_TRANSACTION_DATA_SIZE>,
+struct TransactionWithinBlock<MAX_TRANSACTION_DATA_LEN> {
+    transation: Transaction<MAX_TRANSACTION_DATA_LEN>,
     block_hash: Bytes32
 }
 
-pub fn get_transaction<MAX_TRANSACTION_DATA_SIZE, MAX_TRANSACTION_PROOF_LENGTH, MAX_TRANSACTION_RLP_LENGTH>(
+pub fn get_transaction<MAX_TRANSACTION_DATA_LEN, MAX_TRANSACTION_PROOF_LEN, MAX_TRANSACTION_RLP_LEN>(
     _block_number: Field,
     _tx_idx: Field,
-    _max_transaction_proof_len: PhantomTransactionProofLen<MAX_TRANSACTION_PROOF_LENGTH>,
-    _max_transaction_rlp_len: PhantomTransactionRlpLen<MAX_TRANSACTION_RLP_LENGTH>
-) -> TransactionWithinBlock<MAX_TRANSACTION_DATA_SIZE> {
+    _max_transaction_proof_len: PhantomTransactionProofLen<MAX_TRANSACTION_PROOF_LEN>,
+    _max_transaction_rlp_len: PhantomTransactionRlpLen<MAX_TRANSACTION_RLP_LEN>
+) -> TransactionWithinBlock<MAX_TRANSACTION_DATA_LEN> {
     let _ = get_transaction_unconstrained(
         _block_number,
         _tx_idx,
@@ -48,19 +48,19 @@ pub fn get_transaction<MAX_TRANSACTION_DATA_SIZE, MAX_TRANSACTION_PROOF_LENGTH, 
 }
 
 #[oracle(get_transaction)]
-unconstrained fn get_transaction_oracle<MAX_TRANSACTION_DATA_SIZE, MAX_TRANSACTION_PROOF_LENGTH, MAX_TRANSACTION_RLP_LENGTH>(
+unconstrained fn get_transaction_oracle<MAX_TRANSACTION_DATA_LEN, MAX_TRANSACTION_PROOF_LEN, MAX_TRANSACTION_RLP_LEN>(
     _block_number: Field,
     _tx_idx: Field,
-    _max_transaction_proof_len: PhantomTransactionProofLen<MAX_TRANSACTION_PROOF_LENGTH>,
-    _max_transaction_rlp_len: PhantomTransactionRlpLen<MAX_TRANSACTION_RLP_LENGTH>
-) -> (Transaction<MAX_TRANSACTION_DATA_SIZE>, TransactionProof<MAX_TRANSACTION_PROOF_LENGTH, MAX_TRANSACTION_RLP_LENGTH>) {}
+    _max_transaction_proof_len: PhantomTransactionProofLen<MAX_TRANSACTION_PROOF_LEN>,
+    _max_transaction_rlp_len: PhantomTransactionRlpLen<MAX_TRANSACTION_RLP_LEN>
+) -> (Transaction<MAX_TRANSACTION_DATA_LEN>, TransactionProof<MAX_TRANSACTION_PROOF_LEN, MAX_TRANSACTION_RLP_LEN>) {}
 
-unconstrained fn get_transaction_unconstrained<MAX_TRANSACTION_DATA_SIZE, MAX_TRANSACTION_PROOF_LENGTH, MAX_TRANSACTION_RLP_LENGTH>(
+unconstrained fn get_transaction_unconstrained<MAX_TRANSACTION_DATA_LEN, MAX_TRANSACTION_PROOF_LEN, MAX_TRANSACTION_RLP_LEN>(
     block_number: Field,
     tx_idx: Field,
-    max_transaction_proof_len: PhantomTransactionProofLen<MAX_TRANSACTION_PROOF_LENGTH>,
-    max_transaction_rlp_len: PhantomTransactionRlpLen<MAX_TRANSACTION_RLP_LENGTH>
-) -> (Transaction<MAX_TRANSACTION_DATA_SIZE>, TransactionProof<MAX_TRANSACTION_PROOF_LENGTH, MAX_TRANSACTION_RLP_LENGTH>) {
+    max_transaction_proof_len: PhantomTransactionProofLen<MAX_TRANSACTION_PROOF_LEN>,
+    max_transaction_rlp_len: PhantomTransactionRlpLen<MAX_TRANSACTION_RLP_LEN>
+) -> (Transaction<MAX_TRANSACTION_DATA_LEN>, TransactionProof<MAX_TRANSACTION_PROOF_LEN, MAX_TRANSACTION_RLP_LEN>) {
     get_transaction_oracle(
         block_number,
         tx_idx,

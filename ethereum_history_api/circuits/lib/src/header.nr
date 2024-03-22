@@ -1,7 +1,7 @@
 use crate::misc::types::Bytes32;
 use crate::verifiers::header::verify_header;
 
-global MAX_HEADER_RLP_SIZE = 708;
+global MAX_HEADER_RLP_LEN = 708;
 global ETHEREUM_MAINNET_ID = 1;
 global ETHEREUM_SEPOLIA_ID = 58008;
 
@@ -15,7 +15,7 @@ struct BlockHeaderPartial {
 
 struct BlockHeaderRlp {
     length: Field,
-    data: [u8; MAX_HEADER_RLP_SIZE]
+    data: [u8; MAX_HEADER_RLP_LEN]
 }
 
 pub fn get_header(block_number: Field) -> BlockHeaderPartial {

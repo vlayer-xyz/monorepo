@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { createMockClient } from '../../ethereum/mockClient.js';
 import { OFFSETS, getReceiptOracle } from './receiptOracle.js';
-import { BYTES32_LENGTH, ZERO_PAD_VALUE } from './common/const.js';
+import { BYTES32_LEN, ZERO_PAD_VALUE } from './common/const.js';
 import { padArray } from '../../util/array.js';
 import { KEY_LENGTH } from './receiptOracle/encode.js';
 
@@ -9,7 +9,7 @@ describe('getReceiptOracle', () => {
   it('success', async () => {
     const cancunBlockNumberInNoirFormat = '0x12884e1';
     const chainLinkTransferTxIdInNoirFormat = '0x08';
-    const stateRootInNoirFormat = new Array(BYTES32_LENGTH).fill('0x00');
+    const stateRootInNoirFormat = new Array(BYTES32_LEN).fill('0x00');
     const mockFilePaths = [
       './fixtures/mainnet/cancun/small_block/alchemy_getTransactionReceipts_19432673.json',
       './fixtures/mainnet/cancun/small_block/eth_getBlockByHash_19432673.json'

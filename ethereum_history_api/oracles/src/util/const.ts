@@ -1,1 +1,1 @@
-export const BYTE_HEX_LENGTH = 2;
+export const BYTE_HEX_LEN = 2;
