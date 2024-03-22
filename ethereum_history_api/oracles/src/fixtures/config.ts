@@ -59,8 +59,7 @@ export const FIXTURES: Fixtures = {
         transactionHash: CHAIN_LINK_TRANSFER_TX_HASH
       },
       with_blob: {
-        blockNumber: 19_432_087n,
-        transactionHash: '0x8e5ea19599c8d9aea971a4a48b9f23a61bcc3735f6234e9696aa6b66da41c24b' // txIdx: 1
+        blockNumber: 19_432_087n
       },
       access_list: {
         blockNumber: 19_439_366n
