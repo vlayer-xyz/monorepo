@@ -57,8 +57,5 @@ unconstrained fn get_receipt_unconstrained<LOG_NUM, MAX_LOG_DATA_SIZE, MAX_RECEI
     block_number: Field,
     tx_idx: Field
 ) -> (TxReceipt<LOG_NUM, MAX_LOG_DATA_SIZE>, TxReceiptProof<MAX_RECEIPT_PROOF_LENGTH, MAX_RECEIPT_RLP_LENGTH>) {
-    get_receipt_oracle(
-        block_number,
-        tx_idx
-    )
+    get_receipt_oracle(block_number, tx_idx)
 }
