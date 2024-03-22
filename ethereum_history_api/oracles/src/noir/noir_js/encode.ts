@@ -18,8 +18,8 @@ export function encodeHexStringToArray(value: string): Uint8Array {
   return new Uint8Array(arr);
 }
 
-export function encodeNullable(value: string | null): string {
-  if (value !== null) {
+export function encodeOptional(value: string | undefined | null): string {
+  if (value !== undefined && value !== null) {
     return `Option::some(${value})`;
   } else {
     return 'Option::none()';
