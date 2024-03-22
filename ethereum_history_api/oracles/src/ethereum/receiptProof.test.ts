@@ -13,7 +13,9 @@ describe('getReceiptProof', () => {
       './fixtures/mainnet/paris/usdc_circle/alchemy_getTransactionReceipts_19000000.json'
     ];
     const mockingClient = await createMockClient(mockFilePaths);
-    const receiptProof = await getReceiptProof(mockingClient, blockNumber, txIdx);
+    const block = await mockingClient.getBlock({ blockNumber });
+    const blockReceipts = await mockingClient.getTransactionReceipts({ blockNumber });
+    const receiptProof = await getReceiptProof(block, blockReceipts, txIdx);
 
     expect(receiptProof.key).toStrictEqual(toRlp('0x'));
     expect(receiptProof.proof).toMatchInlineSnapshot(`
@@ -43,7 +45,9 @@ describe('getReceiptProof', () => {
     };
 
     const mockingClient = await createMockClient(mockFilePaths, modifyReceipt);
-    await expect(async () => await getReceiptProof(mockingClient, blockNumber, 0)).rejects.toThrowError(
+    const block = await mockingClient.getBlock({ blockNumber });
+    const blockReceipts = await mockingClient.getTransactionReceipts({ blockNumber });
+    await expect(async () => await getReceiptProof(block, blockReceipts, 0)).rejects.toThrowError(
       'receiptsRoot mismatch'
     );
   });

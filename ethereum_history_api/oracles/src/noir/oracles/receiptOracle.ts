@@ -32,7 +32,8 @@ export const getReceiptOracle = async (client: AlchemyClient, args: NoirArgument
   if (!receipt) {
     throw new Error(`Transaction receipt not found for txId: ${txId}`);
   }
-  const receiptProof = await getReceiptProof(client, blockNumber, txId);
+  const block = await client.getBlock({ blockNumber });
+  const receiptProof = await getReceiptProof(block, blockReceipts, txId);
 
   const encodedReceipt = encodeReceipt(receipt);
   const encodedReceiptProof = encodeReceiptProof(receiptProof);
