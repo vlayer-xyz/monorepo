@@ -21,11 +21,11 @@ fn main(
     tx_idx: pub Field
 ) -> pub TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_LEN> {
     let max_receipt_proof_len: PhantomReceiptProofLen<MAX_RECEIPT_PROOF_LEN> = PhantomReceiptProofLen {};
-    let max_receipt_rlp_length: PhantomReceiptRlpLen<MAX_RECEIPT_RLP_LEN> = PhantomReceiptRlpLen {};
+    let max_receipt_rlp_len: PhantomReceiptRlpLen<MAX_RECEIPT_RLP_LEN> = PhantomReceiptRlpLen {};
     get_receipt(
         block_number,
         tx_idx,
         max_receipt_proof_len,
-        max_receipt_rlp_length
+        max_receipt_rlp_len
     )
 }
