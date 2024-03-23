@@ -18,6 +18,20 @@ export function encodeHexStringToArray(value: string): Uint8Array {
   return new Uint8Array(arr);
 }
 
+export function encodeOptional(value: string | undefined | null): string {
+  if (value !== undefined && value !== null) {
+    return `Option::some(${value})`;
+  } else {
+    return 'Option::none()';
+  }
+}
+
+export function joinArray(value: string[]): string {
+  return `[
+    ${value.join(', ')}
+  ]`;
+}
+
 // DECODERS
 export function decodeHexString(proof: Uint8Array): string {
   return (

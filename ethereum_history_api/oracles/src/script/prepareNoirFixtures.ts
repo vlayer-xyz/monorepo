@@ -1,16 +1,17 @@
-import { writeFile, mkdir, rm } from 'fs/promises';
+import { mkdir, rm, writeFile } from 'fs/promises';
 import { join } from 'path';
-import { createClient } from '../ethereum/client.js';
-import { createHeaderFixture } from './noir_fixtures/header.js';
-import { createStateProofFixture } from './noir_fixtures/state_proof.js';
-import { createAccountFixture } from './noir_fixtures/account.js';
-import { createStorageProofFixture } from './noir_fixtures/storage_proof.js';
-import { createReceiptProofFixture } from './noir_fixtures/receipt_proof.js';
-import { FIXTURES } from '../fixtures/config.js';
-import { getReceiptProof } from '../ethereum/receiptProof.js';
-import { assert } from '../main.js';
-import { Block } from '../ethereum/blockHeader.js';
 import { Hex } from 'viem';
+import { Block } from '../ethereum/blockHeader.js';
+import { createClient } from '../ethereum/client.js';
+import { getReceiptProof } from '../ethereum/receiptProof.js';
+import { FIXTURES } from '../fixtures/config.js';
+import { assert } from '../main.js';
+import { createAccountFixture } from './noir_fixtures/account.js';
+import { createHeaderFixture } from './noir_fixtures/header.js';
+import { createReceiptProofFixture } from './noir_fixtures/receipt_proof.js';
+import { createStateProofFixture } from './noir_fixtures/state_proof.js';
+import { createStorageProofFixture } from './noir_fixtures/storage_proof.js';
+import { createTransactionFixture } from './noir_fixtures/transaction.js';
 
 const INDEX_NOT_FOUND = -1;
 
@@ -55,9 +56,13 @@ for (const chain in FIXTURES) {
       if (transactionHash) {
         const txIdx = getTxIdx(block, transactionHash);
         const blockReceipts = await client.getTransactionReceipts({ blockNumber });
-        const txProof = await getReceiptProof(block, blockReceipts, txIdx);
-        await writeFile(join(modulePath, 'receipt_proof.nr'), createReceiptProofFixture(txProof));
+        const txReceiptProof = await getReceiptProof(block, blockReceipts, txIdx);
+        await writeFile(join(modulePath, 'receipt_proof.nr'), createReceiptProofFixture(txReceiptProof));
         fixtureModules.push('receipt_proof');
+
+        const tx = await client.getTransaction({ hash: transactionHash });
+        await writeFile(join(modulePath, 'transaction.nr'), createTransactionFixture(tx));
+        fixtureModules.push('transaction');
       }
 
       const declareFixtureModules = fixtureModules.map((name) => `mod ${name};`).join('\n') + '\n';
@@ -71,7 +76,7 @@ for (const chain in FIXTURES) {
   await writeFile(chainModuleFile, chainModule);
 }
 
-function getTxIdx(block: Block, transactionHash: Hex) {
+function getTxIdx(block: Block, transactionHash: Hex): number {
   const txIdx = block.transactions.indexOf(transactionHash);
   assert(txIdx !== INDEX_NOT_FOUND, `Transaction with hash: ${transactionHash} not found in block #${block.number}`);
   return txIdx;
