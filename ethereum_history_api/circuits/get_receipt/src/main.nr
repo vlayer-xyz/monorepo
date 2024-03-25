@@ -1,4 +1,4 @@
-use dep::ethereum_history_api::receipt::{get_receipt, TxReceiptWithinBlock, TxReceiptProof};
+use dep::ethereum_history_api::receipt::{get_receipt, TxReceiptWithinBlock};
 
 global LOG_NUM = 1;
 global MAX_LOG_DATA_LEN = 128;

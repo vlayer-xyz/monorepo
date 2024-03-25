@@ -1,4 +1,4 @@
-use dep::proof::{MAX_ACCOUNT_STATE_LENGTH, KEY_LENGTH};
+use dep::proof::const::{MAX_ACCOUNT_STATE_LENGTH};
 
 use crate::header::{get_header, BlockHeaderPartial};
 use crate::misc::types::{Address, Bytes32};
@@ -60,11 +60,7 @@ pub fn get_account_with_storage(
 }
 
 #[oracle(get_proof)]
-unconstrained fn get_proof_oracle(
-    _block_no: Field,
-    _address: Address,
-    _storage_key: Bytes32
-) -> StateAndStorageProof {}
+unconstrained fn get_proof_oracle(_block_no: Field, _address: Address, _storage_key: Bytes32) -> StateAndStorageProof {}
 
 unconstrained fn get_proof_unconstrained(
     block_no: Field,

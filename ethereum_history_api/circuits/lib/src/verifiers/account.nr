@@ -1,4 +1,7 @@
-use dep::proof::{rlp::{RLP_List, decode1_small_lis}, MAX_ACCOUNT_STATE_LENGTH, KEY_LENGTH, TrieProof, byte_value};
+use dep::proof::{
+    rlp::{RLP_List, decode1_small_lis}, const::{MAX_ACCOUNT_STATE_LENGTH, HASH_LENGTH},
+    trie_proof::TrieProof, utils::byte_value
+};
 use dep::u2b::u64_to_u8;
 
 use crate::account::{Account, StateProof};
@@ -67,7 +70,7 @@ fn assert_address_equals(address1: Address, address2: Address) {
     assert(array_equals(address1, address2), "Address mismatch");
 }
 
-fn assert_account_proof(account_state_proof: StateProof, state_root: [u8; KEY_LENGTH]) {
+fn assert_account_proof(account_state_proof: StateProof, state_root: [u8; HASH_LENGTH]) {
     let trie_proof = TrieProof {
         key: account_state_proof.key,
         proof: account_state_proof.proof,
@@ -77,12 +80,7 @@ fn assert_account_proof(account_state_proof: StateProof, state_root: [u8; KEY_LE
     assert(trie_proof.verify_state_root(state_root), "TrieProof: Invalid state root");
 }
 
-pub fn verify_account(
-    address: Address,
-    account: Account,
-    state_proof: StateProof,
-    state_root: [u8; KEY_LENGTH]
-) {
+pub fn verify_account(address: Address, account: Account, state_proof: StateProof, state_root: [u8; HASH_LENGTH]) {
     assert_address_equals(state_proof.key, address);
     assert_account_equals(state_proof.value, account);
     assert_account_proof(state_proof, state_root);
