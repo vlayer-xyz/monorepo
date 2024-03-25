@@ -14,7 +14,7 @@ pub(crate) fn assert_receipt_equals<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_RLP_L
     assert(false, "Not implemented");
 }
 
-fn assert_tx_idx_equals(key: [u8; KEY_LEN], tx_idx: Field) {
+pub fn assert_tx_idx_equals(key: [u8; KEY_LEN], tx_idx: Field) {
     let (key_right_padded, shifted_by_len) = left_nibble_shift(key);
     let key_bytes: [u8; KEY_LEN / 2] = nibbles_to_bytes(key_right_padded);
     let (rlp_offset, rlp_len) = decode0(key_bytes);
