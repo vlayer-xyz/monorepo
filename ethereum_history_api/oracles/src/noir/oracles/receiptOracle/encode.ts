@@ -14,14 +14,12 @@ export const KEY_LENGTH = 4;
 const BYTES_32_ZERO = '0x0000000000000000000000000000000000000000000000000000000000000000';
 
 export function encodeReceipt(receipt: TransactionReceipt): ForeignCallOutput[] {
-  const blobGasUsed = encodeField(receipt.blobGasUsed ?? 0);
-  const blobGasPrice = encodeField(receipt.blobGasPrice ?? 0);
   const status = statusToHex(receipt.status);
   const stateRoot = encodeHex(receipt.root ?? BYTES_32_ZERO);
   const cumulativeGasUsed = encodeField(receipt.cumulativeGasUsed);
   const logsBloom = encodeHex(receipt.logsBloom);
 
-  return [blobGasUsed, blobGasPrice, status, stateRoot, cumulativeGasUsed, logsBloom];
+  return [status, stateRoot, cumulativeGasUsed, logsBloom];
 }
 
 export function encodeReceiptProof(receiptProof: ReceiptProof): ForeignCallOutput[] {

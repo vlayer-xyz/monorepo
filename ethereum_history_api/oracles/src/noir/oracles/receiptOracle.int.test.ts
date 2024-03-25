@@ -21,8 +21,6 @@ describe('getReceiptOracle', () => {
       [chainLinkTransferTxIdInNoirFormat]
     ]);
 
-    expect(receiptWithProof[OFFSETS.BLOB_GAS_USED]).toStrictEqual('0x');
-    expect(receiptWithProof[OFFSETS.BLOB_GAS_PRICE]).toStrictEqual('0x');
     expect(receiptWithProof[OFFSETS.STATUS]).toStrictEqual('0x01');
     expect(receiptWithProof[OFFSETS.STATE_ROOT]).toStrictEqual(stateRootInNoirFormat);
     expect(receiptWithProof[OFFSETS.CUMULATIVE_GAS_USED]).toStrictEqual('0x0a17e1');

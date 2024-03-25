@@ -19,8 +19,7 @@ describe('ReceiptOracle encode', () => {
 
       const noirReceipt = encodeReceipt(legacyReceipt);
 
-      expect(noirReceipt[OFFSETS.BLOB_GAS_USED]).toStrictEqual('0x');
-      expect(noirReceipt[OFFSETS.BLOB_GAS_PRICE]).toStrictEqual('0x');
+      expect(noirReceipt[OFFSETS.STATUS]).toStrictEqual('0x01');
       // prettier-ignore
       expect(noirReceipt[OFFSETS.STATE_ROOT]).toStrictEqual([
         "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00",
@@ -28,6 +27,7 @@ describe('ReceiptOracle encode', () => {
         "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00",
         "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00",
       ]);
+      expect(noirReceipt[OFFSETS.CUMULATIVE_GAS_USED]).toStrictEqual('0x08a73c');
     });
   });
 });

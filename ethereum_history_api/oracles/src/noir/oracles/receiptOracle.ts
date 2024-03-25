@@ -10,18 +10,16 @@ const GET_RECEIPT_ARGS_COUNT = 2;
 const BLOCK_NUM_INDEX = 0;
 const TX_ID_INDEX = 1;
 
-export const OFFSETS = {
-  BLOB_GAS_USED: 0,
-  BLOB_GAS_PRICE: 1,
-  STATUS: 2,
-  STATE_ROOT: 3,
-  CUMULATIVE_GAS_USED: 4,
-  LOGS_BLOOM: 5,
-  PROOF_KEY: 6,
-  PROOF_VALUE: 7,
-  PROOF: 8,
-  PROOF_DEPTH: 9
-};
+export enum OFFSETS {
+  STATUS,
+  STATE_ROOT,
+  CUMULATIVE_GAS_USED,
+  LOGS_BLOOM,
+  PROOF_KEY,
+  PROOF_VALUE,
+  PROOF,
+  PROOF_DEPTH
+}
 
 export const getReceiptOracle = async (client: AlchemyClient, args: NoirArguments): Promise<ForeignCallOutput[]> => {
   const { blockNumber, txId } = decodeGetReceiptArguments(args);

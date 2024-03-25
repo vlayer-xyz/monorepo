@@ -2,7 +2,7 @@ use crate::misc::types::{Bytes32, Address};
 use crate::header::get_header;
 use crate::verifiers::receipt::verify_receipt;
 use dep::std::unsafe::zeroed;
-use dep::proof::const::{MAX_TRIE_NODE_LENGTH};
+use dep::proof::const::MAX_TRIE_NODE_LENGTH;
 
 global BLOOM_FILTER_LEN = 256;
 global MAX_RECEIPT_KEY_LEN = 4;
@@ -16,8 +16,6 @@ struct Log<MAX_LOG_DATA_LEN> {
 }
 
 struct TxReceipt<LOG_NUM, MAX_LOG_DATA_LEN> {
-    blob_gas_used: Field,
-    blob_gas_price: Field,
     status: u1,
     state_root: Bytes32,
     cumulative_gas_used: Field,

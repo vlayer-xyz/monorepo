@@ -5,10 +5,10 @@ import { AlchemyClient } from '../../ethereum/client.js';
 const PORT = 5555;
 const MOCK_ORACLE_SERVER_PORT = PORT + 1;
 
-export const startOracleServer = async (client: AlchemyClient, port: number = PORT) => {
-  const app = buildOracleServer(
-    {
-      logger: {
+export const startOracleServer = async (client: AlchemyClient, port: number = PORT, silent = false) => {
+  const logger = silent
+    ? false
+    : {
         transport: {
           target: 'pino-pretty',
           options: {
@@ -16,7 +16,10 @@ export const startOracleServer = async (client: AlchemyClient, port: number = PO
             ignore: 'pid,hostname,req.hostname,req.remoteAddress,req.remotePort'
           }
         }
-      }
+      };
+  const app = buildOracleServer(
+    {
+      logger
     },
     client
   );
@@ -30,7 +33,7 @@ export async function withMockOracleServer<T>(
   fn: (serverUrl: string) => Promise<T>
 ): Promise<T> {
   const mockClient = await createMockClient(fixtureFilePaths);
-  const app = await startOracleServer(mockClient, MOCK_ORACLE_SERVER_PORT);
+  const app = await startOracleServer(mockClient, MOCK_ORACLE_SERVER_PORT, true);
   const serverUrl = `http://localhost:${MOCK_ORACLE_SERVER_PORT}`;
   try {
     return await fn(serverUrl);
