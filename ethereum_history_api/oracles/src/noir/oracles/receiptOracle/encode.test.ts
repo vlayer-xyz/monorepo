@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { assert } from '../../../util/assert.js';
-import { OFFSETS } from '../receiptOracle.js';
+import { OFFSETS } from './encode.js';
 import { encodeReceipt } from '../receiptOracle/encode.js';
 import { loadReceiptFixture } from '../../../fixtures.js';
 

@@ -13,6 +13,17 @@ const MAX_RECEIPT_PROOF_LENGTH = MAX_RECEIPT_LENGTH * MAX_RECEIPT_PROOF_LEVELS;
 export const KEY_LENGTH = 4;
 const BYTES_32_ZERO = '0x0000000000000000000000000000000000000000000000000000000000000000';
 
+export enum OFFSETS {
+  STATUS,
+  STATE_ROOT,
+  CUMULATIVE_GAS_USED,
+  LOGS_BLOOM,
+  PROOF_KEY,
+  PROOF_VALUE,
+  PROOF,
+  PROOF_DEPTH
+}
+
 export function encodeReceipt(receipt: TransactionReceipt): ForeignCallOutput[] {
   const status = statusToHex(receipt.status);
   const stateRoot = encodeHex(receipt.root ?? BYTES_32_ZERO);

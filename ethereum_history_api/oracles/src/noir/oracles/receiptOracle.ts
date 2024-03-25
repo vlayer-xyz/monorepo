@@ -5,12 +5,14 @@ import { NoirArguments } from './oracles.js';
 import { AlchemyClient } from '../../ethereum/client.js';
 import { getReceiptProof } from '../../ethereum/receiptProof.js';
 import { encodeReceipt, encodeReceiptProof } from './receiptOracle/encode.js';
+import { txTypeToHex } from '../../ethereum/receipt.js';
 
 const GET_RECEIPT_ARGS_COUNT = 2;
 const BLOCK_NUM_INDEX = 0;
 const TX_ID_INDEX = 1;
 
 export enum OFFSETS {
+  TX_TYPE,
   STATUS,
   STATE_ROOT,
   CUMULATIVE_GAS_USED,
@@ -30,12 +32,13 @@ export const getReceiptOracle = async (client: AlchemyClient, args: NoirArgument
   if (!receipt) {
     throw new Error(`Transaction receipt not found for txId: ${txId}`);
   }
+  const txType = txTypeToHex(receipt.type);
   const block = await client.getBlock({ blockNumber });
   const receiptProof = await getReceiptProof(block, blockReceipts, txId);
 
   const encodedReceipt = encodeReceipt(receipt);
   const encodedReceiptProof = encodeReceiptProof(receiptProof);
-  return [...encodedReceipt, ...encodedReceiptProof];
+  return [txType, ...encodedReceipt, ...encodedReceiptProof];
 };
 
 export function decodeGetReceiptArguments(args: NoirArguments): {
