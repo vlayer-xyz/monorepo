@@ -3,7 +3,7 @@ import { assert } from '../util/assert.js';
 import { AlchemyClient } from './client.js';
 import { Proof } from './proof.js';
 import { encodeTx } from './transaction.js';
-import { BaseTrie, TxTrie } from './trie.js';
+import { TxTrie, TxTrie } from './trie.js';
 
 export async function getTxTrie(txs: Transaction[], expectedRoot: Hex): Promise<TxTrie> {
   const trie = new TxTrie();
@@ -21,8 +21,8 @@ export async function getTxProof(client: AlchemyClient, blockNumber: bigint, txI
   const proof = await trie.createProof(txIdx);
 
   return {
-    key: BaseTrie.keyFromIdx(txIdx),
-    proof: proof,
-    value: encodeTx(block.transactions[txIdx])
+    key: TxTrie.keyFromIdx(txIdx),
+    value: encodeTx(block.transactions[txIdx]),
+    proof: proof
   };
 }
