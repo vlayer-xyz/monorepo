@@ -9,7 +9,7 @@ import { BYTES_32_ZERO, U1_ZERO } from '../../../util/const.js';
 
 const MAX_RECEIPT_PROOF_LEVELS = 7;
 const MAX_RECEIPT_LENGTH = 532;
-export const MAX_RECEIPT_RLP_LENGTH = 532;
+export const MAX_ENCODED_RECEIPT_LENGTH = 525;
 const MAX_RECEIPT_PROOF_LENGTH = MAX_RECEIPT_LENGTH * MAX_RECEIPT_PROOF_LEVELS;
 export const KEY_LENGTH = 4;
 
@@ -35,7 +35,7 @@ export function encodeReceipt(receipt: TransactionReceipt): ForeignCallOutput[] 
 
 export function encodeReceiptProof(receiptProof: Proof): ForeignCallOutput[] {
   const key = encodeBytes(BigInt(receiptProof.key), KEY_LENGTH);
-  const value = padArray(encodeHex(receiptProof.value), MAX_RECEIPT_RLP_LENGTH, ZERO_PAD_VALUE);
+  const value = padArray(encodeHex(receiptProof.value), MAX_ENCODED_RECEIPT_LENGTH, ZERO_PAD_VALUE);
   const proof = encodeProof(receiptProof.proof, MAX_RECEIPT_PROOF_LENGTH);
   const depth = encodeField(receiptProof.proof.length);
 
