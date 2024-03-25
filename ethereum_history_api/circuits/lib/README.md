@@ -61,7 +61,7 @@ pub fn verify_receipt<...>(
     block_number: Field,
     tx_idx: Field,
     receipt: TxReceipt<LOG_NUM, MAX_LOG_DATA_SIZE>,
-    receipt_proof: TxReceiptProof<MAX_RECEIPT_PROOF_LENGTH, MAX_RECEIPT_RLP_LENGTH>,
+    receipt_proof: TxReceiptProof,
     receipt_root: [u8; KEY_LENGTH]
 )
 ```
