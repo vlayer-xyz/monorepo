@@ -1,28 +1,31 @@
 import { describe, expect, it } from 'vitest';
 import { createMockClient } from '../../ethereum/mockClient.js';
 import { OFFSETS, getReceiptOracle } from './receiptOracle.js';
-import { BYTES32_LEN } from './common/const.js';
+import { BYTES32_LEN, ZERO_PAD_VALUE } from './common/const.js';
+import { padArray } from '../../util/array.js';
+import { KEY_LENGTH } from './receiptOracle/encode.js';
 
 describe('getReceiptOracle', () => {
   it('success', async () => {
     const cancunBlockNumberInNoirFormat = '0x12884e1';
     const chainLinkTransferTxIdInNoirFormat = '0x08';
     const stateRootInNoirFormat = new Array(BYTES32_LEN).fill('0x00');
-    const mockFilePaths = ['./fixtures/mainnet/cancun/small_block/alchemy_getTransactionReceipts_19432673.json'];
+    const mockFilePaths = [
+      './fixtures/mainnet/cancun/small_block/alchemy_getTransactionReceipts_19432673.json',
+      './fixtures/mainnet/cancun/small_block/eth_getBlockByHash_19432673.json'
+    ];
     const client = await createMockClient(mockFilePaths);
 
-    const receiptProof = await getReceiptOracle(client, [
+    const receiptWithProof = await getReceiptOracle(client, [
       [cancunBlockNumberInNoirFormat],
       [chainLinkTransferTxIdInNoirFormat]
     ]);
 
-    expect(receiptProof[OFFSETS.BLOB_GAS_USED]).toStrictEqual('0x');
-    expect(receiptProof[OFFSETS.BLOB_GAS_PRICE]).toStrictEqual('0x');
-    expect(receiptProof[OFFSETS.STATUS]).toStrictEqual('0x01');
-    expect(receiptProof[OFFSETS.STATE_ROOT]).toStrictEqual(stateRootInNoirFormat);
-    expect(receiptProof[OFFSETS.CUMULATIVE_GAS_USED]).toStrictEqual('0x0a17e1');
+    expect(receiptWithProof[OFFSETS.STATUS]).toStrictEqual('0x01');
+    expect(receiptWithProof[OFFSETS.STATE_ROOT]).toStrictEqual(stateRootInNoirFormat);
+    expect(receiptWithProof[OFFSETS.CUMULATIVE_GAS_USED]).toStrictEqual('0x0a17e1');
     // prettier-ignore
-    expect(receiptProof[OFFSETS.LOGS_BLOOM]).toStrictEqual([
+    expect(receiptWithProof[OFFSETS.LOGS_BLOOM]).toStrictEqual([
       "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", 
       "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x10", "0x00",
       "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", 
@@ -56,6 +59,8 @@ describe('getReceiptOracle', () => {
       "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", 
       "0x00", "0x00", "0x00", "0x00", "0x02", "0x00", "0x00", "0x00"
     ]);
+    expect(receiptWithProof[OFFSETS.PROOF_KEY]).toStrictEqual(padArray(['0x08'], KEY_LENGTH, ZERO_PAD_VALUE, 'left'));
+    expect(receiptWithProof[OFFSETS.PROOF_DEPTH]).toStrictEqual('0x03');
   });
 
   it('transaction not found', async () => {

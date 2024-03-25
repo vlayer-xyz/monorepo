@@ -1,4 +1,7 @@
-use dep::proof::{rlp::{RLP_List, decode1_small_lis}, const::{MAX_ACCOUNT_STATE_LENGTH, HASH_LENGTH}, trie_proof::TrieProof, utils::byte_value};
+use dep::proof::{
+    rlp::{RLP_List, decode1_small_lis}, const::{MAX_ACCOUNT_STATE_LENGTH, HASH_LENGTH},
+    trie_proof::TrieProof, utils::byte_value
+};
 use dep::u2b::u64_to_u8;
 
 use crate::account::{Account, StateProof};
