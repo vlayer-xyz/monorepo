@@ -24,7 +24,9 @@ fn assert_tx_idx_equals(key: [u8; KEY_LEN], tx_idx: Field) {
         assert(tx_idx == 0);
     }
 
-    assert(bytes_to_field(key_bytes, rlp_offset, rlp_len) == tx_idx, "key does not match rlp-encoded transaction index");
+    assert(
+        bytes_to_field(key_bytes, rlp_offset, rlp_len) == tx_idx, "key does not match rlp-encoded transaction index"
+    );
 }
 
 fn assert_receipt_proof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>(
