@@ -1,4 +1,4 @@
-use crate::misc::arrays::{sub_array_equals_up_to_length, sub_array_equals, array_equals};
+use crate::misc::arrays::{sub_array_equals_up_to_length, sub_array_equals, array_equals, memcpy};
 
 #[test]
 fn test_assert_sub_array_equals() {
@@ -69,4 +69,13 @@ fn test_array_not_equals() {
     let array: [Field; 3] = [1, 2, 3];
     let other_array: [Field; 3] = [1, 2, 4];
     assert(array_equals(array, other_array), "Arrays not equal");
+}
+
+
+#[test]
+fn test_memcpy() {
+    let mut dest = [0; 3];
+    let src = [1, 2, 3, 4, 5];
+    memcpy(&mut dest, src, 2);
+    assert(dest == [3, 4, 5]);
 }
