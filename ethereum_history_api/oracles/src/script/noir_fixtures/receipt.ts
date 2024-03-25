@@ -1,13 +1,15 @@
 import { encodeHex } from '../../noir/oracles/common/encode.js';
-import { encodeReceipt, statusToField } from '../../ethereum/receipt.js';
+import { encodeReceipt, statusToField, txTypeToField } from '../../ethereum/receipt.js';
 import { encodeOptional, indentBlock, joinArray } from '../../noir/noir_js/encode.js';
 import { padArray } from '../../util/array.js';
 import { ZERO_PAD_VALUE } from '../../noir/oracles/common/const.js';
-import { MAX_RECEIPT_RLP_LENGTH } from '../../noir/oracles/receiptOracle/encode.js';
+import { MAX_ENCODED_RECEIPT_LENGTH } from '../../noir/oracles/receiptOracle/encode.js';
 import { TransactionReceipt } from '../../types.js';
 
 export function createReceiptFixture(receipt: TransactionReceipt): string {
-  const rlpReceipt = joinArray(padArray(encodeHex(encodeReceipt(receipt)), MAX_RECEIPT_RLP_LENGTH, ZERO_PAD_VALUE));
+  const encodedReceipt = joinArray(
+    padArray(encodeHex(encodeReceipt(receipt)), MAX_ENCODED_RECEIPT_LENGTH, ZERO_PAD_VALUE)
+  );
 
   const status = encodeOptional(receipt.status === null ? null : statusToField(receipt.status).toString());
   const stateRoot = encodeOptional(receipt.root ? joinArray(encodeHex(receipt.root)) : receipt.root);
@@ -15,7 +17,8 @@ export function createReceiptFixture(receipt: TransactionReceipt): string {
 
   return `use crate::receipt::TxReceiptPartial;
 
-global rlp_receipt = ${rlpReceipt};
+global tx_type = ${txTypeToField(receipt.type)};
+global encoded_receipt = ${encodedReceipt};
 
 global receipt = TxReceiptPartial {
   status: ${status},
