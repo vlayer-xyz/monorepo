@@ -2,6 +2,7 @@ use crate::misc::types::{Bytes32, Address};
 use dep::std::unsafe::zeroed;
 
 global MAX_TRANSACTION_TREE_DEPTH = 6;
+global MAX_TRANSACTION_KEY_LEN = 4;
 
 struct Transaction<MAX_TRANSACTION_DATA_LEN> {
     nonce: Field,
@@ -20,7 +21,7 @@ struct PhantomTransactionProofLen<MAX_TRANSACTION_PROOF_LEN> {}
 struct PhantomTransactionRlpLen<MAX_TRANSACTION_RLP_LEN> {}
 
 struct TransactionProof<MAX_TRANSACTION_PROOF_LEN, MAX_TRANSACTION_RLP_LEN> {
-    key: [u8; MAX_TRANSACTION_TREE_DEPTH],
+    key: [u8; MAX_TRANSACTION_KEY_LEN],
     value: [u8; MAX_TRANSACTION_RLP_LEN],
     proof: [u8; MAX_TRANSACTION_PROOF_LEN],
     depth: u64
