@@ -66,8 +66,8 @@ for (const chain in FIXTURES) {
         await writeFile(join(modulePath, 'transaction.nr'), createTransactionFixture(tx));
         fixtureModules.push('transaction');
 
-        const txProf = await getTxProof(client, block.number, txIdx);
-        await writeFile(join(modulePath, 'transaction_proof.nr'), createTransactionProofFixture(txProf));
+        const txProof = await getTxProof(client, block.number, txIdx);
+        await writeFile(join(modulePath, 'transaction_proof.nr'), createTransactionProofFixture(txProof));
         fixtureModules.push('transaction_proof');
       }
 
