@@ -1,12 +1,14 @@
 use dep::proof::utils::byte_value;
 
-pub fn left_nibble_shift<N>(nibbles: [u8; N]) -> [u8; N] {
-    let (mut shifted, len) = byte_value(nibbles);
+pub fn left_nibble_shift<N>(nibbles: [u8; N]) -> ([u8; N], u64) {
+    let (mut shifted, mut len) = byte_value(nibbles);
     if (len % 2 == 1) {
         right_shift_by_one(&mut shifted);
+        len += 1;
     }
 
-    shifted
+    let shifted_by_len = N - len;
+    (shifted, shifted_by_len)
 }
 
 fn right_shift_by_one<N>(arr: &mut [u8; N]) {

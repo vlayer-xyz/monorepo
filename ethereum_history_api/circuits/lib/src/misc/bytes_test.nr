@@ -2,17 +2,23 @@ use crate::misc::bytes::{nibbles_to_byte, nibbles_to_bytes, bytes_to_field, left
 
 #[test]
 fn test_left_nibble_shift_empty() {
-    assert(left_nibble_shift([]) == []);
+    let (shifted, shifted_by_len) = left_nibble_shift([]);
+    assert(shifted == []);
+    assert(shifted_by_len == 0);
 }
 
 #[test]
 fn test_left_nibble_shift_even() {
-    assert(left_nibble_shift([0x0, 0x0, 0xf, 0xf]) == [0xf, 0xf, 0x0, 0x0]);
+    let (shifted, shifted_by_len) = left_nibble_shift([0x0, 0x0, 0xf, 0xf]);
+    assert(shifted == [0xf, 0xf, 0x0, 0x0]);
+    assert(shifted_by_len == 2);
 }
 
 #[test]
 fn test_left_nibble_shift_odd() {
-    assert(left_nibble_shift([0x0, 0x0, 0x0, 0xf]) == [0x0, 0xf, 0x0, 0x0]);
+    let (shifted, shifted_by_len) = left_nibble_shift([0x0, 0x0, 0x0, 0xf]);
+    assert(shifted == [0x0, 0xf, 0x0, 0x0]);
+    assert(shifted_by_len == 2);
 }
 
 #[test]
