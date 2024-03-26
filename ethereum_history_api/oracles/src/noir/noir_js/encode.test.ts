@@ -5,13 +5,13 @@ import {
   encodeHexStringToArray,
   encodeOptional,
   joinArray,
-  tabulateLine,
-  tabulateStructField
+  indentLine,
+  indentBlock
 } from './encode.js';
 
 describe('encodeHexStringToArray', () => {
   it('throws on invalid input', () => {
-    expect(() => encodeHexStringToArray('1234')).toThrow('Invalid hexstring: 1234');
+    expect(() => encodeHexStringToArray('1234')).toThrow('Invalid hex string: 1234');
   });
   it('encodes hex string to array', () => {
     expect(encodeHexStringToArray('0x1234')).toStrictEqual(new Uint8Array([0x12, 0x34]));
@@ -40,19 +40,19 @@ describe('joinArray', () => {
   });
 });
 
-describe('tabulateLine', () => {
+describe('indentLine', () => {
   it('tabulates line', () => {
-    expect(tabulateLine('line', 2)).toBe('    line');
+    expect(indentLine('line', 2)).toBe('    line');
   });
 });
 
-describe('tabulateStructField', () => {
+describe('indentBlock', () => {
   it('tabulates struct field', () => {
     const value = '[\n  1\n]';
-    expect(tabulateStructField(value, 0)).toMatch(`[
+    expect(indentBlock(value, 0)).toMatch(`[
   1
 ]`);
-    expect(tabulateStructField(value, 1)).toMatch(`[
+    expect(indentBlock(value, 1)).toMatch(`[
     1
   ]`);
   });
