@@ -3,6 +3,8 @@ use dep::std::unsafe::zeroed;
 
 global MAX_TRANSACTION_TREE_DEPTH = 6;
 
+type TxType = u8;
+
 struct Transaction<MAX_TRANSACTION_DATA_LEN> {
     nonce: Field,
     gas_price: Option<Field>,
