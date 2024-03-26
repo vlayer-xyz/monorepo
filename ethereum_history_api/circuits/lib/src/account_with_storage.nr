@@ -1,4 +1,4 @@
-use dep::proof::const::{MAX_ACCOUNT_STATE_LENGTH};
+use dep::proof::const::MAX_ACCOUNT_STATE_LENGTH;
 
 use crate::header::{get_header, BlockHeaderPartial};
 use crate::misc::types::{Address, Bytes32};

@@ -2,7 +2,7 @@
 name = "ethereum_history_api"
 type = "lib"
 authors = ["Arkadiusz Konior, Marek Kirejczyk"]
-compiler_version = "0.25.0"
+compiler_version = "0.26.0"
 
 [dependencies]
 u2b = { tag = "v0.3.3", git = "https://github.com/vlayer-xyz/noir-u2b" }
