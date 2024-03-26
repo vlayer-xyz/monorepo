@@ -11,7 +11,9 @@ pub fn left_to_right_padding<N>(nibbles: [u8; N]) -> ([u8; N], u64) {
     (shifted, shifted_by)
 }
 
-fn shift_right_by_one<N>(arr: &mut [u8; N]) {
+pub fn shift_right_by_one<N>(arr: &mut [u8; N]) {
+    assert(arr[N - 1] == 0, "Last element must be zero to shift the array right by one");
+
     let mut last = 0;
     for i in 0..N {
         let tmp = (*arr)[i];

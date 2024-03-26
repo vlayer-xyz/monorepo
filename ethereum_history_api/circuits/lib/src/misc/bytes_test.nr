@@ -1,4 +1,4 @@
-use crate::misc::bytes::{nibbles_to_byte, nibbles_to_bytes, bytes_to_field, left_to_right_padding};
+use crate::misc::bytes::{nibbles_to_byte, nibbles_to_bytes, bytes_to_field, left_to_right_padding, shift_right_by_one};
 
 #[test]
 fn test_left_to_right_padding_empty() {
@@ -19,6 +19,20 @@ fn test_left_to_right_padding_odd() {
     let (shifted, shifted_by) = left_to_right_padding([0x0, 0x0, 0x0, 0xf]);
     assert(shifted == [0x0, 0xf, 0x0, 0x0]);
     assert(shifted_by == 2);
+}
+
+#[test]
+fn test_shift_right_by_one() {
+    let mut arr = [0xa, 0x0, 0xb, 0x0];
+    shift_right_by_one(&mut arr);
+    assert(arr == [0x0, 0xa, 0x0, 0xb]);
+}
+
+#[test(should_fail_with="Last element must be zero to shift the array right by one")]
+fn test_shift_right_by_one_fail() {
+    let non_zero = 0x1;
+    let mut arr = [0xa, 0x0, 0xb, non_zero];
+    shift_right_by_one(&mut arr);
 }
 
 #[test]
