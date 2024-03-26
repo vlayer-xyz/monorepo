@@ -1,4 +1,4 @@
-use crate::misc::types::{Bytes32, Address};
+use crate::misc::{types::{Bytes32, Address}, option::make_option};
 use crate::header::get_header;
 use crate::verifiers::receipt::verify_receipt;
 use dep::std::unsafe::zeroed;
@@ -45,7 +45,10 @@ struct TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_LEN> {
     block_hash: Bytes32
 }
 
-pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_LEN>(block_number: Field, tx_idx: Field) -> TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_LEN> {
+pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_LEN>(
+    block_number: Field,
+    tx_idx: Field
+) -> TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_LEN> {
     let (tx_type, receipt, proof): (TxType, TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>, TxReceiptProof) = get_receipt_unconstrained(block_number, tx_idx);
     zeroed()
 }
@@ -55,14 +58,6 @@ unconstrained fn get_receipt_oracle<LOG_NUM, MAX_LOG_DATA_LEN>(
     _block_number: Field,
     _tx_idx: Field
 ) -> (TxType, ForeignCallTxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>, TxReceiptProof) {}
-
-unconstrained fn make_option<T>(value: T, is_some: bool) -> Option<T> {
-    if is_some == true {
-        Option::some(value)
-    } else {
-        Option::none()
-    }
-}
 
 unconstrained fn get_receipt_unconstrained<LOG_NUM, MAX_LOG_DATA_LEN>(
     block_number: Field,
