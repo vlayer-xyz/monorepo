@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { assert } from '../../../util/assert.js';
-import { OFFSETS } from '../receiptOracle.js';
+import { RECEIPT_OFFSETS } from './encode.js';
 import { encodeReceipt } from '../receiptOracle/encode.js';
 import { loadReceiptFixture } from '../../../fixtures.js';
 
@@ -19,15 +19,15 @@ describe('ReceiptOracle encode', () => {
 
       const noirReceipt = encodeReceipt(legacyReceipt);
 
-      expect(noirReceipt[OFFSETS.STATUS]).toStrictEqual('0x01');
+      expect(noirReceipt[RECEIPT_OFFSETS.STATUS]).toStrictEqual('0x01');
       // prettier-ignore
-      expect(noirReceipt[OFFSETS.STATE_ROOT]).toStrictEqual([
+      expect(noirReceipt[RECEIPT_OFFSETS.STATE_ROOT]).toStrictEqual([
         "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00",
         "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00",
         "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00",
         "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00",
       ]);
-      expect(noirReceipt[OFFSETS.CUMULATIVE_GAS_USED]).toStrictEqual('0x08a73c');
+      expect(noirReceipt[RECEIPT_OFFSETS.CUMULATIVE_GAS_USED]).toStrictEqual('0x08a73c');
     });
   });
 });

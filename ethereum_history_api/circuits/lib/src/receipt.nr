@@ -15,6 +15,8 @@ struct Log<MAX_LOG_DATA_LEN> {
     data: [u8; MAX_LOG_DATA_LEN]
 }
 
+type TxType = u8;
+
 struct TxReceipt<LOG_NUM, MAX_LOG_DATA_LEN> {
     status: u1,
     state_root: Bytes32,
@@ -35,7 +37,7 @@ struct TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_LEN> {
 }
 
 pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_LEN>(block_number: Field, tx_idx: Field) -> TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_LEN> {
-    let (receipt, proof): (TxReceipt<LOG_NUM, MAX_LOG_DATA_LEN>, TxReceiptProof) = get_receipt_unconstrained(block_number, tx_idx);
+    let (tx_type, receipt, proof): (TxType, TxReceipt<LOG_NUM, MAX_LOG_DATA_LEN>, TxReceiptProof) = get_receipt_unconstrained(block_number, tx_idx);
     zeroed()
 }
 
@@ -43,11 +45,11 @@ pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_LEN>(block_number: Field, tx_idx: Field
 unconstrained fn get_receipt_oracle<LOG_NUM, MAX_LOG_DATA_LEN>(
     _block_number: Field,
     _tx_idx: Field
-) -> (TxReceipt<LOG_NUM, MAX_LOG_DATA_LEN>, TxReceiptProof) {}
+) -> (TxType, TxReceipt<LOG_NUM, MAX_LOG_DATA_LEN>, TxReceiptProof) {}
 
 unconstrained fn get_receipt_unconstrained<LOG_NUM, MAX_LOG_DATA_LEN>(
     block_number: Field,
     tx_idx: Field
-) -> (TxReceipt<LOG_NUM, MAX_LOG_DATA_LEN>, TxReceiptProof) {
+) -> (TxType, TxReceipt<LOG_NUM, MAX_LOG_DATA_LEN>, TxReceiptProof) {
     get_receipt_oracle(block_number, tx_idx)
 }
