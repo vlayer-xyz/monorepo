@@ -1,24 +1,38 @@
-use crate::misc::bytes::{nibbles_to_byte, nibbles_to_bytes, bytes_to_field, left_nibble_shift};
+use crate::misc::bytes::{nibbles_to_byte, nibbles_to_bytes, left_to_right_padding, shift_right_by_one};
 
 #[test]
-fn test_left_nibble_shift_empty() {
-    let (shifted, shifted_by_len) = left_nibble_shift([]);
+fn test_left_to_right_padding_empty() {
+    let (shifted, shifted_by) = left_to_right_padding([]);
     assert(shifted == []);
-    assert(shifted_by_len == 0);
+    assert(shifted_by == 0);
 }
 
 #[test]
-fn test_left_nibble_shift_even() {
-    let (shifted, shifted_by_len) = left_nibble_shift([0x0, 0x0, 0xf, 0xf]);
+fn test_left_to_right_padding_even() {
+    let (shifted, shifted_by) = left_to_right_padding([0x0, 0x0, 0xf, 0xf]);
     assert(shifted == [0xf, 0xf, 0x0, 0x0]);
-    assert(shifted_by_len == 2);
+    assert(shifted_by == 2);
 }
 
 #[test]
-fn test_left_nibble_shift_odd() {
-    let (shifted, shifted_by_len) = left_nibble_shift([0x0, 0x0, 0x0, 0xf]);
+fn test_left_to_right_padding_odd() {
+    let (shifted, shifted_by) = left_to_right_padding([0x0, 0x0, 0x0, 0xf]);
     assert(shifted == [0x0, 0xf, 0x0, 0x0]);
-    assert(shifted_by_len == 2);
+    assert(shifted_by == 2);
+}
+
+#[test]
+fn test_shift_right_by_one() {
+    let mut arr = [0xa, 0x0, 0xb, 0x0];
+    shift_right_by_one(&mut arr);
+    assert(arr == [0x0, 0xa, 0x0, 0xb]);
+}
+
+#[test(should_fail_with="Last element must be zero to shift the array right by one")]
+fn test_shift_right_by_one_fail() {
+    let non_zero = 0x1;
+    let mut arr = [0xa, 0x0, 0xb, non_zero];
+    shift_right_by_one(&mut arr);
 }
 
 #[test]
@@ -61,24 +75,9 @@ fn test_nibbles_to_bytes() {
     assert(
         nibbles_to_bytes(
         [
-        0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF, 0x0, 0x1, 0x2, 0x3
+        0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, 0x0, 0x1, 0x2, 0x3
     ]
     )
-        == [0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF, 0x01, 0x23]
+        == [0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23]
     );
-}
-
-#[test]
-fn test_bytes_to_field_zero() {
-    assert(bytes_to_field([0x0], 0, 1) == 0x0);
-}
-
-#[test]
-fn test_bytes_to_field_no_offset() {
-    assert(bytes_to_field([0xac, 0xbf], 0, 2) == 0xacbf);
-}
-
-#[test]
-fn test_bytes_to_field_offset() {
-    assert(bytes_to_field([0x12, 0x56, 0x78, 0xbc, 0xde], 1, 3) == 0x5678bc);
 }

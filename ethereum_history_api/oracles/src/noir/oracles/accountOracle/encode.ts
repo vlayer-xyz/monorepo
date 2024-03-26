@@ -16,6 +16,11 @@ export const MAX_RECEIPT_PROOF_LEN = MAX_RECEIPT_TRIE_NODE_LEN * MAX_RECEIPT_TRE
 export const MAX_RECEIPT_RLP_LEN = MAX_RECEIPT_TRIE_NODE_LEN;
 const RLP_VALUE_INDEX = 1;
 
+export const MAX_TRANSACTION_TREE_DEPTH = 7;
+const MAX_TRANSACTION_TRIE_NODE_LEN = 1048;
+export const MAX_TRANSACTION_RLP_LEN = MAX_TRANSACTION_TRIE_NODE_LEN;
+export const MAX_TRANSACTION_PROOF_LEN = MAX_TRANSACTION_TRIE_NODE_LEN * MAX_TRANSACTION_TREE_DEPTH;
+
 export function encodeAccount(ethProof: GetProofReturnType): ForeignCallOutput[] {
   const nonce = encodeField(ethProof.nonce);
   const balance = encodeField(ethProof.balance);

@@ -2,12 +2,7 @@ import { TransactionReceipt, Hex, Block } from 'viem';
 import { ReceiptTrie } from './trie.js';
 import { encodeReceipt } from './receipt.js';
 import { assert } from '../util/assert.js';
-
-export interface ReceiptProof {
-  key: Hex;
-  proof: Hex[];
-  value: Hex;
-}
+import { Proof } from './proof.js';
 
 export async function getReceiptTrie(receipts: TransactionReceipt[], expectedRoot: Hex): Promise<ReceiptTrie> {
   const trie = new ReceiptTrie();
@@ -18,18 +13,14 @@ export async function getReceiptTrie(receipts: TransactionReceipt[], expectedRoo
   return trie;
 }
 
-export async function getReceiptProof(
-  block: Block,
-  receipts: TransactionReceipt[],
-  txIdx: number
-): Promise<ReceiptProof> {
+export async function getReceiptProof(block: Block, receipts: TransactionReceipt[], txIdx: number): Promise<Proof> {
   const trie = await getReceiptTrie(receipts, block.receiptsRoot);
 
   const proof = await trie.createProof(txIdx);
 
   return {
     key: ReceiptTrie.keyFromIdx(txIdx),
-    proof,
-    value: encodeReceipt(receipts[txIdx])
+    value: encodeReceipt(receipts[txIdx]),
+    proof
   };
 }

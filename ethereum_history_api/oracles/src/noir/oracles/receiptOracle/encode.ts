@@ -4,7 +4,7 @@ import { statusToHex } from '../../../ethereum/receipt.js';
 import { padArray } from '../../../util/array.js';
 import { encodeField, encodeHex, encodeProof, encodeBytes } from '../common/encode.js';
 import { ZERO_PAD_VALUE } from '../common/const.js';
-import { ReceiptProof } from '../../../ethereum/receiptProof.js';
+import { Proof } from '../../../ethereum/proof.js';
 
 const MAX_RECEIPT_PROOF_LEVELS = 7;
 const MAX_RECEIPT_LENGTH = 532;
@@ -12,6 +12,13 @@ export const MAX_RECEIPT_RLP_LENGTH = 532;
 const MAX_RECEIPT_PROOF_LENGTH = MAX_RECEIPT_LENGTH * MAX_RECEIPT_PROOF_LEVELS;
 export const KEY_LENGTH = 4;
 const BYTES_32_ZERO = '0x0000000000000000000000000000000000000000000000000000000000000000';
+
+export enum RECEIPT_OFFSETS {
+  STATUS,
+  STATE_ROOT,
+  CUMULATIVE_GAS_USED,
+  LOGS_BLOOM
+}
 
 export function encodeReceipt(receipt: TransactionReceipt): ForeignCallOutput[] {
   const status = statusToHex(receipt.status);
@@ -22,7 +29,7 @@ export function encodeReceipt(receipt: TransactionReceipt): ForeignCallOutput[] 
   return [status, stateRoot, cumulativeGasUsed, logsBloom];
 }
 
-export function encodeReceiptProof(receiptProof: ReceiptProof): ForeignCallOutput[] {
+export function encodeReceiptProof(receiptProof: Proof): ForeignCallOutput[] {
   const key = encodeBytes(BigInt(receiptProof.key), KEY_LENGTH);
   const value = padArray(encodeHex(receiptProof.value), MAX_RECEIPT_RLP_LENGTH, ZERO_PAD_VALUE);
   const proof = encodeProof(receiptProof.proof, MAX_RECEIPT_PROOF_LENGTH);
