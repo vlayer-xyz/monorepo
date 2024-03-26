@@ -1,5 +1,5 @@
 import { GetTransactionReturnType } from 'viem';
-import { encodeOptional, joinArray, tabulateStructField } from '../../noir/noir_js/encode.js';
+import { encodeOptional, joinArray, indentBlock } from '../../noir/noir_js/encode.js';
 import { encodeAddress, encodeField, encodeHex } from '../../noir/oracles/common/encode.js';
 
 export function createTransactionFixture(tx: GetTransactionReturnType): string {
@@ -17,13 +17,13 @@ global transaction = Transaction {
   nonce: ${tx.nonce},
   gas_price: ${gasPrice},
   gas_limit: ${tx.gas},
-  to: ${tabulateStructField(to, 1)},
+  to: ${indentBlock(to, 1)},
   value: ${tx.value},
-  data: ${tabulateStructField(joinArray(data), 1)},
+  data: ${indentBlock(joinArray(data), 1)},
   data_len: ${dataLen},
   v: ${v},
-  r: ${tabulateStructField(joinArray(r), 1)},
-  s: ${tabulateStructField(joinArray(s), 1)}
+  r: ${indentBlock(joinArray(r), 1)},
+  s: ${indentBlock(joinArray(s), 1)}
 };
 `;
 }
