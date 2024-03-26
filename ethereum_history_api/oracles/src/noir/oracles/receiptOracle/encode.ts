@@ -1,11 +1,11 @@
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
-import { TransactionReceipt } from 'viem';
 import { statusToHex } from '../../../ethereum/receipt.js';
 import { padArray } from '../../../util/array.js';
 import { encodeField, encodeHex, encodeProof, encodeBytes } from '../common/encode.js';
 import { ZERO_PAD_VALUE } from '../common/const.js';
 import { Proof } from '../../../ethereum/proof.js';
-import { BYTES_32_ZERO } from '../../../util/const.js';
+import { TransactionReceipt } from '../../../types.js';
+import { BYTES_32_ZERO, U1_ZERO } from '../../../util/const.js';
 
 const MAX_RECEIPT_PROOF_LEVELS = 7;
 const MAX_RECEIPT_LENGTH = 532;

@@ -12,6 +12,11 @@ module.exports = {
           {
             name: 'json-bigint',
             message: 'Use  ./src/utils/json-bigint instead'
+          },
+          {
+            name: 'viem',
+            importNames: ['TransactionReceipt'],
+            message: 'Please use TransactionReceipt from types.ts instead'
           }
         ]
       }

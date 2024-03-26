@@ -1,10 +1,11 @@
-import { Chain, Client, PublicActions, PublicClient, PublicRpcSchema, TransactionReceipt, Transport } from 'viem';
+import { Chain, Client, PublicActions, PublicClient, PublicRpcSchema, Transport } from 'viem';
 import {
   AlchemyGetTransactionReceiptsRpcSchema,
   GetTransactionReceiptsParameters,
   getTransactionReceipts
 } from './alchemyClientActions/getTransactionReceipts.js';
 import { Prettify } from 'viem/chains';
+import { TransactionReceipt } from '../types.js';
 
 export type AlchemyClient<
   transport extends Transport = Transport,

@@ -1,8 +1,9 @@
 import { Trie } from '@ethereumjs/trie';
-import { Hex, bytesToHex, TransactionReceipt, hexToBytes, toRlp, Transaction } from 'viem';
+import { Hex, bytesToHex, hexToBytes, toRlp, Transaction } from 'viem';
 import { encodeField } from '../noir/oracles/common/encode.js';
 import { encodeReceipt } from './receipt.js';
 import { encodeTx } from './transaction.js';
+import { TransactionReceipt } from '../types.js';
 
 export class BaseTrie {
   protected trie: Trie = new Trie();

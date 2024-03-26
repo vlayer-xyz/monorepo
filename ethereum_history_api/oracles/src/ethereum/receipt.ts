@@ -1,5 +1,7 @@
-import { Hash, Hex, Log, TransactionReceipt, TransactionType, concatHex, toRlp } from 'viem';
+import { Hash, Hex, Log, TransactionType, concatHex, toRlp } from 'viem';
 import { toHexString } from './blockHeader.js';
+import { TransactionReceipt } from '../types.js';
+import { assert } from '../util/assert.js';
 
 export type RecursiveArray<T> = T | RecursiveArray<T>[];
 
@@ -42,6 +44,7 @@ export function receiptToRlpFields(receipt: TransactionReceipt): RecursiveArray<
   if (isPreByzantium(receipt)) {
     fields.push(receipt.root);
   } else {
+    assert(receipt.status !== null, 'Receipt status must be defined in post byzantium receipts');
     fields.push(statusToHex(receipt.status));
   }
   fields.push(toHexString(receipt.cumulativeGasUsed), receipt.logsBloom, logs);
