@@ -13,11 +13,11 @@ export function createReceiptFixture(receipt: TransactionReceipt): string {
   const stateRoot = encodeOptional(receipt.root ? joinArray(encodeHex(receipt.root)) : receipt.root);
   const logsBloom = joinArray(encodeHex(receipt.logsBloom));
 
-  return `use crate::receipt::TxReceiptPatrial;
+  return `use crate::receipt::TxReceiptPartial;
 
 global rlp_receipt = ${rlpReceipt};
 
-global receipt = TxReceiptPatrial {
+global receipt = TxReceiptPartial {
   status: ${status},
   state_root: ${indentBlock(stateRoot, 1)},
   cumulative_gas_used: ${receipt.cumulativeGasUsed},
