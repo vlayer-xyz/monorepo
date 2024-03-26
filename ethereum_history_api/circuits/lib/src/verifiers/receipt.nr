@@ -2,10 +2,7 @@ use dep::proof::{const::HASH_LENGTH, trie_proof::TrieProof, rlp::decode0, utils:
 use dep::u2b::u64_to_u8;
 
 use crate::receipt::{TxReceiptProof, TxReceipt, MAX_RECEIPT_TREE_DEPTH};
-use crate::misc::{
-    arrays::sub_array_equals_up_to_length,
-    bytes::{nibbles_to_bytes, left_to_right_padding, right_pad}
-};
+use crate::misc::{arrays::sub_array_equals_up_to_length, bytes::{nibbles_to_bytes, left_to_right_padding, right_pad}};
 
 global KEY_LEN = 6;
 global MAX_TX_IDX_BYTES_LEN = 2;
@@ -30,8 +27,10 @@ pub fn assert_tx_idx_equals(key_as_rlp: [u8; KEY_LEN], tx_idx: Field) {
         let mut tx_idx_bytes = [0; MAX_TX_IDX_BYTES_LEN];
         let (tx_idx_right_padded, _) = right_pad(u64_to_u8(tx_idx as u64));
         memcpy(&mut tx_idx_bytes, tx_idx_right_padded, 0);
-        
-        assert(sub_array_equals_up_to_length(tx_idx_bytes, key_bytes, rlp_offset, rlp_len), "key does not match rlp-encoded transaction index");
+
+        assert(
+            sub_array_equals_up_to_length(tx_idx_bytes, key_bytes, rlp_offset, rlp_len), "key does not match rlp-encoded transaction index"
+        );
     }
 }
 
