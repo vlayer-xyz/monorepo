@@ -24,7 +24,7 @@ pub fn nibbles_to_byte(upper: u8, lower: u8) -> u8 {
     assert(upper < 16, "Nibble value must be less than 16");
     assert(lower < 16, "Nibble value must be less than 16");
 
-    (upper << 4) | lower
+    upper * 16 + lower
 }
 
 pub fn nibbles_to_bytes<BYTES_LEN, NIB_LEN>(nibbles: [u8; NIB_LEN]) -> [u8; BYTES_LEN] {
@@ -42,10 +42,11 @@ pub fn nibbles_to_bytes<BYTES_LEN, NIB_LEN>(nibbles: [u8; NIB_LEN]) -> [u8; BYTE
 
 pub fn bytes_to_field<BYTES_LEN>(bytes: [u8; BYTES_LEN], offset: u64, len: u64) -> Field {
     let mut field: u64 = 0;
+    let pow_2_8 = 256;
     for i in 0..BYTES_LEN {
         if (i < len) {
-            field <<= 8;
-            field |= bytes[offset + i] as u64;
+            field *= pow_2_8;
+            field += bytes[offset + i] as u64;
         }
     }
 
