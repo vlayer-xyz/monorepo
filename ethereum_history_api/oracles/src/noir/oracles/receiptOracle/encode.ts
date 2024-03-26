@@ -15,18 +15,22 @@ export const KEY_LENGTH = 4;
 
 export enum RECEIPT_OFFSETS {
   STATUS,
+  STATUS_IS_SOME,
   STATE_ROOT,
+  STATE_ROOT_IS_SOME,
   CUMULATIVE_GAS_USED,
   LOGS_BLOOM
 }
 
 export function encodeReceipt(receipt: TransactionReceipt): ForeignCallOutput[] {
-  const status = statusToHex(receipt.status);
+  const status = receipt.status === null ? U1_ZERO : statusToHex(receipt.status);
+  const statusIsSome = receipt.status === null ? '0x00' : '0x01';
   const stateRoot = encodeHex(receipt.root ?? BYTES_32_ZERO);
+  const stateRootIsSome = receipt.root === undefined ? '0x00' : '0x01';
   const cumulativeGasUsed = encodeField(receipt.cumulativeGasUsed);
   const logsBloom = encodeHex(receipt.logsBloom);
 
-  return [status, stateRoot, cumulativeGasUsed, logsBloom];
+  return [status, statusIsSome, stateRoot, stateRootIsSome, cumulativeGasUsed, logsBloom];
 }
 
 export function encodeReceiptProof(receiptProof: Proof): ForeignCallOutput[] {

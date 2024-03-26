@@ -20,6 +20,7 @@ describe('ReceiptOracle encode', () => {
       const noirReceipt = encodeReceipt(legacyReceipt);
 
       expect(noirReceipt[RECEIPT_OFFSETS.STATUS]).toStrictEqual('0x01');
+      expect(noirReceipt[RECEIPT_OFFSETS.STATUS_IS_SOME]).toStrictEqual('0x01');
       // prettier-ignore
       expect(noirReceipt[RECEIPT_OFFSETS.STATE_ROOT]).toStrictEqual([
         "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00",
@@ -27,6 +28,7 @@ describe('ReceiptOracle encode', () => {
         "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00",
         "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00",
       ]);
+      expect(noirReceipt[RECEIPT_OFFSETS.STATE_ROOT_IS_SOME]).toStrictEqual('0x00');
       expect(noirReceipt[RECEIPT_OFFSETS.CUMULATIVE_GAS_USED]).toStrictEqual('0x08a73c');
     });
   });

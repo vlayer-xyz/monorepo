@@ -24,6 +24,15 @@ struct TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN> {
     logs_bloom: [u8; BLOOM_FILTER_LEN]
 }
 
+struct ForeignCallTxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN> {
+    status: u1,
+    status_is_some: bool,
+    state_root: Bytes32,
+    state_root_is_some: bool,
+    cumulative_gas_used: Field,
+    logs_bloom: [u8; BLOOM_FILTER_LEN]
+}
+
 struct TxReceiptProof {
     key: [u8; MAX_RECEIPT_KEY_LEN],
     value: [u8; MAX_TRIE_NODE_LENGTH],
@@ -45,11 +54,27 @@ pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_LEN>(block_number: Field, tx_idx: Field
 unconstrained fn get_receipt_oracle<LOG_NUM, MAX_LOG_DATA_LEN>(
     _block_number: Field,
     _tx_idx: Field
-) -> (TxType, TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>, TxReceiptProof) {}
+) -> (TxType, ForeignCallTxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>, TxReceiptProof) {}
+
+unconstrained fn make_option<T>(value: T, is_some: bool) -> Option<T> {
+    if is_some == true {
+        Option::some(value)
+    } else {
+        Option::none()
+    }
+}
 
 unconstrained fn get_receipt_unconstrained<LOG_NUM, MAX_LOG_DATA_LEN>(
     block_number: Field,
     tx_idx: Field
 ) -> (TxType, TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>, TxReceiptProof) {
-    get_receipt_oracle(block_number, tx_idx)
+    let (tx_type, receipt, proof) = get_receipt_oracle(block_number, tx_idx);
+
+    let receipt = TxReceiptPartial {
+        status: make_option(receipt.status, receipt.status_is_some),
+        state_root: make_option(receipt.state_root, receipt.state_root_is_some),
+        cumulative_gas_used: receipt.cumulative_gas_used,
+        logs_bloom: receipt.logs_bloom
+    };
+    (tx_type, receipt, proof)
 }
