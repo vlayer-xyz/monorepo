@@ -1,17 +1,17 @@
 use dep::proof::utils::byte_value;
 
-pub fn left_nibble_shift<N>(nibbles: [u8; N]) -> ([u8; N], u64) {
+pub fn left_to_right_padding<N>(nibbles: [u8; N]) -> ([u8; N], u64) {
     let (mut shifted, mut len) = byte_value(nibbles);
     if (len % 2 == 1) {
-        right_shift_by_one(&mut shifted);
+        shift_right_by_one(&mut shifted);
         len += 1;
     }
 
-    let shifted_by_len = N - len;
-    (shifted, shifted_by_len)
+    let shifted_by = N - len;
+    (shifted, shifted_by)
 }
 
-fn right_shift_by_one<N>(arr: &mut [u8; N]) {
+fn shift_right_by_one<N>(arr: &mut [u8; N]) {
     let mut last = 0;
     for i in 0..N {
         let tmp = (*arr)[i];

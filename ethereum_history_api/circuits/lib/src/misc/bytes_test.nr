@@ -1,24 +1,24 @@
-use crate::misc::bytes::{nibbles_to_byte, nibbles_to_bytes, bytes_to_field, left_nibble_shift};
+use crate::misc::bytes::{nibbles_to_byte, nibbles_to_bytes, bytes_to_field, left_to_right_padding};
 
 #[test]
-fn test_left_nibble_shift_empty() {
-    let (shifted, shifted_by_len) = left_nibble_shift([]);
+fn test_left_to_right_padding_empty() {
+    let (shifted, shifted_by) = left_to_right_padding([]);
     assert(shifted == []);
-    assert(shifted_by_len == 0);
+    assert(shifted_by == 0);
 }
 
 #[test]
-fn test_left_nibble_shift_even() {
-    let (shifted, shifted_by_len) = left_nibble_shift([0x0, 0x0, 0xf, 0xf]);
+fn test_left_to_right_padding_even() {
+    let (shifted, shifted_by) = left_to_right_padding([0x0, 0x0, 0xf, 0xf]);
     assert(shifted == [0xf, 0xf, 0x0, 0x0]);
-    assert(shifted_by_len == 2);
+    assert(shifted_by == 2);
 }
 
 #[test]
-fn test_left_nibble_shift_odd() {
-    let (shifted, shifted_by_len) = left_nibble_shift([0x0, 0x0, 0x0, 0xf]);
+fn test_left_to_right_padding_odd() {
+    let (shifted, shifted_by) = left_to_right_padding([0x0, 0x0, 0x0, 0xf]);
     assert(shifted == [0x0, 0xf, 0x0, 0x0]);
-    assert(shifted_by_len == 2);
+    assert(shifted_by == 2);
 }
 
 #[test]
