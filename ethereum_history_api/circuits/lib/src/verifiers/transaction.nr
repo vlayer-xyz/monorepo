@@ -1,16 +1,36 @@
 use dep::proof::{const::HASH_LENGTH, trie_proof::TrieProof, rlp::decode0};
 use dep::u2b::u64_to_u8;
 
-use crate::receipt::{TxReceiptProof, TxReceipt, MAX_RECEIPT_TREE_DEPTH};
+use crate::transaction::{TransactionProof, Transaction};
 use crate::misc::{arrays::sub_array_equals_up_to_length, bytes::{nibbles_to_bytes, bytes_to_field, left_nibble_shift}};
 
 global KEY_LEN = 6;
+
+global BERLIN_BLOCK_NUM: u64 = 12_244_000;
+global LONDON_BLOCK_NUM: u64 = 12_965_000;
+global CANCUN_BLOCK_NUM: u64 = 19_426_587;
+
+pub(crate) fn get_transaction_fields_count(block_number: u64) -> u64 {
+    let mut fields_count = 9;
+    if block_number >= BERLIN_BLOCK_NUM {
+        fields_count += 2;
+    }
+    if block_number >= LONDON_BLOCK_NUM {
+        fields_count += 2;
+    }
+    if block_number >= CANCUN_BLOCK_NUM {
+        fields_count += 2;
+    }
+
+    fields_count
+}
 
 pub(crate) fn assert_transaction_equals<MAX_TRANSACTION_DATA_LEN>(
     block_number: Field,
     transaction_rlp: [u8; MAX_TRANSACTION_RLP_LEN],
     transaction: Transaction<MAX_TRANSACTION_DATA_LEN>
 ) {
+
     assert(false, "Not implemented");
 }
 
