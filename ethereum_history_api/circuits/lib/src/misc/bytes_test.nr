@@ -1,4 +1,4 @@
-use crate::misc::bytes::{nibbles_to_byte, nibbles_to_bytes, bytes_to_field, left_to_right_padding, shift_right_by_one};
+use crate::misc::bytes::{nibbles_to_byte, nibbles_to_bytes, left_to_right_padding, shift_right_by_one};
 
 #[test]
 fn test_left_to_right_padding_empty() {
@@ -80,19 +80,4 @@ fn test_nibbles_to_bytes() {
     )
         == [0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF, 0x01, 0x23]
     );
-}
-
-#[test]
-fn test_bytes_to_field_zero() {
-    assert(bytes_to_field([0x0], 0, 1) == 0x0);
-}
-
-#[test]
-fn test_bytes_to_field_no_offset() {
-    assert(bytes_to_field([0xac, 0xbf], 0, 2) == 0xacbf);
-}
-
-#[test]
-fn test_bytes_to_field_offset() {
-    assert(bytes_to_field([0x12, 0x56, 0x78, 0xbc, 0xde], 1, 3) == 0x5678bc);
 }

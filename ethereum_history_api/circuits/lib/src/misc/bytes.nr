@@ -1,7 +1,11 @@
 use dep::proof::utils::byte_value;
 
+pub fn right_pad<N>(arr: [u8; N]) -> ([u8; N], u64) {
+    byte_value(arr)
+}
+
 pub fn left_to_right_padding<N>(nibbles: [u8; N]) -> ([u8; N], u64) {
-    let (mut shifted, mut len) = byte_value(nibbles);
+    let (mut shifted, mut len) = right_pad(nibbles);
     if (len % 2 == 1) {
         shift_right_by_one(&mut shifted);
         len += 1;
@@ -40,17 +44,4 @@ pub fn nibbles_to_bytes<BYTES_LEN, NIB_LEN>(nibbles: [u8; NIB_LEN]) -> [u8; BYTE
     }
 
     bytes
-}
-
-pub fn bytes_to_field<BYTES_LEN>(bytes: [u8; BYTES_LEN], offset: u64, len: u64) -> Field {
-    let mut field: u64 = 0;
-    let pow_2_8 = 256;
-    for i in 0..BYTES_LEN {
-        if (i < len) {
-            field *= pow_2_8;
-            field += bytes[offset + i] as u64;
-        }
-    }
-
-    field as Field
 }
