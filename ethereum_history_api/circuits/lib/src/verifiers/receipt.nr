@@ -1,6 +1,6 @@
 use dep::u2b::{u64_to_u8, u32_to_u8};
 use dep::proof::{
-    const::{HASH_LENGTH, MAX_RECEIPT_RLP_LENGTH, HASH_LENGTH}, trie_proof::TrieProof,
+    const::{HASH_LENGTH, MAX_RECEIPT_RLP_LENGTH}, trie_proof::TrieProof,
     rlp::{RLP_List, decode1, decode0, STRING, LIST}, utils::{byte_value, memcpy}
 };
 use crate::receipt::{TxReceiptProof, TxReceiptPartial, MAX_RECEIPT_TREE_DEPTH, TxType, BLOOM_FILTER_LEN};
