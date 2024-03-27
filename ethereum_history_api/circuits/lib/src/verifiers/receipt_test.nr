@@ -1,5 +1,11 @@
 use dep::proof::const::MAX_RECEIPT_RLP_LENGTH;
-use crate::fixtures::mainnet::{cancun::small_block::receipt::{encoded_receipt, receipt, tx_type}};
+use crate::fixtures::mainnet::{
+    cancun::small_block::{receipt::{encoded_receipt, receipt, tx_type}, header::number as block_number},
+    homestead::fork::{
+    receipt::{encoded_receipt as pre_byzantium_encoded_receipt, tx_type as legacy_tx_type},
+    header::number as pre_byzantium_block_number
+}
+};
 use crate::misc::arrays::{alter_array, sub_array_equals_up_to_length};
 use crate::verifiers::receipt::{
     BYZANTIUM_BLOCK_NUM, assert_receipt_equals, split_receipt_into_tx_type_and_receipt_rlp,
@@ -11,6 +17,13 @@ fn test_split_receipt_into_tx_type_and_receipt_rlp() {
     let (tx_type, receipt_rlp) = split_receipt_into_tx_type_and_receipt_rlp(tx_type, encoded_receipt);
     assert(tx_type == encoded_receipt[0], "Incorrect tx type returned");
     assert(receipt_rlp[0] == encoded_receipt[1], "Incorrect receipt RLP returned");
+}
+
+#[test]
+fn test_split_receipt_into_tx_type_and_receipt_rlp_legacy_tx() {
+    let (tx_type, receipt_rlp) = split_receipt_into_tx_type_and_receipt_rlp(legacy_tx_type, pre_byzantium_encoded_receipt);
+    assert(tx_type == legacy_tx_type, "Incorrect tx type returned");
+    assert(receipt_rlp[0] == pre_byzantium_encoded_receipt[0], "Incorrect receipt RLP returned");
 }
 
 #[test(should_fail_with="Invalid tx type")]
