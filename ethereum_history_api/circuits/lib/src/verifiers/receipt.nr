@@ -34,11 +34,12 @@ pub fn assert_tx_idx_equals(key_as_rlp: [u8; KEY_LEN], tx_idx: Field) {
     }
 }
 
-fn assert_receipt_proof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>(
+pub(crate) fn assert_receipt_proof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>(
     proof: TxReceiptProof,
     root: [u8; HASH_LENGTH]
 ) {
-    assert(false, "Not implemented");
+    let trie_proof = TrieProof { key: proof.key, value: proof.value, proof: proof.proof, depth: proof.depth };
+    assert(trie_proof.verify_receipt_root(root), "TrieProof: Invalid receipt root");
 }
 
 pub fn verify_receipt<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>(

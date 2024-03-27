@@ -1,4 +1,6 @@
-use crate::verifiers::receipt::assert_tx_idx_equals;
+use crate::verifiers::receipt::{assert_tx_idx_equals, assert_receipt_proof};
+use crate::fixtures::mainnet::cancun::small_block::receipt_proof::proof;
+use crate::fixtures::mainnet::cancun::small_block::header::receipts_root;
 
 #[test]
 fn test_assert_tx_idx_equals_zero() {
@@ -40,4 +42,9 @@ fn test_assert_tx_idx_equals_fail() {
     let tx_idx = 0xabcd;
     let wrong_key = [0x8, 0x2, 0xa, 0xb, 0xc, 0xd + 1];
     assert_tx_idx_equals(wrong_key, tx_idx);
+}
+
+#[test]
+fn test_assert_receipt_proof() {
+    assert_receipt_proof(proof, receipts_root);
 }
