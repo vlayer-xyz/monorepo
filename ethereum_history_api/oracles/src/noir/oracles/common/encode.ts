@@ -51,7 +51,7 @@ export function encodeHex(hexString: string): Hex[] {
   return chunks;
 }
 
-export function encodeProofNode(node: Hex, proofOneLevelLen: number): Hex[] {
+export function encodeProofNode(node: Hex, proofOneLevelLen: number = PROOF_ONE_LEVEL_LEN): Hex[] {
   const encodedNode = encodeHex(node);
   assert(
     encodedNode.length <= proofOneLevelLen,
