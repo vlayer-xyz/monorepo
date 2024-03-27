@@ -2,6 +2,8 @@ import { Hex, isHex } from 'viem';
 import { BYTE_HEX_LEN } from '../../util/const.js';
 import { encodeByte } from '../oracles/common/encode.js';
 
+const INDENT = '  ';
+
 // ENCODERS
 export function encodeHexString(value: string): Hex[] {
   return Array.from(encodeHexStringToArray(value)).map((byte) => encodeByte(byte));
@@ -9,7 +11,7 @@ export function encodeHexString(value: string): Hex[] {
 
 export function encodeHexStringToArray(value: string): Uint8Array {
   if (!isHex(value)) {
-    throw new Error(`Invalid hexstring: ${value}`);
+    throw new Error(`Invalid hex string: ${value}`);
   }
   const arr = [];
   for (let i = 2; i < value.length; i += BYTE_HEX_LEN) {
@@ -28,8 +30,21 @@ export function encodeOptional(value: string | undefined | null): string {
 
 export function joinArray(value: string[]): string {
   return `[
-    ${value.join(', ')}
-  ]`;
+${INDENT}${value.join(', ')}
+]`;
+}
+
+export function indentLine(line: string, depth: number): string {
+  return INDENT.repeat(depth) + line;
+}
+
+export function indentBlock(value: string, depth: number): string {
+  const lines = value.split('\n');
+  return lines
+    .map((line, idx) => {
+      return idx === 0 ? line : indentLine(line, depth);
+    })
+    .join('\n');
 }
 
 // DECODERS

@@ -23,7 +23,9 @@ describe('getReceiptOracle', () => {
 
     expect(receiptWithProof[OFFSETS.TX_TYPE]).toStrictEqual('0x02');
     expect(receiptWithProof[OFFSETS.STATUS]).toStrictEqual('0x01');
+    expect(receiptWithProof[OFFSETS.STATUS_IS_SOME]).toStrictEqual('0x01');
     expect(receiptWithProof[OFFSETS.STATE_ROOT]).toStrictEqual(stateRootInNoirFormat);
+    expect(receiptWithProof[OFFSETS.STATE_ROOT_IS_SOME]).toStrictEqual('0x00');
     expect(receiptWithProof[OFFSETS.CUMULATIVE_GAS_USED]).toStrictEqual('0x0a17e1');
     // prettier-ignore
     expect(receiptWithProof[OFFSETS.LOGS_BLOOM]).toStrictEqual([

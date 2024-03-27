@@ -1,9 +1,10 @@
 import { join } from 'path';
-import { GetProofReturnType, Hash, Transaction, TransactionReceipt } from 'viem';
+import { GetProofReturnType, Hash, Transaction } from 'viem';
 import { FIXTURES, JS_FIXTURES_DIRECTORY } from './fixtures/config.js';
 import { BaseFixture } from './fixtures/types.js';
 import { readObject } from './util/file.js';
 import type { Block } from './ethereum/blockHeader.js';
+import { TransactionReceipt } from './types.js';
 
 export async function loadFixture<T>(chain: string, hardFork: string, fixtureName: string, method: string): Promise<T> {
   const fileName = join(JS_FIXTURES_DIRECTORY, chain, hardFork, fixtureName, `${method}.json`);

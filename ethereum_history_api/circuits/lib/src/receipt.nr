@@ -1,4 +1,4 @@
-use crate::misc::types::{Bytes32, Address};
+use crate::misc::{types::{Bytes32, Address}, option::make_option};
 use crate::header::get_header;
 use crate::verifiers::receipt::verify_receipt;
 use dep::std::unsafe::zeroed;
@@ -17,9 +17,18 @@ struct Log<MAX_LOG_DATA_LEN> {
 
 type TxType = u8;
 
-struct TxReceipt<LOG_NUM, MAX_LOG_DATA_LEN> {
+struct TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN> {
+    status: Option<u1>,
+    state_root: Option<Bytes32>,
+    cumulative_gas_used: Field,
+    logs_bloom: [u8; BLOOM_FILTER_LEN]
+}
+
+struct ForeignCallTxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN> {
     status: u1,
+    status_is_some: bool,
     state_root: Bytes32,
+    state_root_is_some: bool,
     cumulative_gas_used: Field,
     logs_bloom: [u8; BLOOM_FILTER_LEN]
 }
@@ -32,12 +41,15 @@ struct TxReceiptProof {
 }
 
 struct TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_LEN> {
-    receipt: TxReceipt<LOG_NUM, MAX_LOG_DATA_LEN>,
+    receipt: TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>,
     block_hash: Bytes32
 }
 
-pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_LEN>(block_number: Field, tx_idx: Field) -> TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_LEN> {
-    let (tx_type, receipt, proof): (TxType, TxReceipt<LOG_NUM, MAX_LOG_DATA_LEN>, TxReceiptProof) = get_receipt_unconstrained(block_number, tx_idx);
+pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_LEN>(
+    block_number: Field,
+    tx_idx: Field
+) -> TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_LEN> {
+    let (tx_type, receipt, proof): (TxType, TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>, TxReceiptProof) = get_receipt_unconstrained(block_number, tx_idx);
     zeroed()
 }
 
@@ -45,11 +57,19 @@ pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_LEN>(block_number: Field, tx_idx: Field
 unconstrained fn get_receipt_oracle<LOG_NUM, MAX_LOG_DATA_LEN>(
     _block_number: Field,
     _tx_idx: Field
-) -> (TxType, TxReceipt<LOG_NUM, MAX_LOG_DATA_LEN>, TxReceiptProof) {}
+) -> (TxType, ForeignCallTxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>, TxReceiptProof) {}
 
 unconstrained fn get_receipt_unconstrained<LOG_NUM, MAX_LOG_DATA_LEN>(
     block_number: Field,
     tx_idx: Field
-) -> (TxType, TxReceipt<LOG_NUM, MAX_LOG_DATA_LEN>, TxReceiptProof) {
-    get_receipt_oracle(block_number, tx_idx)
+) -> (TxType, TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>, TxReceiptProof) {
+    let (tx_type, receipt, proof) = get_receipt_oracle(block_number, tx_idx);
+
+    let receipt = TxReceiptPartial {
+        status: make_option(receipt.status, receipt.status_is_some),
+        state_root: make_option(receipt.state_root, receipt.state_root_is_some),
+        cumulative_gas_used: receipt.cumulative_gas_used,
+        logs_bloom: receipt.logs_bloom
+    };
+    (tx_type, receipt, proof)
 }
