@@ -51,16 +51,16 @@ export function encodeHex(hexString: string): Hex[] {
   return chunks;
 }
 
-export function encodeProofNode(node: Hex): Hex[] {
+export function encodeProofNode(node: Hex, proofOneLevelLen: number): Hex[] {
   const encodedNode = encodeHex(node);
   assert(
-    encodedNode.length <= PROOF_ONE_LEVEL_LEN,
-    `Proof node length: ${encodedNode.length} is too large. Max proof node length: ${PROOF_ONE_LEVEL_LEN}`
+    encodedNode.length <= proofOneLevelLen,
+    `Proof node length: ${encodedNode.length} is too large. Max proof node length: ${proofOneLevelLen}`
   );
-  return padArray(encodeHex(node), PROOF_ONE_LEVEL_LEN, ZERO_PAD_VALUE);
+  return padArray(encodeHex(node), proofOneLevelLen, ZERO_PAD_VALUE);
 }
 
-export function encodeProof(proof: Hex[], length: number): Hex[] {
-  const encodedUnPaddedProof = proof.map(encodeProofNode).flat();
+export function encodeProof(proof: Hex[], length: number, proofOneLevelLen: number = PROOF_ONE_LEVEL_LEN): Hex[] {
+  const encodedUnPaddedProof = proof.map((node) => encodeProofNode(node, proofOneLevelLen)).flat();
   return padArray(encodedUnPaddedProof, length, ZERO_PAD_VALUE);
 }
