@@ -1,17 +1,50 @@
-use dep::proof::{const::HASH_LENGTH, trie_proof::TrieProof, rlp::decode0, utils::memcpy};
-use dep::u2b::u64_to_u8;
-
-use crate::receipt::{TxReceiptProof, TxReceiptPartial, MAX_RECEIPT_TREE_DEPTH};
+use dep::u2b::{u64_to_u8, u32_to_u8};
+use dep::proof::{
+    const::{HASH_LENGTH, MAX_RECEIPT_RLP_LENGTH, HASH_LENGTH}, trie_proof::TrieProof,
+    rlp::{RLP_List, decode1, decode0, STRING, LIST}, utils::{byte_value, memcpy}
+};
+use crate::receipt::{TxReceiptProof, TxReceiptPartial, MAX_RECEIPT_TREE_DEPTH, TxType, BLOOM_FILTER_LEN};
 use crate::misc::{arrays::sub_array_equals_up_to_length, bytes::{nibbles_to_bytes, left_to_right_padding, right_pad}};
 
 global KEY_LEN = 6;
 global MAX_TX_IDX_BYTES_LEN = 2;
 
-pub(crate) fn assert_receipt_equals<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_RLP_LEN>(
-    block_number: Field,
-    receipt_rlp: [u8; MAX_RECEIPT_RLP_LEN],
+global RECEIPT_FIELDS_COUNT = 4;
+
+global BYZANTIUM_BLOCK_NUM: u64 = 4_370_000;
+
+pub(crate) fn is_pre_byzantium(block_number: u64) -> bool {
+    block_number < BYZANTIUM_BLOCK_NUM
+}
+
+pub(crate) fn split_receipt_into_tx_type_and_receipt_rlp(
+    tx_type: TxType,
+    encoded_receipt: [u8; MAX_RECEIPT_RLP_LENGTH]
+) -> (u8, [u8; MAX_RECEIPT_RLP_LENGTH]) {
+    if (tx_type == 0) {
+        (tx_type, encoded_receipt)
+    } else {
+        let mut receipt_rlp = [0; MAX_RECEIPT_RLP_LENGTH];
+        memcpy(&mut receipt_rlp, encoded_receipt, 1);
+        (encoded_receipt[0], receipt_rlp)
+    }
+}
+
+pub(crate) fn assert_receipt_rlp_equal<LOG_NUM, MAX_LOG_DATA_LEN>(
+    block_number: u64,
+    receipt_rlp_right_padded: [u8; MAX_RECEIPT_RLP_LENGTH],
     receipt: TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>
 ) {
+    let receipt_rlp: RLP_List<RECEIPT_FIELDS_COUNT> = decode1(receipt_rlp_right_padded);
+    assert(receipt_rlp.num_fields == RECEIPT_FIELDS_COUNT, "Invalid number of fields in receipt RLP");
+
+    if (is_pre_byzantium(block_number)) {
+      // State root
+    } else {
+      // Status
+    }
+    // Gas used
+    // Logs bloom
     assert(false, "Not implemented");
 }
 
@@ -34,10 +67,19 @@ pub fn assert_tx_idx_equals(key_as_rlp: [u8; KEY_LEN], tx_idx: Field) {
     }
 }
 
-fn assert_receipt_proof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>(
-    proof: TxReceiptProof,
-    root: [u8; HASH_LENGTH]
+pub(crate) fn assert_receipt_equals<LOG_NUM, MAX_LOG_DATA_LEN>(
+    block_number: u64,
+    tx_type: TxType,
+    encoded_receipt: [u8; MAX_RECEIPT_RLP_LENGTH],
+    receipt: TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>
 ) {
+    let (actual_tx_type, receipt_rlp_right_padded) = split_receipt_into_tx_type_and_receipt_rlp(tx_type, encoded_receipt);
+
+    assert(actual_tx_type == tx_type, "Invalid tx type");
+    assert_receipt_rlp_equal(block_number, receipt_rlp_right_padded, receipt);
+}
+
+fn assert_receipt_proof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>(proof: TxReceiptProof, root: [u8; HASH_LENGTH]) {
     assert(false, "Not implemented");
 }
 
