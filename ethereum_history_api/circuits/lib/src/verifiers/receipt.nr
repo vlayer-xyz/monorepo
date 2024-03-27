@@ -18,7 +18,9 @@ pub(crate) fn split_receipt_into_tx_type_and_receipt_rlp(
     encoded_receipt: [u8; MAX_ENCODED_RECEIPT_LENGTH]
 ) -> (u8, [u8; MAX_RECEIPT_RLP_LENGTH]) {
     if (tx_type == 0) {
-        assert(encoded_receipt[MAX_ENCODED_RECEIPT_LENGTH - 1] == 0, "Not 0x00 at the end of legacy receipt RLP");
+        assert(
+            encoded_receipt[MAX_ENCODED_RECEIPT_LENGTH - 1] == 0, "Not 0x00 at the end of legacy receipt RLP"
+        );
         let mut receipt_rlp = [0; MAX_RECEIPT_RLP_LENGTH];
         memcpy(&mut receipt_rlp, encoded_receipt, 0);
         (tx_type, receipt_rlp)
