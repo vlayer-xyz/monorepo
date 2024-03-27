@@ -39,9 +39,9 @@ pub(crate) fn assert_receipt_rlp_equal<LOG_NUM, MAX_LOG_DATA_LEN>(
     assert(receipt_rlp.num_fields == RECEIPT_FIELDS_COUNT, "Invalid number of fields in receipt RLP");
 
     if (is_pre_byzantium(block_number)) {
-      // State root
+        // State root
     } else {
-      // Status
+        // Status
     }
     // Gas used
     // Logs bloom
