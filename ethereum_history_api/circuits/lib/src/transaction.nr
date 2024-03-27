@@ -30,7 +30,7 @@ struct TransactionProof<MAX_TRANSACTION_PROOF_LEN, MAX_TRANSACTION_RLP_LEN> {
 }
 
 struct TransactionWithinBlock<MAX_TRANSACTION_DATA_LEN> {
-    transation: Transaction<MAX_TRANSACTION_DATA_LEN>,
+    transaction: Transaction<MAX_TRANSACTION_DATA_LEN>,
     block_hash: Bytes32
 }
 
