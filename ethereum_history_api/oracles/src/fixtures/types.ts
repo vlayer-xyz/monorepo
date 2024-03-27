@@ -1,4 +1,5 @@
-import { GetBlockReturnType, GetProofReturnType, TransactionReceipt } from 'viem';
+import { GetBlockReturnType, GetProofReturnType } from 'viem';
+import { TransactionReceipt } from '../types.js';
 
 export interface BaseFixture<TResult> {
   method: string;

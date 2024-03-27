@@ -1,9 +1,17 @@
 import { describe, expect, it } from 'vitest';
-import { decodeHexString, encodeHexString, encodeHexStringToArray, encodeOptional, joinArray } from './encode.js';
+import {
+  decodeHexString,
+  encodeHexString,
+  encodeHexStringToArray,
+  encodeOptional,
+  joinArray,
+  indentLine,
+  indentBlock
+} from './encode.js';
 
 describe('encodeHexStringToArray', () => {
   it('throws on invalid input', () => {
-    expect(() => encodeHexStringToArray('1234')).toThrow('Invalid hexstring: 1234');
+    expect(() => encodeHexStringToArray('1234')).toThrow('Invalid hex string: 1234');
   });
   it('encodes hex string to array', () => {
     expect(encodeHexStringToArray('0x1234')).toStrictEqual(new Uint8Array([0x12, 0x34]));
@@ -26,9 +34,27 @@ describe('encodeOptional', () => {
 describe('joinArray', () => {
   it('joins array', () => {
     const expectedFormattedArray = `[
-    0x12, 0x34
-  ]`;
+  0x12, 0x34
+]`;
     expect(joinArray(['0x12', '0x34'])).toBe(expectedFormattedArray);
+  });
+});
+
+describe('indentLine', () => {
+  it('tabulates line', () => {
+    expect(indentLine('line', 2)).toBe('    line');
+  });
+});
+
+describe('indentBlock', () => {
+  it('tabulates struct field', () => {
+    const value = '[\n  1\n]';
+    expect(indentBlock(value, 0)).toMatch(`[
+  1
+]`);
+    expect(indentBlock(value, 1)).toMatch(`[
+    1
+  ]`);
   });
 });
 

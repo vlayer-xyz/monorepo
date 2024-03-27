@@ -1,8 +1,9 @@
-import { TransactionReceipt, Hex, Block } from 'viem';
 import { ReceiptTrie } from './trie.js';
+import { Hex, Block } from 'viem';
 import { encodeReceipt } from './receipt.js';
 import { assert } from '../util/assert.js';
 import { Proof } from './proof.js';
+import { TransactionReceipt } from '../types.js';
 
 export async function getReceiptTrie(receipts: TransactionReceipt[], expectedRoot: Hex): Promise<ReceiptTrie> {
   const trie = new ReceiptTrie();

@@ -1,14 +1,6 @@
-import {
-  Chain,
-  Client,
-  Hex,
-  PublicRpcSchema,
-  RpcTransactionReceipt,
-  TransactionReceipt,
-  Transport,
-  formatTransactionReceipt
-} from 'viem';
+import { Chain, Client, Hex, PublicRpcSchema, RpcTransactionReceipt, Transport, formatTransactionReceipt } from 'viem';
 import { toHexString } from '../blockHeader.js';
+import { TransactionReceipt } from '../../types.js';
 
 export type AlchemyClient<
   transport extends Transport = Transport,

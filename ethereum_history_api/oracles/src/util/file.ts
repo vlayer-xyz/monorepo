@@ -4,8 +4,8 @@ import os from 'os';
 import prettier from 'prettier';
 import path from 'path';
 import packgeJson from '../../package.json';
-import { TransactionReceipt } from 'viem';
 import { BaseFixture } from '../fixtures/types.js';
+import { TransactionReceipt } from '../types.js';
 
 async function prettierFormatJSON(data: string): Promise<string> {
   const options = await prettier.resolveConfig('./');

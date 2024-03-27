@@ -2,7 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { getReceiptProof } from './receiptProof.js';
 import { createMockClient } from './mockClient.js';
 import { Call } from './recordingClient.js';
-import { TransactionReceipt, toRlp } from 'viem';
+import { toRlp } from 'viem';
+import { TransactionReceipt } from '../types.js';
 
 describe('getReceiptProof', () => {
   it('success', async () => {
