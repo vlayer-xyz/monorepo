@@ -2,9 +2,7 @@ use crate::misc::types::{Bytes32, Address};
 use dep::std::unsafe::zeroed;
 
 global MAX_TRANSACTION_TREE_DEPTH = 7;
-global MAX_TRANSACTION_KEY_LEN = 4;
-
-type TxType = u8;
+global MAX_TRANSACTION_KEY_LEN = 3;
 
 struct Transaction<MAX_TRANSACTION_DATA_LEN> {
     nonce: Field,
