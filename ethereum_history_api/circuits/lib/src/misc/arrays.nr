@@ -6,12 +6,6 @@ pub fn alter_array<N>(array: [u8; N]) -> [u8; N] {
     copy
 }
 
-pub fn memcpy<N, M>(dest: &mut [u8; N], src: [u8; M], offset: u64) {
-    for i in 0..N {
-        (*dest)[i] = src[offset + i];
-    }
-}
-
 pub fn sub_array_equals_up_to_length<T, N, M>(subarray: [T; N], array: [T; M], offset: u64, length: u64) -> bool where T: Eq {
     assert(length <= N, "subarray index out of bound");
     assert(offset + N <= M, "array index out of bound");
