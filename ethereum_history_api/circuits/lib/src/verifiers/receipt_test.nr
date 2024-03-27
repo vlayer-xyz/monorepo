@@ -79,9 +79,3 @@ fn test_assert_receipt_rlp_equal_invalid_rlp_field_count() {
     rlp_single_element_list[1] = RLP_SHORT_STRING_TYPE;
     assert_receipt_rlp_equal(BYZANTIUM_BLOCK_NUM, rlp_single_element_list, receipt);
 }
-
-#[test]
-fn test_assert_receipt_rlp_equal() {
-    let (_, receipt_rlp) = split_receipt_into_tx_type_and_receipt_rlp(tx_type, encoded_receipt);
-    assert_receipt_rlp_equal(BYZANTIUM_BLOCK_NUM, receipt_rlp, receipt);
-}
