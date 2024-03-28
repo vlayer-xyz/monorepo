@@ -3,7 +3,7 @@ import {
   MAX_RECEIPT_KEY_NIBBLE_LEN,
   MAX_RECEIPT_PROOF_LEN,
   MAX_RECEIPT_RLP_LEN
-} from '../../noir/oracles/accountOracle/encode.js';
+} from '../../noir/oracles/receiptOracle/encode.js';
 import { createProofFixture } from './proof.js';
 
 export function createReceiptProofFixture(proof: Proof): string {
