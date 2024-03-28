@@ -8,12 +8,12 @@ export function hasHexPrefix(hex: string): boolean {
 }
 
 export function removeHexPrefix(hex: string): string {
-  assert(hasHexPrefix(hex), `Expected hex to have a prefix: ${hex}`);
+  assert(hasHexPrefix(hex), `Attempting to remove 0x prefix from ${hex} which does not have it`);
   return hex.slice(PREFIX.length);
 }
 
 export function addHexPrefix(hex: string): string {
-  assert(!hasHexPrefix(hex), `Expected hex to not have a prefix: ${hex}`);
+  assert(!hasHexPrefix(hex), `Attempting to add 0x prefix to ${hex} which already has it`);
   return `${PREFIX}${hex}`;
 }
 
