@@ -28,7 +28,7 @@ fn test_split_receipt_into_tx_type_and_receipt_rlp_legacy_tx() {
     assert(receipt_rlp[0] == pre_byzantium_encoded_receipt[0], "Incorrect receipt RLP returned");
 }
 
-#[test(should_fail_with="Not 0x00 at the end of legacy receipt RLP")]
+#[test(should_fail_with="RLP receipt exceeds MAX_RECEIPT_RLP_LENGTH")]
 fn test_split_receipt_into_tx_type_and_receipt_rlp_wrong_legacy_rlp() {
     let mut wrong_legacy_rlp = [0; MAX_ENCODED_RECEIPT_LENGTH];
     memcpy(&mut wrong_legacy_rlp, pre_byzantium_encoded_receipt, 0);
