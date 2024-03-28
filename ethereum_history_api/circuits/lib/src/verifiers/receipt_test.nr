@@ -79,6 +79,7 @@ fn test_assert_receipt_proof_fail_invalid_proof_key() {
     assert_receipt_proof(proof_invalid_key, receipts_root);
 }
 
+// TODO: This test should fail with an error message
 #[test(should_fail)]
 fn test_assert_receipt_proof_fail_invalid_proof_depth() {
     let mut proof_invalid_depth = proof;
