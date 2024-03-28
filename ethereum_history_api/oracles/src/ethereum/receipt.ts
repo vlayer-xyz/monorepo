@@ -2,7 +2,7 @@ import { toHexString } from './blockHeader.js';
 import { TransactionReceipt } from '../types.js';
 import { Hash, Hex, Log, TransactionType, concatHex, toRlp, rpcTransactionType } from 'viem';
 import { assert } from '../util/assert.js';
-import { padToEven } from '../util/hex.js';
+import { padHexToEven } from '../util/hex.js';
 
 export type RecursiveArray<T> = T | RecursiveArray<T>[];
 type ValueOf<T> = T[keyof T];
@@ -14,7 +14,7 @@ export function logToRlpFields(log: Log): RecursiveArray<Hex> {
 
 export function txTypeToHex(type: TransactionType): TxTypeHex {
   assert(type in rpcTransactionType, `Unknown transaction type: ${type}`);
-  return padToEven(rpcTransactionType[type as keyof typeof rpcTransactionType]) as TxTypeHex;
+  return padHexToEven(rpcTransactionType[type as keyof typeof rpcTransactionType]) as TxTypeHex;
 }
 
 export function txTypeToField(type: TransactionType): number {

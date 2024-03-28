@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addHexPrefix, hasHexPrefix, padToEven, removeHexPrefix } from './hex.js';
+import { addHexPrefix, hasHexPrefix, padHexToEven, removeHexPrefix } from './hex.js';
 
 describe('hex', () => {
   it('hasPrefix', () => {
@@ -20,9 +20,9 @@ describe('hex', () => {
     expect(() => addHexPrefix('0x01')).toThrow('Expected hex to not have a prefix: 0x01');
   });
 
-  it('padToEven', () => {
-    expect(padToEven('1')).toEqual('01');
-    expect(padToEven('0x1')).toEqual('0x01');
-    expect(padToEven('0x01')).toEqual('0x01');
+  it('padHexToEven', () => {
+    expect(padHexToEven('1')).toEqual('01');
+    expect(padHexToEven('0x1')).toEqual('0x01');
+    expect(padHexToEven('0x01')).toEqual('0x01');
   });
 });

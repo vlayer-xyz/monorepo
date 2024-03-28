@@ -21,7 +21,7 @@ function padUnPrefixedToEven(hex: string): string {
   return hex.length % BYTE_HEX_LEN == 0 ? hex : `0${hex}`;
 }
 
-export function padToEven(hex: string): string {
+export function padHexToEven(hex: string): string {
   if (hasHexPrefix(hex)) {
     return addHexPrefix(padUnPrefixedToEven(removeHexPrefix(hex)));
   } else {
