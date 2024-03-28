@@ -2,7 +2,7 @@ import { type Address, isAddress, isHex, Hex } from 'viem';
 import { assert } from '../../../util/assert.js';
 import { BYTE_HEX_LEN } from '../../../util/const.js';
 import { padArray } from '../../../util/array.js';
-import { BITS_IN_BYTE, BYTES32_LEN, MODULUS, PROOF_ONE_LEVEL_LEN, ZERO_PAD_VALUE } from './const.js';
+import { BITS_IN_BYTE, BYTES32_LEN, MODULUS, MAX_TRIE_NODE_LEN, ZERO_PAD_VALUE } from './const.js';
 
 export function encodeByte(byte: number): Hex {
   assert(byte < 256, 'Byte overflow');
@@ -54,10 +54,10 @@ export function encodeHex(hexString: string): Hex[] {
 export function encodeProofNode(node: Hex): Hex[] {
   const encodedNode = encodeHex(node);
   assert(
-    encodedNode.length <= PROOF_ONE_LEVEL_LEN,
-    `Proof node length: ${encodedNode.length} is too large. Max proof node length: ${PROOF_ONE_LEVEL_LEN}`
+    encodedNode.length <= MAX_TRIE_NODE_LEN,
+    `Proof node length: ${encodedNode.length} is too large. Max proof node length: ${MAX_TRIE_NODE_LEN}`
   );
-  return padArray(encodeHex(node), PROOF_ONE_LEVEL_LEN, ZERO_PAD_VALUE);
+  return padArray(encodeHex(node), MAX_TRIE_NODE_LEN, ZERO_PAD_VALUE);
 }
 
 export function encodeProof(proof: Hex[], length: number): Hex[] {
