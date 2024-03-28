@@ -36,7 +36,7 @@ fn test_split_receipt_into_tx_type_and_receipt_rlp_wrong_legacy_rlp() {
     let not_zero_byte = 0x01;
     wrong_legacy_rlp[MAX_ENCODED_RECEIPT_LENGTH - 1] = not_zero_byte;
 
-    let(tx_type, receipt_rlp) = split_receipt_into_tx_type_and_receipt_rlp(legacy_tx_type, wrong_legacy_rlp);
+    let (_, _) = split_receipt_into_tx_type_and_receipt_rlp(legacy_tx_type, wrong_legacy_rlp);
 }
 
 #[test(should_fail_with="Invalid tx type")]

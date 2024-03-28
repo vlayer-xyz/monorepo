@@ -3,17 +3,17 @@ import { BYTE_HEX_LEN } from './const.js';
 
 const PREFIX = '0x';
 
-export function hasPrefix(hex: string): boolean {
+export function hasHexPrefix(hex: string): boolean {
   return hex.startsWith(PREFIX);
 }
 
-export function removePrefix(hex: string): string {
-  assert(hasPrefix(hex), `Expected hex to have a prefix: ${hex}`);
+export function removeHexPrefix(hex: string): string {
+  assert(hasHexPrefix(hex), `Expected hex to have a prefix: ${hex}`);
   return hex.slice(PREFIX.length);
 }
 
-export function addPrefix(hex: string): string {
-  assert(!hasPrefix(hex), `Expected hex to not have a prefix: ${hex}`);
+export function addHexPrefix(hex: string): string {
+  assert(!hasHexPrefix(hex), `Expected hex to not have a prefix: ${hex}`);
   return `${PREFIX}${hex}`;
 }
 
@@ -22,8 +22,8 @@ function padUnPrefixedToEven(hex: string): string {
 }
 
 export function padToEven(hex: string): string {
-  if (hasPrefix(hex)) {
-    return addPrefix(padUnPrefixedToEven(removePrefix(hex)));
+  if (hasHexPrefix(hex)) {
+    return addHexPrefix(padUnPrefixedToEven(removeHexPrefix(hex)));
   } else {
     return padUnPrefixedToEven(hex);
   }
