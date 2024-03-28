@@ -19,7 +19,7 @@ pub(crate) fn split_receipt_into_tx_type_and_receipt_rlp(
 ) -> (u8, [u8; MAX_RECEIPT_RLP_LENGTH]) {
     if (tx_type == 0) {
         assert(
-            encoded_receipt[MAX_ENCODED_RECEIPT_LENGTH - 1] == 0, "Not 0x00 at the end of legacy receipt RLP"
+            encoded_receipt[MAX_ENCODED_RECEIPT_LENGTH - 1] == 0, "RLP receipt exceeds MAX_RECEIPT_RLP_LENGTH"
         );
         let mut receipt_rlp = [0; MAX_RECEIPT_RLP_LENGTH];
         memcpy(&mut receipt_rlp, encoded_receipt, 0);
