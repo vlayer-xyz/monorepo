@@ -5,7 +5,7 @@ use dep::std::unsafe::zeroed;
 use dep::proof::const::MAX_TRIE_NODE_LENGTH;
 
 global BLOOM_FILTER_LEN = 256;
-global MAX_RECEIPT_KEY_LEN = 4;
+global MAX_RECEIPT_KEY_LEN = 3;
 global MAX_RECEIPT_TREE_DEPTH = 7;
 global MAX_RECEIPT_PROOF_LEN = 3724; // = MAX_RECEIPT_TREE_DEPTH * MAX_TRIE_NODE_LENGTH
 
