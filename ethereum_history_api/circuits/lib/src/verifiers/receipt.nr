@@ -31,7 +31,7 @@ pub(crate) fn split_receipt_into_tx_type_and_receipt_rlp(
     }
 }
 
-pub(crate) fn assert_receipt_rlp_equal<LOG_NUM, MAX_LOG_DATA_LEN>(
+pub(crate) fn assert_receipt_rlp_equals<LOG_NUM, MAX_LOG_DATA_LEN>(
     block_number: u64,
     receipt_rlp: [u8; MAX_RECEIPT_RLP_LENGTH],
     receipt: TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>
@@ -58,7 +58,7 @@ pub(crate) fn assert_receipt_equals<LOG_NUM, MAX_LOG_DATA_LEN>(
     let (actual_tx_type, receipt_rlp) = split_receipt_into_tx_type_and_receipt_rlp(tx_type, encoded_receipt);
 
     assert(actual_tx_type == tx_type, "Invalid tx type");
-    assert_receipt_rlp_equal(block_number, receipt_rlp, receipt);
+    assert_receipt_rlp_equals(block_number, receipt_rlp, receipt);
 }
 
 fn assert_receipt_proof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>(proof: TxReceiptProof, root: [u8; HASH_LENGTH]) {
