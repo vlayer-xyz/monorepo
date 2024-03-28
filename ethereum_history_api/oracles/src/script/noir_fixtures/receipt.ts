@@ -3,9 +3,8 @@ import { encodeReceipt, receiptToRlpFields, statusToField, txTypeToField } from 
 import { encodeOptional, indentBlock, joinArray } from '../../noir/noir_js/encode.js';
 import { padArray } from '../../util/array.js';
 import { ZERO_PAD_VALUE } from '../../noir/oracles/common/const.js';
-import { MAX_ENCODED_RECEIPT_LENGTH } from '../../noir/oracles/receiptOracle/encode.js';
+import { MAX_RECEIPT_ENCODED_LEN, MAX_RECEIPT_RLP_LEN } from '../../noir/oracles/receiptOracle/encode.js';
 import { TransactionReceipt } from '../../types.js';
-import { MAX_RECEIPT_RLP_LEN } from '../../noir/oracles/accountOracle/encode.js';
 import { toRlp } from 'viem';
 
 export function createReceiptFixture(receipt: TransactionReceipt): string {
@@ -13,7 +12,7 @@ export function createReceiptFixture(receipt: TransactionReceipt): string {
     padArray(encodeHex(toRlp(receiptToRlpFields(receipt))), MAX_RECEIPT_RLP_LEN, ZERO_PAD_VALUE)
   );
   const encodedReceipt = joinArray(
-    padArray(encodeHex(encodeReceipt(receipt)), MAX_ENCODED_RECEIPT_LENGTH, ZERO_PAD_VALUE)
+    padArray(encodeHex(encodeReceipt(receipt)), MAX_RECEIPT_ENCODED_LEN, ZERO_PAD_VALUE)
   );
 
   const status = encodeOptional(receipt.status === null ? null : statusToField(receipt.status).toString());
