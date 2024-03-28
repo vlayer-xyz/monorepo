@@ -33,11 +33,11 @@ pub(crate) fn split_receipt_into_tx_type_and_receipt_rlp(
 
 pub(crate) fn assert_receipt_rlp_equal<LOG_NUM, MAX_LOG_DATA_LEN>(
     block_number: u64,
-    receipt_rlp_right_padded: [u8; MAX_RECEIPT_RLP_LENGTH],
+    receipt_rlp: [u8; MAX_RECEIPT_RLP_LENGTH],
     receipt: TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>
 ) {
-    let receipt_rlp: RLP_List<RECEIPT_FIELDS_COUNT> = decode1(receipt_rlp_right_padded);
-    assert(receipt_rlp.num_fields == RECEIPT_FIELDS_COUNT, "Invalid number of fields in receipt RLP");
+    let decoded_receipt: RLP_List<RECEIPT_FIELDS_COUNT> = decode1(receipt_rlp);
+    assert(decoded_receipt.num_fields == RECEIPT_FIELDS_COUNT, "Invalid number of fields in receipt RLP");
 
     if (is_pre_byzantium(block_number)) {
         // State root
@@ -55,10 +55,10 @@ pub(crate) fn assert_receipt_equals<LOG_NUM, MAX_LOG_DATA_LEN>(
     encoded_receipt: [u8; MAX_ENCODED_RECEIPT_LENGTH],
     receipt: TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>
 ) {
-    let (actual_tx_type, receipt_rlp_right_padded) = split_receipt_into_tx_type_and_receipt_rlp(tx_type, encoded_receipt);
+    let (actual_tx_type, receipt_rlp) = split_receipt_into_tx_type_and_receipt_rlp(tx_type, encoded_receipt);
 
     assert(actual_tx_type == tx_type, "Invalid tx type");
-    assert_receipt_rlp_equal(block_number, receipt_rlp_right_padded, receipt);
+    assert_receipt_rlp_equal(block_number, receipt_rlp, receipt);
 }
 
 fn assert_receipt_proof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>(proof: TxReceiptProof, root: [u8; HASH_LENGTH]) {
