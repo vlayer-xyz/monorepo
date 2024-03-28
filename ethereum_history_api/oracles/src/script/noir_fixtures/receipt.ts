@@ -3,11 +3,11 @@ import { encodeReceipt, statusToField } from '../../ethereum/receipt.js';
 import { encodeOptional, indentBlock, joinArray } from '../../noir/noir_js/encode.js';
 import { padArray } from '../../util/array.js';
 import { ZERO_PAD_VALUE } from '../../noir/oracles/common/const.js';
-import { MAX_RECEIPT_RLP_LENGTH } from '../../noir/oracles/receiptOracle/encode.js';
+import { MAX_RECEIPT_RLP_LEN } from '../../noir/oracles/receiptOracle/encode.js';
 import { TransactionReceipt } from '../../types.js';
 
 export function createReceiptFixture(receipt: TransactionReceipt): string {
-  const rlpReceipt = joinArray(padArray(encodeHex(encodeReceipt(receipt)), MAX_RECEIPT_RLP_LENGTH, ZERO_PAD_VALUE));
+  const rlpReceipt = joinArray(padArray(encodeHex(encodeReceipt(receipt)), MAX_RECEIPT_RLP_LEN, ZERO_PAD_VALUE));
 
   const status = encodeOptional(receipt.status === null ? null : statusToField(receipt.status).toString());
   const stateRoot = encodeOptional(receipt.root ? joinArray(encodeHex(receipt.root)) : receipt.root);

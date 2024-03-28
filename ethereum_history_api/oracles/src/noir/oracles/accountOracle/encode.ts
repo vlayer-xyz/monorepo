@@ -5,21 +5,14 @@ import { padArray } from '../../../util/array.js';
 import { MAX_TRIE_NODE_LEN, ZERO_PAD_VALUE } from '../common/const.js';
 import { assert } from '../../../util/assert.js';
 
-const MAX_STATE_PROOF_LEVELS = 11;
 const MAX_ACCOUNT_STATE_LEN = 134;
+const MAX_STATE_PROOF_LEVELS = 11;
 export const STATE_PROOF_LEN = MAX_TRIE_NODE_LEN * MAX_STATE_PROOF_LEVELS;
+
 const MAX_STORAGE_PROOF_LEVELS = 7;
 export const STORAGE_PROOF_LEN = MAX_TRIE_NODE_LEN * MAX_STORAGE_PROOF_LEVELS;
-export const MAX_RECEIPT_KEY_NIBBLE_LEN = 6;
-export const MAX_RECEIPT_TREE_DEPTH = MAX_RECEIPT_KEY_NIBBLE_LEN + 1;
-export const MAX_RECEIPT_PROOF_LEN = MAX_TRIE_NODE_LEN * MAX_RECEIPT_TREE_DEPTH;
-export const MAX_RECEIPT_RLP_LEN = MAX_TRIE_NODE_LEN;
-const RLP_VALUE_INDEX = 1;
 
-export const MAX_TX_KEY_NIBBLE_LEN = 6;
-export const MAX_TX_TREE_DEPTH = MAX_TX_KEY_NIBBLE_LEN + 1;
-export const MAX_TX_RLP_LEN = MAX_TRIE_NODE_LEN;
-export const MAX_TX_PROOF_LEN = MAX_TRIE_NODE_LEN * MAX_TX_TREE_DEPTH;
+const RLP_VALUE_INDEX = 1;
 
 export function encodeAccount(ethProof: GetProofReturnType): ForeignCallOutput[] {
   const nonce = encodeField(ethProof.nonce);
