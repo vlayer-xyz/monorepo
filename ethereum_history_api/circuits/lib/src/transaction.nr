@@ -1,4 +1,4 @@
-use crate::misc::types::{Bytes32, Address};
+use crate::misc::{types::{Bytes32, Address}, option::make_option};
 use dep::std::unsafe::zeroed;
 
 global MAX_TREE_DEPTH = 7;
@@ -9,6 +9,21 @@ struct Transaction<MAX_DATA_LEN> {
     gas_price: Option<Field>,
     gas_limit: Field,
     to: Option<Address>,
+    value: Field,
+    data: [u8; MAX_DATA_LEN],
+    data_len: Field,
+    v: Field,  // ECDSA recovery id
+    r: Bytes32,  // ECDSA signature part
+    s: Bytes32,  // ECDSA signature part
+}
+
+struct ForeignCallTransaction<MAX_DATA_LEN> {
+    nonce: Field,
+    gas_price: Field,
+    gas_price_is_some: bool,
+    gas_limit: Field,
+    to: Address,
+    to_is_some: bool,
     value: Field,
     data: [u8; MAX_DATA_LEN],
     data_len: Field,
@@ -54,7 +69,7 @@ unconstrained fn get_transaction_oracle<MAX_DATA_LEN, MAX_PROOF_LEN, MAX_RLP_LEN
     _tx_idx: Field,
     _max_transaction_proof_len: PhantomTransactionProofLen<MAX_PROOF_LEN>,
     _max_transaction_rlp_len: PhantomTransactionRlpLen<MAX_RLP_LEN>
-) -> (Transaction<MAX_DATA_LEN>, TransactionProof<MAX_PROOF_LEN, MAX_RLP_LEN>) {}
+) -> (ForeignCallTransaction<MAX_DATA_LEN>, TransactionProof<MAX_PROOF_LEN, MAX_RLP_LEN>) {}
 
 unconstrained fn get_transaction_unconstrained<MAX_DATA_LEN, MAX_PROOF_LEN, MAX_RLP_LEN>(
     block_number: Field,
@@ -62,10 +77,24 @@ unconstrained fn get_transaction_unconstrained<MAX_DATA_LEN, MAX_PROOF_LEN, MAX_
     max_transaction_proof_len: PhantomTransactionProofLen<MAX_PROOF_LEN>,
     max_transaction_rlp_len: PhantomTransactionRlpLen<MAX_RLP_LEN>
 ) -> (Transaction<MAX_DATA_LEN>, TransactionProof<MAX_PROOF_LEN, MAX_RLP_LEN>) {
-    get_transaction_oracle(
+    let (transaction, proof) = get_transaction_oracle(
         block_number,
         tx_idx,
         max_transaction_proof_len,
         max_transaction_rlp_len
-    )
+    );
+    
+    let transaction = Transaction {
+        nonce: transaction.nonce,
+        gas_price: make_option(transaction.gas_price, transaction.gas_price_is_some),
+        gas_limit: transaction.gas_limit,
+        to: make_option(transaction.to, transaction.to_is_some),
+        value: transaction.value,
+        data: transaction.data,
+        data_len: transaction.data_len,
+        v: transaction.v,
+        r: transaction.r,
+        s: transaction.s
+    };
+    (transaction, proof)
 }
