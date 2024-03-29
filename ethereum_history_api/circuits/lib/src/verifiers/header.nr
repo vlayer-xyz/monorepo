@@ -38,11 +38,11 @@ pub fn verify_header(
     block_header_partial: BlockHeaderPartial,
     block_header_rlp: BlockHeaderRlp
 ) {
-    let decoded_header: RLP_List<MAX_HEADER_FIELDS_COUNT> = decode1(block_header_rlp.data);
+    let header_rlp_list: RLP_List<MAX_HEADER_FIELDS_COUNT> = decode1(block_header_rlp.data);
     let expected_header_fields_count = get_header_fields_count(chain_id, block_header_partial.number as u64);
 
     assert(
-        expected_header_fields_count == decoded_header.num_fields, "number of header RLP fields does not match"
+        expected_header_fields_count == header_rlp_list.num_fields, "number of header RLP fields does not match"
     );
 
     // We use u40 for block number because even if block time is 1s - it would take 34865 years to reach u40
@@ -50,13 +50,13 @@ pub fn verify_header(
     let (block_number, block_number_length) = byte_value(block_number);
 
     assert(
-        decoded_header.length[BLOCK_NUM_INDEX] == block_number_length, "block number length does not match"
+        header_rlp_list.length[BLOCK_NUM_INDEX] == block_number_length, "block number length does not match"
     );
     assert(
         sub_array_equals_up_to_length(
             block_number,
             block_header_rlp.data,
-            decoded_header.offset[BLOCK_NUM_INDEX],
+            header_rlp_list.offset[BLOCK_NUM_INDEX],
             block_number_length as u64
         ), "block number does not match"
     );
@@ -71,21 +71,21 @@ pub fn verify_header(
         sub_array_equals(
             block_header_partial.state_root,
             block_header_rlp.data,
-            decoded_header.offset[STATE_ROOT_INDEX]
+            header_rlp_list.offset[STATE_ROOT_INDEX]
         ), "state_root does not match"
     );
     assert(
         sub_array_equals(
             block_header_partial.transactions_root,
             block_header_rlp.data,
-            decoded_header.offset[TRANSACTIONS_ROOT_INDEX]
+            header_rlp_list.offset[TRANSACTIONS_ROOT_INDEX]
         ), "transactions_root does not match"
     );
     assert(
         sub_array_equals(
             block_header_partial.receipts_root,
             block_header_rlp.data,
-            decoded_header.offset[RECEIPTS_ROOT_INDEX]
+            header_rlp_list.offset[RECEIPTS_ROOT_INDEX]
         ), "receipts_root does not match"
     );
 }

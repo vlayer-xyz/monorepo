@@ -8,7 +8,7 @@ import { TransactionReceipt } from '../../types.js';
 import { toRlp } from 'viem';
 
 export function createReceiptFixture(receipt: TransactionReceipt): string {
-  const receipt_rlp = joinArray(
+  const receiptRlp = joinArray(
     padArray(encodeHex(toRlp(receiptToRlpFields(receipt))), MAX_RECEIPT_RLP_LEN, ZERO_PAD_VALUE)
   );
   const encodedReceipt = joinArray(
@@ -22,7 +22,7 @@ export function createReceiptFixture(receipt: TransactionReceipt): string {
   return `use crate::receipt::TxReceiptPartial;
 
 global tx_type = ${txTypeToField(receipt.type)};
-global receipt_rlp = ${receipt_rlp};
+global receipt_rlp = ${receiptRlp};
 global encoded_receipt = ${encodedReceipt};
 
 global receipt = TxReceiptPartial {
