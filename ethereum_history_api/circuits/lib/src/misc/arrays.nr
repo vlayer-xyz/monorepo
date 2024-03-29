@@ -6,6 +6,14 @@ pub fn alter_array<N>(array: [u8; N]) -> [u8; N] {
     copy
 }
 
+pub fn resize<NEW_LEN, OLD_LEN>(src: [u8; OLD_LEN]) -> [u8; NEW_LEN] {
+    let mut dest = [0; NEW_LEN];
+    for i in 0..OLD_LEN {
+        dest[i] = src[i];
+    }
+    dest
+}
+
 pub fn sub_array_equals_up_to_length<T, N, M>(subarray: [T; N], array: [T; M], offset: u64, length: u64) -> bool where T: Eq {
     assert(length <= N, "subarray index out of bound");
     assert(offset + N <= M, "array index out of bound");
