@@ -4,9 +4,10 @@ use dep::std::unsafe::zeroed;
 global MAX_TREE_DEPTH = 7;
 global MAX_KEY_LEN = 3;
 
-struct Transaction<MAX_DATA_LEN> {
+type TxType = u8;
+
+struct TxPartial<MAX_DATA_LEN> {
     nonce: Field,
-    gas_price: Option<Field>,
     gas_limit: Field,
     to: Option<Address>,
     value: Field,
@@ -19,8 +20,6 @@ struct Transaction<MAX_DATA_LEN> {
 
 struct ForeignCallTransaction<MAX_DATA_LEN> {
     nonce: Field,
-    gas_price: Field,
-    gas_price_is_some: bool,
     gas_limit: Field,
     to: Address,
     to_is_some: bool,
@@ -43,7 +42,7 @@ struct TransactionProof<MAX_PROOF_LEN, MAX_RLP_LEN> {
 }
 
 struct TransactionWithinBlock<MAX_DATA_LEN> {
-    transaction: Transaction<MAX_DATA_LEN>,
+    transaction: TxPartial<MAX_DATA_LEN>,
     block_hash: Bytes32
 }
 
@@ -69,24 +68,23 @@ unconstrained fn get_transaction_oracle<MAX_DATA_LEN, MAX_PROOF_LEN, MAX_RLP_LEN
     _tx_idx: Field,
     _max_transaction_proof_len: PhantomTransactionProofLen<MAX_PROOF_LEN>,
     _max_transaction_rlp_len: PhantomTransactionRlpLen<MAX_RLP_LEN>
-) -> (ForeignCallTransaction<MAX_DATA_LEN>, TransactionProof<MAX_PROOF_LEN, MAX_RLP_LEN>) {}
+) -> (TxType, ForeignCallTransaction<MAX_DATA_LEN>, TransactionProof<MAX_PROOF_LEN, MAX_RLP_LEN>) {}
 
 unconstrained fn get_transaction_unconstrained<MAX_DATA_LEN, MAX_PROOF_LEN, MAX_RLP_LEN>(
     block_number: Field,
     tx_idx: Field,
     max_transaction_proof_len: PhantomTransactionProofLen<MAX_PROOF_LEN>,
     max_transaction_rlp_len: PhantomTransactionRlpLen<MAX_RLP_LEN>
-) -> (Transaction<MAX_DATA_LEN>, TransactionProof<MAX_PROOF_LEN, MAX_RLP_LEN>) {
-    let (transaction, proof) = get_transaction_oracle(
+) -> (TxType, TxPartial<MAX_DATA_LEN>, TransactionProof<MAX_PROOF_LEN, MAX_RLP_LEN>) {
+    let (tx_type, transaction, proof) = get_transaction_oracle(
         block_number,
         tx_idx,
         max_transaction_proof_len,
         max_transaction_rlp_len
     );
-    
-    let transaction = Transaction {
+
+    let transaction = TxPartial {
         nonce: transaction.nonce,
-        gas_price: make_option(transaction.gas_price, transaction.gas_price_is_some),
         gas_limit: transaction.gas_limit,
         to: make_option(transaction.to, transaction.to_is_some),
         value: transaction.value,
@@ -96,5 +94,5 @@ unconstrained fn get_transaction_unconstrained<MAX_DATA_LEN, MAX_PROOF_LEN, MAX_
         r: transaction.r,
         s: transaction.s
     };
-    (transaction, proof)
+    (tx_type, transaction, proof)
 }
