@@ -1,9 +1,12 @@
 use dep::proof::utils::memcpy;
 use crate::fixtures::mainnet::{
     cancun::{
-        small_block::{receipt::{encoded_receipt, receipt, tx_type}, header::{number as block_number, receipts_root}, receipt_proof::proof}, 
-        access_list::header::receipts_root as access_list_receipts_root
-    },
+    small_block::{
+    receipt::{encoded_receipt, receipt, tx_type}, header::{number as block_number, receipts_root},
+    receipt_proof::proof
+},
+    access_list::header::receipts_root as access_list_receipts_root
+},
     homestead::fork::{
     receipt::{encoded_receipt as pre_byzantium_encoded_receipt, tx_type as legacy_tx_type},
     header::number as pre_byzantium_block_number
@@ -11,8 +14,9 @@ use crate::fixtures::mainnet::{
 };
 use crate::misc::arrays::{alter_array, sub_array_equals_up_to_length, sub_array_equals};
 use crate::verifiers::receipt::{
-    BYZANTIUM_BLOCK_NUM, assert_receipt_equals, assert_receipt_proof, split_receipt_into_tx_type_and_receipt_rlp,
-    assert_receipt_rlp_equals, MAX_RECEIPT_RLP_LENGTH, MAX_ENCODED_RECEIPT_LENGTH
+    BYZANTIUM_BLOCK_NUM, assert_receipt_equals, assert_receipt_proof,
+    split_receipt_into_tx_type_and_receipt_rlp, assert_receipt_rlp_equals, MAX_RECEIPT_RLP_LENGTH,
+    MAX_ENCODED_RECEIPT_LENGTH
 };
 
 #[test]

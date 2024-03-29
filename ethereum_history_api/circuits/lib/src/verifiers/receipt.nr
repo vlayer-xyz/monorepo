@@ -1,6 +1,6 @@
 use dep::proof::{
-    const::HASH_LENGTH, trie_proof::TrieProof,
-    rlp::{RLP_List, decode1, decode0, STRING, LIST}, utils::{byte_value, memcpy}
+    const::HASH_LENGTH, trie_proof::TrieProof, rlp::{RLP_List, decode1, decode0, STRING, LIST},
+    utils::{byte_value, memcpy}
 };
 use crate::receipt::{TxReceiptPartial, MAX_RECEIPT_TREE_DEPTH, TxType, BLOOM_FILTER_LEN};
 use dep::proof::receipt_proof::ReceiptProof;
