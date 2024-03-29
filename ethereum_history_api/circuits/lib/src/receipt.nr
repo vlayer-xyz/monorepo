@@ -47,7 +47,9 @@ pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT
     _max_transaction_rlp_len: PhantomReceiptRlpLen<MAX_RECEIPT_ENCODED_LEN>
 ) -> TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_LEN> {
     let (tx_type, receipt, proof): (TxType, TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>, ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_ENCODED_LEN>) = get_receipt_unconstrained(block_number, tx_idx);
-    zeroed()
+    let header = get_header(block_number);
+    // TODO: run verification
+    TxReceiptWithinBlock { receipt, block_hash: header.hash }
 }
 
 #[oracle(get_receipt)]
