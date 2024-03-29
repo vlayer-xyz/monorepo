@@ -29,15 +29,14 @@ export const getTransactionOracle = async (
   args: NoirArguments
 ): Promise<ForeignCallOutput[]> => {
   const { blockNumber, txId } = decodeGetTransactionArguments(args);
-  const transaction = await client.getTransaction({
-    blockNumber,
-    index: txId
-  });
-  if (!transaction) {
+  const block = await client.getBlock({ blockNumber, includeTransactions: true });
+
+  if (txId >= block.transactions.length) {
     throw new Error(`Transaction not found for txId: ${txId}`);
   }
+  const transaction = block.transactions[txId];
   const txType = txTypeToHex(transaction.type);
-  const txProof = await getTxProof(client, blockNumber, txId);
+  const txProof = await getTxProof(block.transactions, block.transactionsRoot, txId);
 
   const encodedTransaction = encodeTx(transaction);
   const encodedTxProof = encodeTxProof(txProof);
