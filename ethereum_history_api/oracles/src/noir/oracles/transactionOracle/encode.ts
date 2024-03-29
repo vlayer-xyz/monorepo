@@ -15,14 +15,10 @@ export const MAX_TX_PROOF_LEN = MAX_TRIE_NODE_LEN * MAX_TX_TREE_DEPTH;
 export enum TX_OFFSETS {
   NONCE,
   GAS_LIMIT,
-  TO,
   TO_IS_SOME,
   VALUE,
   DATA,
-  DATA_LEN,
-  V,
-  R,
-  S
+  DATA_LEN
 }
 
 export function encodeTx(transaction: Transaction): ForeignCallOutput[] {
