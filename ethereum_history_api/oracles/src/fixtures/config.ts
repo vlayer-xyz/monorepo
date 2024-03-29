@@ -4,6 +4,7 @@ export const JS_FIXTURES_DIRECTORY = 'fixtures';
 export const CIRCLE_USDC_BALANCE_STORAGE_KEY = '0x57d18af793d7300c4ba46d192ec7aa095070dde6c52c687c6d0d92fb8532b305';
 export const UNISWAP_V3_USDC_BALANCE_STORAGE_KEY = '0x1f21a62c4538bacf2aabeca410f0fe63151869f172e03c0e00357ba26a341eff';
 export const CHAIN_LINK_TRANSFER_TX_HASH = '0x98e19df80eb8feae436896cc7cc6d4a97818e6010b56a249352b9ac2caf0d573';
+export const TRANSFER_TX_HASH = '0xfade98d8c3b7438655139080c33ccd0b1fc5d08b93dab0c3792d6c1001d56ddb';
 
 interface Fixture {
   blockNumber: bigint;
@@ -63,6 +64,10 @@ export const FIXTURES: Fixtures = {
       },
       access_list: {
         blockNumber: 19_439_366n
+      },
+      transfer: {
+        blockNumber: 19_539_214n,
+        transactionHash: TRANSFER_TX_HASH
       }
     }
   }
