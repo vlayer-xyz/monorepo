@@ -1,10 +1,5 @@
-use crate::fixtures::mainnet::{
-    cancun::small_block::{receipt::{encoded_receipt, receipt, tx_type}}
-};
-use crate::verifiers::receipt::{
-    BYZANTIUM_BLOCK_NUM, assert_receipt_equals,
-    assert_receipt_rlp_equals, MAX_RECEIPT_RLP_LENGTH
-};
+use crate::fixtures::mainnet::{cancun::small_block::{receipt::{encoded_receipt, receipt, tx_type}}};
+use crate::verifiers::receipt::{BYZANTIUM_BLOCK_NUM, assert_receipt_equals, assert_receipt_rlp_equals, MAX_RECEIPT_RLP_LENGTH};
 
 #[test(should_fail_with="Invalid tx type")]
 fn test_assert_receipt_equals_wrong_tx_type() {

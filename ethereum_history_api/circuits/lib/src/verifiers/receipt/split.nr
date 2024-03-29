@@ -1,4 +1,4 @@
-use dep::proof::{const::{MAX_RECEIPT_RLP_LENGTH as MAX_ENCODED_RECEIPT_LENGTH}, utils::memcpy};
+use dep::proof::{const::MAX_RECEIPT_RLP_LENGTH as MAX_ENCODED_RECEIPT_LENGTH, utils::memcpy};
 use crate::receipt::TxType;
 
 global MAX_RECEIPT_RLP_LENGTH: u64 = MAX_ENCODED_RECEIPT_LENGTH - 1;
