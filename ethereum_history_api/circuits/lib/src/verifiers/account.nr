@@ -55,7 +55,7 @@ pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_ST
         ), "Storage root mismatch"
     );
 
-    assert(decoded_account.length[CODE_HASH_INDEX] == HASH_LEN, "Code hash length mismatch");
+    assert(account_rlp_list.length[CODE_HASH_INDEX] == HASH_LEN, "Code hash length mismatch");
     assert(
         sub_array_equals_up_to_length(
             account.code_hash,
