@@ -25,7 +25,9 @@ fn test_split_receipt_into_tx_type_and_receipt_rlp_legacy_tx() {
     let (tx_type, receipt_rlp) = split_receipt_into_tx_type_and_receipt_rlp(legacy_tx_type, pre_byzantium_encoded_receipt);
     assert(tx_type == legacy_tx_type, "Incorrect tx type returned");
     assert(receipt_rlp.len() == encoded_receipt.len() - 1, "Incorrect receipt RLP length returned");
-    assert(sub_array_equals(receipt_rlp, pre_byzantium_encoded_receipt, 0), "Incorrect receipt RLP returned");
+    assert(
+        sub_array_equals(receipt_rlp, pre_byzantium_encoded_receipt, 0), "Incorrect receipt RLP returned"
+    );
 }
 
 #[test(should_fail_with="RLP receipt exceeds MAX_RECEIPT_RLP_LENGTH")]
