@@ -1,18 +1,10 @@
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
-import { assert } from '../../util/assert.js';
-import { decodeField } from './common/decode.js';
 import { NoirArguments } from './oracles.js';
 import { AlchemyClient } from '../../ethereum/client.js';
 import { txTypeToHex } from '../../ethereum/receipt.js';
 import { getTxProof } from '../../ethereum/txProof.js';
 import { encodeTx, encodeTxProof } from './transactionOracle/encode.js';
 import { decodeGetReceiptArguments } from './receiptOracle.js';
-
-enum ARGS {
-  BLOCK_NUM_INDEX,
-  TX_ID_INDEX
-}
-const GET_TX_ARGS_COUNT = Object.keys(ARGS).length;
 
 export enum OFFSETS {
   TX_TYPE,
