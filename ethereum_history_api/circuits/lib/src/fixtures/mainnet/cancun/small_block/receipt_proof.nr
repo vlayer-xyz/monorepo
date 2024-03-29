@@ -1,6 +1,6 @@
-use crate::receipt::TxReceiptProof;
+use dep::proof::trie_proof::TrieProof;
 
-global proof = TxReceiptProof {
+global proof = TrieProof {
   key: [
   0x00, 0x00, 0x08
 ],

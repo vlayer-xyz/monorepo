@@ -1,8 +1,9 @@
 use dep::proof::{const::HASH_LENGTH, trie_proof::TrieProof, rlp::decode0, utils::memcpy};
 use dep::u2b::u64_to_u8;
 
-use crate::receipt::{TxReceiptProof, TxReceiptPartial, MAX_RECEIPT_TREE_DEPTH};
+use crate::receipt::{TxReceiptPartial, MAX_RECEIPT_TREE_DEPTH};
 use crate::misc::{arrays::sub_array_equals_up_to_length, bytes::{nibbles_to_bytes, left_to_right_padding, right_pad}};
+use dep::proof::receipt_proof::ReceiptProof;
 
 global KEY_LEN = 6;
 global MAX_TX_IDX_BYTES_LEN = 2;
@@ -35,18 +36,17 @@ pub fn assert_tx_idx_equals(key_as_rlp: [u8; KEY_LEN], tx_idx: Field) {
 }
 
 pub(crate) fn assert_receipt_proof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>(
-    proof: TxReceiptProof<MAX_RECEIPT_RLP_LEN>,
+    proof: ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>,
     root: [u8; HASH_LENGTH]
 ) {
-    let trie_proof = TrieProof { key: proof.key, value: proof.value, proof: proof.proof, depth: proof.depth };
-    assert(trie_proof.verify_receipt_root(root), "TrieProof: Invalid receipt root");
+    assert(proof.verify_receipt_root(root), "TrieProof: Invalid receipt root");
 }
 
 pub fn verify_receipt<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>(
     block_number: Field,
     tx_idx: Field,
     receipt: TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>,
-    receipt_proof: TxReceiptProof<MAX_RECEIPT_RLP_LEN>,
+    receipt_proof: ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>,
     receipt_root: [u8; HASH_LENGTH]
 ) {
     assert(false, "Not implemented");
