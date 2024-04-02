@@ -20,9 +20,9 @@ export enum OFFSETS {
   CUMULATIVE_GAS_USED,
   LOGS_BLOOM,
   PROOF_KEY,
-  PROOF_VALUE,
   PROOF,
-  PROOF_DEPTH
+  PROOF_DEPTH,
+  PROOF_VALUE
 }
 
 export const getReceiptOracle = async (client: AlchemyClient, args: NoirArguments): Promise<ForeignCallOutput[]> => {

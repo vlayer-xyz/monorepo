@@ -40,5 +40,5 @@ export function encodeReceiptProof(receiptProof: Proof): ForeignCallOutput[] {
   const proof = encodeProof(receiptProof.proof, MAX_RECEIPT_PROOF_LEN);
   const depth = encodeField(receiptProof.proof.length);
 
-  return [key, value, proof, depth];
+  return [key, proof, depth, value];
 }
