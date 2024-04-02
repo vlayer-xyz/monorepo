@@ -1,5 +1,5 @@
 import { GetProofReturnType } from 'viem';
-import { encodeHexString } from '../../noir/noir_js/encode.js';
+import { encodeHexString, joinArray } from '../../noir/noir_js/encode.js';
 import { encodeValue } from '../../noir/oracles/accountOracle/encode.js';
 
 export function createAccountFixture(stateProof: GetProofReturnType): string {
@@ -9,18 +9,12 @@ export function createAccountFixture(stateProof: GetProofReturnType): string {
   const value = encodeValue(stateProof.accountProof);
   const accountFixture = `use crate::account::Account;
 
-global rlp_encoded_left_padded_account = [
-  ${value.join(',')}
-];
+global rlp_encoded_left_padded_account = ${joinArray(value)};
 
 global nonce = ${stateProof.nonce};
 global balance = ${balance};
-global storage_root = [
-    ${storageHash.join(',')}
-];
-global code_hash = [
-    ${codeHash.join(',')}
-];
+global storage_root = ${joinArray(storageHash)};
+global code_hash = ${joinArray(codeHash)};
 
 global account = Account { nonce, balance, storage_root, code_hash };
 `;
