@@ -9,7 +9,8 @@ use crate::fixtures::mainnet::{
 },
     homestead::fork::{
     receipt::{encoded_receipt as pre_byzantium_encoded_receipt, tx_type as legacy_tx_type},
-    header::number as pre_byzantium_block_number
+    header::{number as pre_byzantium_block_number, receipts_root as pre_byzantium_receipt_root},
+    receipt_proof::proof as pre_byzantium_receipt_proof
 }
 };
 use crate::misc::arrays::{alter_array, sub_array_equals_up_to_length, sub_array_equals};
@@ -76,6 +77,11 @@ fn test_assert_receipt_rlp_equals_invalid_rlp_field_count() {
 #[test]
 fn test_assert_receipt_proof() {
     assert_receipt_proof(proof, receipts_root);
+}
+
+#[test]
+fn test_assert_receipt_proof_pre_byzantium() {
+    assert_receipt_proof(pre_byzantium_receipt_proof, pre_byzantium_receipt_root);
 }
 
 #[test(should_fail_with="Internal node hash does not match the hash extracted from the preceding node")]
