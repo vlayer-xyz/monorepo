@@ -3,10 +3,9 @@ mod split_test;
 
 use dep::proof::{
     const::HASH_LENGTH, trie_proof::TrieProof, rlp::{RLP_List, decode1, decode0, STRING, LIST},
-    utils::{byte_value, memcpy},
-    receipt_proof::ReceiptProof
+    utils::{byte_value, memcpy}, receipt_proof::ReceiptProof
 };
-use crate::verifiers::receipt::split::{split_receipt_into_tx_type_and_receipt_rlp};
+use crate::verifiers::receipt::split::split_receipt_into_tx_type_and_receipt_rlp;
 use crate::receipt::{TxReceiptPartial, MAX_RECEIPT_TREE_DEPTH, TxType, BLOOM_FILTER_LEN};
 
 global RECEIPT_FIELDS_COUNT = 4;
