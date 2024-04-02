@@ -1,5 +1,5 @@
 use crate::{
-    verifiers::receipt::{split::MAX_RECEIPT_RLP_LENGTH, is_pre_byzantium},
+    verifiers::receipt::{MAX_RECEIPT_RLP_LENGTH, is_pre_byzantium},
     receipt::{BLOOM_FILTER_LEN, TxReceiptPartial}
 };
 use dep::proof::{const::HASH_LENGTH, rlp::{RLP_List, decode1, STRING}, utils::byte_value};

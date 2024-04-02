@@ -4,17 +4,19 @@ mod rlp;
 mod rlp_test;
 
 use dep::proof::{
-    const::{HASH_LENGTH, MAX_RECEIPT_RLP_LENGTH as MAX_ENCODED_RECEIPT_LENGTH}, trie_proof::TrieProof,
-    rlp::{RLP_List, decode1, decode0, STRING, LIST}, utils::{byte_value, memcpy}
+    const::HASH_LENGTH, trie_proof::TrieProof, rlp::{RLP_List, decode1, decode0, STRING, LIST},
+    utils::{byte_value, memcpy}, receipt_proof::ReceiptProof
 };
-use crate::receipt::{TxReceiptProof, TxReceiptPartial, MAX_RECEIPT_TREE_DEPTH, TxType, BLOOM_FILTER_LEN};
+use crate::receipt::{TxReceiptPartial, MAX_RECEIPT_TREE_DEPTH, TxType, BLOOM_FILTER_LEN};
 use crate::verifiers::receipt::{
     rlp::assert_receipt_rlp_equals,
-    split::{split_receipt_into_tx_type_and_receipt_rlp, MAX_RECEIPT_RLP_LENGTH}
+    split::{split_receipt_into_tx_type_and_receipt_rlp}
 };
 use dep::u2b::u32_to_u8;
 
 global BYZANTIUM_BLOCK_NUM = 4_370_000;
+global MAX_ENCODED_RECEIPT_LENGTH: u64 = 525;
+global MAX_RECEIPT_RLP_LENGTH: u64 = MAX_ENCODED_RECEIPT_LENGTH - 1;
 
 pub(crate) fn is_pre_byzantium(block_number: u64) -> bool {
     block_number < BYZANTIUM_BLOCK_NUM as u64
@@ -32,15 +34,18 @@ pub(crate) fn assert_receipt_equals<LOG_NUM, MAX_LOG_DATA_LEN>(
     assert_receipt_rlp_equals(block_number, receipt_rlp, receipt);
 }
 
-fn assert_receipt_proof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>(proof: TxReceiptProof, root: [u8; HASH_LENGTH]) {
-    assert(false, "Not implemented");
+pub(crate) fn assert_receipt_proof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>(
+    proof: ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>,
+    root: [u8; HASH_LENGTH]
+) {
+    assert(proof.verify_receipt_root(root), "TrieProof: Invalid receipt root");
 }
 
 pub fn verify_receipt<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>(
     block_number: Field,
     tx_idx: Field,
     receipt: TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>,
-    receipt_proof: TxReceiptProof,
+    receipt_proof: ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>,
     receipt_root: [u8; HASH_LENGTH]
 ) {
     assert(false, "Not implemented");

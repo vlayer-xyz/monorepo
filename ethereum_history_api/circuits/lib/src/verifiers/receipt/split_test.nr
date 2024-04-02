@@ -1,13 +1,13 @@
-use dep::proof::{utils::memcpy, const::MAX_RECEIPT_RLP_LENGTH as MAX_ENCODED_RECEIPT_LENGTH};
+use dep::proof::utils::memcpy;
 use crate::fixtures::mainnet::{
     cancun::small_block::{receipt::{encoded_receipt, receipt, tx_type}},
     homestead::fork::{receipt::{encoded_receipt as pre_byzantium_encoded_receipt, tx_type as legacy_tx_type}}
 };
 use crate::misc::arrays::sub_array_equals;
-use crate::verifiers::receipt::{split::split_receipt_into_tx_type_and_receipt_rlp};
+use crate::verifiers::receipt::{split::split_receipt_into_tx_type_and_receipt_rlp, MAX_ENCODED_RECEIPT_LENGTH};
 
 #[test]
-fn test() {
+fn test_eip1559_tx() {
     let (tx_type, receipt_rlp) = split_receipt_into_tx_type_and_receipt_rlp(tx_type, encoded_receipt);
     assert(tx_type == encoded_receipt[0], "Incorrect tx type returned");
     assert(receipt_rlp.len() == encoded_receipt.len() - 1, "Incorrect receipt RLP length returned");
