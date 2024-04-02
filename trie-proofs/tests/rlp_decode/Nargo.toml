@@ -1,0 +1,8 @@
+[package]
+name = "rlp_decode"
+type = "bin"
+authors = [""]
+compiler_version = ">=0.24.0"
+
+[dependencies]
+trie = { path = "../../lib" }
