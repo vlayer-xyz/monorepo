@@ -1,4 +1,4 @@
-use crate::misc::arrays::{sub_array_equals_up_to_length, sub_array_equals, array_equals};
+use crate::misc::arrays::{sub_array_equals_up_to_length, sub_array_equals, array_equals, resize};
 
 #[test]
 fn test_assert_sub_array_equals() {
@@ -69,4 +69,29 @@ fn test_array_not_equals() {
     let array: [Field; 3] = [1, 2, 3];
     let other_array: [Field; 3] = [1, 2, 4];
     assert(array_equals(array, other_array), "Arrays not equal");
+}
+
+#[test]
+fn test_resize() {
+    assert(array_equals(resize([1, 2]), [1, 2, 0]));
+}
+
+#[test]
+fn test_resize_empty() {
+    assert(array_equals(resize([]), []));
+}
+
+#[test]
+fn test_resize_2d() {
+    assert(array_equals(resize([[1], [2]]), [[1], [2], [0]]));
+}
+
+#[test(should_fail_with = "Arrays not equal")]
+fn test_resize_fail() {
+    assert(array_equals(resize([1, 2]), [0, 1, 2]), "Arrays not equal");
+}
+
+#[test(should_fail_with = "New length must be greater than or equal to old length")]
+fn test_resize_new_length_is_shorter() {
+    let _ = array_equals(resize([1, 2]), [1]);
 }

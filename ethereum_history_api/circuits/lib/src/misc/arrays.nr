@@ -1,4 +1,4 @@
-use dep::std::wrapping_add;
+use dep::std::{unsafe::zeroed, wrapping_add};
 
 pub fn alter_array<N>(array: [u8; N]) -> [u8; N] {
     let mut copy = array.map(|x| x);
@@ -6,7 +6,21 @@ pub fn alter_array<N>(array: [u8; N]) -> [u8; N] {
     copy
 }
 
-pub fn sub_array_equals_up_to_length<T, N, M>(subarray: [T; N], array: [T; M], offset: u64, length: u64) -> bool where T: Eq {
+pub fn resize<TItem, NEW_LEN, OLD_LEN>(src: [TItem; OLD_LEN]) -> [TItem; NEW_LEN] {
+    assert(NEW_LEN >= OLD_LEN, "New length must be greater than or equal to old length");
+    let mut dest = [zeroed(); NEW_LEN];
+    for i in 0..OLD_LEN {
+        dest[i] = src[i];
+    }
+    dest
+}
+
+pub fn sub_array_equals_up_to_length<T, N, M>(
+    subarray: [T; N],
+    array: [T; M],
+    offset: u64,
+    length: u64
+) -> bool where T: Eq {
     assert(length <= N, "subarray index out of bound");
     assert(offset + N <= M, "array index out of bound");
     let mut result = true;
