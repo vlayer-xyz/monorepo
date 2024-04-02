@@ -6,6 +6,16 @@ use crate::verifiers::receipt::rlp::assert_receipt_rlp_equals;
 use crate::misc::arrays::{alter_array, resize};
 use dep::std::wrapping_add;
 
+#[test]
+fn test_pre_byzantium() {
+    assert_receipt_rlp_equals(true, pre_byzantium_receipt_rlp, pre_byzantium_receipt);
+}
+
+#[test]
+fn test_post_byzantium() {
+    assert_receipt_rlp_equals(false, receipt_rlp, receipt);
+}
+
 // TODO: Add correct assertion message when noir-trie-proofs is updated
 #[test(should_fail)]
 fn test_assert_receipt_rlp_equals_invalid_rlp_type() {
