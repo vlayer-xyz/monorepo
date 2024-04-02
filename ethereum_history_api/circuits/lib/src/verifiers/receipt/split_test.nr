@@ -7,7 +7,7 @@ use crate::misc::arrays::sub_array_equals;
 use crate::verifiers::receipt::{split::split_receipt_into_tx_type_and_receipt_rlp};
 
 #[test]
-fn test() {
+fn test_eip1559_tx() {
     let (tx_type, receipt_rlp) = split_receipt_into_tx_type_and_receipt_rlp(tx_type, encoded_receipt);
     assert(tx_type == encoded_receipt[0], "Incorrect tx type returned");
     assert(receipt_rlp.len() == encoded_receipt.len() - 1, "Incorrect receipt RLP length returned");
