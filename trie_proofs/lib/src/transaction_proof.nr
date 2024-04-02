@@ -37,7 +37,7 @@ impl<PROOF_LEN, TX_RLP_LENGTH> TrieProof<3, PROOF_LEN, TX_RLP_LENGTH> {
 
         for i in 0..(path.len() as u64 / MAX_TRIE_NODE_LENGTH - 1) {
             let node: [u8; MAX_TRIE_NODE_LENGTH] = get_internal_node(path, depth, i);
-            verify_internal_node(node, &mut extracted_hash, &mut key_ptr, key_nibbles, path, depth, i);
+            verify_internal_node(node, &mut extracted_hash, &mut key_ptr, key_nibbles, depth, i);
         }
 
         self.verify_transaction_leaf_node(extracted_hash, key_len, key_ptr, key_nibbles);

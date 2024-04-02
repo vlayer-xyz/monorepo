@@ -42,7 +42,7 @@ impl<PROOF_LEN, MAX_VALUE_LEN> TrieProof<32, PROOF_LEN, MAX_VALUE_LEN>
         for i in 0..(path.len() as u64 / MAX_TRIE_NODE_LENGTH - 1)
         {
             let node: [u8; MAX_TRIE_NODE_LENGTH] = get_internal_node(path, depth, i);
-            verify_internal_node(node, &mut extracted_hash, &mut key_ptr, key_nibbles, path, depth, i);
+            verify_internal_node(node, &mut extracted_hash, &mut key_ptr, key_nibbles, depth, i);
         }
 
         self.verify_storage_leaf_node(extracted_hash, key.len(), key_ptr, key_nibbles);

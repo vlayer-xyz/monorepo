@@ -29,7 +29,7 @@ pub(crate) fn get_internal_node<PROOF_LEN, MAX_TRIE_NODE_LENGTH>(path: [u8; PROO
 /// * `path` - RLP-encoded proof path
 /// * `depth` - Depth of proof path
 /// * `cur_depth` - Current depth in the proof path
-pub(crate) fn verify_internal_node<MAX_TRIE_NODE_LENGTH, PROOF_LEN, KEY_NIBBLE_LEN>(node: [u8; MAX_TRIE_NODE_LENGTH], extracted_hash: &mut [u8; HASH_LENGTH], key_ptr: &mut u64, key_nibbles: [u8; KEY_NIBBLE_LEN], path: [u8; PROOF_LEN], depth: u64, cur_depth: u64)
+pub(crate) fn verify_internal_node<MAX_TRIE_NODE_LENGTH, PROOF_LEN, KEY_NIBBLE_LEN>(node: [u8; MAX_TRIE_NODE_LENGTH], extracted_hash: &mut [u8; HASH_LENGTH], key_ptr: &mut u64, key_nibbles: [u8; KEY_NIBBLE_LEN], depth: u64, cur_depth: u64)
 {
     let in_range = (cur_depth as u8) < (depth - 1) as u8; // Range indicator
 
