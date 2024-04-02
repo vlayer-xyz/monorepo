@@ -77,6 +77,11 @@ fn test_resize() {
 }
 
 #[test]
+fn test_resize_empty() {
+    assert(array_equals(resize([]), []));
+}
+
+#[test]
 fn test_resize_2d() {
     assert(array_equals(resize([[1], [2]]), [[1], [2], [0]]));
 }
