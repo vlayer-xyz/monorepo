@@ -88,5 +88,5 @@ fn test_resize_fail() {
 
 #[test(should_fail_with = "New length must be greater than or equal to old length")]
 fn test_resize_new_length_is_shorter() {
-    array_equals(resize([1, 2]), [1]);
+    let _ = array_equals(resize([1, 2]), [1]);
 }
