@@ -20,7 +20,11 @@ Additionally, we provide [smart contracts](./ethereum_history_api/contracts/src/
 
 ## Repository structure
 
-This monorepo consists of the following sub-projects:
+This monorepo consists of two packages:
+- `ethereum_history_api` - main package
+- [`trie_proofs`](trie_proofs/) - dependency package that allows for Ethereum merkle trie proofs verification
+
+`Ethereum_history_api` consists of following sub-projects:
 
 | Package                                          | Description                                                                     | Docs                                                |
 | ------------------------------------------------ | ------------------------------------------------------------------------------- | --------------------------------------------------- |

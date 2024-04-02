@@ -5,5 +5,6 @@ members = [
     "ethereum_history_api/circuits/get_storage",
     "ethereum_history_api/circuits/get_account",
     "ethereum_history_api/circuits/get_header",
+    "trie_proofs/lib",
 ]
 default-member = "ethereum_history_api/circuits/lib"
