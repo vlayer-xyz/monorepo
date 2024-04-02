@@ -1,4 +1,4 @@
-use dep::std::wrapping_add;
+use dep::std::{unsafe::zeroed, wrapping_add};
 
 pub fn alter_array<N>(array: [u8; N]) -> [u8; N] {
     let mut copy = array.map(|x| x);
@@ -6,8 +6,8 @@ pub fn alter_array<N>(array: [u8; N]) -> [u8; N] {
     copy
 }
 
-pub fn resize<NEW_LEN, OLD_LEN>(src: [u8; OLD_LEN]) -> [u8; NEW_LEN] {
-    let mut dest = [0; NEW_LEN];
+pub fn resize<TItem, NEW_LEN, OLD_LEN>(src: [TItem; OLD_LEN]) -> [TItem; NEW_LEN] {
+    let mut dest = [zeroed(); NEW_LEN];
     for i in 0..OLD_LEN {
         dest[i] = src[i];
     }

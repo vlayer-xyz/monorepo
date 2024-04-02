@@ -76,6 +76,11 @@ fn test_resize() {
     assert(array_equals(resize([1, 2]), [1, 2, 0]));
 }
 
+#[test]
+fn test_resize_2d() {
+    assert(array_equals(resize([[1], [2]]), [[1], [2], [0]]));
+}
+
 #[test(should_fail_with = "Arrays not equal")]
 fn test_resize_fail() {
     assert(array_equals(resize([1, 2]), [0, 1, 2]), "Arrays not equal");
