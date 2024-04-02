@@ -2,11 +2,12 @@ import { GetTransactionReturnType } from 'viem';
 import { encodeOptional, joinArray, indentBlock } from '../../noir/noir_js/encode.js';
 import { encodeAddress, encodeHex } from '../../noir/oracles/common/encode.js';
 import { BYTE_HEX_LEN } from '../../util/const.js';
+import { removeHexPrefix } from '../../util/hex.js';
 
 export function createTransactionFixture(tx: GetTransactionReturnType): string {
   const to = encodeOptional(tx.to ? joinArray(encodeAddress(tx.to)) : undefined);
   const data = encodeHex(tx.input);
-  const dataLen = (tx.input.length - '0x'.length) / BYTE_HEX_LEN;
+  const dataLen = removeHexPrefix(tx.input).length / BYTE_HEX_LEN;
   const v = tx.v;
   const r = encodeHex(tx.r);
   const s = encodeHex(tx.s);

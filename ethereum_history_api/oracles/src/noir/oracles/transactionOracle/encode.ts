@@ -5,6 +5,7 @@ import { encodeAddress, encodeBytes, encodeField, encodeHex, encodeProof } from 
 import { BYTE_HEX_LEN, U1_ZERO } from '../../../util/const.js';
 import { Proof } from '../../../ethereum/proof.js';
 import { padArray } from '../../../util/array.js';
+import { removeHexPrefix } from '../../../util/hex.js';
 
 const MAX_TX_KEY_LEN = 3;
 export const MAX_TX_KEY_NIBBLE_LEN = 6;
@@ -30,7 +31,7 @@ export function encodeTx(transaction: Transaction): ForeignCallOutput[] {
   const value = encodeField(transaction.value);
   const data = encodeHex(transaction.input);
 
-  const data_len_field = (transaction.input.length - '0x'.length) / BYTE_HEX_LEN;
+  const data_len_field = removeHexPrefix(transaction.input).length / BYTE_HEX_LEN;
   const data_len = encodeField(data_len_field);
 
   const v = encodeField(transaction.v);
