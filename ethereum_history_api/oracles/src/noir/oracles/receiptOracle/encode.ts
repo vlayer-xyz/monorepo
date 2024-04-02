@@ -36,7 +36,7 @@ export function encodeReceipt(receipt: TransactionReceipt): ForeignCallOutput[] 
 
 export function encodeReceiptProof(receiptProof: Proof): ForeignCallOutput[] {
   const key = encodeBytes(BigInt(receiptProof.key), MAX_RECEIPT_KEY_LEN);
-  const value = padArray(encodeHex(receiptProof.value), MAX_RECEIPT_ENCODED_LEN, ZERO_PAD_VALUE);
+  const value = padArray(encodeHex(receiptProof.value), MAX_RECEIPT_ENCODED_LEN, ZERO_PAD_VALUE, 'left');
   const proof = encodeProof(receiptProof.proof, MAX_RECEIPT_PROOF_LEN);
   const depth = encodeField(receiptProof.proof.length);
 
