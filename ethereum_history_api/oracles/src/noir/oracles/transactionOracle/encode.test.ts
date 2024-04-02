@@ -3,9 +3,7 @@ import { TX_OFFSETS, encodeTx } from './encode.js';
 import { loadTxFixture } from '../../../fixtures.js';
 import { ETH_TRANSFER_TX_HASH, CHAIN_LINK_TRANSFER_TX_HASH } from '../../../fixtures/config.js';
 
-// To fix when we have getTransaction for arbitrary length transactions: add test for transaction.to === null.
-// (right now we can't test it because transactions that create contracts (transaction.to === null)
-// have data_len > MAX_TRIE_NODE_LEN)
+// TODO: Add a test for contract creation transaction when we support transactions longer than trie nodes.
 describe('TransactionOracle encode', () => {
   describe('encodeTx', () => {
     it('transaction with empty data', async () => {

@@ -5,7 +5,7 @@ import { txTypeToHex } from '../../ethereum/receipt.js';
 import { getTxProof } from '../../ethereum/txProof.js';
 import { encodeTx, encodeTxProof } from './transactionOracle/encode.js';
 import { decodeGetReceiptArguments } from './receiptOracle.js';
-import { assert } from '../../main.js';
+import { assert } from '../../util/assert.js';
 
 export enum OFFSETS {
   TX_TYPE,
