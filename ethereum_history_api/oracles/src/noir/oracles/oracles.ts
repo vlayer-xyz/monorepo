@@ -4,6 +4,7 @@ import { getAccountOracle } from './accountOracle.js';
 import { getHeaderOracle } from './headerOracle.js';
 import { getProofOracle } from './proofOracle.js';
 import { getReceiptOracle } from './receiptOracle.js';
+import { getTransactionOracle } from './transactionOracle.js';
 
 export type NoirArgument = string[];
 export type NoirArguments = NoirArgument[];
@@ -29,7 +30,8 @@ export const defaultOraclesMap: OracleMap = {
   get_account: getAccountOracle,
   get_header: getHeaderOracle,
   get_proof: getProofOracle,
-  get_receipt: getReceiptOracle
+  get_receipt: getReceiptOracle,
+  get_transaction: getTransactionOracle
 };
 
 export const defaultOracles = createOracles(createDefaultClient())(defaultOraclesMap);
