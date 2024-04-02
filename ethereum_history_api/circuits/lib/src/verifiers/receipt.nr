@@ -27,7 +27,10 @@ pub(crate) fn assert_receipt_equals<LOG_NUM, MAX_LOG_DATA_LEN>(
     assert_receipt_rlp_equals(block_number, receipt_rlp, receipt);
 }
 
-pub(crate) fn assert_receipt_proof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>(proof: ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>, root: [u8; HASH_LENGTH]) {
+pub(crate) fn assert_receipt_proof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>(
+    proof: ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>,
+    root: [u8; HASH_LENGTH]
+) {
     assert(proof.verify_receipt_root(root), "TrieProof: Invalid receipt root");
 }
 
