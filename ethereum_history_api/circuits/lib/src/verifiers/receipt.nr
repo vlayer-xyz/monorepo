@@ -3,13 +3,9 @@ mod split_test;
 mod rlp;
 mod rlp_test;
 
-use dep::proof::{
-    const::HASH_LENGTH, trie_proof::TrieProof, rlp::{RLP_List, decode1, decode0, STRING, LIST},
-    utils::{byte_value, memcpy}, receipt_proof::ReceiptProof
-};
-use crate::receipt::{TxReceiptPartial, MAX_RECEIPT_TREE_DEPTH, TxType, BLOOM_FILTER_LEN};
+use dep::proof::{const::HASH_LENGTH, receipt_proof::ReceiptProof};
+use crate::receipt::{TxReceiptPartial, TxType};
 use crate::verifiers::receipt::{rlp::assert_receipt_rlp_equals, split::split_receipt_into_tx_type_and_receipt_rlp};
-use dep::u2b::u32_to_u8;
 
 global BYZANTIUM_BLOCK_NUM = 4_370_000;
 global MAX_ENCODED_RECEIPT_LENGTH: u64 = 525;
