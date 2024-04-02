@@ -2,8 +2,8 @@ import { parse, stringify } from './json-bigint.js';
 import fs, { writeFile } from 'fs/promises';
 import os from 'os';
 import prettier from 'prettier';
+import { randomUUID } from 'crypto';
 import path from 'path';
-import packgeJson from '../../package.json';
 import { BaseFixture } from '../fixtures/types.js';
 import { TransactionReceipt } from '../types.js';
 
@@ -28,7 +28,8 @@ export async function readObject<TFixture extends BaseFixture<TResult>, TResult 
 }
 
 export async function withTempFile<T>(callback: (path: string) => Promise<T>): Promise<T> {
-  const testTempDir = await fs.mkdtemp(`${os.tmpdir()}/${packgeJson.name}-temp-dir-`);
+  const pkgName = process.env.npm_package_name ?? randomUUID();
+  const testTempDir = await fs.mkdtemp(`${os.tmpdir()}/${pkgName}-temp-dir`);
   const tempFilePath = `${testTempDir}/temp-${Date.now()}.json`;
   try {
     return await callback(tempFilePath);

@@ -57,6 +57,7 @@ for (const chain in FIXTURES) {
       }
 
       if (transactionHash) {
+        const blockWithTransactions = await client.getBlock({ blockNumber, includeTransactions: true });
         const txIdx = getTxIdx(block, transactionHash);
         const blockReceipts = await client.getTransactionReceipts({ blockNumber });
         const receipt = blockReceipts[txIdx];
@@ -69,7 +70,11 @@ for (const chain in FIXTURES) {
         await writeFile(join(modulePath, 'transaction.nr'), createTransactionFixture(tx));
         fixtureModules.push('transaction');
 
-        const txProof = await getTxProof(client, block.number, txIdx);
+        const txProof = await getTxProof(
+          blockWithTransactions.transactions,
+          blockWithTransactions.transactionsRoot,
+          txIdx
+        );
         await writeFile(join(modulePath, 'transaction_proof.nr'), createTransactionProofFixture(txProof));
         fixtureModules.push('transaction_proof');
       }
