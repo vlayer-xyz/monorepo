@@ -6,4 +6,4 @@ compiler_version = "0.26.0"
 
 [dependencies]
 u2b = { tag = "v0.3.3", git = "https://github.com/vlayer-xyz/noir-u2b" }
-proof = { path = "../../../trie-proofs/lib" }
+proof = { path = "../../../trie_proofs/lib" }
