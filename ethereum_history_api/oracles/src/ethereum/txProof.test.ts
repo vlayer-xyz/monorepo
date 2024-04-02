@@ -11,7 +11,8 @@ describe('getTxProof', () => {
       './fixtures/mainnet/cancun/small_block/eth_getBlockByHash_19432673_includeTransactions.json'
     ];
     const mockingClient = await createMockClient(mockFilePaths);
-    const txProof = await getTxProof(mockingClient, blockNumber, 0);
+    const block = await mockingClient.getBlock({ blockNumber, includeTransactions: true });
+    const txProof = await getTxProof(block.transactions, block.transactionsRoot, 0);
 
     expect(txProof.key).toStrictEqual('0x80');
     expect(txProof.value).toStrictEqual(
@@ -39,6 +40,9 @@ describe('getTxProof', () => {
     };
 
     const mockingClient = await createMockClient(mockFilePaths, modifyTx);
-    await expect(async () => await getTxProof(mockingClient, blockNumber, 0)).rejects.toThrowError('txRoot mismatch');
+    const block = await mockingClient.getBlock({ blockNumber, includeTransactions: true });
+    await expect(async () => await getTxProof(block.transactions, block.transactionsRoot, 0)).rejects.toThrowError(
+      'txRoot mismatch'
+    );
   });
 });

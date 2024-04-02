@@ -1,21 +1,21 @@
 import { GetTransactionReturnType } from 'viem';
 import { encodeOptional, joinArray, indentBlock } from '../../noir/noir_js/encode.js';
-import { encodeAddress, encodeField, encodeHex } from '../../noir/oracles/common/encode.js';
+import { encodeAddress, encodeHex } from '../../noir/oracles/common/encode.js';
+import { BYTE_HEX_LEN } from '../../util/const.js';
+import { removeHexPrefix } from '../../util/hex.js';
 
 export function createTransactionFixture(tx: GetTransactionReturnType): string {
-  const gasPrice = encodeOptional(tx.gasPrice?.toString());
   const to = encodeOptional(tx.to ? joinArray(encodeAddress(tx.to)) : undefined);
   const data = encodeHex(tx.input);
-  const dataLen = encodeField(tx.input.length);
-  const v = encodeField(tx.v);
+  const dataLen = removeHexPrefix(tx.input).length / BYTE_HEX_LEN;
+  const v = tx.v;
   const r = encodeHex(tx.r);
   const s = encodeHex(tx.s);
 
-  return `use crate::transaction::Transaction;
+  return `use crate::transaction::TxPartial;
 
-global transaction = Transaction {
+global transaction = TxPartial {
   nonce: ${tx.nonce},
-  gas_price: ${gasPrice},
   gas_limit: ${tx.gas},
   to: ${indentBlock(to, 1)},
   value: ${tx.value},
