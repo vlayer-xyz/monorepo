@@ -8,10 +8,7 @@ use dep::proof::{
     utils::{byte_value, memcpy}, receipt_proof::ReceiptProof
 };
 use crate::receipt::{TxReceiptPartial, MAX_RECEIPT_TREE_DEPTH, TxType, BLOOM_FILTER_LEN};
-use crate::verifiers::receipt::{
-    rlp::assert_receipt_rlp_equals,
-    split::{split_receipt_into_tx_type_and_receipt_rlp}
-};
+use crate::verifiers::receipt::{rlp::assert_receipt_rlp_equals, split::split_receipt_into_tx_type_and_receipt_rlp};
 use dep::u2b::u32_to_u8;
 
 global BYZANTIUM_BLOCK_NUM = 4_370_000;
@@ -34,10 +31,7 @@ pub(crate) fn assert_receipt_equals<LOG_NUM, MAX_LOG_DATA_LEN>(
     assert_receipt_rlp_equals(block_number, receipt_rlp, receipt);
 }
 
-pub(crate) fn assert_receipt_proof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>(
-    proof: ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>,
-    root: [u8; HASH_LENGTH]
-) {
+pub(crate) fn assert_receipt_proof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>(proof: ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>, root: [u8; HASH_LENGTH]) {
     assert(proof.verify_receipt_root(root), "TrieProof: Invalid receipt root");
 }
 
