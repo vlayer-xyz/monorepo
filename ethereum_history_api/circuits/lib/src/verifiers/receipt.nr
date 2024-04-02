@@ -34,13 +34,15 @@ pub(crate) fn assert_receipt_proof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>(
     assert(proof.verify_receipt_root(root), "TrieProof: Invalid receipt root");
 }
 
-pub fn verify_receipt<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>(
+pub fn verify_receipt<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN>(
     block_number: Field,
     tx_idx: Field,
+    tx_type: TxType,
     receipt: TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>,
-    receipt_proof: ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>,
+    receipt_proof: ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_ENCODED_RECEIPT_LENGTH>,
     receipt_root: [u8; HASH_LENGTH]
 ) {
-    assert(false, "Not implemented");
+    assert_receipt_equals(block_number, tx_type, receipt_proof.value, receipt);
+    // assert_receipt_proof(receipt_proof, receipt_root);
 }
 
