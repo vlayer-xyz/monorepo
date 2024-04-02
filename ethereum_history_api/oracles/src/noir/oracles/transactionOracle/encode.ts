@@ -2,7 +2,7 @@ import { Transaction } from 'viem';
 import { MAX_TRIE_NODE_LEN, ZERO_PAD_VALUE } from '../common/const.js';
 import { ForeignCallOutput } from '@noir-lang/noir_js';
 import { encodeAddress, encodeBytes, encodeField, encodeHex, encodeProof } from '../common/encode.js';
-import { U1_ZERO } from '../../../util/const.js';
+import { BYTE_HEX_LEN, U1_ZERO } from '../../../util/const.js';
 import { Proof } from '../../../ethereum/proof.js';
 import { padArray } from '../../../util/array.js';
 
@@ -29,7 +29,10 @@ export function encodeTx(transaction: Transaction): ForeignCallOutput[] {
   const toIsSome = transaction.to === null ? '0x00' : '0x01';
   const value = encodeField(transaction.value);
   const data = encodeHex(transaction.input);
-  const data_len = encodeField(transaction.input.length);
+
+  const data_len_field = (transaction.input.length - '0x'.length) / BYTE_HEX_LEN;
+  const data_len = encodeField(data_len_field);
+
   const v = encodeField(transaction.v);
   const r = encodeHex(transaction.r);
   const s = encodeHex(transaction.s);

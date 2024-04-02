@@ -1,12 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import { TX_OFFSETS, encodeTx } from './encode.js';
 import { loadTxFixture } from '../../../fixtures.js';
-import { TRANSFER_TX_HASH, CHAIN_LINK_TRANSFER_TX_HASH } from '../../../fixtures/config.js';
+import { ETH_TRANSFER_TX_HASH, CHAIN_LINK_TRANSFER_TX_HASH } from '../../../fixtures/config.js';
 
+// To fix when we have getTransaction for arbitrary length transactions: add test for transaction.to === null.
+// (right now we can't test it because transactions that create contracts (transaction.to === null)
+// have data_len > MAX_TRIE_NODE_LEN)
 describe('TransactionOracle encode', () => {
   describe('encodeTx', () => {
     it('transaction with empty data', async () => {
-      const contractCreationTransaction = await loadTxFixture('mainnet', 'cancun', 'transfer', TRANSFER_TX_HASH);
+      const contractCreationTransaction = await loadTxFixture('mainnet', 'cancun', 'transfer', ETH_TRANSFER_TX_HASH);
       const noirTransaction = encodeTx(contractCreationTransaction);
 
       expect(noirTransaction[TX_OFFSETS.DATA]).toStrictEqual([]);
@@ -15,7 +18,7 @@ describe('TransactionOracle encode', () => {
       expect(noirTransaction[TX_OFFSETS.GAS_LIMIT]).toStrictEqual('0x5a3c');
       expect(noirTransaction[TX_OFFSETS.TO_IS_SOME]).toStrictEqual('0x01');
       expect(noirTransaction[TX_OFFSETS.VALUE]).toStrictEqual('0x038d7ea4c68000');
-      expect(noirTransaction[TX_OFFSETS.DATA_LEN]).toStrictEqual('0x02');
+      expect(noirTransaction[TX_OFFSETS.DATA_LEN]).toStrictEqual('0x');
     });
 
     it('transaction with non-empty data', async () => {
@@ -41,7 +44,7 @@ describe('TransactionOracle encode', () => {
         '0x00','0x00','0x00','0x00','0x00','0x00','0x00','0x00','0x00','0x3f',
         '0x44','0x12','0x7f','0xb4','0x3f','0xa1','0x00','0x00'
       ]);
-      expect(noirTransaction[TX_OFFSETS.DATA_LEN]).toStrictEqual('0x8a');
+      expect(noirTransaction[TX_OFFSETS.DATA_LEN]).toStrictEqual('0x44');
     });
   });
 });

@@ -5,6 +5,7 @@ import { txTypeToHex } from '../../ethereum/receipt.js';
 import { getTxProof } from '../../ethereum/txProof.js';
 import { encodeTx, encodeTxProof } from './transactionOracle/encode.js';
 import { decodeGetReceiptArguments } from './receiptOracle.js';
+import { assert } from '../../main.js';
 
 export enum OFFSETS {
   TX_TYPE,
@@ -35,9 +36,13 @@ export const getTransactionOracle = async (
     throw new Error(`Transaction not found for txId: ${txId}`);
   }
   const transaction = block.transactions[txId];
-  const txType = txTypeToHex(transaction.type);
+  assert(
+    transaction.transactionIndex == txId,
+    `Transaction's transactionIndex: ${transaction.transactionIndex} does not match given transaction index: ${txId}`
+  );
   const txProof = await getTxProof(block.transactions, block.transactionsRoot, txId);
 
+  const txType = txTypeToHex(transaction.type);
   const encodedTransaction = encodeTx(transaction);
   const encodedTxProof = encodeTxProof(txProof);
   return [txType, ...encodedTransaction, ...encodedTxProof];

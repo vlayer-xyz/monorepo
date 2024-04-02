@@ -4,9 +4,6 @@ import { RECEIPT_OFFSETS } from './encode.js';
 import { encodeReceipt } from '../receiptOracle/encode.js';
 import { loadReceiptFixture } from '../../../fixtures.js';
 
-// To fix when we have getTransaction for arbitrary length transactions: add test for transaction.to === null.
-// (right now we can't test it because transactions that create contracts (transaction.to === null)
-// have data_len > MAX_TRIE_NODE_LEN)
 describe('ReceiptOracle encode', () => {
   describe('encodeReceipt', () => {
     it('absent fields are defaulted to zero values', async () => {
