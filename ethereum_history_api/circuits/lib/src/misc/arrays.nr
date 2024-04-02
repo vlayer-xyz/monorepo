@@ -7,6 +7,7 @@ pub fn alter_array<N>(array: [u8; N]) -> [u8; N] {
 }
 
 pub fn resize<TItem, NEW_LEN, OLD_LEN>(src: [TItem; OLD_LEN]) -> [TItem; NEW_LEN] {
+    assert(NEW_LEN >= OLD_LEN, "New length must be greater than or equal to old length");
     let mut dest = [zeroed(); NEW_LEN];
     for i in 0..OLD_LEN {
         dest[i] = src[i];
