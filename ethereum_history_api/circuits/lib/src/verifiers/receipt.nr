@@ -22,9 +22,10 @@ pub(crate) fn assert_receipt_equals<LOG_NUM, MAX_LOG_DATA_LEN>(
     receipt: TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>
 ) {
     let (actual_tx_type, receipt_rlp) = split_receipt_into_tx_type_and_receipt_rlp(tx_type, encoded_receipt);
+    let is_pre_byzantium = is_pre_byzantium(block_number as u64);
 
     assert(actual_tx_type == tx_type, "Invalid tx type");
-    assert_receipt_rlp_equals(block_number, receipt_rlp, receipt);
+    assert_receipt_rlp_equals(is_pre_byzantium, receipt_rlp, receipt);
 }
 
 pub(crate) fn assert_receipt_proof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>(
