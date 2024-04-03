@@ -54,8 +54,9 @@ pub fn data_len<N>(arr: [u8; N], lenlen: u64) -> u64 {
     let loop_len = (loop_len_ind as Field * (MAX_LEN_IN_BYTES as Field - (N - 1) as Field) as Field + N as Field - 1) as u64;
 
     for i in 0..loop_len {
-        let len_len_ind = ((i < lenlen) as u64);
-        out = len_len_ind * (256 * out + (arr[i + 1] as u64)) + (1 - len_len_ind) * out;
+        if (i < lenlen) {
+            out = (arr[i + 1] as u64) + 256 * out;
+        }
     }
 
     out
@@ -110,7 +111,7 @@ pub fn decode_len<N>(arr: [u8; N]) -> RLP_Header {
 }
 
 /// RLP string decoder. Returns offset and length of RLP-encoded string as a tuple.
-pub fn decode0<N>(input: [u8; N]) -> (u64, u64) {
+pub fn decode_string<N>(input: [u8; N]) -> (u64, u64) {
     let mut RLP_Header {offset, length, data_type} = decode_len(input);
 
     let total_len = length + offset;
@@ -127,7 +128,7 @@ pub fn decode0<N>(input: [u8; N]) -> (u64, u64) {
 /// # Quirks
 /// * For string elements, the offset points to the payload, whereas the offset
 ///   of a list element points to the RLP header of that element.
-pub fn decode1<N, NUM_FIELDS>(input: [u8; N]) -> RLP_List<NUM_FIELDS> {
+pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RLP_List<NUM_FIELDS> {
     let mut num_fields: u64 = 0;
     let mut dec_off = [0; NUM_FIELDS];
     let mut dec_len = [0; NUM_FIELDS];
@@ -165,7 +166,7 @@ pub fn decode1<N, NUM_FIELDS>(input: [u8; N]) -> RLP_List<NUM_FIELDS> {
 
 /// RLP list decoder for lists of strings of length < 56 bytes.
 /// Returns an RLP list look-up table.
-pub fn decode1_small_lis<N, NUM_FIELDS>(input: [u8; N]) -> RLP_List<NUM_FIELDS> {
+pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RLP_List<NUM_FIELDS> {
     let mut num_fields: u64 = 0;
     let mut dec_off = [0; NUM_FIELDS];
     let mut dec_len = [0; NUM_FIELDS];
@@ -229,13 +230,13 @@ fn strict_if(pred: bool, x: u64, y: u64) -> u64 {
 #[test]
 fn rlp_decode_test() {
     // Decode empty list
-    let empty_list: RLP_List<1> = decode1([0xc0]);
+    let empty_list: RLP_List<1> = decode_list([0xc0]);
 
     assert(empty_list.num_fields == 0);
 
     // Decode a list of 3 elements
     let input = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0, 0];
-    let output: RLP_List<5> = decode1(input);
+    let output: RLP_List<5> = decode_list(input);
 
     assert(output.num_fields == 3);
     assert(output.offset == [2, 6, 9, 0, 0]);
@@ -247,7 +248,7 @@ fn rlp_decode_test() {
         249, 2, 17, 160, 10, 210, 58, 71, 229, 91, 254, 185, 245, 139, 35, 127, 191, 50, 125, 165, 19, 165, 59, 86, 127, 77, 226, 197, 94, 143, 9, 69, 104, 149, 113, 39, 160, 164, 115, 165, 166, 228, 180, 44, 203, 222, 52, 48, 157, 214, 190, 69, 130, 116, 84, 133, 170, 215, 193, 212, 152, 106, 149, 100, 253, 145, 220, 246, 94, 160, 69, 11, 1, 238, 164, 195, 225, 91, 51, 198, 134, 50, 21, 34, 253, 120, 157, 26, 173, 81, 148, 24, 94, 179, 165, 5, 99, 85, 90, 78, 104, 180, 160, 82, 128, 145, 254, 48, 73, 106, 165, 234, 223, 46, 5, 168, 79, 141, 218, 64, 98, 200, 87, 199, 28, 213, 222, 164, 182, 145, 219, 253, 186, 121, 39, 160, 167, 139, 46, 219, 193, 195, 174, 240, 47, 40, 188, 121, 97, 50, 227, 220, 35, 99, 122, 36, 94, 78, 156, 78, 197, 54, 232, 163, 249, 213, 16, 58, 160, 111, 180, 73, 26, 200, 238, 6, 49, 66, 159, 230, 23, 226, 13, 10, 230, 7, 51, 103, 45, 139, 187, 57, 125, 86, 1, 146, 77, 200, 196, 223, 158, 160, 55, 41, 196, 37, 89, 112, 4, 6, 183, 246, 239, 121, 175, 146, 171, 71, 19, 99, 239, 56, 75, 116, 235, 20, 239, 208, 243, 25, 211, 222, 248, 120, 160, 203, 87, 65, 73, 168, 197, 46, 86, 209, 173, 204, 46, 232, 157, 204, 145, 75, 151, 105, 166, 72, 142, 173, 255, 186, 120, 43, 121, 104, 228, 130, 134, 160, 150, 115, 130, 186, 247, 99, 108, 21, 244, 243, 60, 208, 96, 34, 93, 32, 175, 77, 181, 18, 59, 49, 192, 153, 255, 123, 231, 108, 251, 75, 134, 92, 160, 78, 107, 27, 31, 43, 92, 213, 101, 63, 87, 83, 248, 163, 19, 104, 103, 84, 248, 119, 180, 32, 209, 82, 52, 250, 148, 101, 219, 76, 194, 160, 125, 160, 83, 37, 183, 243, 189, 9, 79, 122, 28, 120, 150, 139, 190, 225, 222, 184, 206, 225, 117, 233, 244, 162, 244, 212, 38, 220, 37, 129, 215, 25, 93, 53, 160, 229, 6, 255, 207, 78, 120, 107, 238, 212, 128, 106, 189, 84, 39, 136, 172, 149, 67, 89, 238, 163, 122, 88, 90, 149, 80, 59, 121, 249, 7, 238, 1, 160, 81, 214, 156, 64, 149, 165, 65, 36, 216, 223, 167, 73, 213, 180, 230, 230, 32, 106, 193, 147, 176, 40, 93, 119, 210, 13, 1, 159, 16, 112, 114, 103, 160, 211, 15, 4, 49, 74, 86, 24, 146, 109, 246, 80, 207, 194, 97, 226, 153, 241, 94, 43, 233, 192, 2, 152, 171, 150, 86, 26, 250, 234, 179, 74, 156, 160, 175, 157, 156, 73, 109, 26, 48, 12, 182, 175, 211, 173, 181, 241, 131, 247, 105, 98, 255, 101, 7, 227, 21, 63, 78, 41, 155, 58, 231, 222, 15, 141, 160, 219, 213, 163, 116, 191, 119, 232, 215, 182, 77, 130, 102, 90, 48, 66, 197, 228, 202, 43, 169, 232, 246, 11, 23, 100, 50, 211, 205, 202, 115, 60, 49, 128
     ];
 
-    let output1: RLP_List<17> = decode1(input1);
+    let output1: RLP_List<17> = decode_list(input1);
 
     assert(output1.num_fields == 17);
     assert(

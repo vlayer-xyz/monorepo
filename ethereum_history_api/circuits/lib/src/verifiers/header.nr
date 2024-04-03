@@ -4,7 +4,7 @@ use dep::u2b::u64_to_u8;
 
 use crate::header::{BlockHeaderPartial, BlockHeaderRlp, ETHEREUM_MAINNET_ID, ETHEREUM_SEPOLIA_ID};
 use crate::misc::arrays::{sub_array_equals, sub_array_equals_up_to_length};
-use crate::rlp::decode::{decode1, RLP_List};
+use crate::rlp::decode::{decode_list, RLP_List};
 
 global MAX_HEADER_FIELDS_COUNT = 20;
 global STATE_ROOT_INDEX = 3;
@@ -39,7 +39,7 @@ pub fn verify_header(
     block_header_partial: BlockHeaderPartial,
     block_header_rlp: BlockHeaderRlp
 ) {
-    let header_rlp_list: RLP_List<MAX_HEADER_FIELDS_COUNT> = decode1(block_header_rlp.data);
+    let header_rlp_list: RLP_List<MAX_HEADER_FIELDS_COUNT> = decode_list(block_header_rlp.data);
     let expected_header_fields_count = get_header_fields_count(chain_id, block_header_partial.number as u64);
 
     assert(
