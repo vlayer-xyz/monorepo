@@ -209,6 +209,23 @@ pub fn decode1_small_lis<N, NUM_FIELDS>(input: [u8; N]) -> RLP_List<NUM_FIELDS> 
     RLP_List::new(dec_off, dec_len, dec_type, num_fields)
 }
 
+pub fn copy_subarray<T, N, M>(arr: [T; N], offset: u64) -> [T; M] {
+    let mut out = [dep::std::unsafe::zeroed(); M];
+
+    for i in 0..M {
+        let j = (((offset + i) as u64) < N) as u64 * (offset + i); // Restrict to proper range and fill with arr[0] otherwise.
+        out[i] = arr[j];
+    }
+
+    out
+}
+
+// Leads to fewer constraints than the usual if.
+fn strict_if(pred: bool, x: u64, y: u64) -> u64 {
+    let pred_f = pred as u64;
+    pred_f * x + (1 - pred_f) * y
+}
+
 #[test]
 fn rlp_decode_test() {
     // Decode empty list
@@ -284,21 +301,4 @@ fn rlp_length_check() {
     assert(z.offset == 3);
     assert(z.length == 1024);
     assert(z.data_type == STRING);
-}
-
-pub fn copy_subarray<T, N, M>(arr: [T; N], offset: u64) -> [T; M] {
-    let mut out = [dep::std::unsafe::zeroed(); M];
-
-    for i in 0..M {
-        let j = (((offset + i) as u64) < N) as u64 * (offset + i); // Restrict to proper range and fill with arr[0] otherwise.
-        out[i] = arr[j];
-    }
-
-    out
-}
-
-// Leads to fewer constraints than the usual if.
-fn strict_if(pred: bool, x: u64, y: u64) -> u64 {
-    let pred_f = pred as u64;
-    pred_f * x + (1 - pred_f) * y
 }
