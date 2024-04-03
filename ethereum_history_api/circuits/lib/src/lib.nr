@@ -9,5 +9,6 @@ mod fixtures;
 mod verifiers;
 mod receipt;
 mod transaction;
+mod rlp;
 
 global HASH_LEN = 32;

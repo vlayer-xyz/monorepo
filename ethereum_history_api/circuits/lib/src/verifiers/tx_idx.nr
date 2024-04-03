@@ -1,6 +1,7 @@
 use dep::u2b::u64_to_u8;
-use dep::proof::{rlp::decode0, utils::memcpy};
+use dep::proof::utils::memcpy;
 use crate::misc::{arrays::sub_array_equals_up_to_length, bytes::{nibbles_to_bytes, left_to_right_padding, right_pad}};
+use crate::rlp::decode::decode0;
 
 global KEY_NIBBLE_LEN = 6;
 global MAX_TX_IDX_BYTES_LEN = 2;
