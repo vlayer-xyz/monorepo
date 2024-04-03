@@ -35,4 +35,3 @@ pub fn assert_merkle_proof<MAX_KEY_LEN, MAX_VALUE_LEN, MAX_DEPTH, MAX_LEAF_LEN>(
     assert(keccak256(proof.leaf, MAX_LEAF_LEN) == root, "Invalid root");
 }
 
-
