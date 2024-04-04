@@ -1,4 +1,12 @@
-use crate::misc::arrays::{sub_array_equals_up_to_length, sub_array_equals, array_equals, resize};
+use crate::misc::arrays::{sub_array_equals_up_to_length, sub_array_equals, array_equals, resize, memcpy};
+
+#[test]
+fn test_memcpy() {
+    let mut dest = [0; 3];
+    let src = [1, 2, 3, 4, 5];
+    memcpy(&mut dest, src, 2);
+    assert(dest == [3, 4, 5]);
+}
 
 #[test]
 fn test_assert_sub_array_equals() {
