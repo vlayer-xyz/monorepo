@@ -1,5 +1,7 @@
 use crate::transaction::TxPartial;
 
+global tx_idx = 0x;
+
 global transaction = TxPartial {
   nonce: 26911,
   gas_limit: 90000,
