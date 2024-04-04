@@ -4,7 +4,7 @@ use crate::{
 };
 use dep::proof::{const::HASH_LENGTH, utils::byte_value};
 use crate::misc::arrays::sub_array_equals_up_to_length;
-use crate::rlp::decode::{RLP_List, decode_list, STRING};
+use crate::rlp::decode::{RlpList, decode_list, STRING};
 use dep::u2b::u32_to_u8;
 
 global RECEIPT_FIELDS_COUNT = 4;
@@ -18,59 +18,57 @@ pub(crate) fn assert_receipt_rlp_equals<LOG_NUM, MAX_LOG_DATA_LEN>(
     receipt_rlp: [u8; MAX_RECEIPT_RLP_LENGTH],
     receipt: TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>
 ) {
-    let receipt_rlp_list: RLP_List<RECEIPT_FIELDS_COUNT> = decode_list(receipt_rlp);
+    let receipt_rlp_list: RlpList<RECEIPT_FIELDS_COUNT> = decode_list(receipt_rlp);
     assert(receipt_rlp_list.num_fields == RECEIPT_FIELDS_COUNT, "Invalid number of fields in receipt RLP");
 
     if (is_pre_byzantium) {
+        assert(receipt_rlp_list.fragments[STATE_ROOT_INDEX].data_type == STRING, "Invalid state root type");
         assert(
-            receipt_rlp_list.rlp_fragments[STATE_ROOT_INDEX].data_type == STRING, "Invalid state root type"
-        );
-        assert(
-            receipt_rlp_list.rlp_fragments[STATE_ROOT_INDEX].length == HASH_LENGTH, "Invalid state root length"
+            receipt_rlp_list.fragments[STATE_ROOT_INDEX].length == HASH_LENGTH, "Invalid state root length"
         );
         assert(
             sub_array_equals_up_to_length(
                 receipt.state_root.expect(f"State root is missing"),
                 receipt_rlp,
-                receipt_rlp_list.rlp_fragments[STATE_ROOT_INDEX].offset,
+                receipt_rlp_list.fragments[STATE_ROOT_INDEX].offset,
                 HASH_LENGTH as u64
             ), "State root mismatch"
         );
     } else {
         let status = receipt.status.expect(f"Status is missing");
-        assert(receipt_rlp_list.rlp_fragments[STATUS_INDEX].data_type == STRING, "Invalid status type");
-        assert(receipt_rlp_list.rlp_fragments[STATUS_INDEX].length == 1, "Invalid status length");
+        assert(receipt_rlp_list.fragments[STATUS_INDEX].data_type == STRING, "Invalid status type");
+        assert(receipt_rlp_list.fragments[STATUS_INDEX].length == 1, "Invalid status length");
         assert(
-            receipt_rlp[receipt_rlp_list.rlp_fragments[STATUS_INDEX].offset] as u1 == status, "Status mismatch"
+            receipt_rlp[receipt_rlp_list.fragments[STATUS_INDEX].offset] as u1 == status, "Status mismatch"
         );
     }
 
     let cumulative_gas_used = u32_to_u8(receipt.cumulative_gas_used as u32);
     let (cumulative_gas_used, cumulative_gas_used_length) = byte_value(cumulative_gas_used);
     assert(
-        receipt_rlp_list.rlp_fragments[CUMULATIVE_GAS_USED_INDEX].data_type == STRING, "Invalid cumulative gas used type"
+        receipt_rlp_list.fragments[CUMULATIVE_GAS_USED_INDEX].data_type == STRING, "Invalid cumulative gas used type"
     );
     assert(
-        receipt_rlp_list.rlp_fragments[CUMULATIVE_GAS_USED_INDEX].length == cumulative_gas_used_length, "Invalid cumulative gas used length"
+        receipt_rlp_list.fragments[CUMULATIVE_GAS_USED_INDEX].length == cumulative_gas_used_length, "Invalid cumulative gas used length"
     );
     assert(
         sub_array_equals_up_to_length(
             cumulative_gas_used,
             receipt_rlp,
-            receipt_rlp_list.rlp_fragments[CUMULATIVE_GAS_USED_INDEX].offset,
+            receipt_rlp_list.fragments[CUMULATIVE_GAS_USED_INDEX].offset,
             cumulative_gas_used_length as u64
         ), "Cumulative gas used mismatch"
     );
 
-    assert(receipt_rlp_list.rlp_fragments[LOGS_BLOOM_INDEX].data_type == STRING, "Invalid logs bloom type");
+    assert(receipt_rlp_list.fragments[LOGS_BLOOM_INDEX].data_type == STRING, "Invalid logs bloom type");
     assert(
-        receipt_rlp_list.rlp_fragments[LOGS_BLOOM_INDEX].length == BLOOM_FILTER_LEN, "Invalid logs bloom length"
+        receipt_rlp_list.fragments[LOGS_BLOOM_INDEX].length == BLOOM_FILTER_LEN, "Invalid logs bloom length"
     );
     assert(
         sub_array_equals_up_to_length(
             receipt.logs_bloom,
             receipt_rlp,
-            receipt_rlp_list.rlp_fragments[LOGS_BLOOM_INDEX].offset,
+            receipt_rlp_list.fragments[LOGS_BLOOM_INDEX].offset,
             BLOOM_FILTER_LEN as u64
         ), "Logs bloom mismatch"
     );
