@@ -1,6 +1,6 @@
 use crate::misc::{types::{Bytes32, Address}, option::make_option};
 use crate::header::get_header;
-use crate::verifiers::receipt::verify_receipt;
+use crate::verifiers::receipt::{MAX_ENCODED_RECEIPT_LENGTH, verify_receipt};
 use dep::std::unsafe::zeroed;
 use dep::proof::receipt_proof::ReceiptProof;
 
@@ -43,23 +43,32 @@ struct TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_LEN> {
 pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_ENCODED_LEN>(
     block_number: Field,
     tx_idx: Field,
-    _max_transaction_proof_len: PhantomReceiptProofLen<MAX_RECEIPT_PROOF_LEN>,
-    _max_transaction_rlp_len: PhantomReceiptRlpLen<MAX_RECEIPT_ENCODED_LEN>
+    _max_receipt_proof_len: PhantomReceiptProofLen<MAX_RECEIPT_PROOF_LEN>,
+    _max_receipt_rlp_len: PhantomReceiptRlpLen<MAX_RECEIPT_ENCODED_LEN>
 ) -> TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_LEN> {
-    let (tx_type, receipt, proof): (TxType, TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>, ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_ENCODED_LEN>) = get_receipt_unconstrained(block_number, tx_idx);
-    zeroed()
+    let (tx_type, receipt, proof): (TxType, TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>, ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_ENCODED_RECEIPT_LENGTH>) = get_receipt_unconstrained(block_number, tx_idx);
+    let header = get_header(block_number);
+    verify_receipt(
+        block_number,
+        tx_idx,
+        tx_type,
+        receipt,
+        proof,
+        header.receipts_root
+    );
+    TxReceiptWithinBlock { receipt, block_hash: header.hash }
 }
 
 #[oracle(get_receipt)]
 unconstrained fn get_receipt_oracle<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_ENCODED_LEN>(
     _block_number: Field,
     _tx_idx: Field
-) -> (TxType, ForeignCallTxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>, ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_ENCODED_LEN>) {}
+) -> (TxType, ForeignCallTxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>, ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_ENCODED_RECEIPT_LENGTH>) {}
 
 unconstrained fn get_receipt_unconstrained<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_ENCODED_LEN>(
     block_number: Field,
     tx_idx: Field
-) -> (TxType, TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>, ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_ENCODED_LEN>) {
+) -> (TxType, TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>, ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_ENCODED_RECEIPT_LENGTH>) {
     let (tx_type, receipt, proof) = get_receipt_oracle(block_number, tx_idx);
 
     let receipt = TxReceiptPartial {
