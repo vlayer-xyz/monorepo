@@ -1,4 +1,4 @@
-use crate::misc::arrays::{sub_array_equals_up_to_length, sub_array_equals, array_equals, resize, memcpy};
+use crate::misc::arrays::memcpy;
 
 #[test]
 fn test_memcpy() {
@@ -8,98 +8,111 @@ fn test_memcpy() {
     assert(dest == [3, 4, 5]);
 }
 
-#[test]
-fn test_assert_sub_array_equals() {
-    let value: [Field; 4] = [1, 2, 0, 0];
-    let array: [Field; 6] = [42, 1, 2, 3, 4, 5];
-    assert(sub_array_equals_up_to_length(value, array, 1, 2));
+mod test_assert_sub_array_equals {
+    use crate::misc::arrays::sub_array_equals_up_to_length;
+
+    #[test]
+    fn success_small() {
+        let value: [Field; 4] = [1, 2, 0, 0];
+        let array: [Field; 6] = [42, 1, 2, 3, 4, 5];
+        assert(sub_array_equals_up_to_length(value, array, 1, 2));
+    }
+
+    #[test]
+    fn success_full_length() {
+        let value: [Field; 4] = [1, 2, 0, 0];
+        let array: [Field; 6] = [42, 1, 2, 0, 0, 5];
+        assert(sub_array_equals_up_to_length(value, array, 1, 4));
+    }
+
+    #[test(should_fail_with = "Not equals")]
+    fn full_length_not_equals() {
+        let value: [Field; 4] = [1, 2, 0, 0];
+        let array: [Field; 6] = [42, 1, 2, 3, 4, 5];
+        assert(sub_array_equals_up_to_length(value, array, 1, 4), "Not equals");
+    }
+
+    #[test(should_fail_with = "subarray index out of bound")]
+    fn subarray_out_of_bound() {
+        let value: [Field; 4] = [1, 2, 0, 0];
+        let array: [Field; 6] = [42, 1, 2, 0, 0, 5];
+        assert(sub_array_equals_up_to_length(value, array, 1, 5));
+    }
+
+    #[test(should_fail)] // Unfortunately in-loop index access happens before the assert
+    fn array_out_of_bound() {
+        let value: [Field; 4] = [1, 2, 0, 0];
+        let array: [Field; 5] = [0, 0, 1, 2, 0];
+        assert(sub_array_equals_up_to_length(value, array, 2, 3));
+    }
 }
 
-#[test(should_fail_with = "Not equals")]
-fn test_assert_sub_array_equals_full_length_not_equals() {
-    let value: [Field; 4] = [1, 2, 0, 0];
-    let array: [Field; 6] = [42, 1, 2, 3, 4, 5];
-    assert(sub_array_equals_up_to_length(value, array, 1, 4), "Not equals");
+mod test_sub_array_equals {
+    use crate::misc::arrays::sub_array_equals;
+    #[test]
+    fn success() {
+        let sub_array: [Field; 3] = [2, 3, 4];
+        let array: [Field; 5] = [1, 2, 3, 4, 5];
+        assert(sub_array_equals(sub_array, array, 1));
+        assert(!sub_array_equals(sub_array, array, 0));
+        assert(!sub_array_equals(sub_array, array, 2));
+        assert(!sub_array_equals(sub_array, array, 2));
+    }
+
+    #[test(should_fail_with = "array index out of bound")]
+    fn index_out_of_bound() -> bool {
+        let sub_array: [Field; 3] = [2, 3, 4];
+        let array: [Field; 5] = [1, 2, 3, 4, 5];
+        sub_array_equals(sub_array, array, 3)
+    }
 }
 
-#[test]
-fn test_assert_sub_array_equals_full_length() {
-    let value: [Field; 4] = [1, 2, 0, 0];
-    let array: [Field; 6] = [42, 1, 2, 0, 0, 5];
-    assert(sub_array_equals_up_to_length(value, array, 1, 4));
+mod array_equls {
+    use crate::misc::arrays::array_equals;
+    #[test]
+    fn success_empty_array() {
+        let empty_array: [Field; 0] = [];
+        assert(array_equals(empty_array, empty_array));
+    }
+
+    #[test]
+    fn success() {
+        let array: [Field; 3] = [1, 2, 3];
+        assert(array_equals(array, array));
+    }
+
+    #[test(should_fail_with = "Arrays not equal")]
+    fn array_not_equals() {
+        let array: [Field; 3] = [1, 2, 3];
+        let other_array: [Field; 3] = [1, 2, 4];
+        assert(array_equals(array, other_array), "Arrays not equal");
+    }
 }
 
-#[test(should_fail_with = "subarray index out of bound")]
-fn test_assert_sub_array_equals_subarray_out_of_bound() {
-    let value: [Field; 4] = [1, 2, 0, 0];
-    let array: [Field; 6] = [42, 1, 2, 0, 0, 5];
-    assert(sub_array_equals_up_to_length(value, array, 1, 5));
-}
+mod resize {
+    use crate::misc::arrays::{array_equals, resize};
+    #[test]
+    fn success() {
+        assert(array_equals(resize([1, 2]), [1, 2, 0]));
+    }
 
-#[test(should_fail)] // Unfortunately in-loop index access happens before the assert
-fn test_assert_sub_array_equals_array_out_of_bound() {
-    let value: [Field; 4] = [1, 2, 0, 0];
-    let array: [Field; 5] = [0, 0, 1, 2, 0];
-    assert(sub_array_equals_up_to_length(value, array, 2, 3));
-}
+    #[test]
+    fn success_empty() {
+        assert(array_equals(resize([]), []));
+    }
 
-#[test]
-fn test_sub_array_equals() {
-    let sub_array: [Field; 3] = [2, 3, 4];
-    let array: [Field; 5] = [1, 2, 3, 4, 5];
-    assert(sub_array_equals(sub_array, array, 1));
-    assert(!sub_array_equals(sub_array, array, 0));
-    assert(!sub_array_equals(sub_array, array, 2));
-    assert(!sub_array_equals(sub_array, array, 2));
-}
+    #[test]
+    fn success_2d() {
+        assert(array_equals(resize([[1], [2]]), [[1], [2], [0]]));
+    }
 
-#[test(should_fail_with = "array index out of bound")]
-fn test_sub_array_equals_index_out_of_bound() -> bool {
-    let sub_array: [Field; 3] = [2, 3, 4];
-    let array: [Field; 5] = [1, 2, 3, 4, 5];
-    sub_array_equals(sub_array, array, 3)
-}
+    #[test(should_fail_with = "Arrays not equal")]
+    fn not_equal() {
+        assert(array_equals(resize([1, 2]), [0, 1, 2]), "Arrays not equal");
+    }
 
-#[test]
-fn test_empty_array_equals() {
-    let empty_array: [Field; 0] = [];
-    assert(array_equals(empty_array, empty_array));
-}
-
-#[test]
-fn test_array_equals() {
-    let array: [Field; 3] = [1, 2, 3];
-    assert(array_equals(array, array));
-}
-
-#[test(should_fail_with = "Arrays not equal")]
-fn test_array_not_equals() {
-    let array: [Field; 3] = [1, 2, 3];
-    let other_array: [Field; 3] = [1, 2, 4];
-    assert(array_equals(array, other_array), "Arrays not equal");
-}
-
-#[test]
-fn test_resize() {
-    assert(array_equals(resize([1, 2]), [1, 2, 0]));
-}
-
-#[test]
-fn test_resize_empty() {
-    assert(array_equals(resize([]), []));
-}
-
-#[test]
-fn test_resize_2d() {
-    assert(array_equals(resize([[1], [2]]), [[1], [2], [0]]));
-}
-
-#[test(should_fail_with = "Arrays not equal")]
-fn test_resize_fail() {
-    assert(array_equals(resize([1, 2]), [0, 1, 2]), "Arrays not equal");
-}
-
-#[test(should_fail_with = "New length must be greater than or equal to old length")]
-fn test_resize_new_length_is_shorter() {
-    let _ = array_equals(resize([1, 2]), [1]);
+    #[test(should_fail_with = "New length must be greater than or equal to old length")]
+    fn new_length_is_shorter() {
+        let _ = array_equals(resize([1, 2]), [1]);
+    }
 }
