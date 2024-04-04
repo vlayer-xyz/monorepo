@@ -8,7 +8,7 @@ fn main(
     tx_idx: pub Field
 ) -> pub TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_LEN> {
     let phantom_receipt_proof_len: PhantomReceiptProofLen <3724>  = PhantomReceiptProofLen {}; // = MAX_RECEIPT_TREE_DEPTH * MAX_TRIE_NODE_LENGTH
-    let phantom_receipt_rlp_len: PhantomReceiptRlpLen <523>  = PhantomReceiptRlpLen {};
+    let phantom_receipt_rlp_len: PhantomReceiptRlpLen <525>  = PhantomReceiptRlpLen {};
 
     get_receipt(
         block_number,
