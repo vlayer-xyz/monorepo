@@ -9,14 +9,14 @@ import { BYTE_HEX_LEN } from '../../util/const.js';
 export function createProofFixture(
   proof: Proof,
   maxTreeDepth: number,
-  maxRlpLen: number,
+  maxValueLen: number,
   maxProofLen: number,
   crateImport: string,
   proofNoirType: string
 ): string {
   const paddedKey = padHex(proof.key, { size: maxTreeDepth / BYTE_HEX_LEN, dir: 'left' });
   const key = encodeHex(paddedKey);
-  const value = padArray(encodeHexString(proof.value), maxRlpLen, ZERO_PAD_VALUE, 'left');
+  const value = padArray(encodeHexString(proof.value), maxValueLen, ZERO_PAD_VALUE, 'left');
   const encodedProof = encodeProof(proof.proof, maxProofLen);
   const depth = proof.proof.length;
   return `use ${crateImport};
