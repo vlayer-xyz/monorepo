@@ -1,4 +1,4 @@
-use crate::misc::bytes::{nibbles_to_byte, nibbles_to_bytes, left_to_right_padding, shift_right_by_one};
+use crate::misc::bytes::{nibbles_to_byte, nibbles_to_bytes, left_to_right_padding, shift_right_by_one, byte_value};
 
 #[test]
 fn test_left_to_right_padding_empty() {
@@ -79,5 +79,35 @@ fn test_nibbles_to_bytes() {
     ]
     )
         == [0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23]
+    );
+}
+
+#[test]
+fn byte_value_test() {
+    let test0 = byte_value([0, 0, 0, 1, 2, 3]);
+    assert((test0.0 == [1, 2, 3, 0, 0, 0]) & (test0.1 == 3));
+
+    let test1 = byte_value(
+        [
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 0, 0, 0
+    ]
+    );
+    assert(
+        (test1.0 == [
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 0, 0, 0
+        ])
+        & (test1.1 == 32)
+    );
+
+    let test2 = byte_value(
+        [
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    ]
+    );
+    assert(
+        (test2.0 == [
+            11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        ])
+        & (test2.1 == 22)
     );
 }

@@ -24,7 +24,7 @@ pub fn leaf_get_len<MAX_LEN>(leaf: Leaf<MAX_LEN>) -> u32 {
 }
 
 pub fn assert_merkle_proof<MAX_KEY_LEN, MAX_VALUE_LEN, MAX_DEPTH, MAX_LEAF_LEN>(
-    key: Key<MAX_KEY_LEN>,
+    _key: Key<MAX_KEY_LEN>,
     value: Value<MAX_VALUE_LEN>,
     root: Bytes32,
     proof: Proof<MAX_DEPTH, MAX_LEAF_LEN>

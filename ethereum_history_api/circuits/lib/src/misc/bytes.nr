@@ -1,5 +1,3 @@
-use dep::proof::utils::byte_value;
-
 pub fn right_pad<N>(arr: [u8; N]) -> ([u8; N], u64) {
     byte_value(arr)
 }
@@ -44,4 +42,44 @@ pub fn nibbles_to_bytes<BYTES_LEN, NIB_LEN>(nibbles: [u8; NIB_LEN]) -> [u8; BYTE
     }
 
     bytes
+}
+
+/// Left-shift for byte arrays
+/// Returns an appropriately shifted byte array.
+///
+/// # Arguments
+/// * `input` - Byte array
+/// * `n` - Amount to left-shift elements by
+///
+/// # Quirks
+/// The empty slots are set to 0.
+pub(crate) fn left_byte_shift<N>(input: [u8; N], n: u64) -> [u8; N] {
+    let mut out = [0; N];
+
+    for i in 0..N {
+        // Restrict indices to be shifted, i.e. ∀i: i+n < N, out[i] ← input[i+n].
+        let index_ind = (((i + n) as u32) < (N as u32)) as u64;
+        out[i] = (index_ind as u8)*input[index_ind*(i+n)];
+    }
+
+    out
+}
+
+/// Function for expressing a big-endian byte array as a right-padded one.
+/// Returns a right-padded byte array together with the actual byte length of the number.
+///
+/// # Arguments
+/// * `in_value` - Byte array representing a number in big-endian form.
+pub(crate) fn byte_value<N>(in_value: [u8; N]) -> ([u8; N], u64) {
+    let mut value_length = 0;
+
+    for i in 0..N {
+        let num_bytes_ind = (value_length == 0) as u64;
+        let byte_ind = (in_value[i] != 0) as u64;
+        value_length = num_bytes_ind*byte_ind*(N - i) + (1-num_bytes_ind)*value_length;
+    }
+
+    let value = left_byte_shift(in_value, N - value_length);
+
+    (value, value_length)
 }

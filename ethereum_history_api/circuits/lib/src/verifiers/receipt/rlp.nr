@@ -2,8 +2,9 @@ use crate::{
     verifiers::receipt::{MAX_RECEIPT_RLP_LENGTH, is_pre_byzantium},
     receipt::{BLOOM_FILTER_LEN, TxReceiptPartial}
 };
-use dep::proof::{const::HASH_LENGTH, utils::byte_value};
+use dep::proof::const::HASH_LENGTH;
 use crate::misc::arrays::sub_array_equals_up_to_length;
+use crate::misc::bytes::byte_value;
 use crate::rlp::decode::{RlpList, decode_list, STRING};
 use dep::u2b::u32_to_u8;
 
