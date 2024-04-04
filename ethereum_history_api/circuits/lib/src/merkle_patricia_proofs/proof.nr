@@ -1,6 +1,6 @@
 use crate::misc::{arrays::sub_array_equals_up_to_length, types::Bytes32};
+use crate::rlp::decode::{decode_len, decode_list_of_small_strings, RLP_List};
 use dep::std::hash::keccak256;
-use dep::proof::rlp::{decode1_small_lis, decode_len, RLP_List};
 
 global MAX_NODE_LEN = 1; // 532;
 
@@ -29,7 +29,7 @@ pub fn assert_merkle_proof<MAX_KEY_LEN, MAX_VALUE_LEN, MAX_DEPTH, MAX_LEAF_LEN>(
     root: Bytes32,
     proof: Proof<MAX_DEPTH, MAX_LEAF_LEN>
 ) {
-    let leaf_rlp_list: RLP_List<2> = decode1_small_lis(proof.leaf);
+    let leaf_rlp_list: RLP_List<2> = decode_list_of_small_strings(proof.leaf);
     assert(leaf_rlp_list.num_fields == 2, "Leaf expected to have 2 fields");
 
     assert(keccak256(proof.leaf, leaf_get_len(proof.leaf)) == root, "Invalid root");
