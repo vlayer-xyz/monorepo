@@ -2,7 +2,7 @@ use crate::misc::{arrays::sub_array_equals_up_to_length, types::Bytes32};
 use crate::rlp::decode::{decode_len, decode_list_of_small_strings, RLP_List};
 use dep::std::hash::keccak256;
 
-global MAX_NODE_LEN = 1; // 532;
+global MAX_NODE_LEN = 532;
 
 type Node = [u8; MAX_NODE_LEN];
 type Leaf<MAX_LEAF_LEN> = [u8; MAX_LEAF_LEN];
