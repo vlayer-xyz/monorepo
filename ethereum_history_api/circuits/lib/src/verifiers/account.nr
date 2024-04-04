@@ -23,42 +23,46 @@ pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_ST
     let balance = U128::from_integer(account.balance).to_be_bytes();
     let (balance, balance_length) = byte_value(balance);
 
-    assert(account_rlp_list.length[NONCE_INDEX] == nonce_length, "Nonce length mismatch");
+    assert(account_rlp_list.rlp_fragments[NONCE_INDEX].length == nonce_length, "Nonce length mismatch");
     assert(
         sub_array_equals_up_to_length(
             nonce,
             account_rlp_right_padded,
-            account_rlp_list.offset[NONCE_INDEX],
+            account_rlp_list.rlp_fragments[NONCE_INDEX].offset,
             nonce_length as u64
         ), "Nonce mismatch"
     );
 
-    assert(account_rlp_list.length[BALANCE_INDEX] == balance_length, "Balance length mismatch");
+    assert(
+        account_rlp_list.rlp_fragments[BALANCE_INDEX].length == balance_length, "Balance length mismatch"
+    );
     assert(
         sub_array_equals_up_to_length(
             balance,
             account_rlp_right_padded,
-            account_rlp_list.offset[BALANCE_INDEX],
+            account_rlp_list.rlp_fragments[BALANCE_INDEX].offset,
             balance_length as u64
         ), "Balance mismatch"
     );
 
-    assert(account_rlp_list.length[STORAGE_ROOT_INDEX] == HASH_LEN, "Storage root length mismatch");
+    assert(
+        account_rlp_list.rlp_fragments[STORAGE_ROOT_INDEX].length == HASH_LEN, "Storage root length mismatch"
+    );
     assert(
         sub_array_equals_up_to_length(
             account.storage_root,
             account_rlp_right_padded,
-            account_rlp_list.offset[STORAGE_ROOT_INDEX],
+            account_rlp_list.rlp_fragments[STORAGE_ROOT_INDEX].offset,
             HASH_LEN as u64
         ), "Storage root mismatch"
     );
 
-    assert(account_rlp_list.length[CODE_HASH_INDEX] == HASH_LEN, "Code hash length mismatch");
+    assert(account_rlp_list.rlp_fragments[CODE_HASH_INDEX].length == HASH_LEN, "Code hash length mismatch");
     assert(
         sub_array_equals_up_to_length(
             account.code_hash,
             account_rlp_right_padded,
-            account_rlp_list.offset[CODE_HASH_INDEX],
+            account_rlp_list.rlp_fragments[CODE_HASH_INDEX].offset,
             HASH_LEN as u64
         ), "Code hash mismatch"
     );

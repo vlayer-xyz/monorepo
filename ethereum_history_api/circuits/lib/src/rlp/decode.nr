@@ -20,22 +20,27 @@ impl RLP_Header {
     }
 }
 
-struct RLP_List<NUM_FIELDS> {
-    offset: [u64; NUM_FIELDS],
-    length: [u64; NUM_FIELDS],
+struct RLP_Fragment {
+    offset: u64,
+    length: u64,
     /// STRING or LIST
-    data_type: [u64; NUM_FIELDS],
+    data_type: u64
+}
+
+impl RLP_Fragment {
+    pub fn new(offset: u64, length: u64, data_type: u64) -> Self {
+        RLP_Fragment { offset, length, data_type }
+    }
+}
+
+struct RLP_List<NUM_FIELDS> {
+    rlp_fragments: [RLP_Fragment; NUM_FIELDS],
     num_fields: u64
 }
 
 impl<NUM_FIELDS> RLP_List<NUM_FIELDS> {
-    pub fn new(
-        offset: [u64; NUM_FIELDS],
-        length: [u64; NUM_FIELDS],
-        data_type: [u64; NUM_FIELDS],
-        num_fields: u64
-    ) -> Self {
-        RLP_List { offset, length, data_type, num_fields }
+    pub fn new(rlp_fragments: [RLP_Fragment; NUM_FIELDS], num_fields: u64) -> Self {
+        RLP_List { rlp_fragments, num_fields }
     }
 }
 
@@ -130,9 +135,7 @@ pub fn decode_string<N>(input: [u8; N]) -> (u64, u64) {
 ///   of a list element points to the RLP header of that element.
 pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RLP_List<NUM_FIELDS> {
     let mut num_fields: u64 = 0;
-    let mut dec_off = [0; NUM_FIELDS];
-    let mut dec_len = [0; NUM_FIELDS];
-    let mut dec_type = [0; NUM_FIELDS];
+    let mut fragments = [RLP_Fragment::new(0, 0, 0); NUM_FIELDS];
 
     let mut RLP_Header {offset, length: payload_len, data_type: input_type} = decode_len(input);
 
@@ -151,9 +154,9 @@ pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RLP_List<NUM_FIELDS> {
         let total_field_len = field_off + field_len;
 
         // Assign decoded data and set them to 0 if loop indicator false (Convenient for testing; could remove this later)
-        dec_off[i] = loop_ind * (offset + (1 - field_type) * field_off); // If the ith slot contains a list, include its RLP header.
-        dec_len[i] = loop_ind * (field_len + field_type * field_off); // If the ith slot contains a list, make sure to include the length of its header in the decoded data.
-        dec_type[i] = loop_ind * (field_type);
+        fragments[i].offset = loop_ind * (offset + (1 - field_type) * field_off); // If the ith slot contains a list, include its RLP header.
+        fragments[i].length = loop_ind * (field_len + field_type * field_off); // If the ith slot contains a list, make sure to include the length of its header in the decoded data.
+        fragments[i].data_type = loop_ind * (field_type);
 
         offset += loop_ind * total_field_len;
         num_fields += loop_ind;
@@ -161,16 +164,14 @@ pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RLP_List<NUM_FIELDS> {
 
     assert(total_len == offset);
 
-    RLP_List::new(dec_off, dec_len, dec_type, num_fields)
+    RLP_List::new(fragments, num_fields)
 }
 
 /// RLP list decoder for lists of strings of length < 56 bytes.
 /// Returns an RLP list look-up table.
 pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RLP_List<NUM_FIELDS> {
     let mut num_fields: u64 = 0;
-    let mut dec_off = [0; NUM_FIELDS];
-    let mut dec_len = [0; NUM_FIELDS];
-    let mut dec_type = [0; NUM_FIELDS];
+    let mut fragments = [RLP_Fragment::new(0, 0, 0); NUM_FIELDS];
 
     let mut RLP_Header {offset, length: payload_len, data_type: input_type} = decode_len(input);
     let total_len = payload_len + offset;
@@ -197,9 +198,9 @@ pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RLP_List<N
 
         let total_field_len = field_off + field_len;
 
-        dec_off[i] = loop_ind * (offset + field_off);
-        dec_len[i] = loop_ind * (field_len);
-        dec_type[i] = loop_ind * (field_type);
+        fragments[i].offset = loop_ind * (offset + field_off);
+        fragments[i].length = loop_ind * (field_len);
+        fragments[i].data_type= loop_ind * (field_type);
 
         offset += loop_ind * total_field_len;
         num_fields += loop_ind;
@@ -207,7 +208,7 @@ pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RLP_List<N
 
     assert(total_len == offset);
 
-    RLP_List::new(dec_off, dec_len, dec_type, num_fields)
+    RLP_List::new(fragments, num_fields)
 }
 
 pub fn copy_subarray<T, N, M>(arr: [T; N], offset: u64) -> [T; M] {
@@ -239,9 +240,14 @@ fn rlp_decode_test() {
     let output: RLP_List<5> = decode_list(input);
 
     assert(output.num_fields == 3);
-    assert(output.offset == [2, 6, 9, 0, 0]);
-    assert(output.length == [3, 3, 1, 0, 0]);
-    assert(output.data_type == [STRING; 5]);
+    let expected_offsets = [2, 6, 9, 0, 0];
+    let expected_lengths = [3, 3, 1, 0, 0];
+    let expected_data_types = [STRING; 5];
+    for i in 0..5 {
+        assert(output.rlp_fragments[i].offset == expected_offsets[i]);
+        assert(output.rlp_fragments[i].length == expected_lengths[i]);
+        assert(output.rlp_fragments[i].data_type == expected_data_types[i]);
+    }
 
     // Decode a list of 17 elements
     let input1 = [
@@ -251,12 +257,14 @@ fn rlp_decode_test() {
     let output1: RLP_List<17> = decode_list(input1);
 
     assert(output1.num_fields == 17);
-    assert(
-        output1.offset
-        == [4, 37, 70, 103, 136, 169, 202, 235, 268, 301, 334, 367, 400, 433, 466, 499, 532]
-    );
-    assert(output1.length == [32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 0]);
-    assert(output1.data_type == [STRING; 17]);
+    let expected_offsets1 = [4, 37, 70, 103, 136, 169, 202, 235, 268, 301, 334, 367, 400, 433, 466, 499, 532];
+    let expected_lengths1 = [32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 0];
+    let expected_data_types1 = [STRING; 17];
+    for i in 0..17 {
+        assert(output1.rlp_fragments[i].offset == expected_offsets1[i]);
+        assert(output1.rlp_fragments[i].length == expected_lengths1[i]);
+        assert(output1.rlp_fragments[i].data_type == expected_data_types1[i]);
+    }
 }
 
 // Test data length decoding on the RLP header of a >55-byte list

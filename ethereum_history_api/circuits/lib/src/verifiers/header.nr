@@ -51,13 +51,13 @@ pub fn verify_header(
     let (block_number, block_number_length) = byte_value(block_number);
 
     assert(
-        header_rlp_list.length[BLOCK_NUM_INDEX] == block_number_length, "block number length does not match"
+        header_rlp_list.rlp_fragments[BLOCK_NUM_INDEX].length == block_number_length, "block number length does not match"
     );
     assert(
         sub_array_equals_up_to_length(
             block_number,
             block_header_rlp.data,
-            header_rlp_list.offset[BLOCK_NUM_INDEX],
+            header_rlp_list.rlp_fragments[BLOCK_NUM_INDEX].offset,
             block_number_length as u64
         ), "block number does not match"
     );
@@ -72,21 +72,21 @@ pub fn verify_header(
         sub_array_equals(
             block_header_partial.state_root,
             block_header_rlp.data,
-            header_rlp_list.offset[STATE_ROOT_INDEX]
+            header_rlp_list.rlp_fragments[STATE_ROOT_INDEX].offset
         ), "state_root does not match"
     );
     assert(
         sub_array_equals(
             block_header_partial.transactions_root,
             block_header_rlp.data,
-            header_rlp_list.offset[TRANSACTIONS_ROOT_INDEX]
+            header_rlp_list.rlp_fragments[TRANSACTIONS_ROOT_INDEX].offset
         ), "transactions_root does not match"
     );
     assert(
         sub_array_equals(
             block_header_partial.receipts_root,
             block_header_rlp.data,
-            header_rlp_list.offset[RECEIPTS_ROOT_INDEX]
+            header_rlp_list.rlp_fragments[RECEIPTS_ROOT_INDEX].offset
         ), "receipts_root does not match"
     );
 }
