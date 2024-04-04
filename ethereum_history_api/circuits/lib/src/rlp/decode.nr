@@ -25,9 +25,9 @@ struct RlpFragment {
     data_type: u64 // STRING or LIST
 }
 
-impl RlpFragment {
-    pub fn new(offset: u64, length: u64, data_type: u64) -> Self {
-        RlpFragment { offset, length, data_type }
+impl Default for RlpFragment {
+    fn default() -> Self {
+        RlpFragment { offset: 0, length: 0, data_type: 0 }
     }
 }
 
@@ -133,7 +133,7 @@ pub fn decode_string<N>(input: [u8; N]) -> (u64, u64) {
 ///   of a list element points to the RLP header of that element.
 pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
     let mut num_fields: u64 = 0;
-    let mut fragments = [RlpFragment::new(0, 0, 0); NUM_FIELDS];
+    let mut fragments = [RlpFragment::default(); NUM_FIELDS];
 
     let mut RlpHeader {offset, length: payload_len, data_type: input_type} = decode_len(input);
 
@@ -169,7 +169,7 @@ pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
 /// Returns an RLP list look-up table.
 pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
     let mut num_fields: u64 = 0;
-    let mut fragments = [RlpFragment::new(0, 0, 0); NUM_FIELDS];
+    let mut fragments = [RlpFragment::default(); NUM_FIELDS];
 
     let mut RlpHeader {offset, length: payload_len, data_type: input_type} = decode_len(input);
     let total_len = payload_len + offset;
