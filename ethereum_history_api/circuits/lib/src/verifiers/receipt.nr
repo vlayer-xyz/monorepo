@@ -3,9 +3,12 @@ mod split_test;
 mod rlp;
 mod rlp_test;
 
-use dep::proof::{const::HASH_LENGTH, receipt_proof::ReceiptProof, utils::byte_value};
+use dep::proof::{const::HASH_LENGTH, receipt_proof::ReceiptProof, utils::byte_value, node::key_as_nibbles};
 use crate::receipt::{TxReceiptPartial, TxType};
-use crate::verifiers::receipt::{rlp::assert_receipt_rlp_equals, split::split_receipt_into_tx_type_and_receipt_rlp};
+use crate::verifiers::{
+    receipt::{rlp::assert_receipt_rlp_equals, split::split_receipt_into_tx_type_and_receipt_rlp},
+    tx_idx::assert_tx_idx_equals
+};
 
 global BYZANTIUM_BLOCK_NUM = 4_370_000;
 global MAX_ENCODED_RECEIPT_LENGTH: u64 = 525;
@@ -43,6 +46,7 @@ pub fn verify_receipt<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN>(
     receipt_proof: ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_ENCODED_RECEIPT_LENGTH>,
     receipt_root: [u8; HASH_LENGTH]
 ) {
+    assert_tx_idx_equals(key_as_nibbles(receipt_proof.key), tx_idx);
     let (value, _) = byte_value(receipt_proof.value);
     assert_receipt_equals(block_number, tx_type, value, receipt);
     assert_receipt_proof(receipt_proof, receipt_root);
