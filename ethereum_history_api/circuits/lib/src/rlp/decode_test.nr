@@ -49,27 +49,32 @@ mod test_decode_string {
     use crate::rlp::decode::decode_string;
 
     #[test]
-    fn single_byte() {
+    fn one_byte_zero() {
         let rlp = [0x00];
-
         let expected_offset = 0;
         let expected_length = 1;
         assert(decode_string(rlp) == (expected_offset, expected_length));
     }
 
     #[test]
-    fn short_string() {
-        let rlp = [0x83, 0x63, 0x61, 0x74];
+    fn one_byte_one() {
+        let rlp = [0x01];
+        let expected_offset = 0;
+        let expected_length = 1;
+        assert(decode_string(rlp) == (expected_offset, expected_length));
+    }
 
+    #[test]
+    fn three_bytes() {
+        let rlp = [0x83, 0x63, 0x61, 0x74];
         let expected_offset = 1;
         let expected_length = 3;
         assert(decode_string(rlp) == (expected_offset, expected_length));
     }
 
     #[test]
-    fn long_string() {
+    fn using_lenlen() {
         let rlp = [0xb8, 0x01, 0x83];
-
         let expected_offset = 2;
         let expected_length = 1;
         assert(decode_string(rlp) == (expected_offset, expected_length));
