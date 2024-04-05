@@ -1,25 +1,26 @@
 import { Trie } from '@ethereumjs/trie';
-import { encodeByte, encodeField } from '../../noir/oracles/common/encode.js';
+import { encodeHex, encodeUint8ArrayToBytes } from '../../noir/oracles/common/encode.js';
 import { encodeHexStringToArray } from '../../main.js';
+import { ProofInput } from '../prepareProofFixtures.js';
+import { joinArray } from '../../noir/noir_js/encode.js';
 
 const exampleValue = encodeHexStringToArray('0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef');
 
-export async function createMerkleProofFixture(keys: number[]) {
+export async function createMerkleProofFixture(proofInput: ProofInput) {
   const trie = new Trie();
-  const keysUInt8Array = keys.map((key) => encodeHexStringToArray(encodeField(key)));
-  for (const key of keysUInt8Array) {
-    await trie.put(key, exampleValue);
+  for (const keyValuePair of proofInput.keyValuePairs) {
+    await trie.put(encodeHexStringToArray(keyValuePair.key), encodeHexStringToArray(keyValuePair.value));
   }
 
-  const key = keysUInt8Array[0];
-  const proof = await trie.createProof(key);
+  const key = proofInput.key;
+  const proof = await trie.createProof(encodeHexStringToArray(key));
   const nodes = proof.slice(0, proof.length - 1);
   const leaf = proof[proof.length - 1];
 
-  return `global root = [${trie.root().join(', ')}];
-global key = [${Array.from(key).map(encodeByte).join(', ')}];
-global value = [${Array.from(exampleValue).map(encodeByte).join(', ')}];
-global nodes = [${nodes.length > 0 ? '[' + nodes.map((proofOneLevel) => Array.from(proofOneLevel).map(encodeByte).join(', ')).join('], [') + ']' : ''}];
-global leaf = [${Array.from(leaf).map(encodeByte).join(', ')}];
+  return `global root = ${joinArray(encodeUint8ArrayToBytes(trie.root()))};
+global key = ${joinArray(encodeHex(key))};
+global value = ${joinArray(encodeUint8ArrayToBytes(exampleValue))};
+global nodes = [${nodes.length > 0 ? '[' + nodes.map((proofOneLevel) => joinArray(encodeUint8ArrayToBytes(proofOneLevel))).join('], [') + ']' : ''}];
+global leaf = ${joinArray(encodeUint8ArrayToBytes(leaf))};
 `;
 }

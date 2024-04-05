@@ -1,9 +1,19 @@
 import { writeFile } from 'fs/promises';
 import { join } from 'path';
 import { createMerkleProofFixture } from './noir_fixtures/merkleProof.js';
+import { Hex } from 'viem';
 
 const NOIR_FIXTURES_DIRECTORY = '../circuits/lib/src/fixtures';
+const exampleValue = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef';
 
-const keySets = [[0x1, 0x11], [0x11], [0x111], [0x1111]];
+export type ProofInput = {
+  key: Hex;
+  keyValuePairs: { key: Hex; value: Hex }[];
+};
 
-await writeFile(join(NOIR_FIXTURES_DIRECTORY, 'proof.nr'), await createMerkleProofFixture(keySets[1]));
+const proofInput: ProofInput = {
+  key: '0x11',
+  keyValuePairs: [{ key: '0x11', value: exampleValue }]
+};
+
+await writeFile(join(NOIR_FIXTURES_DIRECTORY, 'proof.nr'), await createMerkleProofFixture(proofInput));
