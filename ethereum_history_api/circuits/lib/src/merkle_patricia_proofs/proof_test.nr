@@ -30,13 +30,13 @@ mod test_assert_merkle_proof {
     #[test]
     fn simple_success() {
         let proof = Proof { nodes: [], leaf: [0xc2, 0x42, 0x05], depth: 0 };
-        assert_merkle_proof(key, value, root, proof);
+        assert_merkle_proof(value, root, proof);
     }
 
     #[test]
     fn value_padded() {
         let proof = Proof { nodes: [], leaf: [0xc2, 0x42, 0x05, 0x00], depth: 0 };
-        assert_merkle_proof(key, value, root, proof);
+        assert_merkle_proof(value, root, proof);
     }
 
     #[test(should_fail_with="Leaf expected to have 2 fields")]
@@ -45,7 +45,7 @@ mod test_assert_merkle_proof {
             7, 95, 101, 84, 34, 173, 199, 202, 255, 196, 61, 234, 106, 5, 168, 57, 67, 221, 206, 185, 138, 146, 151, 237, 233, 193, 118, 117, 84, 218, 39, 239
         ];
         let proof = Proof { nodes: [], leaf: [0xc1, 0x42, 0x00], depth: 0 };
-        assert_merkle_proof(key, value, root, proof);
+        assert_merkle_proof(value, root, proof);
     }
 
     #[test(should_fail_with="Invalid root")]
@@ -54,13 +54,13 @@ mod test_assert_merkle_proof {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         ];
         let proof = Proof { nodes: [], leaf: [0xc2, 0x42, 0x05], depth: 0 };
-        assert_merkle_proof(key, value, root, proof);
+        assert_merkle_proof(value, root, proof);
     }
 
     #[test(should_fail_with="Value mismatch")]
     fn value_mismatch() {
         let wrong_value = [0x06];
         let proof = Proof { nodes: [], leaf: [0xc2, 0x42, 0x05], depth: 0 };
-        assert_merkle_proof(key, wrong_value, root, proof);
+        assert_merkle_proof(wrong_value, root, proof);
     }
 }
