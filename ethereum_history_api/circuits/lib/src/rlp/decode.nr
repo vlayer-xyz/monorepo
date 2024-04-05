@@ -36,11 +36,11 @@ struct RlpList<NUM_FIELDS> {
     num_fields: u64
 }
 
-impl<NUM_FIELDS> RlpList<NUM_FIELDS> {
-    pub fn new(fragments: [RlpFragment; NUM_FIELDS], num_fields: u64) -> Self {
-        RlpList { fragments, num_fields }
-    }
-}
+// impl<NUM_FIELDS> RlpList<NUM_FIELDS> {
+//     pub fn new(fragments: [RlpFragment; NUM_FIELDS], num_fields: u64) -> Self {
+//         RlpList { fragments, num_fields }
+//     }
+// }
 
 /// Payload length extractor. Returns length of RLP payload in the case its length
 /// exceeds 56 bytes.
@@ -164,7 +164,7 @@ pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
 
     assert(total_len == offset);
 
-    RlpList::new(fragments, num_fields)
+    RlpList { fragments, num_fields }
 }
 
 /// RLP list decoder for lists of strings of length < 56 bytes.
@@ -208,7 +208,7 @@ pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NU
 
     assert(total_len == offset);
 
-    RlpList::new(fragments, num_fields)
+    RlpList { fragments, num_fields }
 }
 
 pub fn copy_subarray<T, N, M>(arr: [T; N], offset: u64) -> [T; M] {

@@ -48,7 +48,7 @@ mod test_decode_list {
         ];
 
         let actual: RlpList<5> = decode_list(rlp);
-        assert(actual == RlpList::new(expected_fragments, 3));
+        assert(actual == RlpList { fragments: expected_fragments, num_fields: 3};
     }
 
     fn rlp_decode_test2() {
