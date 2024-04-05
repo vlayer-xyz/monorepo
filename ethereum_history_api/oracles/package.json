@@ -17,6 +17,7 @@
     "oracle-server:watch": "tsx watch src/script/startOracleServer",
     "prepare-fixtures": "yarn prepare-js-fixtures && yarn prepare-noir-fixtures",
     "prepare-js-fixtures": "tsx src/script/prepareJSFixtures",
+    "prepare-proof-fixtures": "tsx src/script/prepareProofFixtures",
     "prepare-noir-fixtures": "tsx src/script/prepareNoirFixtures"
   },
   "author": "",
