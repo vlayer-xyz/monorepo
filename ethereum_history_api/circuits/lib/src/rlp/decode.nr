@@ -126,34 +126,27 @@ pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
     let mut num_fields: u64 = 0;
     let mut fragments = [RlpFragment::default(); NUM_FIELDS];
 
-    let mut RlpHeader {offset, length: payload_len, data_type: input_type} = decode_to_rlp_header(input);
+    let mut RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
+    assert(data_type == LIST);
 
-    let total_len = payload_len + offset;
-
-    assert(input_type == LIST);
-
-    let total_len = payload_len + offset;
-
+    let total_len = length + offset;
     assert(total_len <= input.len());
 
     for i in 0..NUM_FIELDS {
-        let loop_ind = (offset != total_len) as u64;
+        let if_in_range = (offset != total_len) as u64;
 
-        // Make sure the index doesn't overshoot
         let header: [u8; MAX_LEN_IN_BYTES + 1] = copy_subarray(input, offset);
         let RlpHeader {offset: field_off, length: field_len, data_type: field_type} = decode_to_rlp_header(header);
         let total_field_len = field_off + field_len;
 
-        // Assign decoded data and set them to 0 if loop indicator false (Convenient for testing; could remove this later)
-        fragments[i].offset = loop_ind * (offset + (1 - field_type) * field_off); // If the ith slot contains a list, include its RLP header.
-        fragments[i].length = loop_ind * (field_len + field_type * field_off); // If the ith slot contains a list, make sure to include the length of its header in the decoded data.
-        fragments[i].data_type = loop_ind * (field_type);
+        // Assign decoded data and set them to 0 if outside od total_len
+        fragments[i].offset = if_in_range * (offset + (1 - field_type) * field_off); // If the ith slot contains a list, include its RLP header.
+        fragments[i].length = if_in_range * (field_len + field_type * field_off); // If the ith slot contains a list, make sure to include the length of its header in the decoded data.
+        fragments[i].data_type = if_in_range * (field_type);
 
-        offset += loop_ind * total_field_len;
-        num_fields += loop_ind;
+        offset += if_in_range * total_field_len;
+        num_fields += if_in_range;
     }
-
-    assert(total_len == offset);
 
     RlpList { fragments, num_fields }
 }
