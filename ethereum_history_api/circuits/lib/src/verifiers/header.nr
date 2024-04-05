@@ -1,9 +1,9 @@
-use dep::proof::utils::byte_value;
 use dep::std::hash::keccak256;
 use dep::u2b::u64_to_u8;
 
 use crate::header::{BlockHeaderPartial, BlockHeaderRlp, ETHEREUM_MAINNET_ID, ETHEREUM_SEPOLIA_ID};
 use crate::misc::arrays::{sub_array_equals, sub_array_equals_up_to_length};
+use crate::misc::bytes::byte_value;
 use crate::rlp::decode::{decode_list, RlpList};
 
 global MAX_HEADER_FIELDS_COUNT = 20;

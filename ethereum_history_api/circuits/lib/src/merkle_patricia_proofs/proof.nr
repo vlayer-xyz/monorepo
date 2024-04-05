@@ -23,12 +23,7 @@ pub fn leaf_get_len<MAX_LEN>(leaf: Leaf<MAX_LEN>) -> u32 {
     leaf_unpadded_len as u32
 }
 
-pub fn assert_merkle_proof<MAX_KEY_LEN, MAX_VALUE_LEN, MAX_DEPTH, MAX_LEAF_LEN>(
-    key: Key<MAX_KEY_LEN>,
-    value: Value<MAX_VALUE_LEN>,
-    root: Bytes32,
-    proof: Proof<MAX_DEPTH, MAX_LEAF_LEN>
-) {
+pub fn assert_merkle_proof<MAX_KEY_LEN, MAX_VALUE_LEN, MAX_DEPTH, MAX_LEAF_LEN>(value: Value<MAX_VALUE_LEN>, root: Bytes32, proof: Proof<MAX_DEPTH, MAX_LEAF_LEN>) {
     let leaf_rlp_list: RLP_List<2> = decode1_small_lis(proof.leaf);
     assert(leaf_rlp_list.num_fields == 2, "Leaf expected to have 2 fields");
 

@@ -1,8 +1,8 @@
-use dep::proof::{const::{MAX_ACCOUNT_STATE_LENGTH, HASH_LENGTH}, trie_proof::TrieProof, utils::byte_value};
+use dep::proof::{const::{MAX_ACCOUNT_STATE_LENGTH, HASH_LENGTH}, trie_proof::TrieProof};
 use dep::u2b::u64_to_u8;
 
 use crate::account::{Account, StateProof};
-use crate::misc::{arrays::{sub_array_equals_up_to_length, array_equals}, types::{Address, Bytes32}};
+use crate::misc::{arrays::{sub_array_equals_up_to_length, array_equals}, types::{Address, Bytes32}, bytes::byte_value};
 use crate::rlp::decode::{RlpList, decode_list_of_small_strings};
 
 use crate::HASH_LEN;

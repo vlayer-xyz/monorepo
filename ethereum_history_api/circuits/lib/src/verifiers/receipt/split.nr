@@ -1,4 +1,4 @@
-use dep::proof::utils::memcpy;
+use crate::misc::arrays::memcpy;
 use crate::receipt::TxType;
 use crate::verifiers::receipt::{MAX_ENCODED_RECEIPT_LENGTH, MAX_RECEIPT_RLP_LENGTH};
 
