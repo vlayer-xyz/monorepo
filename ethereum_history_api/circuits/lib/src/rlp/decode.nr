@@ -50,7 +50,7 @@ impl<NUM_FIELDS> RlpList<NUM_FIELDS> {
 /// * `lenlen` - Number of bytes containing the length of the payload
 pub fn data_len<N>(arr: [u8; N], lenlen: u64) -> u64 {
     assert(lenlen <= MAX_LEN_IN_BYTES);
-    let mut out = 0;
+    let mut payload_length = 0;
 
     // Restrict loop to maximum length in bytes
     let loop_len_ind = (MAX_LEN_IN_BYTES < (N - 1)) as u64;
@@ -58,49 +58,49 @@ pub fn data_len<N>(arr: [u8; N], lenlen: u64) -> u64 {
 
     for i in 0..loop_len {
         if (i < lenlen) {
-            out = (arr[i + 1] as u64) + 256 * out;
+            payload_length = (arr[i + 1] as u64) + payload_length * 256;
         }
     }
 
-    out
+    payload_length
 }
 
-pub fn decode_len<N>(arr: [u8; N]) -> RlpHeader {
+pub fn decode_to_rlp_header<N>(arr: [u8; N]) -> RlpHeader {
     let prefix = arr[0];
 
     // Prefix range indicators
-    let prefix_ind1 = (prefix < 0x80); // Single byte
-    let prefix_ind2 = (prefix < 0xb8); // 0-55 byte string
-    let prefix_ind3 = (prefix < 0xc0); // >55-byte string
-    let prefix_ind4 = (prefix < 0xf8); // 0-55 byte list
+    let is_single_byte = (prefix < 0x80); // Single byte
+    let is_short_string = (prefix < 0xb8); // 0-55 byte string
+    let is_long_string = (prefix < 0xc0); // >55-byte string
+    let is_short_list = (prefix < 0xf8); // 0-55 byte list
     // Else >55-byte list
 
     let offset = strict_if(
-        prefix_ind1,
+        is_single_byte,
         0,
         strict_if(
-            prefix_ind2,
+            is_short_string,
             1,
             strict_if(
-                prefix_ind3,
+                is_long_string,
                 wrapping_sub(1 + prefix, 0xb7) as u64,
-                strict_if(prefix_ind4, 1, wrapping_sub(1 + prefix, 0xf7) as u64)
+                strict_if(is_short_list, 1, wrapping_sub(1 + prefix, 0xf7) as u64)
             )
         )
     );
 
     // To compute length, first determine how many of the following bytes contain the length of the payload.
-    let lenlen = prefix_ind3 as u64 * (1 - prefix_ind2 as u64) * wrapping_sub(prefix, 0xb7) as u64
-        + (1 - prefix_ind4 as u64) * wrapping_sub(prefix, 0xf7) as u64;
+    let lenlen = is_long_string as u64 * (1 - is_short_string as u64) * wrapping_sub(prefix, 0xb7) as u64
+        + (1 - is_short_list as u64) * wrapping_sub(prefix, 0xf7) as u64;
 
     // Set length according to whether it is contained in the prefix (i.e. lenlen == 0).
     let len = strict_if(
         lenlen == 0,
         strict_if(
-            prefix_ind1,
+            is_single_byte,
             1,
             strict_if(
-                prefix_ind2,
+                is_short_string,
                 wrapping_sub(prefix, 0x80) as u64,
                 wrapping_sub(prefix, 0xc0) as u64
             )
@@ -115,7 +115,7 @@ pub fn decode_len<N>(arr: [u8; N]) -> RlpHeader {
 
 /// RLP string decoder. Returns offset and length of RLP-encoded string as a tuple.
 pub fn decode_string<N>(input: [u8; N]) -> (u64, u64) {
-    let mut RlpHeader {offset, length, data_type} = decode_len(input);
+    let mut RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
 
     let total_len = length + offset;
 
@@ -135,11 +135,13 @@ pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
     let mut num_fields: u64 = 0;
     let mut fragments = [RlpFragment::default(); NUM_FIELDS];
 
-    let mut RlpHeader {offset, length: payload_len, data_type: input_type} = decode_len(input);
+    let mut RlpHeader {offset, length: payload_len, data_type: input_type} = decode_to_rlp_header(input);
 
     let total_len = payload_len + offset;
 
     assert(input_type == LIST);
+
+    let total_len = payload_len + offset;
 
     assert(total_len <= input.len());
 
@@ -148,7 +150,7 @@ pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
 
         // Make sure the index doesn't overshoot
         let header: [u8; MAX_LEN_IN_BYTES + 1] = copy_subarray(input, offset);
-        let RlpHeader {offset: field_off, length: field_len, data_type: field_type} = decode_len(header);
+        let RlpHeader {offset: field_off, length: field_len, data_type: field_type} = decode_to_rlp_header(header);
         let total_field_len = field_off + field_len;
 
         // Assign decoded data and set them to 0 if loop indicator false (Convenient for testing; could remove this later)
@@ -171,7 +173,7 @@ pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NU
     let mut num_fields: u64 = 0;
     let mut fragments = [RlpFragment::default(); NUM_FIELDS];
 
-    let mut RlpHeader {offset, length: payload_len, data_type: input_type} = decode_len(input);
+    let mut RlpHeader {offset, length: payload_len, data_type: input_type} = decode_to_rlp_header(input);
     let total_len = payload_len + offset;
 
     assert(input_type == LIST);
@@ -221,7 +223,7 @@ pub fn copy_subarray<T, N, M>(arr: [T; N], offset: u64) -> [T; M] {
 }
 
 // Leads to fewer constraints than the usual if.
-fn strict_if(pred: bool, x: u64, y: u64) -> u64 {
+pub fn strict_if(pred: bool, x: u64, y: u64) -> u64 {
     let pred_f = pred as u64;
     pred_f * x + (1 - pred_f) * y
 }
@@ -288,19 +290,19 @@ fn data_len_test_padded() {
 fn rlp_length_check() {
     // List test case
     let in0: [u8; MAX_LEN_IN_BYTES + 1] = copy_subarray([0xc7, 0xc0, 0xc1, 0xc0, 0xc3, 0xc0, 0xc1, 0xc0], 0);
-    let x = decode_len(in0);
+    let x = decode_to_rlp_header(in0);
     assert(x.offset == 1);
     assert(x.length == 7);
     assert(x.data_type == LIST);
 
     // String test case
-    let y = decode_len([0x82, 0x04, 0x00]);
+    let y = decode_to_rlp_header([0x82, 0x04, 0x00]);
     assert(y.offset == 1);
     assert(y.length == 2);
     assert(y.data_type == STRING);
 
     // Longer string test case
-    let z = decode_len(
+    let z = decode_to_rlp_header(
         [
         185, 4, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 0
     ]
