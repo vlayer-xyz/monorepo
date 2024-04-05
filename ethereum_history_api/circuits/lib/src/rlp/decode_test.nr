@@ -39,16 +39,17 @@ mod test_decode_list {
     #[test]
     fn three_elements() {
         let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0, 0];
-        let expected_fragments = [
+        let expected = RlpList {
+            fragments: [
             RlpFragment { offset: 2, length: 3, data_type: STRING },
             RlpFragment { offset: 6, length: 3, data_type: STRING },
             RlpFragment { offset: 9, length: 1, data_type: STRING },
             RlpFragment { offset: 0, length: 0, data_type: STRING },
             RlpFragment { offset: 0, length: 0, data_type: STRING }
-        ];
-
-        let actual: RlpList<5> = decode_list(rlp);
-        assert(actual == RlpList { fragments: expected_fragments, num_fields: 3};
+            ],
+            num_fields: 3
+        };
+        assert(decode_list(rlp) == expected);
     }
 
     fn rlp_decode_test2() {

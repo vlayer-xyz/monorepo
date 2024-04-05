@@ -36,12 +36,6 @@ struct RlpList<NUM_FIELDS> {
     num_fields: u64
 }
 
-// impl<NUM_FIELDS> RlpList<NUM_FIELDS> {
-//     pub fn new(fragments: [RlpFragment; NUM_FIELDS], num_fields: u64) -> Self {
-//         RlpList { fragments, num_fields }
-//     }
-// }
-
 /// Payload length extractor. Returns length of RLP payload in the case its length
 /// exceeds 56 bytes.
 ///
