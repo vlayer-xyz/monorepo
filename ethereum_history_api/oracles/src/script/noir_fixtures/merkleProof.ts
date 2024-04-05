@@ -16,9 +16,10 @@ export async function createMerkleProofFixture(keys: number[]) {
   const nodes = proof.slice(0, proof.length - 1);
   const leaf = proof[proof.length - 1];
 
-  return `global key = ${key.join(', ')};
+  return `global root = [${trie.root().join(', ')}];
+global key = [${Array.from(key).map(encodeByte).join(', ')}];
 global value = [${Array.from(exampleValue).map(encodeByte).join(', ')}];
-global nodes = [[${nodes.map((proofOneLevel) => Array.from(proofOneLevel).map(encodeByte).join(', ')).join('], [')}]];
+global nodes = [${nodes.length > 0 ? '[' + nodes.map((proofOneLevel) => Array.from(proofOneLevel).map(encodeByte).join(', ')).join('], [') + ']' : ''}];
 global leaf = [${Array.from(leaf).map(encodeByte).join(', ')}];
 `;
 }

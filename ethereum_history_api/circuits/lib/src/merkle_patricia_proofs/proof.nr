@@ -1,5 +1,5 @@
 use crate::misc::{arrays::sub_array_equals_up_to_length, types::Bytes32};
-use crate::rlp::decode::{decode_len, decode_list_of_small_strings, RLP_List};
+use crate::rlp::decode::{decode_len, decode_list, RLP_List};
 use dep::std::hash::keccak256;
 
 global MAX_NODE_LEN = 532;
@@ -29,7 +29,7 @@ pub fn assert_merkle_proof<MAX_KEY_LEN, MAX_VALUE_LEN, MAX_DEPTH, MAX_LEAF_LEN>(
     root: Bytes32,
     proof: Proof<MAX_DEPTH, MAX_LEAF_LEN>
 ) {
-    let leaf_rlp_list: RLP_List<2> = decode_list_of_small_strings(proof.leaf);
+    let leaf_rlp_list: RLP_List<2> = decode_list(proof.leaf);
     assert(leaf_rlp_list.num_fields == 2, "Leaf expected to have 2 fields");
 
     assert(keccak256(proof.leaf, leaf_get_len(proof.leaf)) == root, "Invalid root");
@@ -41,6 +41,16 @@ pub fn assert_merkle_proof<MAX_KEY_LEN, MAX_VALUE_LEN, MAX_DEPTH, MAX_LEAF_LEN>(
             leaf_rlp_list.offset[1],
             leaf_rlp_list.length[1]
         ), "Value mismatch"
+    );
+
+    let leaf_parity_prefix_len = 1; // TODO: Remove this hack
+    assert(
+        sub_array_equals_up_to_length(
+            key,
+            proof.leaf,
+            leaf_rlp_list.offset[0] + leaf_parity_prefix_len,
+            leaf_rlp_list.length[0] - leaf_parity_prefix_len
+        ), "Key mismatch"
     );
 }
 
