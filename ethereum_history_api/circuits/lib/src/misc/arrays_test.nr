@@ -1,11 +1,20 @@
-use crate::misc::arrays::memcpy;
+mod test_memcpy {
+    use crate::misc::arrays::memcpy;
 
-#[test]
-fn test_memcpy() {
-    let mut dest = [0; 3];
-    let src = [1, 2, 3, 4, 5];
-    memcpy(&mut dest, src, 2);
-    assert(dest == [3, 4, 5]);
+    #[test]
+    fn success() {
+        let mut dest = [0; 3];
+        let src = [1, 2, 3, 4, 5];
+        memcpy(&mut dest, src, 2);
+        assert(dest == [3, 4, 5]);
+    }
+
+    #[test(should_fail_with = "source index out of bound")]
+    fn src_index_out_of_bound() {
+        let mut dest = [0; 5];
+        let src = [1, 2, 3];
+        memcpy(&mut dest, src, 4);
+    }
 }
 
 mod test_assert_sub_array_equals {
@@ -67,7 +76,7 @@ mod test_sub_array_equals {
     }
 }
 
-mod array_equls {
+mod array_equals {
     use crate::misc::arrays::array_equals;
     #[test]
     fn success_empty_array() {

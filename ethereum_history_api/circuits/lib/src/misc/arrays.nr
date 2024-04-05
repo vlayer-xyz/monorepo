@@ -22,6 +22,7 @@ pub fn resize<TItem, NEW_LEN, OLD_LEN>(src: [TItem; OLD_LEN]) -> [TItem; NEW_LEN
 /// * `src` - Source array
 /// * `offset` - Offset in source array 
 pub(crate) fn memcpy<N, M>(dest: &mut [u8; N], src: [u8; M], offset: u64) {
+    assert(offset + N <= M, "source index out of bound");
     for i in 0..N {
         (*dest)[i] = src[offset + i];
     }
