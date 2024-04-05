@@ -1,20 +1,24 @@
 import { Trie } from '@ethereumjs/trie';
-import { encodeHex } from '../../noir/oracles/common/encode.js';
+import { encodeByte, encodeField } from '../../noir/oracles/common/encode.js';
+import { encodeHexStringToArray } from '../../main.js';
 
-const exampleValue = '0x010203040';
+const exampleValue = encodeHexStringToArray('0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef');
 
 export async function createMerkleProofFixture(keys: number[]) {
   const trie = new Trie();
-  for (const key of keys) {
+  const keysUInt8Array = keys.map((key) => encodeHexStringToArray(encodeField(key)));
+  for (const key of keysUInt8Array) {
     await trie.put(key, exampleValue);
   }
-  const key = keys[0];
+
+  const key = keysUInt8Array[0];
   const proof = await trie.createProof(key);
   const nodes = proof.slice(0, proof.length - 1);
   const leaf = proof[proof.length - 1];
 
-  return `global key = ${key};
-global value = [${encodeHex(exampleValue).join(', ')}];
-global proof = [[${proof.map((proofOneLevel) => proofOneLevel.join(', ')).join('], [')}]];
+  return `global key = ${key.join(', ')};
+global value = [${Array.from(exampleValue).map(encodeByte).join(', ')}];
+global nodes = [[${nodes.map((proofOneLevel) => Array.from(proofOneLevel).map(encodeByte).join(', ')).join('], [')}]];
+global leaf = [${Array.from(leaf).map(encodeByte).join(', ')}];
 `;
 }
