@@ -15,6 +15,49 @@ fn copy_subarray_test() {
     assert(copy_subarray(input, 6) == []);
 }
 
+mod test_decode_string {
+    use crate::rlp::decode::{decode_string, RlpFragment, STRING};
+
+    #[test]
+    fn single_byte() {
+        let rlp = [0x00];
+
+        let expected_offset = 0;
+        let expected_length = 1;
+        assert(decode_string(rlp) == (expected_offset, expected_length));
+    }
+
+    #[test]
+    fn short_string() {
+        let rlp = [0x83, 0x63, 0x61, 0x74];
+
+        let expected_offset = 1;
+        let expected_length = 3;
+        assert(decode_string(rlp) == (expected_offset, expected_length));
+    }
+
+    #[test]
+    fn long_string() {
+        let rlp = [0xb8, 0x01, 0x83];
+
+        let expected_offset = 2;
+        let expected_length = 1;
+        assert(decode_string(rlp) == (expected_offset, expected_length));
+    }
+
+    #[test(should_fail_with = "wrong data type")]
+    fn fail_list_type() {
+        let rlp_of_list_type = [0xc0];
+        let _ = decode_string(rlp_of_list_type);
+    }
+
+    #[test(should_fail_with = "length exceeds input length")]
+    fn fail_length_exceeds_input_length() {
+        let rlp_with_wrong_length = [0x89]; // length is 9, but 0 bytes of payload is provided
+        let _ = decode_string(rlp_with_wrong_length);
+    }
+}
+
 mod test_decode_list {
     use crate::rlp::decode::{decode_list, RlpList, RlpFragment, STRING};
 

@@ -110,12 +110,10 @@ pub fn decode_to_rlp_header<N>(arr: [u8; N]) -> RlpHeader {
 /// RLP string decoder. Returns offset and length of RLP-encoded string as a tuple.
 pub fn decode_string<N>(input: [u8; N]) -> (u64, u64) {
     let mut RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
+    assert(data_type == STRING, "wrong data type");
 
     let total_len = length + offset;
-
-    assert(data_type == STRING);
-
-    assert(total_len <= input.len());
+    assert(total_len <= input.len(), "length exceeds input length");
 
     (offset, length)
 }
