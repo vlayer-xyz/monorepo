@@ -1,9 +1,9 @@
-use dep::proof::{const::{MAX_ACCOUNT_STATE_LENGTH, HASH_LENGTH}, trie_proof::TrieProof, utils::byte_value};
+use dep::proof::{const::{MAX_ACCOUNT_STATE_LENGTH, HASH_LENGTH}, trie_proof::TrieProof};
 use dep::u2b::u64_to_u8;
 
 use crate::account::{Account, StateProof};
-use crate::misc::{arrays::{sub_array_equals_up_to_length, array_equals}, types::{Address, Bytes32}};
-use crate::rlp::decode::{RLP_List, decode_list_of_small_strings};
+use crate::misc::{arrays::{sub_array_equals_up_to_length, array_equals}, types::{Address, Bytes32}, bytes::byte_value};
+use crate::rlp::decode::{RlpList, decode_list_of_small_strings};
 
 use crate::HASH_LEN;
 
@@ -15,7 +15,7 @@ global CODE_HASH_INDEX = 3;
 
 pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_STATE_LENGTH], account: Account) {
     let account_rlp_right_padded = byte_value(account_rlp_left_padded).0;
-    let account_rlp_list: RLP_List<ACCOUNT_FIELDS_COUNT> = decode_list_of_small_strings(account_rlp_right_padded);
+    let account_rlp_list: RlpList<ACCOUNT_FIELDS_COUNT> = decode_list_of_small_strings(account_rlp_right_padded);
     assert(account_rlp_list.num_fields == ACCOUNT_FIELDS_COUNT, "Invalid number of fields in account RLP");
 
     let nonce = u64_to_u8(account.nonce as u64);
@@ -23,42 +23,44 @@ pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_ST
     let balance = U128::from_integer(account.balance).to_be_bytes();
     let (balance, balance_length) = byte_value(balance);
 
-    assert(account_rlp_list.length[NONCE_INDEX] == nonce_length, "Nonce length mismatch");
+    assert(account_rlp_list.fragments[NONCE_INDEX].length == nonce_length, "Nonce length mismatch");
     assert(
         sub_array_equals_up_to_length(
             nonce,
             account_rlp_right_padded,
-            account_rlp_list.offset[NONCE_INDEX],
+            account_rlp_list.fragments[NONCE_INDEX].offset,
             nonce_length as u64
         ), "Nonce mismatch"
     );
 
-    assert(account_rlp_list.length[BALANCE_INDEX] == balance_length, "Balance length mismatch");
+    assert(account_rlp_list.fragments[BALANCE_INDEX].length == balance_length, "Balance length mismatch");
     assert(
         sub_array_equals_up_to_length(
             balance,
             account_rlp_right_padded,
-            account_rlp_list.offset[BALANCE_INDEX],
+            account_rlp_list.fragments[BALANCE_INDEX].offset,
             balance_length as u64
         ), "Balance mismatch"
     );
 
-    assert(account_rlp_list.length[STORAGE_ROOT_INDEX] == HASH_LEN, "Storage root length mismatch");
+    assert(
+        account_rlp_list.fragments[STORAGE_ROOT_INDEX].length == HASH_LEN, "Storage root length mismatch"
+    );
     assert(
         sub_array_equals_up_to_length(
             account.storage_root,
             account_rlp_right_padded,
-            account_rlp_list.offset[STORAGE_ROOT_INDEX],
+            account_rlp_list.fragments[STORAGE_ROOT_INDEX].offset,
             HASH_LEN as u64
         ), "Storage root mismatch"
     );
 
-    assert(account_rlp_list.length[CODE_HASH_INDEX] == HASH_LEN, "Code hash length mismatch");
+    assert(account_rlp_list.fragments[CODE_HASH_INDEX].length == HASH_LEN, "Code hash length mismatch");
     assert(
         sub_array_equals_up_to_length(
             account.code_hash,
             account_rlp_right_padded,
-            account_rlp_list.offset[CODE_HASH_INDEX],
+            account_rlp_list.fragments[CODE_HASH_INDEX].offset,
             HASH_LEN as u64
         ), "Code hash mismatch"
     );

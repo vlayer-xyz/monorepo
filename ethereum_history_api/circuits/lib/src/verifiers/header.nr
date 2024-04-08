@@ -1,10 +1,10 @@
-use dep::proof::utils::byte_value;
 use dep::std::hash::keccak256;
 use dep::u2b::u64_to_u8;
 
 use crate::header::{BlockHeaderPartial, BlockHeaderRlp, ETHEREUM_MAINNET_ID, ETHEREUM_SEPOLIA_ID};
 use crate::misc::arrays::{sub_array_equals, sub_array_equals_up_to_length};
-use crate::rlp::decode::{decode_list, RLP_List};
+use crate::misc::bytes::byte_value;
+use crate::rlp::decode::{decode_list, RlpList};
 
 global MAX_HEADER_FIELDS_COUNT = 20;
 global STATE_ROOT_INDEX = 3;
@@ -39,7 +39,7 @@ pub fn verify_header(
     block_header_partial: BlockHeaderPartial,
     block_header_rlp: BlockHeaderRlp
 ) {
-    let header_rlp_list: RLP_List<MAX_HEADER_FIELDS_COUNT> = decode_list(block_header_rlp.data);
+    let header_rlp_list: RlpList<MAX_HEADER_FIELDS_COUNT> = decode_list(block_header_rlp.data);
     let expected_header_fields_count = get_header_fields_count(chain_id, block_header_partial.number as u64);
 
     assert(
@@ -51,13 +51,13 @@ pub fn verify_header(
     let (block_number, block_number_length) = byte_value(block_number);
 
     assert(
-        header_rlp_list.length[BLOCK_NUM_INDEX] == block_number_length, "block number length does not match"
+        header_rlp_list.fragments[BLOCK_NUM_INDEX].length == block_number_length, "block number length does not match"
     );
     assert(
         sub_array_equals_up_to_length(
             block_number,
             block_header_rlp.data,
-            header_rlp_list.offset[BLOCK_NUM_INDEX],
+            header_rlp_list.fragments[BLOCK_NUM_INDEX].offset,
             block_number_length as u64
         ), "block number does not match"
     );
@@ -72,21 +72,21 @@ pub fn verify_header(
         sub_array_equals(
             block_header_partial.state_root,
             block_header_rlp.data,
-            header_rlp_list.offset[STATE_ROOT_INDEX]
+            header_rlp_list.fragments[STATE_ROOT_INDEX].offset
         ), "state_root does not match"
     );
     assert(
         sub_array_equals(
             block_header_partial.transactions_root,
             block_header_rlp.data,
-            header_rlp_list.offset[TRANSACTIONS_ROOT_INDEX]
+            header_rlp_list.fragments[TRANSACTIONS_ROOT_INDEX].offset
         ), "transactions_root does not match"
     );
     assert(
         sub_array_equals(
             block_header_partial.receipts_root,
             block_header_rlp.data,
-            header_rlp_list.offset[RECEIPTS_ROOT_INDEX]
+            header_rlp_list.fragments[RECEIPTS_ROOT_INDEX].offset
         ), "receipts_root does not match"
     );
 }

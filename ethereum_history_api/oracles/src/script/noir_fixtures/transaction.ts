@@ -1,10 +1,11 @@
 import { GetTransactionReturnType } from 'viem';
 import { encodeOptional, joinArray, indentBlock } from '../../noir/noir_js/encode.js';
-import { encodeAddress, encodeHex } from '../../noir/oracles/common/encode.js';
+import { encodeAddress, encodeField, encodeHex } from '../../noir/oracles/common/encode.js';
 import { BYTE_HEX_LEN } from '../../util/const.js';
 import { removeHexPrefix } from '../../util/hex.js';
 
 export function createTransactionFixture(tx: GetTransactionReturnType): string {
+  const txIdx = encodeField(tx.transactionIndex);
   const to = encodeOptional(tx.to ? joinArray(encodeAddress(tx.to)) : undefined);
   const data = encodeHex(tx.input);
   const dataLen = removeHexPrefix(tx.input).length / BYTE_HEX_LEN;
@@ -13,6 +14,8 @@ export function createTransactionFixture(tx: GetTransactionReturnType): string {
   const s = encodeHex(tx.s);
 
   return `use crate::transaction::TxPartial;
+
+global tx_idx = ${txIdx};
 
 global transaction = TxPartial {
   nonce: ${tx.nonce},
