@@ -19,7 +19,6 @@ import { createReceiptFixture } from './noir_fixtures/receipt.js';
 const INDEX_NOT_FOUND = -1;
 
 const NOIR_FIXTURES_DIRECTORY = '../circuits/lib/src/fixtures';
-await rm(NOIR_FIXTURES_DIRECTORY, { recursive: true, force: true });
 
 for (const chain in HISTORY_API_FIXTURES) {
   const client = createClient.get(chain)!();
