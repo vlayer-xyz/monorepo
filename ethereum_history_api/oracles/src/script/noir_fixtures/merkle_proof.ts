@@ -18,10 +18,10 @@ export function createMerkleProofFixture(proofFixture: ProofFixture) {
   const value = encodeHex(proofFixture.value);
   const nodes = proofFixture.proof.nodes.map((node) => encodeUint8Array(node));
   const leaf = encodeUint8Array(proofFixture.proof.leaf);
-  return `global key = ${joinArray(key)};
-global value = ${joinArray(value)};
-global root = ${joinArray(root)};
-global nodes = [${nodes.length > 0 ? '[' + nodes.map((node) => joinArray(node)).join('], [') + ']' : ''}];
+  return `global key = ${joinArray(key)};\n
+global value = ${joinArray(value)};\n
+global root = ${joinArray(root)};\n
+global nodes = ${joinArray(nodes.map((node) => joinArray(node)))};\n
 global leaf = ${joinArray(leaf)};
 `;
 }
