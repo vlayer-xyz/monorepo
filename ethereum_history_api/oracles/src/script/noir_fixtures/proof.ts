@@ -1,6 +1,6 @@
 import { padHex } from 'viem';
 import { Proof } from '../../ethereum/proof.js';
-import { encodeHexString, joinArray } from '../../noir/noir_js/encode.js';
+import { encodeHexString, indentBlock, joinArray } from '../../noir/noir_js/encode.js';
 import { ZERO_PAD_VALUE } from '../../noir/oracles/common/const.js';
 import { encodeHex, encodeProof } from '../../noir/oracles/common/encode.js';
 import { padArray } from '../../util/array.js';
@@ -22,9 +22,9 @@ export function createProofFixture(
   return `use ${crateImport};
 
 global proof = ${proofNoirType} {
-  key: ${joinArray(key)},
-  value: ${joinArray(value)},
-  proof: ${joinArray(encodedProof)},
+  key: ${indentBlock(joinArray(key), 1)},
+  value: ${indentBlock(joinArray(value), 1)},
+  proof: ${indentBlock(joinArray(encodedProof), 1)},
   depth: ${depth}
 };
 `;
