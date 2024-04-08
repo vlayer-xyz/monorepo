@@ -121,10 +121,8 @@ pub fn decode_string<N>(input: [u8; N]) -> (u64, u64) {
     (offset, length)
 }
 
-/// RLP list decoder. Returns an RLP list look-up table.
-///
-/// # Quirks
-/// * For string elements, the offset points to the payload, whereas the offset
+/// Returns an RLP list look-up table.
+/// For string elements, the offset points to the payload, whereas the offset
 ///   of a list element points to the RLP header of that element.
 pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
     let mut num_fields: u64 = 0;
@@ -143,9 +141,9 @@ pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
         let RlpHeader {offset: field_off, length: field_len, data_type: field_type} = decode_to_rlp_header(header);
         let total_field_len = field_off + field_len;
 
-        // Assign decoded data and set them to 0 if outside od total_len
+        // Assign decoded data or set them to 0 if outside od total_len
         fragments[i].offset = if_in_range * (offset + (1 - field_type) * field_off); // If the ith slot contains a list, include its RLP header.
-        fragments[i].length = if_in_range * (field_len + field_type * field_off); // If the ith slot contains a list, make sure to include the length of its header in the decoded data.
+        fragments[i].length = if_in_range * (field_len + field_type * field_off); // If the ith slot contains a list, include the length of its header.
         fragments[i].data_type = if_in_range * (field_type);
 
         offset += if_in_range * total_field_len;
