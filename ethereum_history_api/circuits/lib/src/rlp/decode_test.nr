@@ -34,7 +34,7 @@ mod test_extract_payload_len {
         assert(extract_payload_len(rlp_header, lenlen) == 0x016d);
     }
 
-    #[test(should_fail_with = "length of length exceeds maximum")]
+    #[test(should_fail_with = "Length of length exceeds maximum")]
     fn fail_lenlen_exceeding() {
         let _ = extract_payload_len([9], 3);
     }
@@ -75,13 +75,13 @@ mod test_decode_string {
         assert(decode_string(rlp) == (expected_offset, expected_length));
     }
 
-    #[test(should_fail_with = "wrong data type")]
+    #[test(should_fail_with = "Wrong data type")]
     fn fail_list_type() {
         let rlp_of_list_type = [0xc0];
         let _ = decode_string(rlp_of_list_type);
     }
 
-    #[test(should_fail_with = "length exceeds input length")]
+    #[test(should_fail_with = "Length exceeds input length")]
     fn fail_length_exceeds_input_length() {
         let rlp_with_wrong_length = [0x89]; // length is 9, but 0 bytes of payload is provided
         let _ = decode_string(rlp_with_wrong_length);

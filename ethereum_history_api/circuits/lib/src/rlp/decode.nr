@@ -113,10 +113,10 @@ pub fn decode_to_rlp_header<N>(arr: [u8; N]) -> RlpHeader {
 
 pub fn decode_string<N>(input: [u8; N]) -> (u64, u64) {
     let mut RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
-    assert(data_type == STRING, "wrong data type");
+    assert(data_type == STRING, "Wrong data type");
 
     let total_len = length + offset;
-    assert(total_len <= input.len(), "length exceeds input length");
+    assert(total_len <= input.len(), "Length exceeds input length");
 
     (offset, length)
 }
