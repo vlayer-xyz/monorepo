@@ -1,2 +1,2 @@
 mod leaf;
-mod depth_one_no_extensions;
+mod depth_one_single_branch;

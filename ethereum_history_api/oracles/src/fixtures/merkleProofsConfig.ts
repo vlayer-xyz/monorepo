@@ -16,7 +16,7 @@ export const PROOF_FIXTURES: ProofFixtureInputs = {
     key: '0x01',
     keyValuePairs: [{ key: '0x01', value: BIG_VALUE }]
   },
-  depth_one_no_extensions: {
+  depth_one_single_branch: {
     key: '0x01',
     keyValuePairs: [
       { key: '0x01', value: BIG_VALUE },
