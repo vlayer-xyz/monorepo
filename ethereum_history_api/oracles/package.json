@@ -15,10 +15,10 @@
     "format:ci": "prettier --check src",
     "oracle-server": "tsx src/script/startOracleServer",
     "oracle-server:watch": "tsx watch src/script/startOracleServer",
-    "prepare-fixtures": "yarn prepare-js-fixtures && yarn prepare-noir-fixtures",
-    "prepare-js-fixtures": "tsx src/script/prepareJSFixtures",
-    "prepare-proof-fixtures": "tsx src/script/prepareProofFixtures",
-    "prepare-noir-fixtures": "tsx src/script/prepareNoirFixtures"
+    "prepare-fixtures": "yarn prepare-js-fixtures && yarn prepare-noir-fixtures && yarn prepare-proof-fixtures",
+    "prepare-js-fixtures": "tsx src/script/prepareJSHistoryAPIFixtures",
+    "prepare-noir-fixtures": "tsx src/script/prepareNoirHistoryAPIFixtures",
+    "prepare-proof-fixtures": "tsx src/script/prepareMerkleProofFixtures"
   },
   "author": "",
   "license": "ISC",

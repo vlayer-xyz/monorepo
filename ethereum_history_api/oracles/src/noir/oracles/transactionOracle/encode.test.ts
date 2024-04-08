@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { TX_OFFSETS, encodeTx } from './encode.js';
 import { loadTxFixture } from '../../../fixtures.js';
-import { ETH_TRANSFER_TX_HASH, CHAIN_LINK_TRANSFER_TX_HASH } from '../../../fixtures/config.js';
+import { ETH_TRANSFER_TX_HASH, CHAIN_LINK_TRANSFER_TX_HASH } from '../../../fixtures/historyAPIConfig.js';
 
 // TODO: Add a test for contract creation transaction when we support transactions longer than trie nodes.
 describe('TransactionOracle encode', () => {

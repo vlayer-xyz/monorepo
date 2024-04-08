@@ -4,7 +4,7 @@ import { Hex } from 'viem';
 import { Block } from '../ethereum/blockHeader.js';
 import { createClient } from '../ethereum/client.js';
 import { getReceiptProof } from '../ethereum/receiptProof.js';
-import { FIXTURES } from '../fixtures/config.js';
+import { HISTORY_API_FIXTURES } from '../fixtures/historyAPIConfig.js';
 import { assert } from '../main.js';
 import { createAccountFixture } from './noir_fixtures/account.js';
 import { createHeaderFixture } from './noir_fixtures/header.js';
@@ -21,17 +21,17 @@ const INDEX_NOT_FOUND = -1;
 const NOIR_FIXTURES_DIRECTORY = '../circuits/lib/src/fixtures';
 await rm(NOIR_FIXTURES_DIRECTORY, { recursive: true, force: true });
 
-for (const chain in FIXTURES) {
+for (const chain in HISTORY_API_FIXTURES) {
   const client = createClient.get(chain)!();
 
   let chainModule = ``;
   const chainModuleFile = `${NOIR_FIXTURES_DIRECTORY}/${chain}.nr`;
-  for (const hardFork in FIXTURES[chain]) {
+  for (const hardFork in HISTORY_API_FIXTURES[chain]) {
     let hardforkModule = ``;
     const hardforkModuleFile = `${NOIR_FIXTURES_DIRECTORY}/${chain}/${hardFork}.nr`;
 
-    for (const fixtureName in FIXTURES[chain][hardFork]) {
-      const { blockNumber, address, storageKeys, transactionHash } = FIXTURES[chain][hardFork][fixtureName];
+    for (const fixtureName in HISTORY_API_FIXTURES[chain][hardFork]) {
+      const { blockNumber, address, storageKeys, transactionHash } = HISTORY_API_FIXTURES[chain][hardFork][fixtureName];
       const modulePath = `${NOIR_FIXTURES_DIRECTORY}/${chain}/${hardFork}/${fixtureName}`;
       await mkdir(modulePath, { recursive: true });
       const fixtureModules: string[] = [];
