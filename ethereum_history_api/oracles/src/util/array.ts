@@ -24,3 +24,7 @@ export function last<T>(array: readonly T[]): T {
   assert(array.length > 0, 'Array should not be empty');
   return array[array.length - 1];
 }
+
+export function hasDuplicates<T>(array: T[]) {
+  return new Set(array).size !== array.length;
+}
