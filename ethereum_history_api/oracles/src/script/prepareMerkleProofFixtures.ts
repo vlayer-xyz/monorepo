@@ -24,9 +24,9 @@ for (const fixtureName in PROOF_FIXTURES) {
     await trie.put(encodeHexStringToArray(keyValuePair.key), encodeHexStringToArray(keyValuePair.value));
   }
   const key = PROOF_FIXTURES[fixtureName].key;
-  const proof = await trie.createProof(encodeHexStringToArray(key));
   const value = keyValuePairs.find((keyValuePair) => keyValuePair.key === key)?.value;
   assert(value !== undefined, `Key ${key} not found in keyValuePairs of ${fixtureName} (see merkleProofConfig.ts)`);
+  const proof = await trie.createProof(encodeHexStringToArray(key));
 
   const proofFixture = {
     key,
