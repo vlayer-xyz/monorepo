@@ -159,40 +159,44 @@ pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NU
     let mut num_fields: u64 = 0;
     let mut fragments = [RlpFragment::default(); NUM_FIELDS];
 
-    let mut RlpHeader {offset, length: payload_len, data_type: input_type} = decode_to_rlp_header(input);
-    let total_len = payload_len + offset;
+    let mut RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
+    assert(data_type == LIST, "Not list type");
 
-    assert(input_type == LIST);
-    assert(total_len <= input.len());
+    let total_len = length + offset;
+    assert(total_len <= input.len(), "Total length exceeds input length");
 
     for i in 0..NUM_FIELDS {
-        let loop_ind = (offset != total_len) as u64;
+        let is_in_range = (offset != total_len) as u64;
 
-        let header = input[offset];
-
-        assert(header < 0xb8); // Header must represent a string of length < 56 bytes.
+        let mut header = 0x00;
+        if (is_in_range as bool) {
+            header = input[offset];
+        }
+        assert(header < 0xb8, "Element is not a string of length < 56 bytes");
 
         let field_type = STRING;
 
-        let single_byte_ind = (header < 0x80) as u64; // 1 if `header` represents a single byte.
+        let is_single_byte = (header < 0x80);
 
-        let field_off = 1 - single_byte_ind; // If `header` < 0x80, then we are dealing with a single byte whose value
-        // is given by header. Else, the string begins at the following index.
-
-        let field_len = single_byte_ind * 1 + (1 - single_byte_ind) * (wrapping_sub(header, 0x80) as u64); // Single byte means len = 1,
-        // else subtract 0x80 from the header to determine len.
+        let mut field_off: u64 = 0;
+        let mut field_len: u64 = 0;
+        if (is_single_byte) {
+            field_off = 0;
+            field_len = 1;
+        } else {
+            field_off = 1;
+            field_len = (wrapping_sub(header, 0x80) as u64);
+        }
 
         let total_field_len = field_off + field_len;
 
-        fragments[i].offset = loop_ind * (offset + field_off);
-        fragments[i].length = loop_ind * (field_len);
-        fragments[i].data_type= loop_ind * (field_type);
+        fragments[i].offset = is_in_range * (offset + field_off);
+        fragments[i].length = is_in_range * (field_len);
+        fragments[i].data_type= is_in_range * (field_type);
 
-        offset += loop_ind * total_field_len;
-        num_fields += loop_ind;
+        offset += is_in_range * total_field_len;
+        num_fields += is_in_range;
     }
-
-    assert(total_len == offset);
 
     RlpList { fragments, num_fields }
 }

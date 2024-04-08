@@ -105,7 +105,6 @@ mod test_decode_list {
                 RlpFragment { offset: 2, length: 3, data_type: STRING },
                 RlpFragment { offset: 6, length: 3, data_type: STRING },
                 RlpFragment { offset: 9, length: 1, data_type: STRING },
-                RlpFragment { offset: 0, length: 0, data_type: STRING },
                 RlpFragment { offset: 0, length: 0, data_type: STRING }
             ],
             num_fields: 3
@@ -143,5 +142,65 @@ mod test_decode_list {
             num_fields: 17
         };
         assert(decode_list(rlp) == expected);
+    }
+}
+
+mod test_decode_list_of_small_strings {
+    use crate::rlp::decode::{decode_list_of_small_strings, RlpList, RlpFragment, STRING};
+    #[test]
+    fn success() {
+        let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13];
+        let expected = RlpList {
+            fragments: [
+                RlpFragment { offset: 2, length: 3, data_type: STRING },
+                RlpFragment { offset: 6, length: 3, data_type: STRING },
+                RlpFragment { offset: 9, length: 1, data_type: STRING }
+            ],
+            num_fields: 3
+        };
+
+        assert(decode_list_of_small_strings(rlp) == expected);
+    }
+
+    #[test]
+    fn success_comparing_with_zeros() {
+        let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13];
+        let expected = RlpList {
+            fragments: [
+                RlpFragment { offset: 2, length: 3, data_type: STRING },
+                RlpFragment { offset: 6, length: 3, data_type: STRING },
+                RlpFragment { offset: 9, length: 1, data_type: STRING },
+                RlpFragment { offset: 0, length: 0, data_type: STRING }
+            ],
+            num_fields: 3
+        };
+
+        assert(decode_list_of_small_strings(rlp) == expected);
+    }
+
+    #[test]
+    fn success_empty_list() {
+        let rlp = [0xc0];
+        let expected = RlpList { fragments: [], num_fields: 0 };
+
+        assert(decode_list_of_small_strings(rlp) == expected);
+    }
+
+    #[test(should_fail_with = "Not list type")]
+    fn fail_wrong_data_type() {
+        let rlp_of_single_byte = [0x00];
+        let _ : RlpList<1> = decode_list_of_small_strings(rlp_of_single_byte);
+    }
+
+    #[test(should_fail_with = "Total length exceeds input length")]
+    fn fail_length_exceeds_input_length() {
+        let rlp = [0xc9, 0x13];
+        let _ : RlpList<1> = decode_list_of_small_strings(rlp);
+    }
+
+    #[test(should_fail_with = "Element is not a string of length < 56 bytes")]
+    fn fail_list_with_lists() {
+        let rlp = [0xc1, 0xc0];
+        let _ : RlpList<1> = decode_list_of_small_strings(rlp);
     }
 }
