@@ -186,7 +186,7 @@ mod test_decode_list_of_small_strings {
         assert(decode_list_of_small_strings(rlp) == expected);
     }
 
-    #[test(should_fail_with = "Not list type")]
+    #[test(should_fail_with = "Expected a list")]
     fn fail_wrong_data_type() {
         let rlp_of_single_byte = [0x00];
         let _ : RlpList<1> = decode_list_of_small_strings(rlp_of_single_byte);

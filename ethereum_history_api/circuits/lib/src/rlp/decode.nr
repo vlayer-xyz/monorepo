@@ -159,31 +159,49 @@ pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NU
     let mut num_fields: u64 = 0;
     let mut fragments = [RlpFragment::default(); NUM_FIELDS];
 
-    let mut RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
-    assert(data_type == LIST, "Not list type");
+    let RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
+    assert(data_type == LIST, "Expected a list");
 
     let total_len = length + offset;
     assert(total_len <= input.len(), "Total length exceeds input length");
 
+    let mut current_offset = offset;
     for i in 0..NUM_FIELDS {
-        let is_in_range = (offset != total_len) as u64;
+        if (current_offset != total_len) {
+            let first_byte = input[current_offset];
 
+            let field_type = STRING;
+            let (field_off, field_len) = get_small_string_offset_and_length(first_byte);
+
+            let total_field_len = field_off + field_len;
+
+            fragments[i].offset = current_offset + field_off;
+            fragments[i].length = field_len;
+            fragments[i].data_type= field_type;
+
+            current_offset += total_field_len;
+            num_fields += 1;
+        }
+    }
+
+    RlpList { fragments, num_fields }
+}
 
 pub fn get_small_string_offset_and_length(first_byte: u8) -> (u64, u64) {
     assert(first_byte < 0xb8, "Element is not a string of length < 56 bytes");
-
+    
     let is_single_byte = (first_byte < 0x80);
 
-        let mut field_off: u64 = 0;
-        let mut field_len: u64 = 0;
+    let mut field_off: u64 = 0;
+    let mut field_len: u64 = 0;
 
-        if (is_single_byte) {
-            field_off = 0;
-            field_len = 1;
-        } else {
-            field_off = 1;
+    if (is_single_byte) {
+        field_off = 0;
+        field_len = 1;
+    } else {
+        field_off = 1;
         field_len = (wrapping_sub(first_byte, 0x80) as u64);
-        }
+    }
 
     (field_off, field_len)
 }
