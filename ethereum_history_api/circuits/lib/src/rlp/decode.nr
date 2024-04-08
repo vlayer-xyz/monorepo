@@ -43,12 +43,16 @@ impl<N> Eq for RlpList<N> {
 }
 
 pub fn extract_payload_len<N>(arr: [u8; N], lenlen: u64) -> u64 {
-    assert(lenlen <= MAX_LEN_IN_BYTES);
+    assert(lenlen <= MAX_LEN_IN_BYTES, "length of length exceeds maximum");
+
     let mut payload_length = 0;
 
-    // Restrict loop to maximum length in bytes
-    let loop_len_ind = (MAX_LEN_IN_BYTES < (N - 1)) as u64;
-    let loop_len = (loop_len_ind as Field * (MAX_LEN_IN_BYTES as Field - (N - 1) as Field) as Field + N as Field - 1) as u64;
+    let mut loop_len: u64 = 0;
+    if (MAX_LEN_IN_BYTES < (N - 1)) {
+        loop_len = MAX_LEN_IN_BYTES;
+    } else {
+        loop_len = N - 1;
+    }
 
     for i in 0..loop_len {
         if (i < lenlen) {

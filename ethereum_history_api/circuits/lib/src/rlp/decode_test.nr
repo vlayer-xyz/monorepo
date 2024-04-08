@@ -34,15 +34,10 @@ mod test_extract_payload_len {
         assert(extract_payload_len(rlp_header, lenlen) == 0x016d);
     }
 
-    #[test]
-    fn short_string() {
-        let rlp_header = [0x83];
-        let lenlen = 0;
-        let _ = extract_payload_len(rlp_header, lenlen);
+    #[test(should_fail_with = "length of length exceeds maximum")]
+    fn fail_lenlen_exceeding() {
+        let _ = extract_payload_len([9], 3);
     }
-
-    #[test]
-    fn lenlen_exceeding() {}
 }
 
 mod test_decode_string {
