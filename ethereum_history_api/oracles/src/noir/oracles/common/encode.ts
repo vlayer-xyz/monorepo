@@ -39,7 +39,7 @@ export function encodeBytes(value: bigint, length: number): Hex[] {
   return encodeHex(`0x${hexValue}`);
 }
 
-export function encodeUint8ArrayToBytes(uint8Array: Uint8Array): Hex[] {
+export function encodeUint8Array(uint8Array: Uint8Array): Hex[] {
   return Array.from(uint8Array).map(encodeByte);
 }
 
