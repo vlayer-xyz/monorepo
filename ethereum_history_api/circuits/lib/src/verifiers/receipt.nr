@@ -1,12 +1,11 @@
-mod split;
-mod split_test;
 mod rlp;
 mod rlp_test;
 
 use dep::proof::{const::HASH_LENGTH, receipt_proof::ReceiptProof, node::key_as_nibbles};
 use crate::receipt::{TxReceiptPartial, TxType};
 use crate::verifiers::{
-    receipt::{rlp::assert_receipt_rlp_equals, split::split_receipt_into_tx_type_and_receipt_rlp},
+    receipt::rlp::assert_receipt_rlp_equals,
+    split_into_tx_type_and_rlp::split_into_tx_type_and_rlp,
     tx_idx::assert_tx_idx_equals
 };
 use crate::misc::bytes::byte_value;
@@ -25,7 +24,7 @@ pub(crate) fn assert_receipt_equals<LOG_NUM, MAX_LOG_DATA_LEN>(
     encoded_receipt: [u8; MAX_ENCODED_RECEIPT_LENGTH],
     receipt: TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>
 ) {
-    let (actual_tx_type, receipt_rlp) = split_receipt_into_tx_type_and_receipt_rlp(tx_type, encoded_receipt);
+    let (actual_tx_type, receipt_rlp) = split_into_tx_type_and_rlp(tx_type, encoded_receipt);
     let is_pre_byzantium = is_pre_byzantium(block_number as u64);
 
     assert(actual_tx_type == tx_type, "Invalid tx type");

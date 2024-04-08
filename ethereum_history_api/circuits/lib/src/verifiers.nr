@@ -10,3 +10,5 @@ mod tx_idx;
 mod tx_idx_test;
 mod transaction;
 mod transaction_test;
+mod split_into_tx_type_and_rlp;
+mod split_into_tx_type_and_rlp_test;
