@@ -135,19 +135,19 @@ pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
     assert(total_len <= input.len());
 
     for i in 0..NUM_FIELDS {
-        let if_in_range = (offset != total_len) as u64;
+        let is_in_range = (offset != total_len) as u64;
 
         let header: [u8; MAX_LEN_IN_BYTES + 1] = copy_subarray(input, offset);
         let RlpHeader {offset: field_off, length: field_len, data_type: field_type} = decode_to_rlp_header(header);
         let total_field_len = field_off + field_len;
 
         // Assign decoded data or set them to 0 if outside od total_len
-        fragments[i].offset = if_in_range * (offset + (1 - field_type) * field_off); // If the ith slot contains a list, include its RLP header.
-        fragments[i].length = if_in_range * (field_len + field_type * field_off); // If the ith slot contains a list, include the length of its header.
-        fragments[i].data_type = if_in_range * (field_type);
+        fragments[i].offset = is_in_range * (offset + (1 - field_type) * field_off); // If the ith slot contains a list, include its RLP header.
+        fragments[i].length = is_in_range * (field_len + field_type * field_off); // If the ith slot contains a list, include the length of its header.
+        fragments[i].data_type = is_in_range * (field_type);
 
-        offset += if_in_range * total_field_len;
-        num_fields += if_in_range;
+        offset += is_in_range * total_field_len;
+        num_fields += is_in_range;
     }
 
     RlpList { fragments, num_fields }
