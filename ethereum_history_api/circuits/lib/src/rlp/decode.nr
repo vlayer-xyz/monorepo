@@ -168,37 +168,24 @@ pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NU
     for i in 0..NUM_FIELDS {
         let is_in_range = (offset != total_len) as u64;
 
-        let mut header = 0x00;
-        if (is_in_range as bool) {
-            header = input[offset];
-        }
-        assert(header < 0xb8, "Element is not a string of length < 56 bytes");
 
-        let field_type = STRING;
+pub fn get_small_string_offset_and_length(first_byte: u8) -> (u64, u64) {
+    assert(first_byte < 0xb8, "Element is not a string of length < 56 bytes");
 
-        let is_single_byte = (header < 0x80);
+    let is_single_byte = (first_byte < 0x80);
 
         let mut field_off: u64 = 0;
         let mut field_len: u64 = 0;
+
         if (is_single_byte) {
             field_off = 0;
             field_len = 1;
         } else {
             field_off = 1;
-            field_len = (wrapping_sub(header, 0x80) as u64);
+        field_len = (wrapping_sub(first_byte, 0x80) as u64);
         }
 
-        let total_field_len = field_off + field_len;
-
-        fragments[i].offset = is_in_range * (offset + field_off);
-        fragments[i].length = is_in_range * (field_len);
-        fragments[i].data_type= is_in_range * (field_type);
-
-        offset += is_in_range * total_field_len;
-        num_fields += is_in_range;
-    }
-
-    RlpList { fragments, num_fields }
+    (field_off, field_len)
 }
 
 pub fn copy_subarray<T, N, M>(arr: [T; N], offset: u64) -> [T; M] {
