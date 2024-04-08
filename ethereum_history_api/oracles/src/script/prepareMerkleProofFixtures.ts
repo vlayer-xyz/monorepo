@@ -11,6 +11,9 @@ function hasDuplicates(arr: Hex[]) {
   return new Set(arr).size !== arr.length;
 }
 
+let fixtureModule = ``;
+const fixtureModuleFile = `${NOIR_PROOF_FIXTURES_DIRECTORY}.nr`;
+
 for (const fixtureName in PROOF_FIXTURES) {
   await mkdir(NOIR_PROOF_FIXTURES_DIRECTORY, { recursive: true });
 
@@ -36,4 +39,7 @@ for (const fixtureName in PROOF_FIXTURES) {
     proof: { nodes: proof.slice(0, proof.length - 1), leaf: proof[proof.length - 1] }
   };
   await writeFile(`${NOIR_PROOF_FIXTURES_DIRECTORY}/${fixtureName}.nr`, createMerkleProofFixture(proofFixture));
+
+  fixtureModule += `mod ${fixtureName};\n`;
 }
+await writeFile(fixtureModuleFile, fixtureModule);
