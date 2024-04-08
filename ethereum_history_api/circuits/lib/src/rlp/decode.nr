@@ -43,12 +43,16 @@ impl<N> Eq for RlpList<N> {
 }
 
 pub fn extract_payload_len<N>(arr: [u8; N], lenlen: u64) -> u64 {
-    assert(lenlen <= MAX_LEN_IN_BYTES);
+    assert(lenlen <= MAX_LEN_IN_BYTES, "Length of length exceeds maximum");
+
     let mut payload_length = 0;
 
-    // Restrict loop to maximum length in bytes
-    let loop_len_ind = (MAX_LEN_IN_BYTES < (N - 1)) as u64;
-    let loop_len = (loop_len_ind as Field * (MAX_LEN_IN_BYTES as Field - (N - 1) as Field) as Field + N as Field - 1) as u64;
+    let mut loop_len: u64 = 0;
+    if (MAX_LEN_IN_BYTES < N - 1) {
+        loop_len = MAX_LEN_IN_BYTES;
+    } else {
+        loop_len = N - 1;
+    }
 
     for i in 0..loop_len {
         if (i < lenlen) {
@@ -109,51 +113,42 @@ pub fn decode_to_rlp_header<N>(arr: [u8; N]) -> RlpHeader {
 
 pub fn decode_string<N>(input: [u8; N]) -> (u64, u64) {
     let mut RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
-    assert(data_type == STRING, "wrong data type");
+    assert(data_type == STRING, "Wrong data type");
 
     let total_len = length + offset;
-    assert(total_len <= input.len(), "length exceeds input length");
+    assert(total_len <= input.len(), "Length exceeds input length");
 
     (offset, length)
 }
 
-/// RLP list decoder. Returns an RLP list look-up table.
-///
-/// # Quirks
-/// * For string elements, the offset points to the payload, whereas the offset
+/// Returns an RLP list look-up table.
+/// For string elements, the offset points to the payload, whereas the offset
 ///   of a list element points to the RLP header of that element.
 pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
     let mut num_fields: u64 = 0;
     let mut fragments = [RlpFragment::default(); NUM_FIELDS];
 
-    let mut RlpHeader {offset, length: payload_len, data_type: input_type} = decode_to_rlp_header(input);
+    let mut RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
+    assert(data_type == LIST);
 
-    let total_len = payload_len + offset;
-
-    assert(input_type == LIST);
-
-    let total_len = payload_len + offset;
-
+    let total_len = length + offset;
     assert(total_len <= input.len());
 
     for i in 0..NUM_FIELDS {
-        let loop_ind = (offset != total_len) as u64;
+        let is_in_range = (offset != total_len) as u64;
 
-        // Make sure the index doesn't overshoot
         let header: [u8; MAX_LEN_IN_BYTES + 1] = copy_subarray(input, offset);
         let RlpHeader {offset: field_off, length: field_len, data_type: field_type} = decode_to_rlp_header(header);
         let total_field_len = field_off + field_len;
 
-        // Assign decoded data and set them to 0 if loop indicator false (Convenient for testing; could remove this later)
-        fragments[i].offset = loop_ind * (offset + (1 - field_type) * field_off); // If the ith slot contains a list, include its RLP header.
-        fragments[i].length = loop_ind * (field_len + field_type * field_off); // If the ith slot contains a list, make sure to include the length of its header in the decoded data.
-        fragments[i].data_type = loop_ind * (field_type);
+        // Assign decoded data or set them to 0 if outside od total_len
+        fragments[i].offset = is_in_range * (offset + (1 - field_type) * field_off); // If the ith slot contains a list, include its RLP header.
+        fragments[i].length = is_in_range * (field_len + field_type * field_off); // If the ith slot contains a list, include the length of its header.
+        fragments[i].data_type = is_in_range * (field_type);
 
-        offset += loop_ind * total_field_len;
-        num_fields += loop_ind;
+        offset += is_in_range * total_field_len;
+        num_fields += is_in_range;
     }
-
-    assert(total_len == offset);
 
     RlpList { fragments, num_fields }
 }
