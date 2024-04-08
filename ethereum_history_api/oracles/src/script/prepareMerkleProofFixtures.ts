@@ -3,6 +3,7 @@ import { createMerkleProofFixture } from './noir_fixtures/merkle_proof.js';
 import { Trie } from '@ethereumjs/trie';
 import { PROOF_FIXTURES } from '../fixtures/merkleProofsConfig.js';
 import { assert, encodeHexStringToArray } from '../main.js';
+import { Hex } from 'viem';
 
 const NOIR_PROOF_FIXTURES_DIRECTORY = '../circuits/lib/src/fixtures/merkle_proofs';
 
