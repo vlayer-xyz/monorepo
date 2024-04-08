@@ -1,6 +1,6 @@
-use crate::transaction::TransactionProof;
+use dep::proof::trie_proof::TrieProof;
 
-global proof = TransactionProof {
+global proof = TrieProof {
   key: [
   0x00, 0x00, 0x58
 ],
