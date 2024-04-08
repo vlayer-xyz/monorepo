@@ -31,7 +31,7 @@ pub fn assert_merkle_proof<MAX_KEY_LEN, MAX_VALUE_LEN, MAX_DEPTH, MAX_LEAF_LEN>(
 ) {
     let leaf_rlp_list: RLP_List<2> = decode_list_of_small_strings(proof.leaf);
     assert(leaf_rlp_list.num_fields == 2, "Leaf expected to have 2 fields");
-    
+
     let leaf_parity_prefix_len = 1; // TODO: Remove this hack
     assert(
         sub_array_equals_up_to_length(

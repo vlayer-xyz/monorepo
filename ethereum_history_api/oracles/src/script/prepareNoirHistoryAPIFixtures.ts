@@ -1,4 +1,4 @@
-import { mkdir, rm, writeFile } from 'fs/promises';
+import { mkdir, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { Hex } from 'viem';
 import { Block } from '../ethereum/blockHeader.js';

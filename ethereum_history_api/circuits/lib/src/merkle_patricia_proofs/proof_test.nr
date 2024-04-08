@@ -24,7 +24,7 @@ mod test_leaf_get_len {
 mod test_assert_merkle_proof {
 
     use crate::merkle_patricia_proofs::proof::{assert_merkle_proof, leaf_get_len, Proof};
-    use crate::fixtures::proof::{
+    use crate::fixtures::merkle_proofs::leaf::{
         key as fixtureKey, value as fixtureValue, nodes as fixtureNodes, leaf as fixtureLeaf,
         root as fixtureRoot
     };

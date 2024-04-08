@@ -1,2 +1,2 @@
 mod mainnet;
-mod proof;
+mod merkle_proofs;
