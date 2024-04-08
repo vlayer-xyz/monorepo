@@ -204,3 +204,35 @@ mod test_decode_list_of_small_strings {
         let _ : RlpList<1> = decode_list_of_small_strings(rlp);
     }
 }
+
+mod test_get_small_string_offset_and_length {
+    use crate::rlp::decode::get_small_string_offset_and_length;
+
+    #[test]
+    fn success_short_string() {
+        let header_byte = 0x83;
+        let (expected_offset, expected_length) = (1, 3);
+
+        assert(get_small_string_offset_and_length(header_byte) == (expected_offset, expected_length));
+    }
+
+    #[test]
+    fn success_byte() {
+        let header_byte = 0x11;
+        let (expected_offset, expected_length) = (0, 1);
+
+        assert(get_small_string_offset_and_length(header_byte) == (expected_offset, expected_length));
+    }
+
+    #[test(should_fail_with = "Element is not a string of length < 56 bytes")]
+    fn fail_list_type() {
+        let header_of_list_type = 0xc0;
+        let _ = get_small_string_offset_and_length(header_of_list_type);
+    }
+
+    #[test(should_fail_with = "Element is not a string of length < 56 bytes")]
+    fn fail_long_string_type() {
+        let header_of_list_type = 0xb9;
+        let _ = get_small_string_offset_and_length(header_of_list_type);
+    }
+}
