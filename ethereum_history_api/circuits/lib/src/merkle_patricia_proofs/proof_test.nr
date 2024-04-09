@@ -1,3 +1,20 @@
+mod test_parity_prefix {
+    use crate::merkle_patricia_proofs::proof::{EVEN, ODD, parity, unprefixed_key_nibbles};
+
+    #[test]
+    fn all_parities() {
+        assert(parity(0) == EVEN);
+        assert(parity(1) == ODD);
+        assert(parity(2) == EVEN);
+        assert(parity(3) == ODD);
+    }
+
+    #[test(should_fail_with="Prefix must be 0, 1, 2 or 3")]
+    fn invalid_parity() {
+        let _ = parity(4);
+    }
+}
+
 mod test_leaf_get_len {
 
     use crate::merkle_patricia_proofs::proof::leaf_get_len;
@@ -21,7 +38,7 @@ mod test_leaf_get_len {
     }
 }
 
-mod simple {
+mod test_simple {
 
     use crate::merkle_patricia_proofs::proof::{assert_merkle_proof, Proof};
     use crate::misc::arrays::alter_array;
@@ -71,7 +88,7 @@ mod simple {
     }
 }
 
-mod from_fixtures {
+mod test_from_fixtures {
 
     use crate::merkle_patricia_proofs::proof::{assert_merkle_proof, Proof};
     use crate::fixtures::merkle_proofs::leaf::{
