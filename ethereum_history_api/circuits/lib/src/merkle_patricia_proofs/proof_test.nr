@@ -27,17 +27,18 @@ mod simple {
 
     global key = [0x42];
     global value = [0x5];
-    global root = [111, 55, 68, 69, 100, 157, 126, 28, 110, 183, 211, 184, 181, 177, 76, 191, 91, 188, 118, 229, 187, 95, 101, 143, 43, 37, 54, 208, 1, 206, 100, 245];
+    global root = [163, 57, 232, 136, 93, 33, 132, 208, 116, 119, 95, 134, 32, 201, 51, 214, 218, 75, 93, 113, 140, 143, 254, 21, 52, 83, 99, 97, 54, 246, 121, 173];
+    global leaf = [0xc4, 0x82, 0x20, 0x42, 0x05];
 
     #[test]
     fn success() {
-        let proof = Proof { nodes: [], leaf: [0xc2, 0x42, 0x05], depth: 0 };
+        let proof = Proof { nodes: [], leaf: leaf, depth: 0 };
         assert_merkle_proof(key, value, root, proof);
     }
 
     #[test]
     fn value_padded() {
-        let proof = Proof { nodes: [], leaf: [0xc2, 0x42, 0x05, 0x00], depth: 0 };
+        let proof = Proof { nodes: [], leaf: [0xc4, 0x82, 0x20, 0x42, 0x05, 0x0, 0x0, 0x0], depth: 0 };
         assert_merkle_proof(key, value, root, proof);
     }
 
@@ -55,14 +56,14 @@ mod simple {
         let root = [
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         ];
-        let proof = Proof { nodes: [], leaf: [0xc2, 0x42, 0x05], depth: 0 };
+        let proof = Proof { nodes: [], leaf: leaf, depth: 0 };
         assert_merkle_proof(key, value, root, proof);
     }
 
     #[test(should_fail_with="Value mismatch")]
     fn value_mismatch() {
         let wrong_value = [0x06];
-        let proof = Proof { nodes: [], leaf: [0xc2, 0x42, 0x05], depth: 0 };
+        let proof = Proof { nodes: [], leaf: leaf, depth: 0 };
         assert_merkle_proof(key, wrong_value, root, proof);
     }
 
