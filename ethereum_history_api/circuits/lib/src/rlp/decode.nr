@@ -167,7 +167,7 @@ pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NU
 
     let mut current_offset = offset;
     for i in 0..NUM_FIELDS {
-        if (current_offset != total_len) {
+        if (current_offset < total_len) {
             let first_byte = input[current_offset];
 
             let (field_off, field_len) = get_small_string_offset_and_length(first_byte);
@@ -180,6 +180,7 @@ pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NU
             num_fields += 1;
         }
     }
+    assert(current_offset == total_len, "Inconsistent rlp length");
 
     RlpList { fragments, num_fields }
 }

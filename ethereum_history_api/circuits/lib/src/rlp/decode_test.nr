@@ -147,6 +147,15 @@ mod test_decode_list {
 
 mod test_decode_list_of_small_strings {
     use crate::rlp::decode::{decode_list_of_small_strings, RlpList, RlpFragment, STRING};
+
+    #[test]
+    fn success_empty_list() {
+        let rlp = [0xc0];
+        let expected = RlpList { fragments: [], num_fields: 0 };
+
+        assert(decode_list_of_small_strings(rlp) == expected);
+    }
+
     #[test]
     fn success() {
         let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13];
@@ -178,12 +187,10 @@ mod test_decode_list_of_small_strings {
         assert(decode_list_of_small_strings(rlp) == expected);
     }
 
-    #[test]
-    fn success_empty_list() {
-        let rlp = [0xc0];
-        let expected = RlpList { fragments: [], num_fields: 0 };
-
-        assert(decode_list_of_small_strings(rlp) == expected);
+    #[test(should_fail_with="Inconsistent rlp length")]
+    fn fail_inconsistent_length() {
+        let rlp = [0xc7, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13];
+        let _ : RlpList<3> = decode_list_of_small_strings(rlp);
     }
 
     #[test(should_fail_with = "Expected a list")]
