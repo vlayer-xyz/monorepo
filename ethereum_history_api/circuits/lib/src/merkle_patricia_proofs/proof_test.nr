@@ -24,6 +24,7 @@ mod test_leaf_get_len {
 mod simple {
 
     use crate::merkle_patricia_proofs::proof::{assert_merkle_proof, Proof};
+    use crate::misc::arrays::alter_array;
 
     global key = [0x42];
     global value = [0x5];
@@ -32,42 +33,40 @@ mod simple {
 
     #[test]
     fn success() {
-        let proof = Proof { nodes: [], leaf, depth: 0 };
+        let proof = Proof { nodes: [], leaf, depth: 1 };
         assert_merkle_proof(key, value, root, proof);
     }
 
     #[test]
     fn value_padded() {
-        let proof = Proof { nodes: [], leaf: [0xc4, 0x82, 0x20, 0x42, 0x05, 0x0, 0x0, 0x0], depth: 0 };
+        let proof = Proof { nodes: [], leaf: [0xc4, 0x82, 0x20, 0x42, 0x05, 0x0, 0x0, 0x0], depth: 1 };
         assert_merkle_proof(key, value, root, proof);
     }
 
     #[test(should_fail_with="Leaf expected to have 2 fields")]
     fn invalid_leaf() {
-        let proof = Proof { nodes: [], leaf: [0xc1, 0x42, 0x00], depth: 0 };
+        let proof = Proof { nodes: [], leaf: [0xc1, 0x42, 0x00], depth: 1 };
         assert_merkle_proof(key, value, root, proof);
     }
 
     #[test(should_fail_with="Invalid root")]
     fn invalid_root() {
-        let root = [
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-        ];
-        let proof = Proof { nodes: [], leaf, depth: 0 };
-        assert_merkle_proof(key, value, root, proof);
+        let wrong_root = alter_array(root);
+        let proof = Proof { nodes: [], leaf, depth: 1 };
+        assert_merkle_proof(key, value, wrong_root, proof);
     }
 
     #[test(should_fail_with="Value mismatch")]
     fn value_mismatch() {
-        let wrong_value = [0x05 + 1];
-        let proof = Proof { nodes: [], leaf, depth: 0 };
+        let wrong_value = alter_array(value);
+        let proof = Proof { nodes: [], leaf, depth: 1 };
         assert_merkle_proof(key, wrong_value, root, proof);
     }
 
     #[test(should_fail_with="Key mismatch")]
     fn key_mismatch() {
-        let wrong_key = [0x42 + 1];
-        let proof = Proof { nodes: [], leaf, depth: 0 };
+        let wrong_key = alter_array(key);
+        let proof = Proof { nodes: [], leaf, depth: 1 };
         assert_merkle_proof(wrong_key, value, root, proof);
     }
 }
@@ -86,7 +85,7 @@ mod from_fixtures {
             fixture_key,
             fixture_value,
             fixture_root,
-            Proof { nodes: fixture_nodes, leaf: fixture_leaf, depth: 0 }
+            Proof { nodes: fixture_nodes, leaf: fixture_leaf, depth: 1 }
         )
     }
 }
