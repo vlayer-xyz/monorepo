@@ -15,7 +15,7 @@ await rm(fixtureModuleFile, { force: true });
 await mkdir(NOIR_PROOF_FIXTURES_DIRECTORY, { recursive: true });
 
 for (const fixtureName in PROOF_FIXTURES) {
-  const keyValuePairs = PROOF_FIXTURES[fixtureName].keyValuePairs;
+  const { keyValuePairs, key } = PROOF_FIXTURES[fixtureName];
   assert(
     !hasDuplicates(keyValuePairs.map((keyValuePair) => keyValuePair.key)),
     `Duplicate keys in fixture ${fixtureName} (merkleProofsConfig.ts) are not allowed`
@@ -25,7 +25,6 @@ for (const fixtureName in PROOF_FIXTURES) {
   for (const keyValuePair of keyValuePairs) {
     await trie.put(encodeHexStringToArray(keyValuePair.key), encodeHexStringToArray(keyValuePair.value));
   }
-  const key = PROOF_FIXTURES[fixtureName].key;
   const value = keyValuePairs.find((keyValuePair) => keyValuePair.key === key)?.value;
   assert(value !== undefined, `Key ${key} not found in keyValuePairs of ${fixtureName} (see merkleProofConfig.ts)`);
   const proof = await trie.createProof(encodeHexStringToArray(key));
