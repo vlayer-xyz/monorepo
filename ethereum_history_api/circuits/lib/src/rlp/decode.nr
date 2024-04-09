@@ -1,4 +1,5 @@
 use dep::std::wrapping_sub;
+use crate::rlp::fragment::RlpFragment;
 
 /// Max number of bytes required to represent length of a string or list
 global MAX_LEN_IN_BYTES: u64 = 2;
@@ -11,24 +12,6 @@ struct RlpHeader {
     offset: u64,
     length: u64, 
     data_type: u64 // STRING or LIST    
-}
-
-struct RlpFragment {
-    offset: u64,
-    length: u64,    
-    data_type: u64 // STRING or LIST
-}
-
-impl Default for RlpFragment {
-    fn default() -> Self {
-        RlpFragment { offset: 0, length: 0, data_type: 0 }
-    }
-}
-
-impl Eq for RlpFragment {
-    fn eq(self, other: Self) -> bool {
-        (self.offset == other.offset) & (self.length == other.length) & (self.data_type == other.data_type)
-    }
 }
 
 struct RlpList<NUM_FIELDS> {
