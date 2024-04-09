@@ -39,7 +39,6 @@ mod receipt {
     }
 }
 
-
 mod transaction {
     use crate::misc::arrays::{sub_array_equals, memcpy};
     use crate::verifiers::split_into_tx_type_and_rlp::split_into_tx_type_and_rlp;
@@ -64,9 +63,7 @@ mod transaction {
         let (tx_type, tx_rlp): (TxType, [u8; MAX_TX_RLP_LENGTH]) = split_into_tx_type_and_rlp(legacy_tx_type, pre_byzantium_encoded_tx);
         assert(tx_type == legacy_tx_type, "Incorrect tx type returned");
         assert(tx_rlp.len() == encoded_tx.len() - 1, "Incorrect receipt RLP length returned");
-        assert(
-            sub_array_equals(tx_rlp, pre_byzantium_encoded_tx, 0), "Incorrect receipt RLP returned"
-        );
+        assert(sub_array_equals(tx_rlp, pre_byzantium_encoded_tx, 0), "Incorrect receipt RLP returned");
     }
 
     #[test(should_fail_with="RLP receipt exceeds MAX_RLP_LENGTH")]

@@ -7,9 +7,7 @@ pub(crate) fn split_into_tx_type_and_rlp<MAX_ENCODED_LENGTH, MAX_RLP_LENGTH>(
     encoded_receipt: [u8; MAX_ENCODED_LENGTH]
 ) -> (u8, [u8; MAX_RLP_LENGTH]) {
     if (tx_type == 0) {
-        assert(
-            encoded_receipt[MAX_ENCODED_LENGTH - 1] == 0, "RLP receipt exceeds MAX_RLP_LENGTH"
-        );
+        assert(encoded_receipt[MAX_ENCODED_LENGTH - 1] == 0, "RLP receipt exceeds MAX_RLP_LENGTH");
         let mut receipt_rlp = [0; MAX_RLP_LENGTH];
         memcpy(&mut receipt_rlp, encoded_receipt, 0);
         (tx_type, receipt_rlp)
