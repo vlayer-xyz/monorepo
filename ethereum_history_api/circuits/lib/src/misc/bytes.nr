@@ -1,3 +1,48 @@
+pub fn byte_to_nibbles(byte: u8) -> (u8, u8)
+{
+    let upper = byte / 16;
+    let lower = byte - 16 * upper;
+
+    (upper, lower)
+}
+
+pub fn bytes_to_nibbles<BYTES_LEN, NIBBLES_LEN>(bytes: [u8; BYTES_LEN]) -> [u8; NIBBLES_LEN]
+{
+    assert(NIBBLES_LEN == 2 * BYTES_LEN);
+    
+    let mut nibbles = [0; NIBBLES_LEN];
+    
+    for i in 0..BYTES_LEN
+    {
+        let two_nibbles = byte_to_nibbles(bytes[i]);
+
+        nibbles[2 * i] = two_nibbles.0;
+        nibbles[2 * i + 1] = two_nibbles.1;
+    }
+    
+    nibbles
+}
+
+pub fn nibbles_to_byte(upper: u8, lower: u8) -> u8 {
+    assert(upper < 16, "Nibble value must be less than 16");
+    assert(lower < 16, "Nibble value must be less than 16");
+
+    upper * 16 + lower
+}
+
+pub fn nibbles_to_bytes<BYTES_LEN, NIB_LEN>(nibbles: [u8; NIB_LEN]) -> [u8; BYTES_LEN] {
+    assert(NIB_LEN == 2 * BYTES_LEN);
+
+    let mut bytes = [0; BYTES_LEN];
+
+    for i in 0..NIB_LEN / 2 {
+        let byte = nibbles_to_byte(nibbles[2 * i], nibbles[2 * i + 1]);
+        bytes[i] = byte;
+    }
+
+    bytes
+}
+
 pub fn right_pad<N>(arr: [u8; N]) -> ([u8; N], u64) {
     byte_value(arr)
 }
@@ -24,25 +69,6 @@ pub fn shift_right_by_one<N>(arr: &mut [u8; N]) {
     }
 }
 
-pub fn nibbles_to_byte(upper: u8, lower: u8) -> u8 {
-    assert(upper < 16, "Nibble value must be less than 16");
-    assert(lower < 16, "Nibble value must be less than 16");
-
-    upper * 16 + lower
-}
-
-pub fn nibbles_to_bytes<BYTES_LEN, NIB_LEN>(nibbles: [u8; NIB_LEN]) -> [u8; BYTES_LEN] {
-    assert(NIB_LEN == 2 * BYTES_LEN);
-
-    let mut bytes = [0; BYTES_LEN];
-
-    for i in 0..NIB_LEN / 2 {
-        let byte = nibbles_to_byte(nibbles[2 * i], nibbles[2 * i + 1]);
-        bytes[i] = byte;
-    }
-
-    bytes
-}
 
 /// Left-shift for byte arrays
 /// Returns an appropriately shifted byte array.
