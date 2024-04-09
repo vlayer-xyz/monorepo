@@ -22,7 +22,7 @@ mod test_leaf_get_len {
 }
 
 mod simple {
-    
+
     use crate::merkle_patricia_proofs::proof::{assert_merkle_proof, Proof};
 
     global key = [0x42];
