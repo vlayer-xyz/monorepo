@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from 'fs/promises';
+import { mkdir, rm, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { Hex } from 'viem';
 import { Block } from '../ethereum/blockHeader.js';
@@ -21,10 +21,14 @@ const INDEX_NOT_FOUND = -1;
 const NOIR_FIXTURES_DIRECTORY = '../circuits/lib/src/fixtures';
 
 for (const chain in HISTORY_API_FIXTURES) {
+  const chainDirectory = `${NOIR_FIXTURES_DIRECTORY}/${chain}`;
+  const chainModuleFile = `${NOIR_FIXTURES_DIRECTORY}/${chain}.nr`;
+  await rm(chainDirectory, { recursive: true, force: true });
+  await rm(chainModuleFile, { force: true });
+
   const client = createClient.get(chain)!();
 
   let chainModule = ``;
-  const chainModuleFile = `${NOIR_FIXTURES_DIRECTORY}/${chain}.nr`;
   for (const hardFork in HISTORY_API_FIXTURES[chain]) {
     let hardforkModule = ``;
     const hardforkModuleFile = `${NOIR_FIXTURES_DIRECTORY}/${chain}/${hardFork}.nr`;

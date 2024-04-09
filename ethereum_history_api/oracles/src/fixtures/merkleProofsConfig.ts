@@ -4,19 +4,19 @@ import { Hex } from 'viem';
 // implementation only hashes nodes with big enough values.
 const BIG_VALUE = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef';
 
-export interface ProofFixtureInput {
+export interface ProofFixtureConfig {
   key: Hex;
   keyValuePairs: { key: Hex; value: Hex }[];
 }
 
-type ProofFixtureInputs = Record<string, ProofFixtureInput>;
+type ProofFixtures = Record<string, ProofFixtureConfig>;
 
-export const PROOF_FIXTURES: ProofFixtureInputs = {
+export const PROOF_FIXTURES: ProofFixtures = {
   leaf: {
     key: '0x01',
     keyValuePairs: [{ key: '0x01', value: BIG_VALUE }]
   },
-  depth_one_single_branch: {
+  branch_then_leaf: {
     key: '0x01',
     keyValuePairs: [
       { key: '0x01', value: BIG_VALUE },

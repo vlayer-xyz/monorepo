@@ -159,42 +159,40 @@ pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NU
     let mut num_fields: u64 = 0;
     let mut fragments = [RlpFragment::default(); NUM_FIELDS];
 
-    let mut RlpHeader {offset, length: payload_len, data_type: input_type} = decode_to_rlp_header(input);
-    let total_len = payload_len + offset;
+    let RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
+    assert(data_type == LIST, "Expected a list");
 
-    assert(input_type == LIST);
-    assert(total_len <= input.len());
+    let total_len = length + offset;
+    assert(total_len <= input.len(), "Total length exceeds input length");
 
+    let mut current_offset = offset;
     for i in 0..NUM_FIELDS {
-        let loop_ind = (offset != total_len) as u64;
+        if (current_offset < total_len) {
+            let first_byte = input[current_offset];
 
-        let header = input[offset];
+            let (field_off, field_len) = get_small_string_offset_and_length(first_byte);
 
-        assert(header < 0xb8); // Header must represent a string of length < 56 bytes.
+            fragments[i].offset = current_offset + field_off;
+            fragments[i].length = field_len;
+            fragments[i].data_type = STRING;
 
-        let field_type = STRING;
-
-        let single_byte_ind = (header < 0x80) as u64; // 1 if `header` represents a single byte.
-
-        let field_off = 1 - single_byte_ind; // If `header` < 0x80, then we are dealing with a single byte whose value
-        // is given by header. Else, the string begins at the following index.
-
-        let field_len = single_byte_ind * 1 + (1 - single_byte_ind) * (wrapping_sub(header, 0x80) as u64); // Single byte means len = 1,
-        // else subtract 0x80 from the header to determine len.
-
-        let total_field_len = field_off + field_len;
-
-        fragments[i].offset = loop_ind * (offset + field_off);
-        fragments[i].length = loop_ind * (field_len);
-        fragments[i].data_type= loop_ind * (field_type);
-
-        offset += loop_ind * total_field_len;
-        num_fields += loop_ind;
+            current_offset += (field_off + field_len);
+            num_fields += 1;
+        }
     }
-
-    assert(total_len == offset);
+    assert(current_offset == total_len, "Inconsistent rlp length");
 
     RlpList { fragments, num_fields }
+}
+
+pub fn get_small_string_offset_and_length(first_byte: u8) -> (u64, u64) {
+    assert(first_byte < 0xb8, "Element is not a string of length < 56 bytes");
+
+    if (first_byte < 0x80) {
+        (0, 1)
+    } else {
+        (1, wrapping_sub(first_byte as u64, 0x80))
+    }
 }
 
 pub fn copy_subarray<T, N, M>(arr: [T; N], offset: u64) -> [T; M] {

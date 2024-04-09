@@ -10,7 +10,8 @@ import { removeHexPrefix } from '../../../util/hex.js';
 const MAX_TX_KEY_LEN = 3;
 export const MAX_TX_KEY_NIBBLE_LEN = 6;
 export const MAX_TX_TREE_DEPTH = MAX_TX_KEY_NIBBLE_LEN + 1;
-export const MAX_TX_RLP_LEN = MAX_TRIE_NODE_LEN;
+export const MAX_TX_ENCODED_LEN = 525;
+export const MAX_TX_RLP_LEN = MAX_TX_ENCODED_LEN - 1;
 export const MAX_TX_PROOF_LEN = MAX_TRIE_NODE_LEN * MAX_TX_TREE_DEPTH;
 
 export enum TX_OFFSETS {

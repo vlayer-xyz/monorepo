@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from 'fs/promises';
+import { mkdir, rm, writeFile } from 'fs/promises';
 import { createMerkleProofFixture } from './noir_fixtures/merkle_proof.js';
 import { Trie } from '@ethereumjs/trie';
 import { PROOF_FIXTURES } from '../fixtures/merkleProofsConfig.js';
@@ -10,10 +10,12 @@ const NOIR_PROOF_FIXTURES_DIRECTORY = '../circuits/lib/src/fixtures/merkle_proof
 let fixtureModule = ``;
 const fixtureModuleFile = `${NOIR_PROOF_FIXTURES_DIRECTORY}.nr`;
 
-for (const fixtureName in PROOF_FIXTURES) {
-  await mkdir(NOIR_PROOF_FIXTURES_DIRECTORY, { recursive: true });
+await rm(NOIR_PROOF_FIXTURES_DIRECTORY, { recursive: true, force: true });
+await rm(fixtureModuleFile, { force: true });
+await mkdir(NOIR_PROOF_FIXTURES_DIRECTORY, { recursive: true });
 
-  const keyValuePairs = PROOF_FIXTURES[fixtureName].keyValuePairs;
+for (const fixtureName in PROOF_FIXTURES) {
+  const { keyValuePairs, key } = PROOF_FIXTURES[fixtureName];
   assert(
     !hasDuplicates(keyValuePairs.map((keyValuePair) => keyValuePair.key)),
     `Duplicate keys in fixture ${fixtureName} (merkleProofsConfig.ts) are not allowed`
@@ -23,7 +25,6 @@ for (const fixtureName in PROOF_FIXTURES) {
   for (const keyValuePair of keyValuePairs) {
     await trie.put(encodeHexStringToArray(keyValuePair.key), encodeHexStringToArray(keyValuePair.value));
   }
-  const key = PROOF_FIXTURES[fixtureName].key;
   const value = keyValuePairs.find((keyValuePair) => keyValuePair.key === key)?.value;
   assert(value !== undefined, `Key ${key} not found in keyValuePairs of ${fixtureName} (see merkleProofConfig.ts)`);
   const proof = await trie.createProof(encodeHexStringToArray(key));

@@ -12,7 +12,7 @@ export function createTransactionProofFixture(proof: Proof): string {
     MAX_TX_KEY_NIBBLE_LEN,
     MAX_TX_RLP_LEN,
     MAX_TX_PROOF_LEN,
-    'crate::transaction::TransactionProof',
-    'TransactionProof'
+    'dep::proof::trie_proof::TrieProof',
+    'TrieProof'
   );
 }
