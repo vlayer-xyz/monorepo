@@ -170,16 +170,13 @@ pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NU
         if (current_offset != total_len) {
             let first_byte = input[current_offset];
 
-            let field_type = STRING;
             let (field_off, field_len) = get_small_string_offset_and_length(first_byte);
-
-            let total_field_len = field_off + field_len;
 
             fragments[i].offset = current_offset + field_off;
             fragments[i].length = field_len;
-            fragments[i].data_type= field_type;
+            fragments[i].data_type = STRING;
 
-            current_offset += total_field_len;
+            current_offset += (field_off + field_len);
             num_fields += 1;
         }
     }
@@ -189,21 +186,12 @@ pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NU
 
 pub fn get_small_string_offset_and_length(first_byte: u8) -> (u64, u64) {
     assert(first_byte < 0xb8, "Element is not a string of length < 56 bytes");
-    
-    let is_single_byte = (first_byte < 0x80);
 
-    let mut field_off: u64 = 0;
-    let mut field_len: u64 = 0;
-
-    if (is_single_byte) {
-        field_off = 0;
-        field_len = 1;
+    if (first_byte < 0x80) {
+        (0 as u64, 1 as u64)
     } else {
-        field_off = 1;
-        field_len = (wrapping_sub(first_byte, 0x80) as u64);
+        (1 as u64, wrapping_sub(first_byte, 0x80) as u64)
     }
-
-    (field_off, field_len)
 }
 
 pub fn copy_subarray<T, N, M>(arr: [T; N], offset: u64) -> [T; M] {
