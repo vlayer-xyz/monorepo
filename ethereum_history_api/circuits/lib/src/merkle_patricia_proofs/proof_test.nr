@@ -32,7 +32,7 @@ mod simple {
 
     #[test]
     fn success() {
-        let proof = Proof { nodes: [], leaf: leaf, depth: 0 };
+        let proof = Proof { nodes: [], leaf, depth: 0 };
         assert_merkle_proof(key, value, root, proof);
     }
 
@@ -53,21 +53,21 @@ mod simple {
         let root = [
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         ];
-        let proof = Proof { nodes: [], leaf: leaf, depth: 0 };
+        let proof = Proof { nodes: [], leaf, depth: 0 };
         assert_merkle_proof(key, value, root, proof);
     }
 
     #[test(should_fail_with="Value mismatch")]
     fn value_mismatch() {
         let wrong_value = [0x05 + 1];
-        let proof = Proof { nodes: [], leaf: leaf, depth: 0 };
+        let proof = Proof { nodes: [], leaf, depth: 0 };
         assert_merkle_proof(key, wrong_value, root, proof);
     }
 
     #[test(should_fail_with="Key mismatch")]
     fn key_mismatch() {
         let wrong_key = [0x42 + 1];
-        let proof = Proof { nodes: [], leaf: leaf, depth: 0 };
+        let proof = Proof { nodes: [], leaf, depth: 0 };
         assert_merkle_proof(wrong_key, value, root, proof);
     }
 }
