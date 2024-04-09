@@ -145,3 +145,49 @@ mod test_decode_list {
         assert(decode_list(rlp) == expected);
     }
 }
+
+mod test_decode_to_rlp_header {
+    use crate::rlp::decode::{decode_to_rlp_header, RlpHeader, STRING, LIST};
+
+    #[test]
+    fn success_single_byte() {
+        let rlp = [0x00];
+        let expected = RlpHeader { offset: 0, length: 1, data_type: STRING };
+        assert(decode_to_rlp_header(rlp) == expected);
+    }
+
+    #[test]
+    fn success_short_string() {
+        let rlp = [0x83, 0x63, 0x61, 0x74];
+        let expected = RlpHeader { offset: 1, length: 3, data_type: STRING };
+        assert(decode_to_rlp_header(rlp) == expected);
+    }
+
+    #[test]
+    fn success_long_string() {
+        let rlp = [0xb8, 0x01, 0x23];
+        let expected = RlpHeader { offset: 2, length: 1, data_type: STRING };
+        assert(decode_to_rlp_header(rlp) == expected);
+    }
+
+    #[test]
+    fn success_empty_array() {
+        let rlp = [0xc0];
+        let expected = RlpHeader { offset: 1, length: 0, data_type: LIST };
+        assert(decode_to_rlp_header(rlp) == expected);
+    }
+
+    #[test]
+    fn success_short_array() {
+        let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x18];
+        let expected = RlpHeader { offset: 1, length: 9, data_type: LIST };
+        assert(decode_to_rlp_header(rlp) == expected);
+    }
+
+    #[test]
+    fn success_long_array() {
+        let rlp = [0xf9, 0x03, 0x12, 0x13, 0x14];
+        let expected = RlpHeader { offset: 2, length: 3, data_type: LIST };
+        assert(decode_to_rlp_header(rlp) == expected);
+    }
+}

@@ -13,6 +13,12 @@ struct RlpHeader {
     data_type: u64 // STRING or LIST    
 }
 
+impl Eq for RlpHeader {
+    fn eq(self, other: Self) -> bool {
+        (self.offset == other.offset) & (self.length == other.length) & (self.data_type == other.data_type)
+    }
+}
+
 struct RlpFragment {
     offset: u64,
     length: u64,    
@@ -92,7 +98,7 @@ pub fn decode_to_rlp_header<N>(arr: [u8; N]) -> RlpHeader {
         + (1 - is_short_list as u64) * wrapping_sub(prefix, 0xf7) as u64;
 
     // Set length according to whether it is contained in the prefix (i.e. lenlen == 0).
-    let len = strict_if(
+    let length = strict_if(
         lenlen == 0,
         strict_if(
             is_single_byte,
@@ -108,7 +114,7 @@ pub fn decode_to_rlp_header<N>(arr: [u8; N]) -> RlpHeader {
 
     let data_type = (prefix >= 0xc0) as u64;
 
-    RlpHeader { offset, length: len, data_type }
+    RlpHeader { offset, length, data_type }
 }
 
 pub fn decode_string<N>(input: [u8; N]) -> (u64, u64) {
