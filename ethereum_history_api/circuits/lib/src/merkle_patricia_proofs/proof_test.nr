@@ -82,17 +82,17 @@ mod from_fixtures {
 
     use crate::merkle_patricia_proofs::proof::{assert_merkle_proof, Proof};
     use crate::fixtures::merkle_proofs::leaf::{
-        key as fixtureKey, value as fixtureValue, nodes as fixtureNodes, leaf as fixtureLeaf,
-        root as fixtureRoot
+        key as fixture_key, value as fixture_value, nodes as fixture_nodes, leaf as fixture_leaf,
+        root as fixture_root
     };
 
     #[test]
     fn success() {
         assert_merkle_proof(
-            fixtureKey,
-            fixtureValue,
-            fixtureRoot,
-            Proof { nodes: fixtureNodes, leaf: fixtureLeaf, depth: 0 }
+            fixture_key,
+            fixture_value,
+            fixture_root,
+            Proof { nodes: fixture_nodes, leaf: fixture_leaf, depth: 0 }
         )
     }
 }

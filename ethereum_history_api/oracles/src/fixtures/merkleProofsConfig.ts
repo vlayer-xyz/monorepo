@@ -16,7 +16,7 @@ export const PROOF_FIXTURES: ProofFixtureInputs = {
     key: '0x01',
     keyValuePairs: [{ key: '0x01', value: BIG_VALUE }]
   },
-  single_branch: {
+  branch_then_leaf: {
     key: '0x01',
     keyValuePairs: [
       { key: '0x01', value: BIG_VALUE },
