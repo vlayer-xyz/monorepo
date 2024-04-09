@@ -44,9 +44,6 @@ mod simple {
 
     #[test(should_fail_with="Leaf expected to have 2 fields")]
     fn invalid_leaf() {
-        let root = [
-            7, 95, 101, 84, 34, 173, 199, 202, 255, 196, 61, 234, 106, 5, 168, 57, 67, 221, 206, 185, 138, 146, 151, 237, 233, 193, 118, 117, 84, 218, 39, 239
-        ];
         let proof = Proof { nodes: [], leaf: [0xc1, 0x42, 0x00], depth: 0 };
         assert_merkle_proof(key, value, root, proof);
     }
@@ -62,19 +59,15 @@ mod simple {
 
     #[test(should_fail_with="Value mismatch")]
     fn value_mismatch() {
-        let wrong_value = [0x06];
+        let wrong_value = [0x05 + 1];
         let proof = Proof { nodes: [], leaf: leaf, depth: 0 };
         assert_merkle_proof(key, wrong_value, root, proof);
     }
 
     #[test(should_fail_with="Key mismatch")]
     fn key_mismatch() {
-        let root = [
-            0x11, 0x73, 0x86, 0x5a, 0xe7, 0x36, 0xbc, 0xb6, 0x19, 0xe3, 0x38, 0xa5, 0x6d, 0xb5, 0x2d, 0x78, 0x3f, 0x36, 0x6d, 0x99, 0x5a, 0x91, 0x27, 0x44, 0x37, 0xe6, 0x1b, 0x56, 0xa1, 0x1e, 0x60, 0xb0
-        ];
-        let wrong_key = [0x20, 0x81];
-        let value = [0x0a];
-        let proof = Proof { nodes: [], leaf: [0xc4, 0x82, 0x20, 0x80, 0x0a], depth: 0 };
+        let wrong_key = [0x42 + 1];
+        let proof = Proof { nodes: [], leaf: leaf, depth: 0 };
         assert_merkle_proof(wrong_key, value, root, proof);
     }
 }
