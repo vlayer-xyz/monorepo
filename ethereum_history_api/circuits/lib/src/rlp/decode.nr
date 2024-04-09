@@ -189,9 +189,9 @@ pub fn get_small_string_offset_and_length(first_byte: u8) -> (u64, u64) {
     assert(first_byte < 0xb8, "Element is not a string of length < 56 bytes");
 
     if (first_byte < 0x80) {
-        (0 as u64, 1 as u64)
+        (0, 1)
     } else {
-        (1 as u64, wrapping_sub(first_byte, 0x80) as u64)
+        (1, wrapping_sub(first_byte as u64, 0x80))
     }
 }
 
