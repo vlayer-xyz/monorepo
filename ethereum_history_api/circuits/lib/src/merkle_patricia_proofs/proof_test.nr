@@ -21,29 +21,16 @@ mod test_leaf_get_len {
     }
 }
 
-mod test_assert_merkle_proof {
+mod simple {
+    
+    use crate::merkle_patricia_proofs::proof::{assert_merkle_proof, Proof};
 
-    use crate::merkle_patricia_proofs::proof::{assert_merkle_proof, leaf_get_len, Proof};
-    use crate::fixtures::merkle_proofs::leaf::{
-        key as fixtureKey, value as fixtureValue, nodes as fixtureNodes, leaf as fixtureLeaf,
-        root as fixtureRoot
-    };
     global key = [0x42];
     global value = [0x5];
     global root = [111, 55, 68, 69, 100, 157, 126, 28, 110, 183, 211, 184, 181, 177, 76, 191, 91, 188, 118, 229, 187, 95, 101, 143, 43, 37, 54, 208, 1, 206, 100, 245];
 
     #[test]
-    fn fixture_success() {
-        assert_merkle_proof(
-            fixtureKey,
-            fixtureValue,
-            fixtureRoot,
-            Proof { nodes: fixtureNodes, leaf: fixtureLeaf, depth: 0 }
-        )
-    }
-
-    #[test]
-    fn simple_success() {
+    fn success() {
         let proof = Proof { nodes: [], leaf: [0xc2, 0x42, 0x05], depth: 0 };
         assert_merkle_proof(key, value, root, proof);
     }
@@ -88,5 +75,24 @@ mod test_assert_merkle_proof {
         let value = [0x0a];
         let proof = Proof { nodes: [], leaf: [0xc4, 0x82, 0x20, 0x80, 0x0a], depth: 0 };
         assert_merkle_proof(wrong_key, value, root, proof);
+    }
+}
+
+mod from_fixtures {
+
+    use crate::merkle_patricia_proofs::proof::{assert_merkle_proof, Proof};
+    use crate::fixtures::merkle_proofs::leaf::{
+        key as fixtureKey, value as fixtureValue, nodes as fixtureNodes, leaf as fixtureLeaf,
+        root as fixtureRoot
+    };
+
+    #[test]
+    fn success() {
+        assert_merkle_proof(
+            fixtureKey,
+            fixtureValue,
+            fixtureRoot,
+            Proof { nodes: fixtureNodes, leaf: fixtureLeaf, depth: 0 }
+        )
     }
 }
