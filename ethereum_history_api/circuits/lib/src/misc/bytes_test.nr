@@ -1,4 +1,4 @@
-use crate::misc::bytes::{nibbles_to_byte, nibbles_to_bytes, left_to_right_padding, shift_right_by_one, byte_value};
+use crate::misc::bytes::{left_to_right_padding, shift_right_by_one};
 
 #[test]
 fn test_left_to_right_padding_empty() {
@@ -35,54 +35,99 @@ fn test_shift_right_by_one_fail() {
     shift_right_by_one(&mut arr);
 }
 
-#[test]
-fn test_nibbles_to_byte_zero() {
-    assert(nibbles_to_byte(0x0, 0x0) == 0x0);
-}
+mod test_bytes_nibbles_conversions {
 
-#[test]
-fn test_nibbles_to_byte_one_nibble() {
-    assert(nibbles_to_byte(0x0, 0xf) == 0xf);
-}
+    use crate::misc::bytes::{nibbles_to_byte, nibbles_to_bytes, byte_to_nibbles, bytes_to_nibbles};
 
-#[test]
-fn test_nibbles_to_byte_two_nibbles() {
-    assert(nibbles_to_byte(0xf, 0xf) == 0xff);
-}
+    #[test]
+    fn test_byte_to_nibbles_zero() {
+        assert(byte_to_nibbles(0x0) == (0x0, 0x0));
+    }
 
-#[test(should_fail_with="Nibble value must be less than 16")]
-fn test_nibbles_to_byte_fail_overflow() {
-    assert(nibbles_to_byte(0x00, 0x10) == 0x10);
-}
+    #[test]
+    fn test_byte_to_nibbles_one_nibble() {
+        assert(byte_to_nibbles(0xf) == (0x0, 0xf));
+    }
 
-#[test]
-fn test_nibbles_to_bytes_empty() {
-    assert(nibbles_to_bytes([]) == []);
-}
+    #[test]
+    fn test_byte_to_nibbles_two_nibbles() {
+        assert(byte_to_nibbles(0xff) == (0xf, 0xf));
+    }
 
-#[test]
-fn test_nibbles_to_bytes_zero() {
-    assert(nibbles_to_bytes([0x0, 0x0]) == [0x0]);
-}
+    #[test]
+    fn test_bytes_to_nibbles_empty() {
+        assert(bytes_to_nibbles([]) == []);
+    }
 
-#[test]
-fn test_nibbles_to_bytes_simple() {
-    assert(nibbles_to_bytes([0x0, 0xf, 0xf, 0x0]) == [0x0f, 0xf0]);
-}
+    #[test]
+    fn test_bytes_to_nibbles_zero() {
+        assert(bytes_to_nibbles([0x0]) == [0x0, 0x0]);
+    }
 
-#[test]
-fn test_nibbles_to_bytes() {
-    assert(
-        nibbles_to_bytes(
-        [
-        0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, 0x0, 0x1, 0x2, 0x3
-    ]
-    )
-        == [0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23]
-    );
+    #[test]
+    fn test_bytes_to_nibbles_simple() {
+        assert(bytes_to_nibbles([0x0f, 0xf0]) == [0x0, 0xf, 0xf, 0x0]);
+    }
+
+    #[test]
+    fn test_bytes_to_nibbles() {
+        assert(
+            bytes_to_nibbles([0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23]) == [
+                0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, 0x0, 0x1, 0x2, 0x3
+            ]
+        );
+    }
+
+    #[test]
+    fn test_nibbles_to_byte_zero() {
+        assert(nibbles_to_byte(0x0, 0x0) == 0x0);
+    }
+
+    #[test]
+    fn test_nibbles_to_byte_one_nibble() {
+        assert(nibbles_to_byte(0x0, 0xf) == 0xf);
+    }
+
+    #[test]
+    fn test_nibbles_to_byte_two_nibbles() {
+        assert(nibbles_to_byte(0xf, 0xf) == 0xff);
+    }
+
+    #[test(should_fail_with="Nibble value must be less than 16")]
+    fn test_nibbles_to_byte_fail_overflow() {
+        assert(nibbles_to_byte(0x00, 0x10) == 0x10);
+    }
+
+    #[test]
+    fn test_nibbles_to_bytes_empty() {
+        assert(nibbles_to_bytes([]) == []);
+    }
+
+    #[test]
+    fn test_nibbles_to_bytes_zero() {
+        assert(nibbles_to_bytes([0x0, 0x0]) == [0x0]);
+    }
+
+    #[test]
+    fn test_nibbles_to_bytes_simple() {
+        assert(nibbles_to_bytes([0x0, 0xf, 0xf, 0x0]) == [0x0f, 0xf0]);
+    }
+
+    #[test]
+    fn test_nibbles_to_bytes() {
+        assert(
+            nibbles_to_bytes(
+            [
+            0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, 0x0, 0x1, 0x2, 0x3
+        ]
+        )
+            == [0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23]
+        );
+    }
 }
 
 mod test_byte_value {
+
     use crate::misc::bytes::byte_value;
 
     #[test]
