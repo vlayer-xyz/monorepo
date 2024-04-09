@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from 'fs/promises';
+import { mkdir, rm, writeFile } from 'fs/promises';
 import { createMerkleProofFixture } from './noir_fixtures/merkle_proof.js';
 import { Trie } from '@ethereumjs/trie';
 import { PROOF_FIXTURES } from '../fixtures/merkleProofsConfig.js';
@@ -10,9 +10,11 @@ const NOIR_PROOF_FIXTURES_DIRECTORY = '../circuits/lib/src/fixtures/merkle_proof
 let fixtureModule = ``;
 const fixtureModuleFile = `${NOIR_PROOF_FIXTURES_DIRECTORY}.nr`;
 
-for (const fixtureName in PROOF_FIXTURES) {
-  await mkdir(NOIR_PROOF_FIXTURES_DIRECTORY, { recursive: true });
+await rm(NOIR_PROOF_FIXTURES_DIRECTORY, { recursive: true, force: true });
+await rm(fixtureModuleFile, { force: true });
+await mkdir(NOIR_PROOF_FIXTURES_DIRECTORY, { recursive: true });
 
+for (const fixtureName in PROOF_FIXTURES) {
   const keyValuePairs = PROOF_FIXTURES[fixtureName].keyValuePairs;
   assert(
     !hasDuplicates(keyValuePairs.map((keyValuePair) => keyValuePair.key)),
