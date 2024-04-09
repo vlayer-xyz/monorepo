@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { assert } from '../../../util/assert.js';
 import { RECEIPT_OFFSETS } from './encode.js';
 import { encodeReceipt } from '../receiptOracle/encode.js';
-import { loadReceiptFixture } from '../../../fixtures.js';
+import { loadReceiptFixture } from '../../../historyAPIFixtures.js';
 
 describe('ReceiptOracle encode', () => {
   describe('encodeReceipt', () => {

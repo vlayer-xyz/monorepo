@@ -7,16 +7,16 @@ export const CHAIN_LINK_TRANSFER_TX_HASH = '0x98e19df80eb8feae436896cc7cc6d4a978
 export const ETH_TRANSFER_TX_HASH = '0xfade98d8c3b7438655139080c33ccd0b1fc5d08b93dab0c3792d6c1001d56ddb';
 export const ORACLIZE_TRANSFER_TX_HASH = '0x38f299591902bfada359527fa6b9b597a959c41c6f72a3b484807fbf52dc8abe';
 
-interface Fixture {
+interface HistoryAPIFixture {
   blockNumber: bigint;
   address?: Address;
   storageKeys?: Hex[];
   transactionHash?: Hex;
 }
 
-type Fixtures = Record<string, Record<string, Record<string, Fixture>>>;
+type HistoryAPIFixtures = Record<string, Record<string, Record<string, HistoryAPIFixture>>>;
 
-export const FIXTURES: Fixtures = {
+export const HISTORY_API_FIXTURES: HistoryAPIFixtures = {
   mainnet: {
     frontier: {
       zero: {

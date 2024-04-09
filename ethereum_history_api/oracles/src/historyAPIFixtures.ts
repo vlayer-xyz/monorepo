@@ -1,10 +1,10 @@
 import { join } from 'path';
 import { GetProofReturnType, Hash, Transaction } from 'viem';
-import { FIXTURES, JS_FIXTURES_DIRECTORY } from './fixtures/config.js';
 import { BaseFixture } from './fixtures/types.js';
 import { readObject } from './util/file.js';
 import type { Block } from './ethereum/blockHeader.js';
 import { TransactionReceipt } from './types.js';
+import { HISTORY_API_FIXTURES, JS_FIXTURES_DIRECTORY } from './fixtures/historyAPIConfig.js';
 
 export async function loadFixture<T>(chain: string, hardFork: string, fixtureName: string, method: string): Promise<T> {
   const fileName = join(JS_FIXTURES_DIRECTORY, chain, hardFork, fixtureName, `${method}.json`);
@@ -18,7 +18,7 @@ export async function loadBlockFixture<TIncludeTransactions extends boolean = fa
   fixtureName: string,
   includeTransactions: TIncludeTransactions
 ): Promise<Block<TIncludeTransactions>> {
-  const blockNumber = FIXTURES[chain][hardFork][fixtureName].blockNumber;
+  const blockNumber = HISTORY_API_FIXTURES[chain][hardFork][fixtureName].blockNumber;
   if (includeTransactions) {
     return loadFixture(chain, hardFork, fixtureName, `eth_getBlockByHash_${blockNumber}_includeTransactions`);
   } else {
@@ -31,7 +31,7 @@ export async function loadProofFixture(
   hardFork: string,
   fixtureName: string
 ): Promise<GetProofReturnType> {
-  const blockNumber = FIXTURES[chain][hardFork][fixtureName].blockNumber;
+  const blockNumber = HISTORY_API_FIXTURES[chain][hardFork][fixtureName].blockNumber;
   return loadFixture<GetProofReturnType>(chain, hardFork, fixtureName, `eth_getProof_${blockNumber}`);
 }
 
@@ -55,7 +55,7 @@ export async function loadReceiptFixture(
   fixtureName: string,
   txHash: Hash
 ): Promise<TransactionReceipt> {
-  const blockNumber = FIXTURES[chain][hardFork][fixtureName].blockNumber;
+  const blockNumber = HISTORY_API_FIXTURES[chain][hardFork][fixtureName].blockNumber;
   const blockReceipts = await loadFixture<TransactionReceipt[]>(
     chain,
     hardFork,
@@ -73,9 +73,9 @@ export async function loadBlockFixtures<TIncludeTransactions extends boolean = f
   includeTransactions: TIncludeTransactions
 ): Promise<Block<TIncludeTransactions>[]> {
   const blocks: Block<TIncludeTransactions>[] = [];
-  for (const chain in FIXTURES) {
-    for (const hardFork in FIXTURES[chain]) {
-      for (const fixtureName in FIXTURES[chain][hardFork]) {
+  for (const chain in HISTORY_API_FIXTURES) {
+    for (const hardFork in HISTORY_API_FIXTURES[chain]) {
+      for (const fixtureName in HISTORY_API_FIXTURES[chain][hardFork]) {
         blocks.push(await loadBlockFixture(chain, hardFork, fixtureName, includeTransactions));
       }
     }

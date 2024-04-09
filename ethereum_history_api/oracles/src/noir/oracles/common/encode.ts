@@ -39,6 +39,10 @@ export function encodeBytes(value: bigint, length: number): Hex[] {
   return encodeHex(`0x${hexValue}`);
 }
 
+export function encodeUint8Array(uint8Array: Uint8Array): Hex[] {
+  return Array.from(uint8Array).map(encodeByte);
+}
+
 export function encodeHex(hexString: string): Hex[] {
   if (!isHex(hexString)) {
     throw new Error(`Invalid hex string: ${hexString}`);

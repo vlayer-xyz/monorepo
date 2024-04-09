@@ -10,7 +10,7 @@ import {
 } from './receipt.js';
 import { toEventSelector } from 'viem';
 import { assert } from '../util/assert.js';
-import { loadReceiptFixture } from '../fixtures.js';
+import { loadReceiptFixture } from '../historyAPIFixtures.js';
 
 describe('logToRlpFields', () => {
   it(`log`, async () => {

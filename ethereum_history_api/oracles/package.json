@@ -16,8 +16,8 @@
     "oracle-server": "tsx src/script/startOracleServer",
     "oracle-server:watch": "tsx watch src/script/startOracleServer",
     "prepare-fixtures": "yarn prepare-js-fixtures && yarn prepare-noir-fixtures",
-    "prepare-js-fixtures": "tsx src/script/prepareJSFixtures",
-    "prepare-noir-fixtures": "tsx src/script/prepareNoirFixtures"
+    "prepare-js-fixtures": "tsx src/script/prepareJSHistoryAPIFixtures",
+    "prepare-noir-fixtures": "rm -rf ../circuits/lib/src/fixtures && tsx src/script/prepareNoirHistoryAPIFixtures && tsx src/script/prepareMerkleProofFixtures"
   },
   "author": "",
   "license": "ISC",
