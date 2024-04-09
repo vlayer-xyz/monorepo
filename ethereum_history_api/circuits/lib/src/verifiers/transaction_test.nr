@@ -5,6 +5,7 @@ mod assert_tx_proof {
         homestead::fork::{header::transactions_root as legacy_transactions_root, transaction_proof::proof as legacy_proof}
     };
     use crate::misc::arrays::alter_array;
+    use dep::proof::const::MAX_TRIE_NODE_LENGTH;
 
     #[test]
     fn success() {
@@ -29,9 +30,18 @@ mod assert_tx_proof {
     }
 
     #[test(should_fail_with="Internal node hash does not match the hash extracted from the preceding node")]
-    fn invalid_proof() {
+    fn invalid_proof_internal_node() {
         let mut proof_invalid_proof = proof;
-        proof_invalid_proof.proof[0] += 1;
+        let internal_node_offset = MAX_TRIE_NODE_LENGTH * 0;
+        proof_invalid_proof.proof[internal_node_offset] += 1;
+        assert_tx_proof(proof_invalid_proof, transactions_root);
+    }
+
+    #[test(should_fail_with="Transaction root: leaf node hash does not match the hash extracted from the preceding node")]
+    fn invalid_proof_leaf_node() {
+        let mut proof_invalid_proof = proof;
+        let leaf_node_offset = MAX_TRIE_NODE_LENGTH * (proof.depth - 1);
+        proof_invalid_proof.proof[leaf_node_offset] += 1;
         assert_tx_proof(proof_invalid_proof, transactions_root);
     }
 
