@@ -1,5 +1,6 @@
 use crate::misc::{types::{Bytes32, Address}, option::make_option};
 use dep::std::unsafe::zeroed;
+use dep::proof::transaction_proof::TransactionProof;
 
 global MAX_TREE_DEPTH = 7;
 global MAX_KEY_LEN = 3;
@@ -33,13 +34,6 @@ struct ForeignCallTransaction<MAX_DATA_LEN> {
 
 struct PhantomTransactionProofLen<MAX_PROOF_LEN> {}
 struct PhantomTransactionRlpLen<MAX_RLP_LEN> {}
-
-struct TransactionProof<MAX_PROOF_LEN, MAX_RLP_LEN> {
-    key: [u8; MAX_KEY_LEN],
-    value: [u8; MAX_RLP_LEN],
-    proof: [u8; MAX_PROOF_LEN],
-    depth: u64
-}
 
 struct TransactionWithinBlock<MAX_DATA_LEN> {
     transaction: TxPartial<MAX_DATA_LEN>,
