@@ -18,10 +18,10 @@ export function createMerkleProofFixture(proofFixture: ProofFixture) {
   const root = joinArray(encodeUint8Array(proofFixture.root));
   const nodes = joinArray(proofFixture.proof.nodes.map((node) => indentBlock(joinArray(encodeUint8Array(node)), 1)));
   const leaf = joinArray(encodeUint8Array(proofFixture.proof.leaf));
-  return `global key = ${indentBlock(key, 1)};\n
-global value = ${indentBlock(value, 1)};\n
-global root = ${indentBlock(root, 1)};\n
-global nodes = ${indentBlock(nodes, 1)};\n
-global leaf = ${indentBlock(leaf, 1)};
+  return `global key = ${key};\n
+global value = ${value};\n
+global root = ${root};\n
+global nodes = ${nodes};\n
+global leaf = ${leaf};
 `;
 }
