@@ -89,7 +89,7 @@ mod test_decode_string {
 }
 
 mod test_decode_list {
-    use crate::rlp::decode::{decode_list, RlpList, RlpFragment, STRING};
+    use crate::rlp::{decode::{decode_list, RlpList, STRING}, fragment::RlpFragment};
 
     #[test]
     fn empty() {
