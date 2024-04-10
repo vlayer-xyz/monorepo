@@ -10,9 +10,8 @@ import { MAX_TX_RLP_LEN, MAX_TX_ENCODED_LEN } from '../../noir/oracles/transacti
 import { ZERO_PAD_VALUE } from '../../noir/oracles/common/const.js';
 
 export function createTransactionFixture(tx: GetTransactionReturnType): string {
-  const fields = TxRlpEncoder.txToFields(tx);
-  const hx = encodeHex(toRlp(fields));
-  const txRlp = joinArray(padArray(hx, MAX_TX_RLP_LEN, ZERO_PAD_VALUE));
+  const rlpFields = TxRlpEncoder.txToFields(tx);
+  const txRlp = joinArray(padArray(encodeHex(toRlp(rlpFields)), MAX_TX_RLP_LEN, ZERO_PAD_VALUE));
   const encodedTx = joinArray(padArray(encodeHex(encodeTx(tx)), MAX_TX_ENCODED_LEN, ZERO_PAD_VALUE));
 
   const txIdx = encodeField(tx.transactionIndex);
