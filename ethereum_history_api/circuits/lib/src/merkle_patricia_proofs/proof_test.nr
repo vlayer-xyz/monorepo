@@ -37,6 +37,12 @@ mod test_strip_prefix {
         );
     }
 
+    #[test(should_fail_with="Generic arguments don't match")]
+    fn mismatched_generic_args() {
+        let prefixed_key_bytes = [0x20, 0xab, 0xcd, 0x00];
+        let _: ([u8; 9], u64) = strip_prefix(prefixed_key_bytes, 3);
+    }
+    
     #[test(should_fail_with="Expected a zero after a prefix of even parity")]
     fn non_zero_after_even_prefix() {
         let wrong_prefix = 0x21;

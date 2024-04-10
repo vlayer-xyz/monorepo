@@ -6,7 +6,7 @@ pub fn byte_to_nibbles(byte: u8) -> (u8, u8) {
 }
 
 pub fn bytes_to_nibbles<BYTES_LEN, NIBBLES_LEN>(bytes: [u8; BYTES_LEN]) -> [u8; NIBBLES_LEN] {
-    assert(NIBBLES_LEN == 2 * BYTES_LEN);
+    assert(NIBBLES_LEN == 2 * BYTES_LEN, "Generic arguments don't match");
 
     let mut nibbles = [0; NIBBLES_LEN];
 
@@ -28,7 +28,7 @@ pub fn nibbles_to_byte(upper: u8, lower: u8) -> u8 {
 }
 
 pub fn nibbles_to_bytes<BYTES_LEN, NIB_LEN>(nibbles: [u8; NIB_LEN]) -> [u8; BYTES_LEN] {
-    assert(NIB_LEN == 2 * BYTES_LEN);
+    assert(NIB_LEN == 2 * BYTES_LEN, "Generic arguments don't match");
 
     let mut bytes = [0; BYTES_LEN];
 

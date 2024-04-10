@@ -44,7 +44,7 @@ pub fn strip_prefix<MAX_KEY_LEN, MAX_KEY_NIBBLE_LEN>(
     prefixed_key_bytes: [u8; MAX_KEY_LEN],
     prefixed_len: u64
 ) -> ([u8; MAX_KEY_NIBBLE_LEN], u64) {
-    assert(MAX_KEY_LEN * 2 == MAX_KEY_NIBBLE_LEN);
+    assert(MAX_KEY_LEN * 2 == MAX_KEY_NIBBLE_LEN, "Generic arguments don't match");
     let prefixed_key_nibbles: [u8; MAX_KEY_NIBBLE_LEN] = bytes_to_nibbles(prefixed_key_bytes);
 
     let mut stripped_nibbles = [0; MAX_KEY_NIBBLE_LEN];

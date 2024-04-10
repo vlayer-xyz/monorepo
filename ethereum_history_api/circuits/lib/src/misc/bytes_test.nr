@@ -78,7 +78,7 @@ mod test_bytes_nibbles_conversions {
         );
     }
 
-    #[test(should_fail)]
+    #[test(should_fail_with="Generic arguments don't match")]
     fn bytes_to_nibbles_fail() {
         let _: [u8; 3] = bytes_to_nibbles([0x00]);
     }
@@ -130,7 +130,7 @@ mod test_bytes_nibbles_conversions {
         );
     }
 
-    #[test(should_fail)]
+    #[test(should_fail_with="Generic arguments don't match")]
     fn nibbles_to_bytes_fail() {
         let _: [u8; 1] = nibbles_to_bytes([0x0, 0x0, 0x0]);
     }
