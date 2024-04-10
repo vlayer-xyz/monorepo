@@ -37,6 +37,13 @@ mod test_strip_prefix {
         );
     }
 
+    #[test(should_fail_with="Expected a zero after a prefix of even parity")]
+    fn non_zero_after_even_prefix() {
+        let wrong_prefix = 0x21;
+        let prefixed_key_bytes = [wrong_prefix, 0xab, 0xcd, 0x00];
+        let _: ([u8; 8], u64) = strip_prefix(prefixed_key_bytes, 3);
+    }
+
     #[test(should_fail_with="Prefix must be 0, 1, 2 or 3")]
         fn invalid_prefix() {
         let prefixed_key_bytes = [0x4a, 0xbc];

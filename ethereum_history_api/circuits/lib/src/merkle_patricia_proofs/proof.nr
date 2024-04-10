@@ -48,7 +48,11 @@ pub fn strip_prefix<MAX_KEY_LEN, MAX_KEY_NIBBLE_LEN>(
     let prefixed_key_nibbles: [u8; MAX_KEY_NIBBLE_LEN] = bytes_to_nibbles(prefixed_key_bytes);
 
     let mut stripped_nibbles = [0; MAX_KEY_NIBBLE_LEN];
-    let offset = 2 - parity(prefixed_key_nibbles[0]) as u64;
+    let parity = parity(prefixed_key_nibbles[0]);
+    if (parity == EVEN) {
+        assert(prefixed_key_nibbles[1] == 0, "Expected a zero after a prefix of even parity");
+    }
+    let offset = 2 - parity as u64;
     let stripped_len = prefixed_len * 2 - offset;
     memcpy_up_to_length(
         &mut stripped_nibbles,
