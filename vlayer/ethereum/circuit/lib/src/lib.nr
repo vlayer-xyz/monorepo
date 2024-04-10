@@ -1,1 +1,1 @@
-mod get_token_balance;
+mod token;
