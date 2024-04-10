@@ -4,6 +4,21 @@ use crate::misc::{types::{PaddedValue, ADDRESS_LENGTH, U128_LENGTH}, bytes::byte
 use dep::u2b::u64_to_u8;
 use dep::proof::const::HASH_LENGTH;
 
+struct FieldLayout {
+    field_count: u64,
+    nonce_idx: u8,
+    gas_limit_idx: u8,
+    to_idx: u8,
+    signature_idx: u8,
+}
+
+global TX_TYPE_TO_FIELD_LAYOUT = [
+    FieldLayout {field_count: 9, nonce_idx: 0, gas_limit_idx: 2, to_idx: 3, signature_idx: 6},
+    FieldLayout {field_count: 11, nonce_idx: 1, gas_limit_idx: 3, to_idx: 4, signature_idx: 8},
+    FieldLayout {field_count: 12, nonce_idx: 1, gas_limit_idx: 4, to_idx: 5, signature_idx: 9},
+    FieldLayout {field_count: 14, nonce_idx: 1, gas_limit_idx: 4, to_idx: 5, signature_idx: 11},
+];
+
 global MAX_TX_FIELDS_COUNT = 14;
 
 pub(crate) fn assert_tx_rlp_equals<MAX_DATA_LEN>(
@@ -12,18 +27,16 @@ pub(crate) fn assert_tx_rlp_equals<MAX_DATA_LEN>(
     tx: TxPartial<MAX_DATA_LEN>
 ) {
     let tx_rlp_list: RlpList<MAX_TX_FIELDS_COUNT> = decode_list(tx_rlp);
-    let fields_count = [9, 11, 12, 14][tx_type];
-    assert(tx_rlp_list.num_fields == fields_count, "Invalid number of fields in tx RLP");
+
+    let FieldLayout {field_count, nonce_idx, gas_limit_idx, to_idx, signature_idx} = TX_TYPE_TO_FIELD_LAYOUT[tx_type];
+    assert(tx_rlp_list.num_fields == field_count, "Invalid number of fields in tx RLP");
 
     let nonce = u64_to_u8(tx.nonce);
-    let nonce_idx = [0, 1, 1, 1][tx_type];
     tx_rlp_list.fragments[nonce_idx].assert_string_eq("Nonce", tx_rlp, Into::into(byte_value(nonce)));
 
     let gas_limit = u64_to_u8(tx.gas_limit);
-    let gas_limit_idx = [2, 3, 4, 4][tx_type];
     tx_rlp_list.fragments[gas_limit_idx].assert_string_eq("Gas limit", tx_rlp, Into::into(byte_value(gas_limit)));
 
-    let to_idx = [3, 4, 5, 5][tx_type];
     if (tx.to.is_some()) {
         tx_rlp_list.fragments[to_idx].assert_string_eq(
             "To",
@@ -42,7 +55,6 @@ pub(crate) fn assert_tx_rlp_equals<MAX_DATA_LEN>(
 
     tx_rlp_list.fragments[to_idx + 2].assert_string_eq("Data", tx_rlp, tx.data);
 
-    let signature_idx = [6, 8, 9, 11][tx_type];
     tx_rlp_list.fragments[signature_idx].assert_string_eq("V", tx_rlp, Into::into(byte_value([tx.v as u8])));
     tx_rlp_list.fragments[signature_idx + 1].assert_string_eq("R", tx_rlp, Into::into((tx.r, HASH_LENGTH)));
     tx_rlp_list.fragments[signature_idx + 2].assert_string_eq("S", tx_rlp, Into::into((tx.s, HASH_LENGTH)));
