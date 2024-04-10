@@ -54,36 +54,30 @@ pub fn extract_payload_len<N>(arr: [u8; N], lenlen: u64) -> u64 {
 pub fn decode_to_rlp_header<N>(arr: [u8; N]) -> RlpHeader {
     let prefix = arr[0];
 
-    // (prefix < 0x80) - single byte
-    let is_short_string = (prefix < 0xb8 & prefix >= 0x80); // 0-55 byte string
-    let is_long_string = (prefix < 0xc0 & prefix >= 0xb8); // >55-byte string
-    let is_short_list = (prefix < 0xf8 & prefix >= 0xc0); // 0-55 byte list
-    let is_long_list = (prefix >= 0xf8); // >55-byte list
-
-    let mut offset = 0;
-    let mut length = 1;
     let mut data_type = STRING;
-
-    if (is_short_string) {
-        offset = 1;
-        length = wrapping_sub(prefix, 0x80) as u64;
-    }
-    if (is_long_string) {
-        offset = wrapping_sub(1 + prefix, 0xb7) as u64;
-        length =  extract_payload_len(arr, wrapping_sub(prefix, 0xb7) as u64);
-    }
-    if (is_short_list) {
-        offset = 1;
-        length = wrapping_sub(prefix, 0xc0) as u64;
-        data_type = LIST;
-    }
-    if (is_long_list) {
-        offset = wrapping_sub(1 + prefix, 0xf7) as u64;
-        length =  extract_payload_len(arr, wrapping_sub(prefix, 0xf7) as u64);
+    if (prefix >= 0xc0) {
         data_type = LIST;
     }
 
-    RlpHeader { offset, length, data_type }
+    if (prefix < 0x80) { // single byte
+        RlpHeader { offset: 0, length: 1, data_type }
+    } else if (prefix < 0xb8) { // 0-55 byte string
+        RlpHeader { offset: 1, length: wrapping_sub(prefix, 0x80) as u64, data_type }
+    } else if (prefix < 0xc0) { // >55-byte string
+        RlpHeader {
+            offset: wrapping_sub(1 + prefix, 0xb7) as u64,
+            length: extract_payload_len(arr, wrapping_sub(prefix, 0xb7) as u64),
+            data_type
+        }
+    } else if (prefix < 0xf8) { // 0-55 byte list
+        RlpHeader { offset: 1, length: wrapping_sub(prefix, 0xc0) as u64, data_type }
+    } else { // >55-byte list
+        RlpHeader {
+            offset: wrapping_sub(1 + prefix, 0xf7) as u64,
+            length: extract_payload_len(arr, wrapping_sub(prefix, 0xf7) as u64),
+            data_type
+        }
+    }
 }
 
 pub fn decode_string<N>(input: [u8; N]) -> (u64, u64) {
