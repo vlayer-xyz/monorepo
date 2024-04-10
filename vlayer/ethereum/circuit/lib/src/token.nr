@@ -3,10 +3,10 @@ use dep::std::unsafe::zeroed;
 
 global TOKEN_BALANCE_INDEX = 0;
 
-pub fn get_token_balance(token_address: Address, address: Address, block_number: Field) -> Field {
+pub fn get_token_balance(token_address: Address, wallet_address: Address, block_number: Field) -> Field {
     get_token_balance_internal(
         token_address,
-        address,
+        wallet_address,
         block_number,
         calculate_token_balance_storage_key,
         get_account_with_storage,
