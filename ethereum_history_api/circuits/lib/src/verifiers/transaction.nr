@@ -1,3 +1,7 @@
+mod rlp;
+mod rlp_test;
+mod layout;
+
 use dep::proof::const::HASH_LENGTH;
 use dep::proof::transaction_proof::TransactionProof;
 
