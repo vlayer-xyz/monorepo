@@ -258,7 +258,7 @@ mod test_decode_to_rlp_header {
 
     #[test]
     fn success_long_string() {
-        let header = [0xb8, 0x3c]; // string with 60 bytes
+        let header = [0xb8, 60]; // string with 60 bytes
         let rlp : [u8; 62] = resize(header);
         let expected = RlpHeader { offset: 2, length: 60, data_type: STRING };
         assert(decode_to_rlp_header(rlp) == expected);
@@ -287,7 +287,7 @@ mod test_decode_to_rlp_header {
 
     #[test]
     fn success_long_list() {
-        let header = [0xf8, 0x3c]; // list of 60 elements
+        let header = [0xf8, 60]; // list of 60 elements
         let rlp : [u8; 62] = resize(header);
         let expected = RlpHeader { offset: 2, length: 60, data_type: LIST };
         assert(decode_to_rlp_header(rlp) == expected);
