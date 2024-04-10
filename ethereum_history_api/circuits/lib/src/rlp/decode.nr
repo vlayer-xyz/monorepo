@@ -32,6 +32,8 @@ impl<N> Eq for RlpList<N> {
 
 pub fn extract_payload_len<N>(arr: [u8; N], lenlen: u64) -> u64 {
     assert(lenlen <= MAX_LEN_IN_BYTES, "Length of length exceeds maximum");
+    assert(lenlen < N, "Length of length exceeds input length");
+    assert(lenlen > 0, "Length of length is zero");
 
     let mut payload_length = 0;
 
@@ -89,37 +91,40 @@ pub fn decode_string<N>(input: [u8; N]) -> (u64, u64) {
 /// For string elements, the offset points to the payload, whereas the offset
 ///   of a list element points to the RLP header of that element.
 pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
-    let mut num_fields: u64 = 0;
-    let mut fragments = [RlpFragment::default(); NUM_FIELDS];
+    decode_list_eternal(
+        input,
+        |current_offset: &mut u64| {
+            let header: [u8; N] = copy_subarray(input, *current_offset);
+            let RlpHeader {offset: field_off, length: field_len, data_type} = decode_to_rlp_header(header);
 
-    let mut RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
-    assert(data_type == LIST);
+            let offset = *current_offset + (1 - data_type) * field_off; // If the ith slot contains a list, include its RLP header.
+            let length = field_len + data_type * offset; // If the ith slot contains a list, include the length of its header.
+            let fragment = RlpFragment {offset, length, data_type};
 
-    let total_len = length + offset;
-    assert(total_len <= input.len());
-
-    for i in 0..NUM_FIELDS {
-        let is_in_range = (offset != total_len) as u64;
-
-        let header: [u8; MAX_LEN_IN_BYTES + 1] = copy_subarray(input, offset);
-        let RlpHeader {offset: field_off, length: field_len, data_type: field_type} = decode_to_rlp_header(header);
-        let total_field_len = field_off + field_len;
-
-        // Assign decoded data or set them to 0 if outside od total_len
-        fragments[i].offset = is_in_range * (offset + (1 - field_type) * field_off); // If the ith slot contains a list, include its RLP header.
-        fragments[i].length = is_in_range * (field_len + field_type * field_off); // If the ith slot contains a list, include the length of its header.
-        fragments[i].data_type = is_in_range * (field_type);
-
-        offset += is_in_range * total_field_len;
-        num_fields += is_in_range;
-    }
-
-    RlpList { fragments, num_fields }
+            *current_offset += field_off + field_len;
+            fragment
+        }
+    )
 }
 
 /// RLP list decoder for lists of strings of length < 56 bytes.
 /// Returns an RLP list look-up table.
 pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
+    decode_list_eternal(
+        input,
+        |current_offset: &mut u64| {
+            let first_byte = input[*current_offset];
+            let (field_off, field_len) = get_small_string_offset_and_length(first_byte);
+
+            let fragment = RlpFragment { offset: *current_offset + field_off, length: field_len, data_type: STRING };
+            
+            *current_offset += field_off + field_len;
+            fragment
+        }
+    )
+}
+
+pub fn decode_list_eternal<N, NUM_FIELDS, Env>(input: [u8; N], inside: fn[Env](&mut u64) -> RlpFragment) -> RlpList<NUM_FIELDS> {
     let mut num_fields: u64 = 0;
     let mut fragments = [RlpFragment::default(); NUM_FIELDS];
 
@@ -132,15 +137,8 @@ pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NU
     let mut current_offset = offset;
     for i in 0..NUM_FIELDS {
         if (current_offset < total_len) {
-            let first_byte = input[current_offset];
+            fragments[i] = inside(&mut current_offset);
 
-            let (field_off, field_len) = get_small_string_offset_and_length(first_byte);
-
-            fragments[i].offset = current_offset + field_off;
-            fragments[i].length = field_len;
-            fragments[i].data_type = STRING;
-
-            current_offset += (field_off + field_len);
             num_fields += 1;
         }
     }
