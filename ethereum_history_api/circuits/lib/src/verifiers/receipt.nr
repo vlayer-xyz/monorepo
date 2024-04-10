@@ -4,8 +4,8 @@ mod rlp_test;
 use dep::proof::{const::HASH_LENGTH, receipt_proof::ReceiptProof, node::key_as_nibbles};
 use crate::receipt::{TxReceiptPartial, TxType};
 use crate::verifiers::{
-    receipt::rlp::assert_receipt_rlp_equals, split_into_tx_type_and_rlp::split_into_tx_type_and_rlp,
-    tx_idx::assert_tx_idx_equals
+    receipt::rlp::assert_receipt_rlp_equals,
+    tx_helpers::{split::split_into_tx_type_and_rlp, idx::assert_tx_idx_equals}
 };
 use crate::misc::bytes::byte_value;
 

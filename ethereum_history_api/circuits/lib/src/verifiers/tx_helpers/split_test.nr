@@ -1,6 +1,6 @@
 mod receipt {
     use crate::misc::arrays::{sub_array_equals, memcpy};
-    use crate::verifiers::split_into_tx_type_and_rlp::split_into_tx_type_and_rlp;
+    use crate::verifiers::tx_helpers::split::split_into_tx_type_and_rlp;
 
     use crate::fixtures::mainnet::{
         cancun::small_block::{receipt::{encoded_receipt, tx_type}},
@@ -41,7 +41,7 @@ mod receipt {
 
 mod transaction {
     use crate::misc::arrays::{sub_array_equals, memcpy};
-    use crate::verifiers::split_into_tx_type_and_rlp::split_into_tx_type_and_rlp;
+    use crate::verifiers::tx_helpers::split::split_into_tx_type_and_rlp;
 
     use crate::fixtures::mainnet::{
         cancun::small_block::{transaction::{encoded_tx, tx_type}},
