@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { alterArray, last, padArray } from './array.js';
+import { alterArray, hasDuplicates, last, padArray } from './array.js';
 
 describe('arrays', () => {
   it('padArray right', () => {
@@ -26,5 +26,10 @@ describe('arrays', () => {
   it('last', () => {
     expect(last(['a', 'b', 'c'])).toStrictEqual('c');
     expect(() => last([])).toThrow('Array should not be empty');
+  });
+
+  it('hasDuplicates', () => {
+    expect(hasDuplicates(['a', 'b', 'c'])).toStrictEqual(false);
+    expect(hasDuplicates([1, 2, 3, 2, 4])).toStrictEqual(true);
   });
 });

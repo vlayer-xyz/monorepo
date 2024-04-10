@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { TransactionEIP1559, TransactionEIP2930, TransactionEIP4844, TransactionLegacy } from 'viem';
-import { loadTxFixture } from '../fixtures.js';
+import { loadTxFixture } from '../historyAPIFixtures.js';
 import { TxRlpEncoder } from './transaction.js';
 import { assert } from '../util/assert.js';
 

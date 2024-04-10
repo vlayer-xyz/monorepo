@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { CRYPTO_PUNKS_ADDRESS } from '../../ethereum/recordingClient.test.js';
 import { decodeGetProofArguments } from './proofOracle.js';
-import { CIRCLE_USDC_BALANCE_STORAGE_KEY } from '../../fixtures/config.js';
+import { CIRCLE_USDC_BALANCE_STORAGE_KEY } from '../../fixtures/historyAPIConfig.js';
 
 describe('proofOracle', () => {
   it('decodeGetProofArguments success', () => {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { calculateBlockHash, calculateBlockHeaderHash, headerToRlpFields, blockToHeader } from './blockHeader.js';
-import { loadBlockFixture, loadBlockFixtures } from '../fixtures.js';
+import { loadBlockFixture, loadBlockFixtures } from '../historyAPIFixtures.js';
 
 describe('calculateBlockHeaderHash', async () => {
   const blocks = await loadBlockFixtures(false);

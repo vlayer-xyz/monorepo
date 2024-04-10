@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { loadProofFixture } from '../../../fixtures.js';
+import { loadProofFixture } from '../../../historyAPIFixtures.js';
 import accountAsFields from './fixtures/accountAsFields.json';
 import stateProofAsFields from './fixtures/stateProofAsFields.json';
 import storageProofAsFields from './fixtures/storageProofAsFields.json';

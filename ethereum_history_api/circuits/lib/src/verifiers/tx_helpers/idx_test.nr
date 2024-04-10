@@ -1,4 +1,4 @@
-use crate::verifiers::tx_idx::assert_tx_idx_equals;
+use crate::verifiers::tx_helpers::idx::assert_tx_idx_equals;
 
 #[test]
 fn test_assert_tx_idx_equals_zero() {

@@ -3,7 +3,7 @@ import { join } from 'path';
 import { GetProofParameters } from 'viem';
 
 import { createClient } from '../ethereum/client.js';
-import { FIXTURES, JS_FIXTURES_DIRECTORY } from '../fixtures/config.js';
+import { HISTORY_API_FIXTURES, JS_FIXTURES_DIRECTORY } from '../fixtures/historyAPIConfig.js';
 import { GetBlockFixture, GetTransactionReceiptsFixture, GetProofFixture } from '../fixtures/types.js';
 import { writeObject } from '../util/file.js';
 import { RecordingClient, createRecordingClient } from '../ethereum/recordingClient.js';
@@ -37,14 +37,14 @@ async function createReceiptsFixture(
 
 export async function prepareJSFixtures(): Promise<void> {
   await rm(JS_FIXTURES_DIRECTORY, { recursive: true, force: true });
-  for (const chain in FIXTURES) {
+  for (const chain in HISTORY_API_FIXTURES) {
     const client = createRecordingClient(createClient.get(chain)!());
-    for (const hardFork in FIXTURES[chain]) {
-      for (const fixtureName in FIXTURES[chain][hardFork]) {
+    for (const hardFork in HISTORY_API_FIXTURES[chain]) {
+      for (const fixtureName in HISTORY_API_FIXTURES[chain][hardFork]) {
         const modulePath = `${JS_FIXTURES_DIRECTORY}/${chain}/${hardFork}/${fixtureName}`;
 
         await mkdir(modulePath, { recursive: true });
-        const { blockNumber, address, storageKeys } = FIXTURES[chain][hardFork][fixtureName];
+        const { blockNumber, address, storageKeys } = HISTORY_API_FIXTURES[chain][hardFork][fixtureName];
 
         const getBlockFixture = await createBlockFixture(client, blockNumber);
         await writeObject(getBlockFixture, join(modulePath, `eth_getBlockByHash_${blockNumber}.json`));

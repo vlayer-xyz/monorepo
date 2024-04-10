@@ -89,7 +89,7 @@ mod test_decode_string {
 }
 
 mod test_decode_list {
-    use crate::rlp::decode::{decode_list, RlpList, RlpFragment, STRING};
+    use crate::rlp::{decode::{decode_list, RlpList, STRING}, fragment::RlpFragment};
 
     #[test]
     fn empty() {
@@ -105,7 +105,6 @@ mod test_decode_list {
                 RlpFragment { offset: 2, length: 3, data_type: STRING },
                 RlpFragment { offset: 6, length: 3, data_type: STRING },
                 RlpFragment { offset: 9, length: 1, data_type: STRING },
-                RlpFragment { offset: 0, length: 0, data_type: STRING },
                 RlpFragment { offset: 0, length: 0, data_type: STRING }
             ],
             num_fields: 3
@@ -143,6 +142,105 @@ mod test_decode_list {
             num_fields: 17
         };
         assert(decode_list(rlp) == expected);
+    }
+}
+
+mod test_decode_list_of_small_strings {
+    use crate::rlp::decode::{decode_list_of_small_strings, RlpList, RlpFragment, STRING};
+
+    #[test]
+    fn success_empty_list() {
+        let rlp = [0xc0];
+        let expected = RlpList { fragments: [], num_fields: 0 };
+
+        assert(decode_list_of_small_strings(rlp) == expected);
+    }
+
+    #[test]
+    fn success() {
+        let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13];
+        let expected = RlpList {
+            fragments: [
+                RlpFragment { offset: 2, length: 3, data_type: STRING },
+                RlpFragment { offset: 6, length: 3, data_type: STRING },
+                RlpFragment { offset: 9, length: 1, data_type: STRING }
+            ],
+            num_fields: 3
+        };
+
+        assert(decode_list_of_small_strings(rlp) == expected);
+    }
+
+    #[test]
+    fn success_comparing_with_zeros() {
+        let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13];
+        let expected = RlpList {
+            fragments: [
+                RlpFragment { offset: 2, length: 3, data_type: STRING },
+                RlpFragment { offset: 6, length: 3, data_type: STRING },
+                RlpFragment { offset: 9, length: 1, data_type: STRING },
+                RlpFragment { offset: 0, length: 0, data_type: STRING }
+            ],
+            num_fields: 3
+        };
+
+        assert(decode_list_of_small_strings(rlp) == expected);
+    }
+
+    #[test(should_fail_with="Inconsistent rlp length")]
+    fn fail_inconsistent_length() {
+        let rlp = [0xc7, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13];
+        let _ : RlpList<3> = decode_list_of_small_strings(rlp);
+    }
+
+    #[test(should_fail_with = "Expected a list")]
+    fn fail_wrong_data_type() {
+        let rlp_of_single_byte = [0x00];
+        let _ : RlpList<1> = decode_list_of_small_strings(rlp_of_single_byte);
+    }
+
+    #[test(should_fail_with = "Total length exceeds input length")]
+    fn fail_length_exceeds_input_length() {
+        let rlp = [0xc9, 0x13];
+        let _ : RlpList<1> = decode_list_of_small_strings(rlp);
+    }
+
+    #[test(should_fail_with = "Element is not a string of length < 56 bytes")]
+    fn fail_list_with_lists() {
+        let rlp = [0xc1, 0xc0];
+        let _ : RlpList<1> = decode_list_of_small_strings(rlp);
+    }
+}
+
+mod test_get_small_string_offset_and_length {
+    use crate::rlp::decode::get_small_string_offset_and_length;
+
+    #[test]
+    fn success_short_string() {
+        let header_byte = 0x83;
+        let (expected_offset, expected_length) = (1, 3);
+
+        assert(get_small_string_offset_and_length(header_byte) == (expected_offset, expected_length));
+    }
+
+    #[test]
+    fn success_byte() {
+        let header_byte = 0x11;
+        let (expected_offset, expected_length) = (0, 1);
+
+        assert(get_small_string_offset_and_length(header_byte) == (expected_offset, expected_length));
+    }
+
+    #[test(should_fail_with = "Element is not a string of length < 56 bytes")]
+    fn fail_list_type() {
+        let header_of_list_type = 0xc0;
+        let _ = get_small_string_offset_and_length(header_of_list_type);
+    }
+
+    #[test(should_fail_with = "Element is not a string of length < 56 bytes")]
+    fn fail_long_string_type() {
+        let header_of_list_type = 0xb9;
+        let _ = get_small_string_offset_and_length(header_of_list_type);
     }
 }
 

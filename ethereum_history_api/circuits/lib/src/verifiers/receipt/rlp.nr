@@ -5,6 +5,7 @@ use crate::{
 use dep::proof::const::HASH_LENGTH;
 use crate::misc::arrays::sub_array_equals_up_to_length;
 use crate::misc::bytes::byte_value;
+use crate::misc::types::PaddedValue;
 use crate::rlp::decode::{RlpList, decode_list, STRING};
 use dep::u2b::u32_to_u8;
 
@@ -23,54 +24,29 @@ pub(crate) fn assert_receipt_rlp_equals<LOG_NUM, MAX_LOG_DATA_LEN>(
     assert(receipt_rlp_list.num_fields == RECEIPT_FIELDS_COUNT, "Invalid number of fields in receipt RLP");
 
     if (is_pre_byzantium) {
-        assert(receipt_rlp_list.fragments[STATE_ROOT_INDEX].data_type == STRING, "Invalid state root type");
-        assert(
-            receipt_rlp_list.fragments[STATE_ROOT_INDEX].length == HASH_LENGTH, "Invalid state root length"
-        );
-        assert(
-            sub_array_equals_up_to_length(
-                receipt.state_root.expect(f"State root is missing"),
-                receipt_rlp,
-                receipt_rlp_list.fragments[STATE_ROOT_INDEX].offset,
-                HASH_LENGTH as u64
-            ), "State root mismatch"
+        receipt_rlp_list.fragments[STATE_ROOT_INDEX].assert_string_eq(
+            "State root",
+            receipt_rlp,
+            Into::into((receipt.state_root.expect(f"State root is missing"), HASH_LENGTH))
         );
     } else {
-        let status = receipt.status.expect(f"Status is missing");
-        assert(receipt_rlp_list.fragments[STATUS_INDEX].data_type == STRING, "Invalid status type");
-        assert(receipt_rlp_list.fragments[STATUS_INDEX].length == 1, "Invalid status length");
-        assert(
-            receipt_rlp[receipt_rlp_list.fragments[STATUS_INDEX].offset] as u1 == status, "Status mismatch"
+        receipt_rlp_list.fragments[STATUS_INDEX].assert_string_eq(
+            "Status",
+            receipt_rlp,
+            Into::into(([receipt.status.expect(f"Status is missing") as u8], 1 as u64))
         );
     }
 
-    let cumulative_gas_used = u32_to_u8(receipt.cumulative_gas_used as u32);
-    let (cumulative_gas_used, cumulative_gas_used_length) = byte_value(cumulative_gas_used);
-    assert(
-        receipt_rlp_list.fragments[CUMULATIVE_GAS_USED_INDEX].data_type == STRING, "Invalid cumulative gas used type"
-    );
-    assert(
-        receipt_rlp_list.fragments[CUMULATIVE_GAS_USED_INDEX].length == cumulative_gas_used_length, "Invalid cumulative gas used length"
-    );
-    assert(
-        sub_array_equals_up_to_length(
-            cumulative_gas_used,
-            receipt_rlp,
-            receipt_rlp_list.fragments[CUMULATIVE_GAS_USED_INDEX].offset,
-            cumulative_gas_used_length as u64
-        ), "Cumulative gas used mismatch"
+    let cumulative_gas_used = u32_to_u8(receipt.cumulative_gas_used);
+    receipt_rlp_list.fragments[CUMULATIVE_GAS_USED_INDEX].assert_string_eq(
+        "Cumulative gas used",
+        receipt_rlp,
+        Into::into(byte_value(cumulative_gas_used))
     );
 
-    assert(receipt_rlp_list.fragments[LOGS_BLOOM_INDEX].data_type == STRING, "Invalid logs bloom type");
-    assert(
-        receipt_rlp_list.fragments[LOGS_BLOOM_INDEX].length == BLOOM_FILTER_LEN, "Invalid logs bloom length"
-    );
-    assert(
-        sub_array_equals_up_to_length(
-            receipt.logs_bloom,
-            receipt_rlp,
-            receipt_rlp_list.fragments[LOGS_BLOOM_INDEX].offset,
-            BLOOM_FILTER_LEN as u64
-        ), "Logs bloom mismatch"
+    receipt_rlp_list.fragments[LOGS_BLOOM_INDEX].assert_string_eq(
+        "Logs bloom",
+        receipt_rlp,
+        Into::into((receipt.logs_bloom, BLOOM_FILTER_LEN))
     );
 }
