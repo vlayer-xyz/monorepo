@@ -174,9 +174,3 @@ pub fn copy_subarray<T, N, M>(arr: [T; N], offset: u64) -> [T; M] {
 
     out
 }
-
-// Leads to fewer constraints than the usual if.
-pub fn strict_if(pred: bool, x: u64, y: u64) -> u64 {
-    let pred_f = pred as u64;
-    pred_f * x + (1 - pred_f) * y
-}

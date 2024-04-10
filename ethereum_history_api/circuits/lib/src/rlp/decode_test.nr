@@ -1,10 +1,4 @@
-use crate::rlp::decode::{copy_subarray, strict_if};
-
-#[test]
-fn test_strict_if() {
-    assert(strict_if(true, 1, 2) == 1);
-    assert(strict_if(false, 1, 2) == 2);
-}
+use crate::rlp::decode::copy_subarray;
 
 #[test]
 fn test_copy_subarray() {
