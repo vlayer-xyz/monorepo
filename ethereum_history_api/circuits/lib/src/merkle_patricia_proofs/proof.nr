@@ -30,14 +30,9 @@ pub fn leaf_get_len<MAX_LEN>(leaf: Leaf<MAX_LEN>) -> u32 {
 // 1 - Extension node, odd number of nibbles
 // 2 - Leaf node, even number of nibbles
 // 3 - Leaf node, odd number of nibbles
-pub fn parity(prefix: u8) -> u64 {
-    assert([0, 1, 2, 3].any(|x| x == prefix), "Prefix must be 0, 1, 2 or 3");
-    let mut result = -1;
-    if (prefix % 2 == 0) {
-        result = EVEN;
-    } else {
-        result = ODD;
-    }
+pub fn parity(prefix: u8) -> u8 {
+    assert(prefix < 4, "Prefix must be 0, 1, 2 or 3");
+    let result = prefix % 2;
     assert((result == EVEN) | (result == ODD), "Invalid parity");
 
     result
@@ -45,23 +40,24 @@ pub fn parity(prefix: u8) -> u64 {
 
 // Leaf and extension nodes are RLP lists with 2 elements: prefixed key nibbles (in bytes) and value.
 // This function removes the prefix and returns appropriate number of key nibbles according to the parity of the prefix (see function: parity).
-pub fn unprefixed_key_nibbles<MAX_KEY_LEN, MAX_KEY_NIBBLE_LEN>(prefixed_key_bytes: [u8; MAX_KEY_LEN]) -> [u8; MAX_KEY_NIBBLE_LEN] {
+pub fn strip_prefix<MAX_KEY_LEN, MAX_KEY_NIBBLE_LEN>(
+    prefixed_key_bytes: [u8; MAX_KEY_LEN],
+    prefixed_len: u64
+) -> ([u8; MAX_KEY_NIBBLE_LEN], u64) {
     assert(MAX_KEY_LEN * 2 == MAX_KEY_NIBBLE_LEN);
-
     let prefixed_key_nibbles: [u8; MAX_KEY_NIBBLE_LEN] = bytes_to_nibbles(prefixed_key_bytes);
-    let mut unprefixed_key_nibbles = [0; MAX_KEY_NIBBLE_LEN];
 
-    if (parity(prefixed_key_nibbles[0]) == ODD) {
-        memcpy_up_to_length(&mut unprefixed_key_nibbles, prefixed_key_nibbles, 1, MAX_KEY_NIBBLE_LEN - 1);
-    } else {
-        if (parity(prefixed_key_nibbles[0]) == EVEN) {
-            memcpy_up_to_length(&mut unprefixed_key_nibbles, prefixed_key_nibbles, 2, MAX_KEY_NIBBLE_LEN - 2);
-        } else {
-            assert(false, "Parity prefix must be ODD or EVEN");
-        }
-    }
+    let mut stripped_nibbles = [0; MAX_KEY_NIBBLE_LEN];
+    let offset = 2 - parity(prefixed_key_nibbles[0]) as u64;
+    let stripped_len = prefixed_len * 2 - offset;
+    memcpy_up_to_length(
+        &mut stripped_nibbles,
+        prefixed_key_nibbles,
+        offset,
+        stripped_len
+    );
 
-    unprefixed_key_nibbles
+    (stripped_nibbles, stripped_len)
 }
 
 pub fn assert_merkle_proof<MAX_KEY_LEN, MAX_VALUE_LEN, MAX_DEPTH, MAX_LEAF_LEN>(

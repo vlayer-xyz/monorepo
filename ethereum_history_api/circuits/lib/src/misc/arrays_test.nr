@@ -22,7 +22,6 @@ mod test_memcpy_up_to_length {
         let src = [1, 2, 3, 4, 5];
         memcpy_up_to_length(&mut dest, src, 1, 4);
     }
-
 }
 
 mod test_memcpy {

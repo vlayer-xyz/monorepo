@@ -1,8 +1,6 @@
 pub fn byte_to_nibbles(byte: u8) -> (u8, u8) {
     let upper = byte / 16;
     let lower = byte - 16 * upper;
-    assert(upper < 16, "Nibble value must be less than 16");
-    assert(lower < 16, "Nibble value must be less than 16");
 
     (upper, lower)
 }
