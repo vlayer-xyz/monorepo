@@ -186,7 +186,7 @@ mod test_decode_to_rlp_header {
 
     #[test]
     fn success_long_array() {
-        let rlp = [0xf9, 0x03, 0x12, 0x13, 0x14];
+        let rlp = [0xf8, 0x03, 0x12, 0x13, 0x14];
         let expected = RlpHeader { offset: 2, length: 3, data_type: LIST };
         assert(decode_to_rlp_header(rlp) == expected);
     }
