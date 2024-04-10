@@ -1,5 +1,5 @@
-mod test_parity_prefix {
-    use crate::merkle_patricia_proofs::proof::{EVEN, ODD, parity, unprefixed_key_nibbles};
+mod test_parity {
+    use crate::merkle_patricia_proofs::proof::{EVEN, ODD, parity};
 
     #[test]
     fn all_parities() {
@@ -12,6 +12,35 @@ mod test_parity_prefix {
     #[test(should_fail_with="Prefix must be 0, 1, 2 or 3")]
     fn invalid_parity() {
         let _ = parity(4);
+    }
+}
+
+mod test_strip_prefix {
+
+    use crate::merkle_patricia_proofs::proof::strip_prefix;
+
+    #[test]
+        fn success_even() {
+        let prefixed_key_bytes = [0x20, 0xab, 0xcd, 0x00];
+        let (stripped_nibbles, stripped_len): ([u8; 8], u64) = strip_prefix(prefixed_key_bytes, 3);
+        assert(
+            (stripped_nibbles, stripped_len) == ([0xa, 0xb, 0xc, 0xd, 0x0, 0x0, 0x0, 0x0], 4), "Incorrect stripping of even prefix"
+        );
+    }
+
+    #[test]
+        fn success_odd() {
+        let prefixed_key_bytes = [0x3a, 0xbc, 0xde, 0x00];
+        let (stripped_nibbles, stripped_len): ([u8; 8], u64) = strip_prefix(prefixed_key_bytes, 3);
+        assert(
+            (stripped_nibbles, stripped_len) == ([0xa, 0xb, 0xc, 0xd, 0xe, 0x0, 0x0, 0x0], 5), "Incorrect stripping of odd prefix"
+        );
+    }
+
+    #[test(should_fail_with="Prefix must be 0, 1, 2 or 3")]
+        fn invalid_prefix() {
+        let prefixed_key_bytes = [0x4a, 0xbc];
+        let _: ([u8; 4], u64) = strip_prefix(prefixed_key_bytes, 2);
     }
 }
 
