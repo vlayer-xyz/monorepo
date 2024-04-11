@@ -18,23 +18,23 @@ pub(crate) fn get_token_balance_internal(
     token_address: Address,
     wallet_address: Address,
     block_number: Field,
-    _calculate_token_balance_storage_key: fn(Address, Address) -> Bytes32,
-    _get_account_with_storage: fn(Field, Address, Bytes32) -> StorageWithinBlock<1>,
-    _storage_value_to_balance: fn(Bytes32) -> Field
+    calculate_token_balance_storage_key_param: fn(Address, Address) -> Bytes32,
+    get_account_with_storage_param: fn(Field, Address, Bytes32) -> StorageWithinBlock<1>,
+    storage_value_to_balance_param: fn(Bytes32) -> Field
 ) -> Field {
-    let storage_key = _calculate_token_balance_storage_key(token_address, wallet_address);
-    let account = _get_account_with_storage(block_number, token_address, storage_key);
+    let storage_key = calculate_token_balance_storage_key_param(token_address, wallet_address);
+    let account = get_account_with_storage_param(block_number, token_address, storage_key);
     let balance = account.values[TOKEN_BALANCE_INDEX];
 
-    _storage_value_to_balance(balance)
+    storage_value_to_balance_param(balance)
 }
 
-pub fn calculate_token_balance_storage_key(_token_address: Address, _address: Address) -> Bytes32 {
+pub fn calculate_token_balance_storage_key(token_address: Address, wallet_address: Address) -> Bytes32 {
     assert(false, "Not implemented");
     zeroed()
 }
 
-fn storage_value_to_balance(_bytes: Bytes32) -> Field {
+fn storage_value_to_balance(bytes: Bytes32) -> Field {
     assert(false, "Not implemented");
     zeroed()
 }
