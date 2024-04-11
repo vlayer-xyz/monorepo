@@ -3,38 +3,34 @@ use dep::std::unsafe::zeroed;
 
 global TOKEN_BALANCE_INDEX = 0;
 
-pub fn get_token_balance(token_address: Address, wallet_address: Address, block_number: Field) -> U128 {
-    get_token_balance_internal(
-        token_address,
-        wallet_address,
-        block_number,
-        calculate_token_balance_storage_key,
-        get_account_with_storage,
-        storage_value_to_balance
-    )
+struct Erc20Token {
+    address: Address,
+    balances_slot: Field,
+    chain_id: Field
 }
 
-pub(crate) fn get_token_balance_internal(
-    token_address: Address,
-    wallet_address: Address,
-    block_number: Field,
-    calculate_token_balance_storage_key_param: fn(Address, Address) -> Bytes32,
-    get_account_with_storage_param: fn(Field, Address, Bytes32) -> StorageWithinBlock<1>,
-    storage_value_to_balance_param: fn(Bytes32) -> U128
-) -> U128 {
-    let storage_key = calculate_token_balance_storage_key_param(token_address, wallet_address);
-    let account = get_account_with_storage_param(block_number, token_address, storage_key);
-    let balance = account.values[TOKEN_BALANCE_INDEX];
-
-    storage_value_to_balance_param(balance)
+impl Erc20Token {
+    fn calculate_balance_storage_key(self, wallet_address: Address) -> Bytes32 {
+        assert(false, "Not implemented");
+        zeroed()
+    }
 }
 
-pub fn calculate_token_balance_storage_key(token_address: Address, wallet_address: Address) -> Bytes32 {
-    assert(false, "Not implemented");
-    zeroed()
+trait TokenApi {
+    fn get_balance(self, wallet_address: Address, block_number: Field) -> Field ;
 }
 
-fn storage_value_to_balance(bytes: Bytes32) -> U128 {
-    assert(false, "Not implemented");
-    zeroed()
+impl TokenApi for Erc20Token {
+    fn get_balance(self, wallet_address: Address, block_number: Field) -> Field {
+        let storage_key = self.calculate_balance_storage_key(wallet_address);
+        let account = get_account_with_storage(block_number, self.address, storage_key);
+        let balance = account.values[TOKEN_BALANCE_INDEX];
+
+        storage_value_to_balance(balance)
+    }
+}
+
+pub(crate) fn storage_value_to_balance(bytes: Bytes32) -> Field { // TODO change Field to U256
+    assert(bytes[0] == 0, "Value exceeds the maximum limit for conversion to the specified Field type.");
+    bytes.fold(0, |acc, byte: u8| acc * 0x100 + (byte as Field))
 }

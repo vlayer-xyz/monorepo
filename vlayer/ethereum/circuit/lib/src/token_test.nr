@@ -1,35 +1,33 @@
-mod test_get_token_balance_internal {
-    use crate::token::get_token_balance_internal;
-    use dep::ethereum_history_api::{
-        account_with_storage::{get_account_with_storage, StorageWithinBlock, Account},
-        misc::types::{Address, Bytes32}
-    };
-
-    global TEST_BYTES32: Bytes32 = [0; 32];
-
-    global TEST_ACCOUNT: Account = Account {
-        nonce: 1,
-        balance: 1,
-        storage_root: TEST_BYTES32,
-        code_hash: TEST_BYTES32,
-    };
-
-    global TEST_STORAGE_WITHIN_BLOCK: StorageWithinBlock<1> = StorageWithinBlock { block_hash: TEST_BYTES32, account: TEST_ACCOUNT, values:[TEST_BYTES32]};
+mod test_storage_value_to_balance {
+    use crate::token::storage_value_to_balance;
 
     #[test]
-    fn success() {
-        let mock_calculate_token_balance_storage_key = |_token_address, _wallet_address| TEST_BYTES32;
-        let mock_get_account_with_storage = |_block_number, _token_address, _storage_key| TEST_STORAGE_WITHIN_BLOCK;
-        let mock_storage_value_to_balance = |_storage_value| U128::from_integer(1);
+    fn success_zero() {
+        let balance = storage_value_to_balance([0; 32]);
+        assert_eq(balance, 0);
+    }
 
-        let balance = get_token_balance_internal(
-            [0; 20],
-            [0; 20],
-            1,
-            mock_calculate_token_balance_storage_key,
-            mock_get_account_with_storage,
-            mock_storage_value_to_balance
+    #[test]
+    fn success_one() {
+        let balance = storage_value_to_balance(
+            [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1
+        ]
         );
-        assert_eq(balance, U128::from_integer(1));
+        assert_eq(balance, 1);
+    }
+
+    #[test]
+    fn success_medium() {
+        let balance = storage_value_to_balance(
+            [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xab, 0xcd, 0xef, 0x01, 0x23, 0x45, 0x67, 0x89
+        ]
+        );
+        assert_eq(balance, 0xabcdef0123456789);
+    }
+    #[test(should_fail_with="Value exceeds the maximum limit for conversion to the specified Field type.")]
+    fn fail_to_big() {
+        let _ = storage_value_to_balance([0xff; 32]);
     }
 }
