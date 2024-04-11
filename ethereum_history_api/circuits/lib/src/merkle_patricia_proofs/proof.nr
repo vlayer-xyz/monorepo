@@ -32,10 +32,7 @@ pub fn leaf_get_len<MAX_LEN>(leaf: Leaf<MAX_LEN>) -> u32 {
 // 3 - Leaf node, odd number of nibbles
 pub fn parity(prefix: u8) -> u8 {
     assert(prefix < 4, "Prefix must be 0, 1, 2 or 3");
-    let result = prefix % 2;
-    assert((result == EVEN) | (result == ODD), "Invalid parity");
-
-    result
+    prefix % 2
 }
 
 // Leaf and extension nodes are RLP lists with 2 elements: prefixed key nibbles (in bytes) and value.
