@@ -57,21 +57,29 @@ pub fn decode_to_rlp_header<N>(arr: [u8; N]) -> RlpHeader {
     if (prefix < 0x80) { // single byte
         RlpHeader { offset: 0, length: 1, data_type: STRING }
     } else if (prefix < 0xb8) { // 0-55 byte string
+        let offset = 1;
+        let length = wrapping_sub(prefix, 0x80) as u64;
+        assert(offset + length <= N, "Length of short string exceeds input length");
+
         RlpHeader { offset: 1, length: wrapping_sub(prefix, 0x80) as u64, data_type: STRING }
     } else if (prefix < 0xc0) { // >55-byte string
-        RlpHeader {
-            offset: wrapping_sub(1 + prefix, 0xb7) as u64,
-            length: extract_payload_len(arr, wrapping_sub(prefix, 0xb7) as u64),
-            data_type: STRING
-        }
+        let offset = wrapping_sub(1 + prefix, 0xb7) as u64;
+        let length = extract_payload_len(arr, wrapping_sub(prefix, 0xb7) as u64);
+        assert(offset + length <= N, "Length of long string exceeds input length");
+
+        RlpHeader { offset, length, data_type: STRING }
     } else if (prefix < 0xf8) { // 0-55 byte list
-        RlpHeader { offset: 1, length: wrapping_sub(prefix, 0xc0) as u64, data_type: LIST }
+        let offset = 1;
+        let length = wrapping_sub(prefix, 0xc0) as u64;
+        assert(offset + length <= N, "Length of short list exceeds input length");
+
+        RlpHeader { offset, length, data_type: LIST }
     } else { // >55-byte list
-        RlpHeader {
-            offset: wrapping_sub(1 + prefix, 0xf7) as u64,
-            length: extract_payload_len(arr, wrapping_sub(prefix, 0xf7) as u64),
-            data_type: LIST
-        }
+        let offset = wrapping_sub(1 + prefix, 0xf7) as u64;
+        let length = extract_payload_len(arr, wrapping_sub(prefix, 0xf7) as u64);
+        assert(offset + length <= N, "Length of long list exceeds input length");
+
+        RlpHeader { offset, length, data_type: LIST }
     }
 }
 
@@ -80,7 +88,7 @@ pub fn decode_string<N>(input: [u8; N]) -> (u64, u64) {
     assert(data_type == STRING, "Wrong data type");
 
     let total_len = length + offset;
-    assert(total_len <= input.len(), "Length exceeds input length");
+    assert(total_len <= input.len(), "Total length exceeds input length");
 
     (offset, length)
 }
@@ -101,7 +109,7 @@ pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
     for i in 0..NUM_FIELDS {
         let is_in_range = (offset != total_len) as u64;
 
-        let header: [u8; MAX_LEN_IN_BYTES + 1] = copy_subarray(input, offset);
+        let header: [u8; N] = copy_subarray(input, offset);
         let RlpHeader {offset: field_off, length: field_len, data_type: field_type} = decode_to_rlp_header(header);
         let total_field_len = field_off + field_len;
 
