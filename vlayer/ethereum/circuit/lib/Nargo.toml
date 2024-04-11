@@ -1,7 +1,6 @@
 [package]
 name = "vlayer_ethereum"
 type = "lib"
-authors = [""]
 compiler_version = ">=0.26.0"
 
 [dependencies]
