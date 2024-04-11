@@ -35,7 +35,7 @@ mod test_memcpy {
         assert(dest == [3, 4, 5]);
     }
 
-    #[test(should_fail_with = "source index out of bound")]
+    #[test(should_fail_with = "Source index out of bound")]
     fn src_index_out_of_bound() {
         let mut dest = [0; 5];
         let src = [1, 2, 3];
