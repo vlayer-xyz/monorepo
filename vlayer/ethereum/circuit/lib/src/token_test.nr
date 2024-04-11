@@ -20,7 +20,7 @@ mod test_get_token_balance_internal {
     fn success() {
         let mock_calculate_token_balance_storage_key = |_token_address, _wallet_address| TEST_BYTES32;
         let mock_get_account_with_storage = |_block_number, _token_address, _storage_key| TEST_STORAGE_WITHIN_BLOCK;
-        let mock_storage_value_to_balance = |_storage_value| 1;
+        let mock_storage_value_to_balance = |_storage_value| U128::from_integer(1);
 
         let balance = get_token_balance_internal(
             [0; 20],
@@ -30,6 +30,6 @@ mod test_get_token_balance_internal {
             mock_get_account_with_storage,
             mock_storage_value_to_balance
         );
-        assert_eq(balance, 1);
+        assert_eq(balance, U128::from_integer(1));
     }
 }

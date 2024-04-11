@@ -3,7 +3,7 @@ use dep::std::unsafe::zeroed;
 
 global TOKEN_BALANCE_INDEX = 0;
 
-pub fn get_token_balance(token_address: Address, wallet_address: Address, block_number: Field) -> Field {
+pub fn get_token_balance(token_address: Address, wallet_address: Address, block_number: Field) -> U128 {
     get_token_balance_internal(
         token_address,
         wallet_address,
@@ -20,8 +20,8 @@ pub(crate) fn get_token_balance_internal(
     block_number: Field,
     calculate_token_balance_storage_key_param: fn(Address, Address) -> Bytes32,
     get_account_with_storage_param: fn(Field, Address, Bytes32) -> StorageWithinBlock<1>,
-    storage_value_to_balance_param: fn(Bytes32) -> Field
-) -> Field {
+    storage_value_to_balance_param: fn(Bytes32) -> U128
+) -> U128 {
     let storage_key = calculate_token_balance_storage_key_param(token_address, wallet_address);
     let account = get_account_with_storage_param(block_number, token_address, storage_key);
     let balance = account.values[TOKEN_BALANCE_INDEX];
@@ -34,7 +34,7 @@ pub fn calculate_token_balance_storage_key(token_address: Address, wallet_addres
     zeroed()
 }
 
-fn storage_value_to_balance(bytes: Bytes32) -> Field {
+fn storage_value_to_balance(bytes: Bytes32) -> U128 {
     assert(false, "Not implemented");
     zeroed()
 }
