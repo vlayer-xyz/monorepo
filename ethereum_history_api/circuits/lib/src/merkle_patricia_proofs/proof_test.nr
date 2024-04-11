@@ -14,7 +14,7 @@ mod test_leaf_get_len {
         assert(leaf_get_len(leaf) == 3);
     }
 
-    #[test(should_fail_with="Leaf RLP length exceeds MAX_LEN")]
+    #[test(should_fail_with="Length of short list exceeds input length")]
     fn rlp_len_too_long() {
         let leaf = [0xc2, 0x42];
         let _ = leaf_get_len(leaf);
