@@ -9,6 +9,7 @@ export const ORACLIZE_TRANSFER_TX_HASH = '0x38f299591902bfada359527fa6b9b597a959
 
 interface HistoryAPIFixture {
   blockNumber: bigint;
+  skipHeader?: boolean;
   address?: Address;
   storageKeys?: Hex[];
   transactionHash?: Hex;
@@ -51,6 +52,7 @@ export const HISTORY_API_FIXTURES: HistoryAPIFixtures = {
         storageKeys: [CIRCLE_USDC_BALANCE_STORAGE_KEY]
       },
       usdc_uniswap: {
+        skipHeader: true,
         blockNumber: 19_000_000n,
         address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
         storageKeys: [UNISWAP_V3_USDC_BALANCE_STORAGE_KEY]
@@ -68,6 +70,7 @@ export const HISTORY_API_FIXTURES: HistoryAPIFixtures = {
         blockNumber: 19_439_366n
       },
       transfer: {
+        skipHeader: true,
         blockNumber: 19_539_214n,
         transactionHash: ETH_TRANSFER_TX_HASH
       }

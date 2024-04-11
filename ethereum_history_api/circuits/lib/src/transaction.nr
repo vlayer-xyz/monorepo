@@ -1,4 +1,4 @@
-use crate::misc::{types::{Bytes32, Address}, option::make_option};
+use crate::misc::{types::{Bytes32, Address, PaddedValue}, option::make_option};
 use dep::std::unsafe::zeroed;
 use dep::proof::transaction_proof::TransactionProof;
 
@@ -8,25 +8,24 @@ global MAX_KEY_LEN = 3;
 type TxType = u8;
 
 struct TxPartial<MAX_DATA_LEN> {
-    nonce: Field,
-    gas_limit: Field,
+    nonce: u64,
+    gas_limit: u64,
     to: Option<Address>,
-    value: Field,
-    data: [u8; MAX_DATA_LEN],
-    data_len: Field,
+    value: U128,
+    data: PaddedValue<MAX_DATA_LEN>,
     v: Field,  // ECDSA recovery id
     r: Bytes32,  // ECDSA signature part
     s: Bytes32,  // ECDSA signature part
 }
 
 struct ForeignCallTransaction<MAX_DATA_LEN> {
-    nonce: Field,
-    gas_limit: Field,
+    nonce: u64,
+    gas_limit: u64,
     to: Address,
     to_is_some: bool,
     value: Field,
     data: [u8; MAX_DATA_LEN],
-    data_len: Field,
+    data_len: u64,
     v: Field,  // ECDSA recovery id
     r: Bytes32,  // ECDSA signature part
     s: Bytes32,  // ECDSA signature part
@@ -81,9 +80,8 @@ unconstrained fn get_transaction_unconstrained<MAX_DATA_LEN, MAX_PROOF_LEN, MAX_
         nonce: transaction.nonce,
         gas_limit: transaction.gas_limit,
         to: make_option(transaction.to, transaction.to_is_some),
-        value: transaction.value,
-        data: transaction.data,
-        data_len: transaction.data_len,
+        value: U128::from_integer(transaction.value),
+        data: PaddedValue::new(transaction.data, transaction.data_len),
         v: transaction.v,
         r: transaction.r,
         s: transaction.s
