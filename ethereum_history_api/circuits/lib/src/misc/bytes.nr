@@ -11,10 +11,10 @@ pub fn bytes_to_nibbles<BYTES_LEN, NIBBLES_LEN>(bytes: [u8; BYTES_LEN]) -> [u8; 
     let mut nibbles = [0; NIBBLES_LEN];
 
     for i in 0..BYTES_LEN {
-        let two_nibbles = byte_to_nibbles(bytes[i]);
+        let (hi, lo) = byte_to_nibbles(bytes[i]);
 
-        nibbles[2 * i] = two_nibbles.0;
-        nibbles[2 * i + 1] = two_nibbles.1;
+        nibbles[2 * i] = hi;
+        nibbles[2 * i + 1] = lo;
     }
 
     nibbles

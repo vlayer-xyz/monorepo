@@ -9,14 +9,14 @@ mod test_memcpy_up_to_length {
         assert(dest == [3, 4, 0]);
     }
 
-    #[test(should_fail_with = "source index out of bound")]
+    #[test(should_fail_with = "Source index out of bound")]
     fn src_index_out_of_bound() {
         let mut dest = [0; 5];
         let src = [1, 2, 3];
         memcpy_up_to_length(&mut dest, src, 1, 3);
     }
 
-    #[test(should_fail_with = "destination index out of bound")]
+    #[test(should_fail_with = "Destination index out of bound")]
     fn dest_index_out_of_bound() {
         let mut dest = [0; 3];
         let src = [1, 2, 3, 4, 5];

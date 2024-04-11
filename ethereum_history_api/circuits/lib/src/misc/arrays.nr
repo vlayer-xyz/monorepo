@@ -16,11 +16,10 @@ pub fn resize<TItem, NEW_LEN, OLD_LEN>(src: [TItem; OLD_LEN]) -> [TItem; NEW_LEN
 }
 
 pub(crate) fn memcpy_up_to_length<N, M>(dest: &mut [u8; N], src: [u8; M], offset: u64, length: u64) {
-    assert(length <= N, "destination index out of bound");
-    assert(offset + length <= M, "source index out of bound");
+    assert(length <= N, "Destination index out of bound");
+    assert(offset + length <= M, "Source index out of bound");
     for i in 0..N {
-        let do_copy = i < length;
-        if do_copy {
+        if i < length {
             (*dest)[i] = src[offset + i];
         }
     }
