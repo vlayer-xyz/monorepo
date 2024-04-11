@@ -25,6 +25,29 @@ pub(crate) fn memcpy_up_to_length<N, M>(dest: &mut [u8; N], src: [u8; M], offset
     }
 }
 
+struct PhantomLen<L> {
+    _data: [(); L]
+}
+
+impl<L> PhantomLen<L> {
+    pub fn new() -> Self {
+        PhantomLen { _data: [(); L] }
+    }
+}
+
+pub fn memcpy_up_to_len<LEN, N, M>(
+    dest: &mut [u8; N],
+    src: [u8; M],
+    offset: u64,
+    _length: PhantomLen<LEN>
+) {
+    assert(LEN <= dest.len() as u64, "Destination index out of bound");
+    assert(offset + LEN <= src.len() as u64, "Source index out of bound");
+    for i in 0..LEN {
+        (*dest)[i] = src[offset + i];
+    }
+}
+
 /// Fills destination array with content of source array starting from the starting position.
 ///
 /// # Arguments

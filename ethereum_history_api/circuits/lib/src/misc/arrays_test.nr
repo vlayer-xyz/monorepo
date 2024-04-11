@@ -24,6 +24,35 @@ mod test_memcpy_up_to_length {
     }
 }
 
+mod test_memcpy_up_to_len {
+    use crate::misc::arrays::{memcpy_up_to_len, PhantomLen};
+
+    #[test]
+    fn success() {
+        let phantom_len: PhantomLen<2> = PhantomLen::new();
+        let mut dest = [0; 3];
+        let src = [1, 2, 3, 4, 5];
+        memcpy_up_to_len(&mut dest, src, 2, phantom_len);
+        assert(dest == [3, 4, 0]);
+    }
+
+    #[test(should_fail_with = "Source index out of bound")]
+    fn src_index_out_of_bound() {
+        let phantom_len: PhantomLen<3> = PhantomLen::new();
+        let mut dest = [0; 5];
+        let src = [1, 2, 3];
+        memcpy_up_to_len(&mut dest, src, 1, phantom_len);
+    }
+
+    #[test(should_fail_with = "Destination index out of bound")]
+    fn dest_index_out_of_bound() {
+        let phantom_len: PhantomLen<4> = PhantomLen::new();
+        let mut dest = [0; 3];
+        let src = [1, 2, 3, 4, 5];
+        memcpy_up_to_len(&mut dest, src, 1, phantom_len);
+    }
+}
+
 mod test_memcpy {
     use crate::misc::arrays::memcpy;
 
@@ -35,7 +64,7 @@ mod test_memcpy {
         assert(dest == [3, 4, 5]);
     }
 
-    #[test(should_fail_with = "source index out of bound")]
+    #[test(should_fail_with = "Source index out of bound")]
     fn src_index_out_of_bound() {
         let mut dest = [0; 5];
         let src = [1, 2, 3];
