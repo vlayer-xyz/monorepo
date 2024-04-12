@@ -1,0 +1,8 @@
+pub fn field_to_bytes32(value: Field) -> [u8; 32] {
+    let byte_array = value.to_be_bytes(32);
+    let mut bytes = [0; 32];
+    for i in 0..32 {
+        bytes[i] = byte_array[i];
+    }
+    bytes
+}
