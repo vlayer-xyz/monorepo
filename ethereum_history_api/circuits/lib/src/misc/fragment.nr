@@ -6,14 +6,14 @@ struct Fragment<MAX_DATA_LEN> { // Slice
 	data: [u8; MAX_DATA_LEN]
 }
 
-impl<MAX> Fragment<MAX> {
-    pub fn new(offset: u64, length: u64, data: [u8; MAX]) -> Fragment<MAX> {
+impl<MAX_DATA_LEN> Fragment<MAX_DATA_LEN> {
+    pub fn new(offset: u64, length: u64, data: [u8; MAX_DATA_LEN]) -> Fragment<MAX_DATA_LEN> {
         assert(offset + length <= data.len() as u64, "Fragment data exceeds data length");
 
         Fragment { offset, length, data }
     }
 
-    pub fn new_focused(data: [u8; MAX]) -> Fragment<MAX> {
+    pub fn new_focused(data: [u8; MAX_DATA_LEN]) -> Fragment<MAX_DATA_LEN> {
         Fragment { offset: 0, length: data.len() as u64, data }
     }
 
