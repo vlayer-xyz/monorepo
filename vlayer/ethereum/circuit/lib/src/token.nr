@@ -6,6 +6,7 @@ use dep::std::{unsafe::zeroed, field::bytes32_to_field};
 use dep::std::hash::keccak256;
 
 global TOKEN_BALANCE_INDEX = 0;
+global STORAGE_KEY_HASH_INPUT_LENGTH = 64;
 
 struct ERC20Token {
     address: Address,
@@ -34,12 +35,9 @@ impl ERC20 for ERC20Token {
 }
 
 pub(crate) fn calculate_balance_storage_key(balances_slot: Bytes32, wallet_address: Address) -> Bytes32 {
-    let mut key = [0; 64];
-    for i in 0..ADDRESS_LENGTH {
-        key[BYTES32_LENGTH - ADDRESS_LENGTH + i] = wallet_address[i];
-    }
-    for i in 0..BYTES32_LENGTH {
-        key[BYTES32_LENGTH + i] = balances_slot[i];
-    }
-    keccak256(key, 64)
+    let mut vector: BoundedVec<u8, STORAGE_KEY_HASH_INPUT_LENGTH> = BoundedVec::new();
+    vector.extend_from_array([0; BYTES32_LENGTH - ADDRESS_LENGTH]);
+    vector.extend_from_array(wallet_address);
+    vector.extend_from_array(balances_slot);
+    keccak256(vector.storage(), STORAGE_KEY_HASH_INPUT_LENGTH)
 }
