@@ -59,25 +59,25 @@ pub fn decode_to_rlp_header<N>(arr: [u8; N]) -> RlpHeader {
     } else if (prefix < 0xb8) { // 0-55 byte string
         let offset = 1;
         let length = wrapping_sub(prefix, 0x80) as u64;
-        assert(offset + length <= N, "Length of short string exceeds input length");
+        assert(offset + length <= N, "Decoded length of short string exceeds input length");
 
         RlpHeader { offset, length, data_type: STRING }
     } else if (prefix < 0xc0) { // >55-byte string
         let offset = wrapping_sub(1 + prefix, 0xb7) as u64;
         let length = extract_payload_len(arr, wrapping_sub(prefix, 0xb7) as u64);
-        assert(offset + length <= N, "Length of long string exceeds input length");
+        assert(offset + length <= N, "Decoded length of long string exceeds input length");
 
         RlpHeader { offset, length, data_type: STRING }
     } else if (prefix < 0xf8) { // 0-55 byte list
         let offset = 1;
         let length = wrapping_sub(prefix, 0xc0) as u64;
-        assert(offset + length <= N, "Length of short list exceeds input length");
+        assert(offset + length <= N, "Decoded length of short list exceeds input length");
 
         RlpHeader { offset, length, data_type: LIST }
     } else { // >55-byte list
         let offset = wrapping_sub(1 + prefix, 0xf7) as u64;
         let length = extract_payload_len(arr, wrapping_sub(prefix, 0xf7) as u64);
-        assert(offset + length <= N, "Length of long list exceeds input length");
+        assert(offset + length <= N, "Decoded length of long list exceeds input length");
 
         RlpHeader { offset, length, data_type: LIST }
     }
