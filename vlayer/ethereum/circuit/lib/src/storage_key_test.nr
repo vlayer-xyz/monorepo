@@ -1,6 +1,5 @@
-mod test_calculate_balance_storage_key {
-    use dep::std::hash::keccak256;
-    use crate::token::calculate_mapping_address_storage_key;
+mod test_calculate_mapping_address_storage_key {
+    use crate::storage_key::calculate_mapping_address_storage_key;
 
     #[test]
     fn success() {

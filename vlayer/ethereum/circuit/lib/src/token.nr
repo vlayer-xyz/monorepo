@@ -4,9 +4,9 @@ use dep::ethereum_history_api::{
 };
 use dep::std::{unsafe::zeroed, field::bytes32_to_field};
 use dep::std::hash::keccak256;
+use crate::storage_key::calculate_mapping_address_storage_key;
 
 global TOKEN_BALANCE_INDEX = 0;
-global STORAGE_KEY_HASH_INPUT_LENGTH = 64;
 
 struct ERC20Token {
     address: Address,
@@ -32,14 +32,4 @@ impl ERC20 for ERC20Token {
 
         bytes32_to_field(balance)
     }
-}
-
-pub(crate) fn calculate_mapping_address_storage_key(slot: Field, address: Address) -> Bytes32 {
-    let mut vector: BoundedVec<u8, STORAGE_KEY_HASH_INPUT_LENGTH> = BoundedVec::new();
-
-    vector.extend_from_array([0; BYTES32_LENGTH - ADDRESS_LENGTH]);
-    vector.extend_from_array(address);
-    vector.extend_from_array(field_to_bytes32(slot));
-
-    keccak256(vector.storage(), STORAGE_KEY_HASH_INPUT_LENGTH)
 }
