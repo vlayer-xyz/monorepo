@@ -4,5 +4,6 @@ mod bytes;
 mod bytes_test;
 mod fragment;
 mod fragment_test;
+mod iterable;
 mod types;
 mod option;
