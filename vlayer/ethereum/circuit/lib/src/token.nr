@@ -1,5 +1,5 @@
 use dep::ethereum_history_api::{account_with_storage::{get_account_with_storage, StorageWithinBlock}, misc::types::{Address, Bytes32}};
-use dep::std::unsafe::zeroed;
+use dep::std::{unsafe::zeroed, field::bytes32_to_field};
 
 global TOKEN_BALANCE_INDEX = 0;
 
@@ -26,11 +26,6 @@ impl TokenApi for Erc20Token {
         let account = get_account_with_storage(block_number, self.address, storage_key);
         let balance = account.values[TOKEN_BALANCE_INDEX];
 
-        storage_value_to_balance(balance)
+        bytes32_to_field(balance)
     }
-}
-
-pub(crate) fn storage_value_to_balance(bytes: Bytes32) -> Field { // TODO change Field to U256
-    assert(bytes[0] == 0, "Value exceeds the maximum limit for conversion to the specified Field type.");
-    bytes.fold(0, |acc, byte: u8| acc * 0x100 + (byte as Field))
 }
