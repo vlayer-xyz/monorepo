@@ -1,3 +1,3 @@
-trait Iterable<TItem> {
-  fn each(self, callback: fn (TItem) -> ()) -> ();
+trait Iterable<Env, TItem> {
+  fn each(self, callback: fn[Env] (TItem) -> ()) -> ();
 }
