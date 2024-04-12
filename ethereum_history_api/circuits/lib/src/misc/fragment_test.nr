@@ -44,3 +44,21 @@ fn fail_focus() {
     let fragment = Fragment::new(1, 2, [1, 2, 3, 4]);
     let _: Fragment<1> = fragment.focus();
 }
+
+#[test(should_fail_with = "Saw first element")]
+fn succes_each_first() {
+    let fragment = Fragment::new(0, 3, [1, 2, 3]);
+    fragment.each(|c: u8|{assert_eq(c, 2, "Saw first element");});
+}
+
+#[test(should_fail_with = "Saw second element")]
+fn succes_each_second() {
+    let fragment = Fragment::new(0, 3, [1, 1, 3]);
+    fragment.each(|c: u8|{assert_eq(c, 3, "Saw second element");});
+}
+
+#[test(should_fail_with = "Saw third element")]
+fn succes_each_third() {
+    let fragment = Fragment::new(0, 3, [1, 1, 1]);
+    fragment.each(|c: u8|{assert_eq(c, 4, "Saw third element");});
+}
