@@ -61,7 +61,7 @@ pub fn decode_to_rlp_header<N>(arr: [u8; N]) -> RlpHeader {
         let length = wrapping_sub(prefix, 0x80) as u64;
         assert(offset + length <= N, "Length of short string exceeds input length");
 
-        RlpHeader { offset: 1, length: wrapping_sub(prefix, 0x80) as u64, data_type: STRING }
+        RlpHeader { offset, length, data_type: STRING }
     } else if (prefix < 0xc0) { // >55-byte string
         let offset = wrapping_sub(1 + prefix, 0xb7) as u64;
         let length = extract_payload_len(arr, wrapping_sub(prefix, 0xb7) as u64);
