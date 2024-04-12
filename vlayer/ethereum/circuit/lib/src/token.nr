@@ -16,8 +16,7 @@ struct ERC20Token {
 
 impl ERC20Token {
     fn calculate_balance_storage_key(self, wallet_address: Address) -> Bytes32 {
-        let slot = field_to_bytes32(self.balances_slot);
-        calculate_balance_storage_key(slot, wallet_address)
+        calculate_mapping_address_storage_key(self.balances_slot, wallet_address)
     }
 }
 
@@ -35,10 +34,12 @@ impl ERC20 for ERC20Token {
     }
 }
 
-pub(crate) fn calculate_balance_storage_key(balances_slot: Bytes32, wallet_address: Address) -> Bytes32 {
+pub(crate) fn calculate_mapping_address_storage_key(slot: Field, address: Address) -> Bytes32 {
     let mut vector: BoundedVec<u8, STORAGE_KEY_HASH_INPUT_LENGTH> = BoundedVec::new();
+
     vector.extend_from_array([0; BYTES32_LENGTH - ADDRESS_LENGTH]);
-    vector.extend_from_array(wallet_address);
-    vector.extend_from_array(balances_slot);
+    vector.extend_from_array(address);
+    vector.extend_from_array(field_to_bytes32(slot));
+
     keccak256(vector.storage(), STORAGE_KEY_HASH_INPUT_LENGTH)
 }
