@@ -1,9 +1,5 @@
-use dep::ethereum_history_api::{
-    account_with_storage::{get_account_with_storage, StorageWithinBlock},
-    misc::{types::{Address, Bytes32, ADDRESS_LENGTH, BYTES32_LENGTH}, field::field_to_bytes32}
-};
-use dep::std::{unsafe::zeroed, field::bytes32_to_field};
-use dep::std::hash::keccak256;
+use dep::ethereum_history_api::{account_with_storage::get_account_with_storage, misc::types::{Address, Bytes32}};
+use dep::std::field::bytes32_to_field;
 use crate::storage_key::calculate_mapping_address_storage_key;
 
 global TOKEN_BALANCE_INDEX = 0;
