@@ -1,3 +1,3 @@
 mod imp;
 mod imp_test;
-mod imp_test_int;
+mod imp_int_test;
