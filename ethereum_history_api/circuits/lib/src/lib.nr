@@ -12,5 +12,6 @@ mod fixtures;
 mod verifiers;
 mod merkle_patricia_proofs;
 mod rlp;
+mod slice;
 
 global HASH_LEN = 32;

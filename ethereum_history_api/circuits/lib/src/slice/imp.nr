@@ -10,6 +10,7 @@ impl<N> Slice<N> {
     }
 
     pub fn new_extended(data: [u8; N], offset: u64, len: u64) -> Slice<N> {
+        assert(offset + len <= N, f"Given offset with length exceed capacity of the slice: {N}");
         Slice { data, offset, len }
     }
 
@@ -22,8 +23,9 @@ impl<N> Slice<N> {
     }
 
     pub fn at(self, index: u64) -> u8 {
+        let len = self.len;
         assert(
-            index < self.len, f"Index out of bounds, tried to access index {index} but the length is {self.len}"
+            index < self.len, f"Index out of bounds, tried to access index {index} but the length is {len}"
         );
         self.data[self.offset + index]
     }
