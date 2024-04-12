@@ -30,9 +30,9 @@ pub fn leaf_get_len<MAX_LEN>(leaf: Leaf<MAX_LEN>) -> u32 {
 // 1 - Extension node, odd number of nibbles
 // 2 - Leaf node, even number of nibbles
 // 3 - Leaf node, odd number of nibbles
-pub fn parity(prefix: u8) -> u8 {
+pub fn parity(prefix: u8) -> u64 {
     assert(prefix < 4, "Prefix must be 0, 1, 2 or 3");
-    prefix % 2
+    (prefix % 2) as u64
 }
 
 // Leaf and extension nodes are RLP lists with 2 elements: prefixed key nibbles (in bytes) and value.
@@ -49,7 +49,7 @@ pub fn strip_prefix<MAX_KEY_LEN, MAX_KEY_NIBBLE_LEN>(
     if (parity == EVEN) {
         assert(prefixed_key_nibbles[1] == 0, "Expected a zero after a prefix of even parity");
     }
-    let offset = 2 - parity as u64;
+    let offset = 2 - parity;
     let stripped_len = prefixed_len * 2 - offset;
     memcpy_up_to_length(
         &mut stripped_nibbles,

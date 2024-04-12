@@ -6,7 +6,6 @@ mod storage;
 mod storage_test;
 mod receipt;
 mod receipt_test;
-mod tx_idx;
-mod tx_idx_test;
 mod transaction;
 mod transaction_test;
+mod tx_helpers;

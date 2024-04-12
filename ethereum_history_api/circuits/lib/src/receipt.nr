@@ -4,7 +4,7 @@ use crate::verifiers::receipt::{MAX_ENCODED_RECEIPT_LENGTH, verify_receipt};
 use dep::std::unsafe::zeroed;
 use dep::proof::receipt_proof::ReceiptProof;
 
-global BLOOM_FILTER_LEN = 256;
+global BLOOM_FILTER_LEN: u64 = 256;
 global MAX_RECEIPT_KEY_LEN = 3;
 global MAX_RECEIPT_TREE_DEPTH = 7;
 
@@ -22,7 +22,7 @@ struct PhantomReceiptRlpLen<MAX_RECEIPT_ENCODED_LEN> {}
 struct TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN> {
     status: Option<u1>,
     state_root: Option<Bytes32>,
-    cumulative_gas_used: Field,
+    cumulative_gas_used: u32,
     logs_bloom: [u8; BLOOM_FILTER_LEN]
 }
 
@@ -31,7 +31,7 @@ struct ForeignCallTxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN> {
     status_is_some: bool,
     state_root: Bytes32,
     state_root_is_some: bool,
-    cumulative_gas_used: Field,
+    cumulative_gas_used: u32,
     logs_bloom: [u8; BLOOM_FILTER_LEN]
 }
 

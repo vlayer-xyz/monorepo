@@ -34,14 +34,18 @@ for (const chain in HISTORY_API_FIXTURES) {
     const hardforkModuleFile = `${NOIR_FIXTURES_DIRECTORY}/${chain}/${hardFork}.nr`;
 
     for (const fixtureName in HISTORY_API_FIXTURES[chain][hardFork]) {
-      const { blockNumber, address, storageKeys, transactionHash } = HISTORY_API_FIXTURES[chain][hardFork][fixtureName];
+      const { blockNumber, address, storageKeys, transactionHash, skipHeader } =
+        HISTORY_API_FIXTURES[chain][hardFork][fixtureName];
       const modulePath = `${NOIR_FIXTURES_DIRECTORY}/${chain}/${hardFork}/${fixtureName}`;
       await mkdir(modulePath, { recursive: true });
       const fixtureModules: string[] = [];
 
       const block = await client.getBlock({ blockNumber });
-      await writeFile(join(modulePath, 'header.nr'), createHeaderFixture(block));
-      fixtureModules.push('header');
+
+      if (!(skipHeader ?? false)) {
+        await writeFile(join(modulePath, 'header.nr'), createHeaderFixture(block));
+        fixtureModules.push('header');
+      }
 
       if (address) {
         const stateProof = await client.getProof({
