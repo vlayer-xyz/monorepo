@@ -15,6 +15,16 @@ pub fn resize<TItem, NEW_LEN, OLD_LEN>(src: [TItem; OLD_LEN]) -> [TItem; NEW_LEN
     dest
 }
 
+pub(crate) fn memcpy_up_to_length<N, M>(dest: &mut [u8; N], src: [u8; M], offset: u64, length: u64) {
+    assert(length <= N, "Destination index out of bound");
+    assert(offset + length <= M, "Source index out of bound");
+    for i in 0..N {
+        if i < length {
+            (*dest)[i] = src[offset + i];
+        }
+    }
+}
+
 /// Fills destination array with content of source array starting from the starting position.
 ///
 /// # Arguments
@@ -22,10 +32,7 @@ pub fn resize<TItem, NEW_LEN, OLD_LEN>(src: [TItem; OLD_LEN]) -> [TItem; NEW_LEN
 /// * `src` - Source array
 /// * `offset` - Offset in source array 
 pub(crate) fn memcpy<N, M>(dest: &mut [u8; N], src: [u8; M], offset: u64) {
-    assert(offset + N <= M, "source index out of bound");
-    for i in 0..N {
-        (*dest)[i] = src[offset + i];
-    }
+    memcpy_up_to_length(dest, src, offset, N);
 }
 
 pub fn sub_array_equals_up_to_length<T, N, M>(

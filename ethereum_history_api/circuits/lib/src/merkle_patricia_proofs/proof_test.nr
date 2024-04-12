@@ -1,3 +1,62 @@
+mod test_parity {
+    use crate::merkle_patricia_proofs::proof::{EVEN, ODD, parity};
+
+    #[test]
+    fn all_parities() {
+        assert(parity(0) == EVEN);
+        assert(parity(1) == ODD);
+        assert(parity(2) == EVEN);
+        assert(parity(3) == ODD);
+    }
+
+    #[test(should_fail_with="Prefix must be 0, 1, 2 or 3")]
+    fn invalid_parity() {
+        let _ = parity(4);
+    }
+}
+
+mod test_strip_prefix {
+
+    use crate::merkle_patricia_proofs::proof::strip_prefix;
+
+    #[test]
+        fn success_even() {
+        let prefixed_key_bytes = [0x20, 0xab, 0xcd, 0x00];
+        let (stripped_nibbles, stripped_len): ([u8; 8], u64) = strip_prefix(prefixed_key_bytes, 3);
+        assert(
+            (stripped_nibbles, stripped_len) == ([0xa, 0xb, 0xc, 0xd, 0x0, 0x0, 0x0, 0x0], 4), "Incorrect stripping of even prefix"
+        );
+    }
+
+    #[test]
+        fn success_odd() {
+        let prefixed_key_bytes = [0x3a, 0xbc, 0xde, 0x00];
+        let (stripped_nibbles, stripped_len): ([u8; 8], u64) = strip_prefix(prefixed_key_bytes, 3);
+        assert(
+            (stripped_nibbles, stripped_len) == ([0xa, 0xb, 0xc, 0xd, 0xe, 0x0, 0x0, 0x0], 5), "Incorrect stripping of odd prefix"
+        );
+    }
+
+    #[test(should_fail_with="Generic arguments don't match")]
+    fn mismatched_generic_args() {
+        let prefixed_key_bytes = [0x20, 0xab, 0xcd, 0x00];
+        let _: ([u8; 9], u64) = strip_prefix(prefixed_key_bytes, 3);
+    }
+
+    #[test(should_fail_with="Expected a zero after a prefix of even parity")]
+    fn non_zero_after_even_prefix() {
+        let wrong_prefix = 0x21;
+        let prefixed_key_bytes = [wrong_prefix, 0xab, 0xcd, 0x00];
+        let _: ([u8; 8], u64) = strip_prefix(prefixed_key_bytes, 3);
+    }
+
+    #[test(should_fail_with="Prefix must be 0, 1, 2 or 3")]
+        fn invalid_prefix() {
+        let prefixed_key_bytes = [0x4a, 0xbc];
+        let _: ([u8; 4], u64) = strip_prefix(prefixed_key_bytes, 2);
+    }
+}
+
 mod test_leaf_get_len {
 
     use crate::merkle_patricia_proofs::proof::leaf_get_len;
@@ -21,7 +80,7 @@ mod test_leaf_get_len {
     }
 }
 
-mod simple {
+mod test_simple {
 
     use crate::merkle_patricia_proofs::proof::{assert_merkle_proof, Proof};
     use crate::misc::arrays::alter_array;
@@ -71,7 +130,7 @@ mod simple {
     }
 }
 
-mod from_fixtures {
+mod test_from_fixtures {
 
     use crate::merkle_patricia_proofs::proof::{assert_merkle_proof, Proof};
     use crate::fixtures::merkle_proofs::leaf::{

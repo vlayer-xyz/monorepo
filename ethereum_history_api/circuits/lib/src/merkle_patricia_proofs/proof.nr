@@ -1,8 +1,10 @@
-use crate::misc::{arrays::sub_array_equals_up_to_length, types::Bytes32};
 use crate::rlp::decode::{decode_to_rlp_header, decode_list_of_small_strings, RlpList};
+use crate::misc::{arrays::{sub_array_equals_up_to_length, memcpy_up_to_length}, types::Bytes32, bytes::bytes_to_nibbles};
 use dep::std::hash::keccak256;
 
 global MAX_NODE_LEN = 532;
+global EVEN = 0;
+global ODD = 1;
 
 type Node = [u8; MAX_NODE_LEN];
 type Leaf<MAX_LEAF_LEN> = [u8; MAX_LEAF_LEN];
@@ -21,6 +23,42 @@ pub fn leaf_get_len<MAX_LEN>(leaf: Leaf<MAX_LEN>) -> u32 {
     let leaf_unpadded_len = rlp_leaf_header.offset + rlp_leaf_header.length;
     assert(leaf_unpadded_len <= MAX_LEN, "Leaf RLP length exceeds MAX_LEN");
     leaf_unpadded_len as u32
+}
+
+// Prefixes mean:
+// 0 - Extension node, even number of nibbles
+// 1 - Extension node, odd number of nibbles
+// 2 - Leaf node, even number of nibbles
+// 3 - Leaf node, odd number of nibbles
+pub fn parity(prefix: u8) -> u64 {
+    assert(prefix < 4, "Prefix must be 0, 1, 2 or 3");
+    (prefix % 2) as u64
+}
+
+// Leaf and extension nodes are RLP lists with 2 elements: prefixed key nibbles (in bytes) and value.
+// This function removes the prefix and returns appropriate number of key nibbles according to the parity of the prefix (see function: parity).
+pub fn strip_prefix<MAX_KEY_LEN, MAX_KEY_NIBBLE_LEN>(
+    prefixed_key_bytes: [u8; MAX_KEY_LEN],
+    prefixed_len: u64
+) -> ([u8; MAX_KEY_NIBBLE_LEN], u64) {
+    assert(MAX_KEY_LEN * 2 == MAX_KEY_NIBBLE_LEN, "Generic arguments don't match");
+    let prefixed_key_nibbles: [u8; MAX_KEY_NIBBLE_LEN] = bytes_to_nibbles(prefixed_key_bytes);
+
+    let mut stripped_nibbles = [0; MAX_KEY_NIBBLE_LEN];
+    let parity = parity(prefixed_key_nibbles[0]);
+    if (parity == EVEN) {
+        assert(prefixed_key_nibbles[1] == 0, "Expected a zero after a prefix of even parity");
+    }
+    let offset = 2 - parity;
+    let stripped_len = prefixed_len * 2 - offset;
+    memcpy_up_to_length(
+        &mut stripped_nibbles,
+        prefixed_key_nibbles,
+        offset,
+        stripped_len
+    );
+
+    (stripped_nibbles, stripped_len)
 }
 
 pub fn assert_merkle_proof<MAX_KEY_LEN, MAX_VALUE_LEN, MAX_DEPTH, MAX_LEAF_LEN>(
