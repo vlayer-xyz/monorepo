@@ -1,7 +1,7 @@
 use crate::rlp::decode::{decode_to_rlp_header, decode_list_of_small_strings, RlpList};
 use crate::misc::{
     fragment::Fragment, arrays::{sub_array_equals_up_to_length, memcpy_up_to_length}, types::Bytes32,
-    bytes::bytes_to_nibbles
+    bytes::{bytes_to_nibbles, right_pad}
 };
 use dep::std::hash::keccak256;
 
@@ -57,18 +57,21 @@ pub fn assert_merkle_proof<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH
     root: Bytes32,
     proof: Proof<MAX_DEPTH, MAX_LEAF_LEN>
 ) {
+    let (key_right_padded, key_len) = right_pad(key);
+    let key_nibbles = bytes_to_nibbles(Fragment::new_with_length(key_len, key_right_padded));
+
     let leaf_rlp_list: RlpList<2> = decode_list_of_small_strings(proof.leaf);
     assert(leaf_rlp_list.num_fields == 2, "Leaf expected to have 2 fields");
 
-    let leaf_parity_prefix_len = 1; // TODO: Remove this hack
-    assert(
-        sub_array_equals_up_to_length(
-            key,
-            proof.leaf,
-            leaf_rlp_list.fragments[0].offset + leaf_parity_prefix_len,
-            leaf_rlp_list.fragments[0].length - leaf_parity_prefix_len
-        ), "Key mismatch"
-    );
+    let prefixed_leaf_key_part: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> = Fragment::new(
+        leaf_rlp_list.fragments[0].offset,
+        leaf_rlp_list.fragments[0].length,
+        proof.leaf
+    ).focus();
+
+    let leaf_key_part = strip_prefix(prefixed_leaf_key_part);
+
+    assert(leaf_key_part == key_nibbles, "Key mismatch");
 
     assert(
         sub_array_equals_up_to_length(
