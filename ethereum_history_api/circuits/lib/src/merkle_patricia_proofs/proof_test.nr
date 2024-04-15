@@ -17,43 +17,39 @@ mod parity {
 
 mod strip_prefix {
 
+    use crate::misc::fragment::Fragment;
     use crate::merkle_patricia_proofs::proof::strip_prefix;
 
+    global MAX_PREFIXED_KEY_NIBBLE_LEN = 8;
     #[test]
         fn success_even() {
-        let prefixed_key_bytes = [0x20, 0xab, 0xcd, 0x00];
-        let (stripped_nibbles, stripped_len): ([u8; 8], u64) = strip_prefix(prefixed_key_bytes, 3);
+        let prefixed_key_bytes = Fragment::new_with_length(3, [0x20, 0xab, 0xcd, 0x00, 0x00, 0x00]);
+        let stripped_nibbles = strip_prefix(prefixed_key_bytes);
         assert(
-            (stripped_nibbles, stripped_len) == ([0xa, 0xb, 0xc, 0xd, 0x0, 0x0, 0x0, 0x0], 4), "Incorrect stripping of even prefix"
+            stripped_nibbles == Fragment::new_with_length(4, [0xa, 0xb, 0xc, 0xd, 0x0, 0x0]), "Incorrect stripping of even prefix"
         );
     }
 
     #[test]
         fn success_odd() {
-        let prefixed_key_bytes = [0x3a, 0xbc, 0xde, 0x00];
-        let (stripped_nibbles, stripped_len): ([u8; 8], u64) = strip_prefix(prefixed_key_bytes, 3);
+        let prefixed_key_bytes = Fragment::new_with_length(3, [0x3a, 0xbc, 0xde, 0x00, 0x00, 0x00]);
+        let stripped_nibbles = strip_prefix(prefixed_key_bytes);
         assert(
-            (stripped_nibbles, stripped_len) == ([0xa, 0xb, 0xc, 0xd, 0xe, 0x0, 0x0, 0x0], 5), "Incorrect stripping of odd prefix"
+            stripped_nibbles == Fragment::new_with_length(5, [0xa, 0xb, 0xc, 0xd, 0xe, 0x0]), "Incorrect stripping of odd prefix"
         );
-    }
-
-    #[test(should_fail_with="Generic arguments don't match")]
-    fn mismatched_generic_args() {
-        let prefixed_key_bytes = [0x20, 0xab, 0xcd, 0x00];
-        let _: ([u8; 9], u64) = strip_prefix(prefixed_key_bytes, 3);
     }
 
     #[test(should_fail_with="Expected a zero after a prefix of even parity")]
     fn non_zero_after_even_prefix() {
         let wrong_prefix = 0x21;
-        let prefixed_key_bytes = [wrong_prefix, 0xab, 0xcd, 0x00];
-        let _: ([u8; 8], u64) = strip_prefix(prefixed_key_bytes, 3);
+        let prefixed_key_bytes = Fragment::new_with_length(3, [wrong_prefix, 0xab, 0xcd, 0x00, 0x00, 0x00]);
+        let _ = strip_prefix(prefixed_key_bytes);
     }
 
     #[test(should_fail_with="Prefix must be 0, 1, 2 or 3")]
         fn invalid_prefix() {
-        let prefixed_key_bytes = [0x4a, 0xbc];
-        let _: ([u8; 4], u64) = strip_prefix(prefixed_key_bytes, 2);
+        let prefixed_key_bytes = Fragment::new_with_length(2, [0x4a, 0xbc, 0x00, 0x00]);
+        let _ = strip_prefix(prefixed_key_bytes);
     }
 }
 
