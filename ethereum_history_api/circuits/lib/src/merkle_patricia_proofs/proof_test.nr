@@ -19,7 +19,7 @@ mod strip_prefix {
 
     use crate::misc::fragment::Fragment;
     use crate::merkle_patricia_proofs::proof::strip_prefix;
-    
+
     #[test]
         fn success_even() {
         let prefixed_key_bytes = Fragment::new_with_length(3, [0x20, 0xab, 0xcd, 0x00, 0x00, 0x00]);
