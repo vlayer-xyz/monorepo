@@ -1,10 +1,9 @@
 use crate::misc::arrays::memcpy_up_to_length;
-use crate::misc::iterable::Iterable;
 
 struct Fragment<MAX_DATA_LEN> { // Slice
-	offset: u64,
-	length: u64,
-	data: [u8; MAX_DATA_LEN]
+    offset: u64,
+    length: u64,
+    data: [u8; MAX_DATA_LEN]
 }
 
 impl<MAX_DATA_LEN> Fragment<MAX_DATA_LEN> {
@@ -26,14 +25,4 @@ impl<MAX_DATA_LEN> Fragment<MAX_DATA_LEN> {
 
         Fragment { offset: 0, length: self.length, data: new_data }
     }
-}
-
-impl<Env, MAX_DATA_LEN> Iterable<Env, u8> for Fragment<MAX_DATA_LEN> {
-	fn each(self, callback: fn[Env](u8) -> ()) -> () {
-		for i in 0..MAX_DATA_LEN {
-			if i < self.length {
-				callback(self.data[i])
-			}
-		}
-	}
 }
