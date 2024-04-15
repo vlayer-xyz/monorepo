@@ -11,6 +11,7 @@ fn test_copy_subarray() {
 
 mod extract_payload_len {
     use crate::rlp::decode::extract_payload_len;
+    use crate::misc::arrays::resize;
 
     #[test] 
     fn unpadded() {
@@ -21,21 +22,40 @@ mod extract_payload_len {
 
     #[test]
     fn padded() {
-        let rlp_header = [
-            249, 1, 109, 32, 185, 1, 105, 2, 249, 1, 101, 1, 132, 1, 3, 187, 10, 185, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 248, 90, 248, 88, 148, 56, 140, 129, 140, 168, 185, 37, 27, 57, 49, 49, 192, 138, 115, 106, 103, 204, 177, 146, 151, 225, 160, 39, 241, 42, 191, 227, 88, 96, 169, 169, 39, 180, 101, 187, 61, 74, 156, 35, 200, 66, 129, 116, 184, 63, 39, 143, 228, 94, 215, 180, 218, 38, 98, 160, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 36, 230, 50, 131, 46, 62, 226, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-        ];
-        let lenlen = (rlp_header[0] - 0xf7) as u64;
-        assert(extract_payload_len(rlp_header, lenlen) == 0x016d);
+        let rlp_header = [249, 1, 109];
+        let rlp_header_padded : [u8; 200]= resize(rlp_header);
+        let lenlen = (rlp_header_padded[0] - 0xf7) as u64;
+        assert(extract_payload_len(rlp_header_padded, lenlen) == 0x016d);
     }
 
     #[test(should_fail_with = "Length of length exceeds maximum")]
     fn fail_lenlen_exceeding() {
         let _ = extract_payload_len([9], 3);
     }
+
+    #[test(should_fail_with = "Length of length is zero")]
+    fn fail_lenlen_zero() {
+        let _ = extract_payload_len([0, 0, 0], 0);
+    }
+
+    #[test(should_fail_with ="Length of length exceeds input length")]
+    fn lenlen_exceeds_input_length() {
+        let rlp_header = [3];
+        let lenlen = 2;
+        let _ = extract_payload_len(rlp_header, lenlen);
+    }
+
+    #[test(should_fail)] // It doesn't compile because the loop bound is negative
+    fn empty_array() {
+        let rlp_header = [];
+        let lenlen = 0;
+        let _ = extract_payload_len(rlp_header, lenlen);
+    }
 }
 
 mod decode_string {
     use crate::rlp::decode::decode_string;
+    use crate::misc::arrays::resize;
 
     #[test]
     fn one_byte_zero() {
@@ -55,7 +75,7 @@ mod decode_string {
 
     #[test]
     fn three_bytes() {
-        let rlp = [0x83, 0x63, 0x61, 0x74];
+        let rlp = [0x83, 0x63, 0x61, 0x74]; // "0x636174"
         let expected_offset = 1;
         let expected_length = 3;
         assert(decode_string(rlp) == (expected_offset, expected_length));
@@ -63,19 +83,20 @@ mod decode_string {
 
     #[test]
     fn using_lenlen() {
-        let rlp = [0xb8, 0x01, 0x83];
+        let rlp_header = [0xb8, 60]; //string of length 60
+        let rlp : [u8; 62]= resize(rlp_header);
         let expected_offset = 2;
-        let expected_length = 1;
+        let expected_length = 60;
         assert(decode_string(rlp) == (expected_offset, expected_length));
     }
 
     #[test(should_fail_with = "Wrong data type")]
     fn fail_list_type() {
-        let rlp_of_list_type = [0xc0];
+        let rlp_of_list_type = [0xc0]; // []
         let _ = decode_string(rlp_of_list_type);
     }
 
-    #[test(should_fail_with = ""Decoded length of short string exceeds input length")]
+    #[test(should_fail_with = "Decoded length of short string exceeds input length")]
     fn fail_length_exceeds_input_length() {
         let rlp_with_wrong_length = [0x89]; // length is 9, but 0 bytes of payload is provided
         let _ = decode_string(rlp_with_wrong_length);
@@ -84,7 +105,6 @@ mod decode_string {
 
 mod decode_list {
     use crate::rlp::{decode::{decode_list, RlpList, STRING}, fragment::RlpFragment};
-    use crate::misc::arrays::resize;
 
     #[test]
     fn empty() {
@@ -94,7 +114,7 @@ mod decode_list {
 
     #[test]
     fn three_elements() {
-        let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x00]; // ["0x636174","0x646f68", "0x00"]
+        let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0]; // ["0x636174","0x646f68","0x00"]
         let expected = RlpList {
             fragments: [
                 RlpFragment { offset: 2, length: 3, data_type: STRING },
@@ -105,6 +125,24 @@ mod decode_list {
             num_fields: 3
         };
         assert(decode_list(rlp) == expected);
+    }
+
+    #[test(should_fail_with = "Expected a list")]
+    fn fail_wrong_data_type() {
+        let rlp_of_single_byte = [0x00];
+        let _ : RlpList<1> = decode_list(rlp_of_single_byte);
+    }
+
+    #[test(should_fail_with = "Decoded length of short list exceeds input length")]
+    fn fail_length_exceeds_input_length() {
+        let rlp = [0xc9, 0x13];
+        let _ : RlpList<1> = decode_list(rlp);
+    }
+
+    #[test(should_fail_with="Inconsistent rlp length")]
+    fn fail_inconsistent_length() {
+        let rlp = [0xc7, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13];
+        let _ : RlpList<3> = decode_list(rlp);
     }
 }
 
@@ -121,7 +159,7 @@ mod decode_list_of_small_strings {
 
     #[test]
     fn success() {
-        let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13];
+        let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13]; //["0x636174","0x646f68","0x13"]
         let expected = RlpList {
             fragments: [
                 RlpFragment { offset: 2, length: 3, data_type: STRING },
@@ -136,7 +174,7 @@ mod decode_list_of_small_strings {
 
     #[test]
     fn success_comparing_with_zeros() {
-        let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13];
+        let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13]; // ["0x636174","0x646f68","0x13"]
         let expected = RlpList {
             fragments: [
                 RlpFragment { offset: 2, length: 3, data_type: STRING },
