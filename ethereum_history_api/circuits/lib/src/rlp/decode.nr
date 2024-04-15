@@ -33,7 +33,7 @@ impl<N> Eq for RlpList<N> {
 pub fn extract_payload_len<N>(arr: [u8; N], lenlen: u64) -> u64 {
     assert(lenlen <= MAX_LEN_IN_BYTES, "Length of length exceeds maximum");
     assert(lenlen < N, "Length of length exceeds input length");
-    assert(lenlen > 0, "Length of length is zero");
+    assert(lenlen != 0, "Length of length is zero");
 
     let mut payload_length = 0;
 

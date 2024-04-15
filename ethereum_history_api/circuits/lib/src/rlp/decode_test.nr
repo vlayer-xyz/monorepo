@@ -15,17 +15,17 @@ mod extract_payload_len {
 
     #[test] 
     fn unpadded() {
-        let rlp_header = [249, 1, 109];
+        let rlp_header = [0xf9, 1, 1];
         let lenlen = (rlp_header[0] - 0xf7) as u64;
-        assert(extract_payload_len(rlp_header, lenlen) == 0x016d);
+        assert(extract_payload_len(rlp_header, lenlen) == 0x0101);
     }
 
     #[test]
     fn padded() {
-        let rlp_header = [249, 1, 109];
-        let rlp_header_padded : [u8; 200]= resize(rlp_header);
+        let rlp_header = [249, 1, 1];
+        let rlp_header_padded : [u8; 200] = resize(rlp_header);
         let lenlen = (rlp_header_padded[0] - 0xf7) as u64;
-        assert(extract_payload_len(rlp_header_padded, lenlen) == 0x016d);
+        assert(extract_payload_len(rlp_header_padded, lenlen) == 0x0101);
     }
 
     #[test(should_fail_with = "Length of length exceeds maximum")]
