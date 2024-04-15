@@ -1,3 +1,5 @@
+use crate::misc::fragment::Fragment;
+
 pub fn byte_to_nibbles(byte: u8) -> (u8, u8) {
     let upper = byte / 16;
     let lower = byte - 16 * upper;
@@ -18,6 +20,20 @@ pub fn bytes_to_nibbles<BYTES_LEN, NIBBLES_LEN>(bytes: [u8; BYTES_LEN]) -> [u8; 
     }
 
     nibbles
+}
+
+pub fn bytes_to_nibbles_fragment<MAX_NIBBLE_LEN>(bytes: Fragment<MAX_NIBBLE_LEN>) -> Fragment<MAX_NIBBLE_LEN> {
+  assert(MAX_NIBBLE_LEN >= 2 * bytes.length, "Bytes implicit data length must be at least 2 times larger than bytes explicit length");
+
+  let mut nibbles = Fragment::new_focused([0; MAX_NIBBLE_LEN]);
+  for i in 0..bytes.length {
+    let (hi, lo) = byte_to_nibbles(bytes.at(i));
+
+    nibbles.set(2 * i, hi);
+    nibbles.set(2 * i + 1, lo);
+  }
+
+  nibbles
 }
 
 pub fn nibbles_to_byte(upper: u8, lower: u8) -> u8 {
