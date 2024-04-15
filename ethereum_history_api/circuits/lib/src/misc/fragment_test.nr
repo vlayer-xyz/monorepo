@@ -31,7 +31,7 @@ fn success_focus() {
 }
 
 #[test]
-fn succescc_focus_full() {
+fn success_focus_full() {
     let fragment = Fragment::new(0, 4, [1, 2, 3, 4]);
     let focused_fragment = fragment.focus();
     assert_eq(focused_fragment.data, [1, 2, 3, 4]);
