@@ -32,6 +32,8 @@ impl<N> Eq for RlpList<N> {
 
 pub fn extract_payload_len<N>(arr: [u8; N], lenlen: u64) -> u64 {
     assert(lenlen <= MAX_LEN_IN_BYTES, "Length of length exceeds maximum");
+    assert(lenlen < N, "Length of length exceeds input length");
+    assert(lenlen != 0, "Length of length is zero");
 
     let mut payload_length = 0;
 
@@ -100,27 +102,28 @@ pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
     let mut num_fields: u64 = 0;
     let mut fragments = [RlpFragment::default(); NUM_FIELDS];
 
-    let mut RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
-    assert(data_type == LIST);
+    let RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
+    assert(data_type == LIST, "Expected a list");
 
     let total_len = length + offset;
-    assert(total_len <= input.len());
+    assert(total_len <= input.len(), "Total length exceeds input length");
 
+    let mut current_offset = offset;
     for i in 0..NUM_FIELDS {
-        let is_in_range = (offset != total_len) as u64;
+        if (current_offset < total_len) {
+            let header: [u8; N] = copy_subarray(input, current_offset);
 
-        let header: [u8; N] = copy_subarray(input, offset);
-        let RlpHeader {offset: field_off, length: field_len, data_type: field_type} = decode_to_rlp_header(header);
-        let total_field_len = field_off + field_len;
+            let RlpHeader {offset: field_off, length: field_len, data_type: field_type} = decode_to_rlp_header(header);
 
-        // Assign decoded data or set them to 0 if outside od total_len
-        fragments[i].offset = is_in_range * (offset + (1 - field_type) * field_off); // If the ith slot contains a list, include its RLP header.
-        fragments[i].length = is_in_range * (field_len + field_type * field_off); // If the ith slot contains a list, include the length of its header.
-        fragments[i].data_type = is_in_range * (field_type);
+            fragments[i].offset = current_offset + (1 - field_type) * field_off; // If the ith slot contains a list, include its RLP header.
+            fragments[i].length = field_len + field_type * field_off; // If the ith slot contains a list, include the length of its header.
+            fragments[i].data_type = field_type;
 
-        offset += is_in_range * total_field_len;
-        num_fields += is_in_range;
+            current_offset += field_off + field_len;
+            num_fields += 1;
+        }
     }
+    assert(current_offset == total_len, "Inconsistent rlp length");
 
     RlpList { fragments, num_fields }
 }
@@ -148,7 +151,7 @@ pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NU
             fragments[i].length = field_len;
             fragments[i].data_type = STRING;
 
-            current_offset += (field_off + field_len);
+            current_offset += field_off + field_len;
             num_fields += 1;
         }
     }
