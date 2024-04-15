@@ -1,4 +1,4 @@
-mod test_parity {
+mod parity {
     use crate::merkle_patricia_proofs::proof::{EVEN, ODD, parity};
 
     #[test]
@@ -15,7 +15,7 @@ mod test_parity {
     }
 }
 
-mod test_strip_prefix {
+mod strip_prefix {
 
     use crate::merkle_patricia_proofs::proof::strip_prefix;
 
@@ -57,7 +57,7 @@ mod test_strip_prefix {
     }
 }
 
-mod test_leaf_get_len {
+mod leaf_get_len {
 
     use crate::merkle_patricia_proofs::proof::leaf_get_len;
 
@@ -80,7 +80,7 @@ mod test_leaf_get_len {
     }
 }
 
-mod test_simple {
+mod assert_merkle_proof {
 
     use crate::merkle_patricia_proofs::proof::{assert_merkle_proof, Proof};
     use crate::misc::arrays::alter_array;
@@ -130,7 +130,7 @@ mod test_simple {
     }
 }
 
-mod test_from_fixtures {
+mod assert_merkle_proof_from_fixtures {
 
     use crate::merkle_patricia_proofs::proof::{assert_merkle_proof, Proof};
     use crate::fixtures::merkle_proofs::leaf::{
