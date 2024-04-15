@@ -133,7 +133,8 @@ mod resize {
 
     #[test]
     fn success_empty() {
-        assert(array_equals(resize([]), []));
+        let arr: [u8; 0] = [];
+        assert(array_equals(resize(arr), []));
     }
 
     #[test]

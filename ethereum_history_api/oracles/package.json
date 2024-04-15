@@ -23,7 +23,7 @@
   "license": "ISC",
   "dependencies": {
     "@ethereumjs/trie": "^6.1.1",
-    "@noir-lang/noir_js": "0.26.0",
+    "@noir-lang/noir_js": "0.27.0",
     "dotenv": "^16.3.1",
     "fastify": "^4.25.2",
     "json-bigint": "^1.0.0",
