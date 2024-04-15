@@ -43,8 +43,7 @@ pub fn parity(prefix: u8) -> u64 {
 pub fn strip_prefix<MAX_PREFIXED_KEY_NIBBLE_LEN>(prefixed_key_bytes: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN>) -> Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> {
     let mut prefixed_key_nibbles = bytes_to_nibbles(prefixed_key_bytes);
 
-    let parity = parity(prefixed_key_nibbles.at(0));
-    let _ = prefixed_key_nibbles.pop_front();
+    let parity = parity(prefixed_key_nibbles.pop_front());
     if (parity == EVEN) {
         assert(prefixed_key_nibbles.pop_front() == 0, "Expected a zero after a prefix of even parity");
     }
