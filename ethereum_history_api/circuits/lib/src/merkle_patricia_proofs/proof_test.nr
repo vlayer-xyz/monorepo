@@ -80,7 +80,7 @@ mod assert_merkle_proof {
     use crate::merkle_patricia_proofs::proof::{assert_merkle_proof, Proof};
     use crate::misc::arrays::alter_array;
 
-    global key = [0x42];
+    global key = [0x00, 0x00, 0x00, 0x42];
     global value = [0x5];
     global root = [163, 57, 232, 136, 93, 33, 132, 208, 116, 119, 95, 134, 32, 201, 51, 214, 218, 75, 93, 113, 140, 143, 254, 21, 52, 83, 99, 97, 54, 246, 121, 173];
     global leaf = [0xc4, 0x82, 0x20, 0x42, 0x05];
@@ -119,7 +119,7 @@ mod assert_merkle_proof {
 
     #[test(should_fail_with="Key mismatch")]
     fn key_mismatch() {
-        let wrong_key = alter_array(key);
+        let wrong_key = [0x00, 0x00, 0x00, 0x43];
         let proof = Proof { nodes: [], leaf, depth: 1 };
         assert_merkle_proof(wrong_key, value, root, proof);
     }
