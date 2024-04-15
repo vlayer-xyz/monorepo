@@ -1,15 +1,11 @@
 // Taken from here: https://noir-lang.org/docs/how_to/how-to-oracles
 
-interface Value {
-  inner: string;
-}
-
 export interface SingleForeignCallParam {
-  Single: Value;
+  Single: string;
 }
 
 export interface ArrayForeignCallParam {
-  Array: Value[];
+  Array: string[];
 }
 
 export type ForeignCallParam = SingleForeignCallParam | ArrayForeignCallParam;
