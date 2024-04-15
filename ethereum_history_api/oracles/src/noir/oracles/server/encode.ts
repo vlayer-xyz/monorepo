@@ -6,9 +6,9 @@ import { NoirArguments } from '../oracles.js';
 export function decodeNoirArguments(params: ForeignCallParams): NoirArguments {
   return params.map((it) => {
     if ('Single' in it) {
-      return ['0x' + it.Single.inner];
+      return ['0x' + it.Single];
     } else {
-      return it.Array.map((it) => '0x' + it.inner);
+      return it.Array.map((it) => '0x' + it);
     }
   });
 }
@@ -20,12 +20,10 @@ export function encodeForeignCallResult(noirOutputs: ForeignCallOutput[]): Forei
 
 function encodeForeignCallResultValue(noirOutput: ForeignCallOutput): ForeignCallParam {
   if (typeof noirOutput === 'string') {
-    return { Single: { inner: noirOutput } };
+    return { Single: noirOutput };
   } else {
     return {
-      Array: noirOutput.map((inner) => ({
-        inner
-      }))
+      Array: noirOutput
     };
   }
 }
