@@ -1,4 +1,4 @@
-mod test_memcpy_up_to_length {
+mod memcpy_up_to_length {
     use crate::misc::arrays::memcpy_up_to_length;
 
     #[test]
@@ -24,7 +24,7 @@ mod test_memcpy_up_to_length {
     }
 }
 
-mod test_memcpy {
+mod memcpy {
     use crate::misc::arrays::memcpy;
 
     #[test]
@@ -43,7 +43,7 @@ mod test_memcpy {
     }
 }
 
-mod test_sub_array_equals_up_to_length {
+mod sub_array_equals_up_to_length {
     use crate::misc::arrays::sub_array_equals_up_to_length;
 
     #[test]
@@ -82,7 +82,7 @@ mod test_sub_array_equals_up_to_length {
     }
 }
 
-mod test_sub_array_equals {
+mod sub_array_equals {
     use crate::misc::arrays::sub_array_equals;
     #[test]
     fn success() {

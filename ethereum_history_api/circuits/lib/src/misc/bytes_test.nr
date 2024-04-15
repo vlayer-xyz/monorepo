@@ -1,4 +1,4 @@
-mod test_left_to_right_padding {
+mod left_to_right_padding {
 
     use crate::misc::bytes::left_to_right_padding;
 
@@ -24,7 +24,7 @@ mod test_left_to_right_padding {
     }
 }
 
-mod test_shift_right_by_one {
+mod shift_right_by_one {
 
     use crate::misc::bytes::shift_right_by_one;
 
@@ -43,7 +43,7 @@ mod test_shift_right_by_one {
     }
 }
 
-mod test_byte_to_nibbles {
+mod byte_to_nibbles {
 
     use crate::misc::bytes::byte_to_nibbles;
 
@@ -63,7 +63,7 @@ mod test_byte_to_nibbles {
     }
 }
 
-mod test_bytes_to_nibbles {
+mod bytes_to_nibbles {
 
     use crate::misc::bytes::bytes_to_nibbles;
 
@@ -97,7 +97,7 @@ mod test_bytes_to_nibbles {
     }
 }
 
-mod test_nibbles_to_byte {
+mod nibbles_to_byte {
 
     use crate::misc::bytes::nibbles_to_byte;
 
@@ -122,7 +122,7 @@ mod test_nibbles_to_byte {
     }
 }
 
-mod test_nibbles_to_bytes {
+mod nibbles_to_bytes {
 
     use crate::misc::bytes::nibbles_to_bytes;
 
@@ -159,7 +159,7 @@ mod test_nibbles_to_bytes {
     }
 }
 
-mod test_byte_value {
+mod byte_value {
 
     use crate::misc::bytes::byte_value;
 

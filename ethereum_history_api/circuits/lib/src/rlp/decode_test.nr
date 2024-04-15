@@ -9,7 +9,7 @@ fn test_copy_subarray() {
     assert(copy_subarray(input, 6) == []);
 }
 
-mod test_extract_payload_len {
+mod extract_payload_len {
     use crate::rlp::decode::extract_payload_len;
 
     #[test] 
@@ -34,7 +34,7 @@ mod test_extract_payload_len {
     }
 }
 
-mod test_decode_string {
+mod decode_string {
     use crate::rlp::decode::decode_string;
 
     #[test]
@@ -82,7 +82,7 @@ mod test_decode_string {
     }
 }
 
-mod test_decode_list {
+mod decode_list {
     use crate::rlp::{decode::{decode_list, RlpList, STRING}, fragment::RlpFragment};
     use crate::misc::arrays::resize;
 
@@ -108,7 +108,7 @@ mod test_decode_list {
     }
 }
 
-mod test_decode_list_of_small_strings {
+mod decode_list_of_small_strings {
     use crate::rlp::decode::{decode_list_of_small_strings, RlpList, RlpFragment, STRING};
 
     #[test]
@@ -175,7 +175,7 @@ mod test_decode_list_of_small_strings {
     }
 }
 
-mod test_get_small_string_offset_and_length {
+mod get_small_string_offset_and_length {
     use crate::rlp::decode::get_small_string_offset_and_length;
 
     #[test]
@@ -207,7 +207,7 @@ mod test_get_small_string_offset_and_length {
     }
 }
 
-mod test_decode_to_rlp_header {
+mod decode_to_rlp_header {
     use crate::rlp::decode::{decode_to_rlp_header, RlpHeader, STRING, LIST};
     use crate::misc::arrays::resize;
 
