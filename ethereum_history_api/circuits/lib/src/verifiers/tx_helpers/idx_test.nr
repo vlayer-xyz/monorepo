@@ -21,21 +21,21 @@ fn test_assert_tx_idx_equals() {
     assert_tx_idx_equals(key, tx_idx);
 }
 
-#[test(should_fail_with="key is not an rlp-encoded string")]
+#[test(should_fail_with="Key is not an rlp-encoded string")]
 fn test_assert_tx_idx_equals_fail_incorrect_rlp_encoding() {
     let tx_idx = 0x1;
     let key_encoded_incorrectly = [0x0, 0x1, 0xa, 0xb, 0xc, 0xe];
     assert_tx_idx_equals(key_encoded_incorrectly, tx_idx);
 }
 
-#[test(should_fail_with="key does not match rlp-encoded transaction index")]
+#[test(should_fail_with="Key does not match rlp-encoded transaction index")]
 fn test_assert_tx_idx_equals_fail_zero() {
     let wrong_tx_idx = 0x0 + 1;
     let key = [0x0, 0x0, 0x0, 0x0, 0x8, 0x0];
     assert_tx_idx_equals(key, wrong_tx_idx);
 }
 
-#[test(should_fail_with="key does not match rlp-encoded transaction index")]
+#[test(should_fail_with="Key does not match rlp-encoded transaction index")]
 fn test_assert_tx_idx_equals_fail() {
     let tx_idx = 0xabcd;
     let wrong_key = [0x8, 0x2, 0xa, 0xb, 0xc, 0xd + 1];
