@@ -79,7 +79,7 @@ fn test_verify_receipt_success() {
     verify_receipt(block_number, tx_idx, tx_type, receipt, proof, receipts_root);
 }
 
-#[test(should_fail_with="key does not match rlp-encoded transaction index")]
+#[test(should_fail_with="Key does not match rlp-encoded transaction index")]
 fn test_verify_receipt_invalid_tx_idx() {
     verify_receipt(block_number, tx_idx + 1, tx_type, receipt, proof, receipts_root);
 }
@@ -101,7 +101,7 @@ fn test_verify_receipt_invalid_receipt() {
     );
 }
 
-#[test(should_fail_with="key does not match rlp-encoded transaction index")]
+#[test(should_fail_with="Key does not match rlp-encoded transaction index")]
 fn test_verify_receipt_invalid_proof() {
     verify_receipt(
         block_number,
