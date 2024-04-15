@@ -1,5 +1,8 @@
 use crate::rlp::decode::{decode_to_rlp_header, decode_list_of_small_strings, RlpList};
-use crate::misc::{fragment::Fragment, arrays::{sub_array_equals_up_to_length, memcpy_up_to_length}, types::Bytes32, bytes::bytes_to_nibbles_fragment};
+use crate::misc::{
+    fragment::Fragment, arrays::{sub_array_equals_up_to_length, memcpy_up_to_length}, types::Bytes32,
+    bytes::bytes_to_nibbles
+};
 use dep::std::hash::keccak256;
 
 global MAX_NODE_LEN = 532;
@@ -37,17 +40,15 @@ pub fn parity(prefix: u8) -> u64 {
 
 // Leaf and extension nodes are RLP lists with 2 elements: prefixed key nibbles (in bytes) and value.
 // This function removes the prefix and returns appropriate number of key nibbles according to the parity of the prefix (see function: parity).
-pub fn strip_prefix<MAX_PREFIXED_KEY_NIBBLE_LEN>(
-    prefixed_key_bytes: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN>,
-) -> Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> {
-    let mut prefixed_key_nibbles = bytes_to_nibbles_fragment(prefixed_key_bytes);
+pub fn strip_prefix<MAX_PREFIXED_KEY_NIBBLE_LEN>(prefixed_key_bytes: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN>) -> Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> {
+    let mut prefixed_key_nibbles = bytes_to_nibbles(prefixed_key_bytes);
 
     let parity = parity(prefixed_key_nibbles.at(0));
     let _ = prefixed_key_nibbles.pop_front();
     if (parity == EVEN) {
         assert(prefixed_key_nibbles.pop_front() == 0, "Expected a zero after a prefix of even parity");
     }
-    
+
     prefixed_key_nibbles
 }
 

@@ -33,29 +33,33 @@ impl<MAX_DATA_LEN> Fragment<MAX_DATA_LEN> {
     }
 
     pub fn is_empty(self) -> bool {
-         self.length == 0
-     }
+        self.length == 0
+    }
 
     pub fn at(self, index: u64) -> u8 {
         let length = self.length;
-        assert(index < self.length, f"Index out of bounds, tried to access index {index} but the length is {length}");
+        assert(
+            index < self.length, f"Index out of bounds, tried to access index {index} but the length is {length}"
+        );
 
         self.data[self.offset + index]
     }
 
     pub fn set(&mut self, index: u64, value: u8) {
         let length = self.length;
-        assert(index < self.length, f"Index out of bounds, tried to set at index {index} but the length is {length}");
+        assert(
+            index < self.length, f"Index out of bounds, tried to set at index {index} but the length is {length}"
+        );
 
         self.data[self.offset + index] = value;
     }
 
     pub fn pop_front(&mut self) -> u8 {
-         assert(!self.is_empty(), "Cannot pop from an empty slice");
-         self.offset += 1;
-         self.length -= 1;
-         self.data[self.offset - 1]
-     }
+        assert(!self.is_empty(), "Cannot pop from an empty slice");
+        self.offset += 1;
+        self.length -= 1;
+        self.data[self.offset - 1]
+    }
 }
 
 impl<MAX_DATA_LEN> Eq for Fragment<MAX_DATA_LEN> {
