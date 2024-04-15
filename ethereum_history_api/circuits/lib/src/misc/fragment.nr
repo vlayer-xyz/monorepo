@@ -1,6 +1,6 @@
 use crate::misc::arrays::memcpy_up_to_length;
 
-struct Fragment<MAX_DATA_LEN> { // Slice
+struct Fragment<MAX_DATA_LEN> {
     offset: u64,
     length: u64,
     data: [u8; MAX_DATA_LEN]
