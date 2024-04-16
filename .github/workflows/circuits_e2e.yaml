@@ -33,7 +33,7 @@ jobs:
           toolchain: 0.26.0
 
       - name: Compile Circuit
-        run: nargo compile --workspace
+        run: nargo compile --workspace --deny-warnings
 
       - name: Start Oracle Server
         working-directory: ethereum_history_api/oracles
