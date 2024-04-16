@@ -61,9 +61,4 @@ jobs:
       - name: Stop Oracle Server
         if: always()
         run: kill $ORACLE_SERVER_PID
-      
-      - name: Archive is_dao_worthy proof
-        uses: actions/upload-artifact@v4
-        with:
-          name: proof of is_dao_worthy
-          path: proofs/is_dao_worthy.proof
+
