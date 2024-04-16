@@ -19,6 +19,7 @@ impl Eq for RlpHeader {
         (self.offset == other.offset) & (self.length == other.length) & (self.data_type == other.data_type)
     }
 }
+
 struct RlpList<NUM_FIELDS> {
     fragments: [RlpFragment; NUM_FIELDS],
     num_fields: u64
