@@ -52,6 +52,29 @@ mod strip_prefix {
     }
 }
 
+mod extract_hash {
+
+    use crate::merkle_patricia_proofs::proof::extract_hash;
+    use crate::misc::fragment::Fragment;
+    use crate::fixtures::merkle_proofs::branch_then_leaf::nodes as fixture_nodes;
+
+    global hash = [0x4d, 0xf3, 0xf1, 0x5d, 0xfc, 0x22, 0x96, 0x36, 0xc2, 0x7f, 0x5f, 0xfb, 0x66, 0x73, 0x0d, 0x90, 0x41, 0x23, 0xd3, 0xd8, 0xd6, 0xe3, 0xbc, 0xf0, 0x32, 0x5d, 0xf7, 0x1e, 0x13, 0xfb, 0xec, 0xbb];
+    
+    #[test]
+    fn branch_node() {
+        let node = fixture_nodes[0];
+        let key_nibble = 0x0;
+        assert(extract_hash(node, Fragment::new_focused([key_nibble]), &mut 0) == hash);
+    }
+
+    #[test(should_fail_with="Expected a hash at position given by the key nibble")]
+    fn fail_branch_node() {
+        let node = fixture_nodes[0];
+        let key_nibble = 0x2;
+        assert(extract_hash(node, Fragment::new_focused([key_nibble]), &mut 0) == hash);
+    }
+}
+
 mod leaf_get_len {
 
     use crate::merkle_patricia_proofs::proof::leaf_get_len;

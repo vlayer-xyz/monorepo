@@ -6,6 +6,7 @@ use crate::misc::{
 use dep::std::hash::keccak256;
 
 global MAX_NODE_LEN = 532;
+global HASH_LEN = 32;
 global EVEN = 0;
 global ODD = 1;
 
@@ -49,6 +50,17 @@ pub fn strip_prefix<MAX_PREFIXED_KEY_NIBBLE_LEN>(prefixed_key_bytes: Fragment<MA
     }
 
     prefixed_key_nibbles
+}
+
+pub fn extract_hash<MAX_PREFIXED_KEY_NIBBLE_LEN>(node: Node, key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN>, key_ptr: &mut u64) -> [u8; HASH_LEN] {
+    let node_rlp_list: RlpList<17> = decode_list_of_small_strings(node);
+    assert(node_rlp_list.num_fields == 17, "Extension nodes not implemented yet");
+    let curr_nibble = key_nibbles.at(*key_ptr);
+    assert(node_rlp_list.fragments[curr_nibble].length == HASH_LEN, "Expected a hash at position given by the key nibble");
+
+    *key_ptr += 1;
+    let hash: Fragment<HASH_LEN> = Fragment::new(node_rlp_list.fragments[curr_nibble].offset, HASH_LEN, node).focus();
+    hash.data
 }
 
 pub fn assert_merkle_proof<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH, MAX_LEAF_LEN>(
