@@ -6,7 +6,8 @@ import {
   encodeOptional,
   joinArray,
   indentLine,
-  indentBlock
+  indentBlock,
+  joinArrayVertical
 } from './encode.js';
 
 describe('encodeHexStringToArray', () => {
@@ -49,10 +50,20 @@ describe('indentLine', () => {
 describe('indentBlock', () => {
   it('tabulates struct field', () => {
     const value = '[\n  1\n]';
-    expect(indentBlock(value, 0)).toMatch(`[
+    expect(indentBlock(value, 0)).toStrictEqual(`[
   1
 ]`);
-    expect(indentBlock(value, 1)).toMatch(`[
+    expect(indentBlock(value, 1)).toStrictEqual(`[
+    1
+  ]`);
+  });
+
+  it('tabulates multiline array element', () => {
+    const value = '[\n  1\n]';
+    expect(indentBlock(value, 0, false)).toStrictEqual(`[
+  1
+]`);
+    expect(indentBlock(value, 1, false)).toStrictEqual(`  [
     1
   ]`);
   });
