@@ -66,34 +66,48 @@ mod byte_to_nibbles {
 mod bytes_to_nibbles {
 
     use crate::misc::bytes::bytes_to_nibbles;
+    use crate::misc::fragment::Fragment;
 
     #[test]
     fn empty() {
-        assert(bytes_to_nibbles([]) == []);
+        let empty = Fragment::new_focused([]);
+        assert(bytes_to_nibbles(empty).is_empty());
     }
 
     #[test]
     fn zero() {
-        assert(bytes_to_nibbles([0x0]) == [0x0, 0x0]);
+        let bytes = Fragment::new_with_length(1, [0x0, 0x0]);
+        let expected_nibbles = Fragment::new_focused([0x0, 0x0]);
+        assert(bytes_to_nibbles(bytes) == expected_nibbles);
     }
 
     #[test]
     fn simple() {
-        assert(bytes_to_nibbles([0x0f, 0xf0]) == [0x0, 0xf, 0xf, 0x0]);
+        let bytes = Fragment::new_with_length(2, [0x0f, 0xf0, 0x00, 0x00]);
+        let expected_nibbles = Fragment::new_focused([0x0, 0xf, 0xf, 0x0]);
+        assert(bytes_to_nibbles(bytes) == expected_nibbles);
     }
 
     #[test]
     fn normal() {
-        assert(
-            bytes_to_nibbles([0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23]) == [
-                0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, 0x0, 0x1, 0x2, 0x3
-            ]
+        let bytes = Fragment::new_with_length(
+            10,
+            [
+            0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23, 0x0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ]
         );
+        let expected_nibbles = Fragment::new_focused(
+            [
+            0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, 0x0, 0x1, 0x2, 0x3
+        ]
+        );
+        assert(bytes_to_nibbles(bytes) == expected_nibbles);
     }
 
-    #[test(should_fail_with="Generic arguments don't match")]
+    #[test(should_fail_with="Bytes implicit data length must be at least 2 times larger than bytes explicit length")]
     fn fail() {
-        let _: [u8; 3] = bytes_to_nibbles([0x00]);
+        let bytes = Fragment::new_focused([0x0f, 0xf0]);
+        let _ = bytes_to_nibbles(bytes);
     }
 }
 

@@ -1,3 +1,5 @@
+use crate::misc::fragment::Fragment;
+
 pub fn byte_to_nibbles(byte: u8) -> (u8, u8) {
     let upper = byte / 16;
     let lower = byte - 16 * upper;
@@ -5,16 +7,19 @@ pub fn byte_to_nibbles(byte: u8) -> (u8, u8) {
     (upper, lower)
 }
 
-pub fn bytes_to_nibbles<BYTES_LEN, NIBBLES_LEN>(bytes: [u8; BYTES_LEN]) -> [u8; NIBBLES_LEN] {
-    assert(NIBBLES_LEN == 2 * BYTES_LEN, "Generic arguments don't match");
+pub fn bytes_to_nibbles<MAX_NIBBLE_LEN>(bytes: Fragment<MAX_NIBBLE_LEN>) -> Fragment<MAX_NIBBLE_LEN> {
+    assert(
+        MAX_NIBBLE_LEN >= 2 * bytes.length, "Bytes implicit data length must be at least 2 times larger than bytes explicit length"
+    );
 
-    let mut nibbles = [0; NIBBLES_LEN];
+    let mut nibbles = Fragment::new_with_length(2 * bytes.length, [0; MAX_NIBBLE_LEN]);
+    for i in 0..MAX_NIBBLE_LEN {
+        if i < bytes.length {
+            let (hi, lo) = byte_to_nibbles(bytes.at(i));
 
-    for i in 0..BYTES_LEN {
-        let (hi, lo) = byte_to_nibbles(bytes[i]);
-
-        nibbles[2 * i] = hi;
-        nibbles[2 * i + 1] = lo;
+            nibbles.set(2 * i, hi);
+            nibbles.set(2 * i + 1, lo);
+        }
     }
 
     nibbles
