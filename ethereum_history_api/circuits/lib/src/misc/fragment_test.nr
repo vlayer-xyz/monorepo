@@ -104,7 +104,7 @@ mod at {
 mod set {
 
     use crate::misc::fragment::Fragment;
-    
+
     #[test]
     fn success() {
         let mut fragment = Fragment::new(1, 2, [1, 2, 3]);
