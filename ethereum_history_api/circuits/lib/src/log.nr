@@ -3,7 +3,7 @@ use dep::std::unsafe::zeroed;
 
 struct Log<MAX_LOG_DATA_LEN> {
     address: Address,
-    topics: [Bytes32; 4],
+    topics: BoundedVec<Bytes32, 4>,
     data: BoundedVec<u8, MAX_LOG_DATA_LEN>,
 }
 
