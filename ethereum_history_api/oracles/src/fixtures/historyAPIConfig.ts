@@ -6,6 +6,7 @@ export const UNISWAP_V3_USDC_BALANCE_STORAGE_KEY = '0x1f21a62c4538bacf2aabeca410
 export const CHAIN_LINK_TRANSFER_TX_HASH = '0x98e19df80eb8feae436896cc7cc6d4a97818e6010b56a249352b9ac2caf0d573';
 export const ETH_TRANSFER_TX_HASH = '0xfade98d8c3b7438655139080c33ccd0b1fc5d08b93dab0c3792d6c1001d56ddb';
 export const ORACLIZE_TRANSFER_TX_HASH = '0x38f299591902bfada359527fa6b9b597a959c41c6f72a3b484807fbf52dc8abe';
+export const TETHER_APPROVE_TX_HASH = '0xa799d5931eed84370b0d8917441d8c912a7e155d9a9a3ebcc0f5bf1a44e4dab6';
 
 interface HistoryAPIFixture {
   blockNumber: bigint;
@@ -13,6 +14,7 @@ interface HistoryAPIFixture {
   address?: Address;
   storageKeys?: Hex[];
   transactionHash?: Hex;
+  logIdx?: number;
 }
 
 type HistoryAPIFixtures = Record<string, Record<string, Record<string, HistoryAPIFixture>>>;
@@ -61,7 +63,8 @@ export const HISTORY_API_FIXTURES: HistoryAPIFixtures = {
     cancun: {
       small_block: {
         blockNumber: 19_432_673n,
-        transactionHash: CHAIN_LINK_TRANSFER_TX_HASH
+        transactionHash: CHAIN_LINK_TRANSFER_TX_HASH,
+        logIdx: 0
       },
       with_blob: {
         blockNumber: 19_432_087n
@@ -73,6 +76,12 @@ export const HISTORY_API_FIXTURES: HistoryAPIFixtures = {
         skipHeader: true,
         blockNumber: 19_539_214n,
         transactionHash: ETH_TRANSFER_TX_HASH
+      },
+      approve: {
+        skipHeader: true,
+        blockNumber: 19_667_377n,
+        transactionHash: TETHER_APPROVE_TX_HASH,
+        logIdx: 0
       }
     }
   }

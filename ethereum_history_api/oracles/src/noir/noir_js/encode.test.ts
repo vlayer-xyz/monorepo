@@ -6,7 +6,8 @@ import {
   encodeOptional,
   joinArray,
   indentLine,
-  indentBlock
+  indentBlock,
+  joinArrayVertical
 } from './encode.js';
 
 describe('encodeHexStringToArray', () => {
@@ -40,6 +41,22 @@ describe('joinArray', () => {
   });
 });
 
+describe('joinArrayVertical', () => {
+  it('empty', () => {
+    const expectedFormattedArray = `[
+
+]`;
+    expect(joinArrayVertical([])).toBe(expectedFormattedArray);
+  });
+  it('non-empty', () => {
+    const expectedFormattedArray = `[
+  [],
+  []
+]`;
+    expect(joinArrayVertical(['[]', '[]'])).toBe(expectedFormattedArray);
+  });
+});
+
 describe('indentLine', () => {
   it('tabulates line', () => {
     expect(indentLine('line', 2)).toBe('    line');
@@ -49,10 +66,20 @@ describe('indentLine', () => {
 describe('indentBlock', () => {
   it('tabulates struct field', () => {
     const value = '[\n  1\n]';
-    expect(indentBlock(value, 0)).toMatch(`[
+    expect(indentBlock(value, 0)).toStrictEqual(`[
   1
 ]`);
-    expect(indentBlock(value, 1)).toMatch(`[
+    expect(indentBlock(value, 1)).toStrictEqual(`[
+    1
+  ]`);
+  });
+
+  it('tabulates multiline array element', () => {
+    const value = '[\n  1\n]';
+    expect(indentBlock(value, 0, false)).toStrictEqual(`[
+  1
+]`);
+    expect(indentBlock(value, 1, false)).toStrictEqual(`  [
     1
   ]`);
   });
