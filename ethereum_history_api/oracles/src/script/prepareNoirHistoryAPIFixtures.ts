@@ -15,6 +15,7 @@ import { createTransactionFixture } from './noir_fixtures/transaction.js';
 import { getTxProof } from '../ethereum/txProof.js';
 import { createTransactionProofFixture } from './noir_fixtures/transaction_proof.js';
 import { createReceiptFixture } from './noir_fixtures/receipt.js';
+import { createLogFixture } from './noir_fixtures/log.js';
 
 const INDEX_NOT_FOUND = -1;
 
@@ -34,7 +35,7 @@ for (const chain in HISTORY_API_FIXTURES) {
     const hardforkModuleFile = `${NOIR_FIXTURES_DIRECTORY}/${chain}/${hardFork}.nr`;
 
     for (const fixtureName in HISTORY_API_FIXTURES[chain][hardFork]) {
-      const { blockNumber, address, storageKeys, transactionHash, skipHeader } =
+      const { blockNumber, address, storageKeys, transactionHash, skipHeader, logIdx } =
         HISTORY_API_FIXTURES[chain][hardFork][fixtureName];
       const modulePath = `${NOIR_FIXTURES_DIRECTORY}/${chain}/${hardFork}/${fixtureName}`;
       await mkdir(modulePath, { recursive: true });
@@ -84,6 +85,11 @@ for (const chain in HISTORY_API_FIXTURES) {
         );
         await writeFile(join(modulePath, 'transaction_proof.nr'), createTransactionProofFixture(txProof));
         fixtureModules.push('transaction_proof');
+        if (logIdx !== undefined) {
+          const log = receipt.logs[logIdx];
+          await writeFile(join(modulePath, 'log.nr'), createLogFixture(log));
+          fixtureModules.push('log');
+        }
       }
 
       const declareFixtureModules = fixtureModules.map((name) => `mod ${name};`).join('\n') + '\n';
