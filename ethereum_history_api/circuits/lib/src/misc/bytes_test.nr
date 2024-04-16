@@ -71,7 +71,7 @@ mod bytes_to_nibbles {
     #[test]
     fn empty() {
         let empty = Fragment::new_focused([]);
-        assert(bytes_to_nibbles(empty) == empty);
+        assert(bytes_to_nibbles(empty).is_empty());
     }
 
     #[test]
