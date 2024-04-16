@@ -39,10 +39,10 @@ fn modify_rlp_list() {
     assert_eq(rlp_list.len(), 2);
 }
 
-mod decode_list{
+mod decode_list {
     use crate::rlp::rlp_type::{RlpList, decode_list};
     use crate::rlp::decode::STRING;
-    
+
     #[test]
     fn empty() {
         let empty_list: RlpList<1, 3> = decode_list([0xc0]);
@@ -52,7 +52,7 @@ mod decode_list{
     #[test]
     fn three_elements() {
         let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0]; // ["0x636174","0x646f68","0x00"]
-        
+
         let decoded: RlpList<10, 3> = decode_list(rlp);
         assert_eq(decoded.len(), 3);
         assert_eq(decoded.get(0).fragment.offset, 2);
