@@ -1,0 +1,1 @@
+../../../../contract/get_receipt/plonk_vk.sol
