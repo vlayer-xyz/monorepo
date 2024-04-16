@@ -41,6 +41,22 @@ describe('joinArray', () => {
   });
 });
 
+describe('joinArrayVertical', () => {
+  it('empty', () => {
+    const expectedFormattedArray = `[
+
+]`;
+    expect(joinArrayVertical([])).toBe(expectedFormattedArray);
+  });
+  it('non-empty', () => {
+    const expectedFormattedArray = `[
+  [],
+  []
+]`;
+    expect(joinArrayVertical(['[]', '[]'])).toBe(expectedFormattedArray);
+  });
+});
+
 describe('indentLine', () => {
   it('tabulates line', () => {
     expect(indentLine('line', 2)).toBe('    line');

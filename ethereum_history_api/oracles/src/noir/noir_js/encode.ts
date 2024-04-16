@@ -34,6 +34,12 @@ ${INDENT}${value.join(', ')}
 ]`;
 }
 
+export function joinArrayVertical(value: string[]): string {
+  return `[
+${value.map((val) => indentBlock(val, 1, false)).join(',\n')}
+]`;
+}
+
 export function indentLine(line: string, depth: number): string {
   return INDENT.repeat(depth) + line;
 }
