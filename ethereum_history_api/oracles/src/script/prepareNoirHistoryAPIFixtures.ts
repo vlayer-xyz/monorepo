@@ -87,7 +87,7 @@ for (const chain in HISTORY_API_FIXTURES) {
         fixtureModules.push('transaction_proof');
         if (logIdx !== undefined) {
           const log = receipt.logs[logIdx];
-          await writeFile(join(modulePath, 'log.nr'), createLogFixture(log));
+          await writeFile(join(modulePath, 'log.nr'), createLogFixture(log, logIdx));
           fixtureModules.push('log');
         }
       }
