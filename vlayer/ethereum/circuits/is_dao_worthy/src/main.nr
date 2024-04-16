@@ -1,11 +1,8 @@
-fn main(x: Field, y: pub Field) {
-    assert(x != y);
-}
+use dep::ethereum_history_api::misc::types::Address;
+use dep::token::token_list::mainnet::USDC;
 
-#[test]
-fn test_main() {
-    main(1, 2);
+mod main_test;
 
-    // Uncomment to make test fail
-    // main(1, 1);
+fn main(wallet_address: Address, block_number: pub Field, min_balance: pub Field) {
+    assert(min_balance.lt(USDC.get_balance(wallet_address, block_number)), "Insufficient USDC balance");
 }

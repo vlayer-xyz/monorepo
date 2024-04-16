@@ -5,6 +5,7 @@ members = [
     "ethereum_history_api/circuits/get_storage",
     "ethereum_history_api/circuits/get_account",
     "ethereum_history_api/circuits/get_header",
-    "vlayer/ethereum/circuits/lib"
+    "vlayer/ethereum/circuits/lib",
+    "vlayer/ethereum/circuits/is_dao_worthy",
 ]
 default-member = "ethereum_history_api/circuits/lib"
