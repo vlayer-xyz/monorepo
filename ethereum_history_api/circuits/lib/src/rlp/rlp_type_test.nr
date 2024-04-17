@@ -1,23 +1,37 @@
-use crate::rlp::rlp_type::{RlpList, FragmentWithDataType, decode_list};
+use crate::rlp::rlp_type::{RlpList, create_rlp_list, FragmentWithDataType};
 use crate::misc::fragment::Fragment;
 use crate::rlp::decode::{LIST, STRING};
 
-pub fn create_rlp_list() -> RlpList<3, 5> {
-    let fragment1: Fragment<3> = Fragment::new_focused([1, 2, 3]);
-    let fragment2: Fragment<3> = Fragment::new_focused([4, 5, 6]);
-
-    let fragment_with_type1: FragmentWithDataType<3> = FragmentWithDataType { fragment: fragment1, data_type: LIST };
-    let fragment_with_type2: FragmentWithDataType<3> = FragmentWithDataType { fragment: fragment2, data_type: STRING };
-
-    let mut rlp_list: RlpList<3, 5> = BoundedVec::new();
-    rlp_list.extend_from_array([fragment_with_type1, fragment_with_type2]);
-
-    rlp_list
-}
+global fragments = [
+    FragmentWithDataType { 
+      fragment: Fragment {
+        data: [1, 2, 3], 
+        offset: 0, 
+        length: 3
+      }, 
+      data_type: LIST
+    },
+    FragmentWithDataType { 
+      fragment: Fragment {
+        data: [4, 5, 6], 
+        offset: 2, 
+        length: 1
+      }, 
+      data_type: STRING
+    },
+    FragmentWithDataType { 
+      fragment: Fragment {
+        data: [7, 8, 9], 
+        offset: 0, 
+        length: 2
+      }, 
+      data_type: LIST
+    }
+];
 
 #[test]
 fn success_create() {
-    let rlp_list = create_rlp_list();
+    let rlp_list: RlpList<3, 5> = create_rlp_list([fragments[0], fragments[1]]);
 
     assert_eq(rlp_list.len(), 2);
     assert_eq(rlp_list.max_len(), 5);
@@ -26,13 +40,11 @@ fn success_create() {
 
 #[test]
 fn modify_rlp_list() {
-    let mut rlp_list = create_rlp_list();
+    let mut rlp_list: RlpList<3, 5> = create_rlp_list([fragments[0], fragments[1]]);
 
     assert_eq(rlp_list.len(), 2);
 
-    let fragment: Fragment<3> = Fragment::new_focused([1, 1, 1]);
-    let fragment_with_type: FragmentWithDataType<3> = FragmentWithDataType { fragment, data_type: LIST };
-    rlp_list.push(fragment_with_type);
+    rlp_list.push(fragments[2]);
     assert_eq(rlp_list.len(), 3);
 
     let _ = rlp_list.pop();
