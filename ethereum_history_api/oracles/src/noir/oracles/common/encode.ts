@@ -48,9 +48,13 @@ export function encodeHex(hexString: string): Hex[] {
     throw new Error(`Invalid hex string: ${hexString}`);
   }
   const chunks: Hex[] = [];
-  for (let i = BYTE_HEX_LEN; i < hexString.length; i += BYTE_HEX_LEN) {
+  const parity = hexString.length % BYTE_HEX_LEN;
+  if (parity == 1) {
+    chunks.push(`0x0${hexString[BYTE_HEX_LEN]}`);
+  }
+  for (let i = BYTE_HEX_LEN + parity; i < hexString.length; i += BYTE_HEX_LEN) {
     const chunk = hexString.substring(i, i + BYTE_HEX_LEN);
-    chunks.push(`0x${chunk.padStart(BYTE_HEX_LEN, '0')}`);
+    chunks.push(`0x${chunk}`);
   }
   return chunks;
 }

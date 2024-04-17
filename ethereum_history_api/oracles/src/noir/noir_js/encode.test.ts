@@ -16,6 +16,9 @@ describe('encodeHexStringToArray', () => {
   it('encodes hex string to array', () => {
     expect(encodeHexStringToArray('0x1234')).toStrictEqual(new Uint8Array([0x12, 0x34]));
   });
+  it('encodes odd hex string to array', () => {
+    expect(encodeHexStringToArray('0x123')).toStrictEqual(new Uint8Array([0x01, 0x23]));
+  });
 });
 
 describe('encodeHexString', () => {
