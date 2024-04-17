@@ -19,12 +19,14 @@ mod strip_prefix {
 
     use crate::misc::fragment::Fragment;
     use crate::merkle_patricia_proofs::proof::strip_prefix;
+    use crate::misc::bytes::byte_to_nibbles;
 
     #[test]
         fn success_even() {
         let prefixed_key_bytes = Fragment::new_with_length(3, [0x20, 0xab, 0xcd, 0x00, 0x00, 0x00]);
-        let (prefix, stripped_nibbles) = strip_prefix(prefixed_key_bytes);
+        let (prefix, _) = byte_to_nibbles(prefixed_key_bytes.at(0));
         assert(prefix == 2, "Incorrect prefix");
+        let stripped_nibbles = strip_prefix(prefixed_key_bytes);
         assert(
             stripped_nibbles == Fragment::new_with_length(4, [0xa, 0xb, 0xc, 0xd, 0x0, 0x0]), "Incorrect stripping of even prefix"
         );
@@ -33,8 +35,9 @@ mod strip_prefix {
     #[test]
         fn success_odd() {
         let prefixed_key_bytes = Fragment::new_with_length(3, [0x3a, 0xbc, 0xde, 0x00, 0x00, 0x00]);
-        let (prefix, stripped_nibbles) = strip_prefix(prefixed_key_bytes);
+        let (prefix, _) = byte_to_nibbles(prefixed_key_bytes.at(0));
         assert(prefix == 3, "Incorrect prefix");
+        let stripped_nibbles = strip_prefix(prefixed_key_bytes);
         assert(
             stripped_nibbles == Fragment::new_with_length(5, [0xa, 0xb, 0xc, 0xd, 0xe, 0x0]), "Incorrect stripping of odd prefix"
         );

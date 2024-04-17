@@ -1,7 +1,7 @@
 use crate::rlp::decode::{decode_to_rlp_header, decode_list_of_small_strings, RlpList};
 use crate::misc::{
     fragment::Fragment, arrays::{sub_array_equals_up_to_length, memcpy_up_to_length}, types::Bytes32,
-    bytes::{bytes_to_nibbles, right_pad}
+    bytes::{bytes_to_nibbles, byte_to_nibbles, right_pad}
 };
 use dep::std::hash::keccak256;
 
@@ -44,7 +44,7 @@ pub fn parity(prefix: u8) -> u64 {
 
 // Leaf and extension nodes are RLP lists with 2 elements: prefixed key nibbles (in bytes) and value.
 // This function removes the prefix and returns appropriate number of key nibbles according to the parity of the prefix (see function: parity).
-pub fn strip_prefix<MAX_PREFIXED_KEY_NIBBLE_LEN>(prefixed_key_bytes: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN>) -> (u8, Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN>) {
+pub fn strip_prefix<MAX_PREFIXED_KEY_NIBBLE_LEN>(prefixed_key_bytes: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN>) -> Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> {
     let mut prefixed_key_nibbles = bytes_to_nibbles(prefixed_key_bytes);
 
     let prefix = prefixed_key_nibbles.pop_front();
@@ -53,7 +53,7 @@ pub fn strip_prefix<MAX_PREFIXED_KEY_NIBBLE_LEN>(prefixed_key_bytes: Fragment<MA
         assert(prefixed_key_nibbles.pop_front() == 0, "Expected a zero after a prefix of even parity");
     }
 
-    (prefix, prefixed_key_nibbles)
+    prefixed_key_nibbles
 }
 
 pub fn extract_hash<MAX_PREFIXED_KEY_NIBBLE_LEN>(
@@ -72,23 +72,30 @@ pub fn extract_hash<MAX_PREFIXED_KEY_NIBBLE_LEN>(
 
         hash = Fragment::new(node_rlp_list.fragments[curr_nibble].offset, HASH_LEN, node).focus();
         *key_ptr += 1;
-
     } else if (node_rlp_list.num_fields == EXTENSION_NODE) {
         let prefixed_extension_key_part: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> = Fragment::new(
             node_rlp_list.fragments[0].offset,
             node_rlp_list.fragments[0].length,
             node
         ).focus();
-        let (prefix, extension_key_part) = strip_prefix(prefixed_extension_key_part); // Extension nodes have a prefix that needs to be removed.
+        let (prefix, _) = byte_to_nibbles(prefixed_extension_key_part.at(0));
         assert((prefix == 0) | (prefix == 1), "Extension parity prefix must be 0 or 1");
-        
-        let curr_key_nibbles_part = Fragment::new(key_nibbles.offset + *key_ptr, extension_key_part.length, key_nibbles.data);
-        assert(extension_key_part == curr_key_nibbles_part, "Extension key part does not correspond to given key nibbles");
-        assert(node_rlp_list.fragments[1].length == HASH_LEN, "Expected a hash at the end of the extension node");
+        let extension_key_part = strip_prefix(prefixed_extension_key_part); // Extension nodes have a prefix that needs to be removed.
+
+        let curr_key_nibbles_part = Fragment::new(
+            key_nibbles.offset + *key_ptr,
+            extension_key_part.length,
+            key_nibbles.data
+        );
+        assert(
+            extension_key_part == curr_key_nibbles_part, "Extension key part does not correspond to given key nibbles"
+        );
+        assert(
+            node_rlp_list.fragments[1].length == HASH_LEN, "Expected a hash at the end of the extension node"
+        );
 
         hash = Fragment::new(node_rlp_list.fragments[1].offset, HASH_LEN, node).focus();
         *key_ptr += extension_key_part.length;
-
     } else {
         assert(false, "Invalid node type");
     }
@@ -114,8 +121,9 @@ pub fn assert_merkle_proof<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH
         proof.leaf
     ).focus();
 
-    let (prefix, leaf_key_part) = strip_prefix(prefixed_leaf_key_part);
+    let (prefix, _) = byte_to_nibbles(prefixed_leaf_key_part.at(0));
     assert((prefix == 2) | (prefix == 3), "Leaf parity prefix must be 2 or 3");
+    let leaf_key_part = strip_prefix(prefixed_leaf_key_part);
     assert(leaf_key_part == key_nibbles, "Key mismatch");
 
     assert(
