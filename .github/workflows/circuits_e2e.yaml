@@ -5,7 +5,8 @@ on: [push]
 jobs:
   test:
     name: Circuits E2E Tests
-    runs-on: 32-core-ubuntu-runner
+    runs-on:
+      group: Default Larger Runners
     environment: CI
     env:
       ETHEREUM_JSON_RPC_API_URL: ${{ secrets.ETHEREUM_JSON_RPC_API_URL }}
@@ -33,7 +34,7 @@ jobs:
           toolchain: 0.26.0
 
       - name: Compile Circuit
-        run: nargo compile --workspace
+        run: nargo compile --workspace --deny-warnings
 
       - name: Start Oracle Server
         working-directory: ethereum_history_api/oracles
