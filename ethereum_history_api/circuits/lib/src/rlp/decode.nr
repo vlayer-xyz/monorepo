@@ -1,5 +1,5 @@
 use dep::std::wrapping_sub;
-use crate::rlp::fragment::RlpFragment;
+use crate::rlp::rlp_fragment::RlpFragment;
 
 /// Max number of bytes required to represent length of a string or list
 global MAX_LEN_IN_BYTES: u64 = 2;
