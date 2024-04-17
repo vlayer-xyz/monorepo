@@ -50,7 +50,7 @@ impl<MAX_DATA_LEN> Fragment<MAX_DATA_LEN> {
         assert(
             index < self.length, f"Index out of bounds, tried to set at index {index} but the length is {length}"
         );
-
+        
         self.data[self.offset + index] = value;
     }
 

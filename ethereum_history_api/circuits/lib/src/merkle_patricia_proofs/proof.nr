@@ -56,51 +56,72 @@ pub fn strip_prefix<MAX_PREFIXED_KEY_NIBBLE_LEN>(prefixed_key_bytes: Fragment<MA
     prefixed_key_nibbles
 }
 
+pub fn extract_hash_from_branch_node<MAX_PREFIXED_KEY_NIBBLE_LEN>(
+    node: Node,
+    node_rlp_list: RlpList<MAX_NODE_FIELDS>,
+    key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN>,
+    key_ptr: &mut u64
+) -> [u8; HASH_LEN] {
+    let curr_nibble = key_nibbles.at(*key_ptr);
+    assert(
+        node_rlp_list.fragments[curr_nibble].length == HASH_LEN, "Expected a hash at position given by the key nibble"
+    );
+    let hash = Fragment::new(node_rlp_list.fragments[curr_nibble].offset, HASH_LEN, node).focus();
+    *key_ptr += 1;
+
+    hash.data
+}
+
+pub fn extract_hash_from_extension_node<MAX_PREFIXED_KEY_NIBBLE_LEN>(
+    node: Node,
+    node_rlp_list: RlpList<MAX_NODE_FIELDS>,
+    key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN>,
+    key_ptr: &mut u64
+) -> [u8; HASH_LEN] {
+    let prefixed_extension_key_part: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> = Fragment::new(
+        node_rlp_list.fragments[0].offset,
+        node_rlp_list.fragments[0].length,
+        node
+    ).focus();
+
+    let (prefix, _) = byte_to_nibbles(prefixed_extension_key_part.at(0));
+    assert((prefix == 0) | (prefix == 1), "Extension parity prefix must be 0 or 1");
+    let extension_key_part = strip_prefix(prefixed_extension_key_part); // Extension nodes have a prefix that needs to be removed.
+    let curr_key_nibbles_part = Fragment::new(
+        key_nibbles.offset + *key_ptr,
+        extension_key_part.length,
+        key_nibbles.data
+    );
+    assert(
+        extension_key_part == curr_key_nibbles_part, "Extension key part does not correspond to given key nibbles"
+    );
+    assert(
+        node_rlp_list.fragments[1].length == HASH_LEN, "Expected a hash at the end of the extension node"
+    );
+
+    let hash = Fragment::new(node_rlp_list.fragments[1].offset, HASH_LEN, node).focus();
+    *key_ptr += extension_key_part.length;
+
+    hash.data
+}
+
 pub fn extract_hash<MAX_PREFIXED_KEY_NIBBLE_LEN>(
     node: Node,
     key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN>,
     key_ptr: &mut u64
 ) -> [u8; HASH_LEN] {
-    let mut hash = Fragment::new_focused([0; HASH_LEN]);
+    let mut hash = [0; HASH_LEN];
     let node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list_of_small_strings(node);
 
     if (node_rlp_list.num_fields == BRANCH_NODE) {
-        let curr_nibble = key_nibbles.at(*key_ptr);
-        assert(
-            node_rlp_list.fragments[curr_nibble].length == HASH_LEN, "Expected a hash at position given by the key nibble"
-        );
-
-        hash = Fragment::new(node_rlp_list.fragments[curr_nibble].offset, HASH_LEN, node).focus();
-        *key_ptr += 1;
+        hash = extract_hash_from_branch_node(node, node_rlp_list, key_nibbles, key_ptr);
     } else if (node_rlp_list.num_fields == EXTENSION_NODE) {
-        let prefixed_extension_key_part: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> = Fragment::new(
-            node_rlp_list.fragments[0].offset,
-            node_rlp_list.fragments[0].length,
-            node
-        ).focus();
-        let (prefix, _) = byte_to_nibbles(prefixed_extension_key_part.at(0));
-        assert((prefix == 0) | (prefix == 1), "Extension parity prefix must be 0 or 1");
-        let extension_key_part = strip_prefix(prefixed_extension_key_part); // Extension nodes have a prefix that needs to be removed.
-
-        let curr_key_nibbles_part = Fragment::new(
-            key_nibbles.offset + *key_ptr,
-            extension_key_part.length,
-            key_nibbles.data
-        );
-        assert(
-            extension_key_part == curr_key_nibbles_part, "Extension key part does not correspond to given key nibbles"
-        );
-        assert(
-            node_rlp_list.fragments[1].length == HASH_LEN, "Expected a hash at the end of the extension node"
-        );
-
-        hash = Fragment::new(node_rlp_list.fragments[1].offset, HASH_LEN, node).focus();
-        *key_ptr += extension_key_part.length;
+        hash = extract_hash_from_extension_node(node, node_rlp_list, key_nibbles, key_ptr);
     } else {
         assert(false, "Invalid node type");
     }
 
-    hash.data
+    hash
 }
 
 pub fn assert_merkle_proof<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH, MAX_LEAF_LEN>(
