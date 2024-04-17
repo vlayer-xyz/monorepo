@@ -6,6 +6,9 @@ use crate::misc::{
 use dep::std::hash::keccak256;
 
 global MAX_NODE_LEN = 532;
+global MAX_NODE_FIELDS = 17;
+global BRANCH_NODE = 17;
+global EXTENSION_NODE = 2;
 global HASH_LEN = 32;
 global EVEN = 0;
 global ODD = 1;
@@ -41,25 +44,55 @@ pub fn parity(prefix: u8) -> u64 {
 
 // Leaf and extension nodes are RLP lists with 2 elements: prefixed key nibbles (in bytes) and value.
 // This function removes the prefix and returns appropriate number of key nibbles according to the parity of the prefix (see function: parity).
-pub fn strip_prefix<MAX_PREFIXED_KEY_NIBBLE_LEN>(prefixed_key_bytes: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN>) -> Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> {
+pub fn strip_prefix<MAX_PREFIXED_KEY_NIBBLE_LEN>(prefixed_key_bytes: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN>) -> (u8, Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN>) {
     let mut prefixed_key_nibbles = bytes_to_nibbles(prefixed_key_bytes);
 
-    let parity = parity(prefixed_key_nibbles.pop_front());
+    let prefix = prefixed_key_nibbles.pop_front();
+    let parity = parity(prefix);
     if (parity == EVEN) {
         assert(prefixed_key_nibbles.pop_front() == 0, "Expected a zero after a prefix of even parity");
     }
 
-    prefixed_key_nibbles
+    (prefix, prefixed_key_nibbles)
 }
 
-pub fn extract_hash<MAX_PREFIXED_KEY_NIBBLE_LEN>(node: Node, key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN>, key_ptr: &mut u64) -> [u8; HASH_LEN] {
-    let node_rlp_list: RlpList<17> = decode_list_of_small_strings(node);
-    assert(node_rlp_list.num_fields == 17, "Extension nodes not implemented yet");
-    let curr_nibble = key_nibbles.at(*key_ptr);
-    assert(node_rlp_list.fragments[curr_nibble].length == HASH_LEN, "Expected a hash at position given by the key nibble");
+pub fn extract_hash<MAX_PREFIXED_KEY_NIBBLE_LEN>(
+    node: Node,
+    key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN>,
+    key_ptr: &mut u64
+) -> [u8; HASH_LEN] {
+    let mut hash = Fragment::new_focused([0; HASH_LEN]);
+    let node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list_of_small_strings(node);
 
-    *key_ptr += 1;
-    let hash: Fragment<HASH_LEN> = Fragment::new(node_rlp_list.fragments[curr_nibble].offset, HASH_LEN, node).focus();
+    if (node_rlp_list.num_fields == BRANCH_NODE) {
+        let curr_nibble = key_nibbles.at(*key_ptr);
+        assert(
+            node_rlp_list.fragments[curr_nibble].length == HASH_LEN, "Expected a hash at position given by the key nibble"
+        );
+
+        hash = Fragment::new(node_rlp_list.fragments[curr_nibble].offset, HASH_LEN, node).focus();
+        *key_ptr += 1;
+
+    } else if (node_rlp_list.num_fields == EXTENSION_NODE) {
+        let prefixed_extension_key_part: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> = Fragment::new(
+            node_rlp_list.fragments[0].offset,
+            node_rlp_list.fragments[0].length,
+            node
+        ).focus();
+        let (prefix, extension_key_part) = strip_prefix(prefixed_extension_key_part); // Extension nodes have a prefix that needs to be removed.
+        assert((prefix == 0) | (prefix == 1), "Extension parity prefix must be 0 or 1");
+        
+        let curr_key_nibbles_part = Fragment::new(key_nibbles.offset + *key_ptr, extension_key_part.length, key_nibbles.data);
+        assert(extension_key_part == curr_key_nibbles_part, "Extension key part does not correspond to given key nibbles");
+        assert(node_rlp_list.fragments[1].length == HASH_LEN, "Expected a hash at the end of the extension node");
+
+        hash = Fragment::new(node_rlp_list.fragments[1].offset, HASH_LEN, node).focus();
+        *key_ptr += extension_key_part.length;
+
+    } else {
+        assert(false, "Invalid node type");
+    }
+
     hash.data
 }
 
@@ -81,8 +114,8 @@ pub fn assert_merkle_proof<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH
         proof.leaf
     ).focus();
 
-    let leaf_key_part = strip_prefix(prefixed_leaf_key_part);
-
+    let (prefix, leaf_key_part) = strip_prefix(prefixed_leaf_key_part);
+    assert((prefix == 2) | (prefix == 3), "Leaf parity prefix must be 2 or 3");
     assert(leaf_key_part == key_nibbles, "Key mismatch");
 
     assert(
