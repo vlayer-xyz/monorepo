@@ -10,3 +10,9 @@ fn success() {
     assert(sub_array_equals_up_to_length(arr, vec.storage(), 0, 5));
 }
 
+#[test(should_fail_with = "Array size exceeds bounded vector size")]
+fn fail() {
+    let arr = [1, 2, 3, 4, 5];
+    let _: BoundedVec <u8, 3> = bounded_vec_from_array(arr);
+}
+
