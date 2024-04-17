@@ -40,14 +40,6 @@ pub fn verify_header(
     block_header_partial: BlockHeaderPartial,
     block_header_rlp: BlockHeaderRlp
 ) {
-    assert(
-        sub_array_equals(
-            keccak256(block_header_rlp.data, block_header_rlp.length as u32),
-            block_header_partial.hash,
-            0
-        ), "block hash does not match"
-    );
-
     let header_rlp_list: RlpList<MAX_HEADER_FIELDS_COUNT> = decode_list(block_header_rlp.data);
     let expected_header_fields_count = get_header_fields_count(chain_id, block_header_partial.number as u64);
 
@@ -74,5 +66,13 @@ pub fn verify_header(
         "Receipts root",
         block_header_rlp.data,
         BoundedVec { storage: block_header_partial.receipts_root, len: HASH_LEN }
+    );
+
+    assert(
+        sub_array_equals(
+            keccak256(block_header_rlp.data, block_header_rlp.length as u32),
+            block_header_partial.hash,
+            0
+        ), "block hash does not match"
     );
 }
