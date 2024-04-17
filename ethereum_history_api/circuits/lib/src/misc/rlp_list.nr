@@ -1,6 +1,6 @@
 use crate::misc::fragment::Fragment;
 use crate::rlp::decode::{decode_to_rlp_header, copy_subarray, RlpHeader, LIST, STRING};
-use crate::rlp::rlp_fragment::RlpFragment;
+use crate::misc::rlp_fragment::RlpFragment;
 use crate::misc::bounded_vecs::bounded_vec_from_array;
 
 struct FragmentWithDataType<MAX_BYTES_LEN> {

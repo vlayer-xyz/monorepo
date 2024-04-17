@@ -1,4 +1,4 @@
-use crate::rlp::rlp_list::{RlpList, create_rlp_list, FragmentWithDataType};
+use crate::misc::rlp_list::{RlpList, create_rlp_list, FragmentWithDataType};
 use crate::misc::fragment::Fragment;
 use crate::rlp::decode::{LIST, STRING};
 
@@ -52,7 +52,7 @@ fn modify_rlp_list() {
 }
 
 mod decode_list {
-    use crate::rlp::rlp_list::{RlpList, decode_list};
+    use crate::misc::rlp_list::{RlpList, decode_list};
     use crate::rlp::decode::STRING;
 
     #[test]

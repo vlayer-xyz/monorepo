@@ -1,4 +1,5 @@
-use crate::rlp::{decode::{STRING, LIST}, rlp_fragment::RlpFragment};
+use crate::rlp::decode::{STRING, LIST};
+use crate::misc::rlp_fragment::RlpFragment;
 
 #[test]
 fn success_short() {
