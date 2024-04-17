@@ -55,23 +55,46 @@ mod strip_prefix {
 mod extract_hash {
 
     use crate::merkle_patricia_proofs::proof::extract_hash;
-    use crate::misc::fragment::Fragment;
-    use crate::fixtures::merkle_proofs::branch_then_leaf::nodes as fixture_nodes;
+    use crate::misc::{fragment::Fragment, bytes::bytes_to_nibbles};
+    use crate::fixtures::merkle_proofs::{
+        branch_then_leaf::{key as branch_key, nodes as branch_nodes},
+        extension_odd::{key as extension_odd_key, nodes as extension_odd_nodes}
+    };
 
-    global hash = [0x4d, 0xf3, 0xf1, 0x5d, 0xfc, 0x22, 0x96, 0x36, 0xc2, 0x7f, 0x5f, 0xfb, 0x66, 0x73, 0x0d, 0x90, 0x41, 0x23, 0xd3, 0xd8, 0xd6, 0xe3, 0xbc, 0xf0, 0x32, 0x5d, 0xf7, 0x1e, 0x13, 0xfb, 0xec, 0xbb];
+    global branch_hash = [0x4d, 0xf3, 0xf1, 0x5d, 0xfc, 0x22, 0x96, 0x36, 0xc2, 0x7f, 0x5f, 0xfb, 0x66, 0x73, 0x0d, 0x90, 0x41, 0x23, 0xd3, 0xd8, 0xd6, 0xe3, 0xbc, 0xf0, 0x32, 0x5d, 0xf7, 0x1e, 0x13, 0xfb, 0xec, 0xbb];
+    global extension_odd_hash = [0x60, 0xc1, 0xdf, 0x16, 0xda, 0x26, 0x84, 0x73, 0xae, 0xe6, 0xb0, 0x02, 0xca, 0xe7, 0x9c, 0xf9, 0x10, 0xd1, 0xfa, 0x0b, 0xc8, 0xc0, 0x66, 0x9a, 0xfa, 0x63, 0x1b, 0xae, 0xd0, 0xeb, 0x6f, 0x52];
     
     #[test]
     fn branch_node() {
-        let node = fixture_nodes[0];
-        let key_nibble = 0x0;
-        assert(extract_hash(node, Fragment::new_focused([key_nibble]), &mut 0) == hash);
+        let branch_node = branch_nodes[0];
+        let key_nibbles = bytes_to_nibbles(Fragment::new(3, 1, branch_key));
+        let mut key_ptr = 0;
+        assert(
+            extract_hash(branch_node, key_nibbles, &mut key_ptr) == branch_hash, "Incorrect hash extracted"
+        );
+        assert(key_ptr == 1, "Key pointer didn't advance correctly");
     }
 
     #[test(should_fail_with="Expected a hash at position given by the key nibble")]
     fn fail_branch_node() {
-        let node = fixture_nodes[0];
-        let key_nibble = 0x2;
-        assert(extract_hash(node, Fragment::new_focused([key_nibble]), &mut 0) == hash);
+        let branch_node = branch_nodes[0];
+        let mut altered_key_nibbles = bytes_to_nibbles(Fragment::new(3, 1, branch_key));
+        altered_key_nibbles.set(0, 0x2);
+        let mut key_ptr = 0;
+        assert(
+            extract_hash(branch_node, altered_key_nibbles, &mut key_ptr) == branch_hash, "Incorrect hash extracted"
+        );
+    }
+
+    #[test]
+    fn extension_node_odd() {
+        let extension_node = extension_odd_nodes[0];
+        let mut key_ptr = 0;
+        let key_nibbles = bytes_to_nibbles(Fragment::new(4, 2, extension_odd_key));
+        assert(
+            extract_hash(extension_node, key_nibbles, &mut key_ptr) == extension_odd_hash, "Incorrect hash extracted"
+        );
+        assert(key_ptr == 3, "Key pointer didn't advance correctly");
     }
 }
 

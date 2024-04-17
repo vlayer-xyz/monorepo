@@ -22,5 +22,19 @@ export const PROOF_FIXTURES: ProofFixtures = {
       { key: '0x01', value: BIG_VALUE },
       { key: '0x11', value: BIG_VALUE }
     ]
+  },
+  extension_odd: {
+    key: '0x123a',
+    keyValuePairs: [
+      { key: '0x123a', value: BIG_VALUE },
+      { key: '0x123b', value: BIG_VALUE }
+    ]
+  },
+  extension_even: {
+    key: '0x1234a',
+    keyValuePairs: [
+      { key: '0x1234a', value: BIG_VALUE },
+      { key: '0x1234b', value: BIG_VALUE }
+    ]
   }
 };
