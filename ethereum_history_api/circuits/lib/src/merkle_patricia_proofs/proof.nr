@@ -57,8 +57,8 @@ pub fn assert_merkle_proof<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH
     root: Bytes32,
     proof: Proof<MAX_DEPTH, MAX_LEAF_LEN>
 ) {
-    let (key_right_padded, key_len) = right_pad(key);
-    let key_nibbles = bytes_to_nibbles(Fragment::new_with_length(key_len, key_right_padded));
+    let key = right_pad(key);
+    let key_nibbles = bytes_to_nibbles(Fragment::new_with_length(key.len, key.storage));
 
     let leaf_rlp_list: RlpList<2> = decode_list_of_small_strings(proof.leaf);
     assert(leaf_rlp_list.num_fields == 2, "Leaf expected to have 2 fields");

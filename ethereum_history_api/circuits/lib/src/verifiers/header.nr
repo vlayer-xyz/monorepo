@@ -48,17 +48,17 @@ pub fn verify_header(
 
     // We use u40 for block number because even if block time is 1s - it would take 34865 years to reach u40
     let block_number = u64_to_u8(block_header_partial.number as u64);
-    let (block_number, block_number_length) = byte_value(block_number);
+    let block_number = byte_value(block_number);
 
     assert(
-        header_rlp_list.fragments[BLOCK_NUM_INDEX].length == block_number_length, "block number length does not match"
+        header_rlp_list.fragments[BLOCK_NUM_INDEX].length == block_number.len, "block number length does not match"
     );
     assert(
         sub_array_equals_up_to_length(
-            block_number,
+            block_number.storage,
             block_header_rlp.data,
             header_rlp_list.fragments[BLOCK_NUM_INDEX].offset,
-            block_number_length as u64
+            block_number.len
         ), "block number does not match"
     );
     assert(

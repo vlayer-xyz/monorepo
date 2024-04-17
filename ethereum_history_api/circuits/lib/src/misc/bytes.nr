@@ -45,12 +45,12 @@ pub fn nibbles_to_bytes<BYTES_LEN, NIB_LEN>(nibbles: [u8; NIB_LEN]) -> [u8; BYTE
     bytes
 }
 
-pub fn right_pad<N>(arr: [u8; N]) -> ([u8; N], u64) {
+pub fn right_pad<N>(arr: [u8; N]) -> BoundedVec<u8, N> {
     byte_value(arr)
 }
 
 pub fn left_to_right_padding<N>(nibbles: [u8; N]) -> ([u8; N], u64) {
-    let (mut shifted, mut len) = right_pad(nibbles);
+    let mut BoundedVec {storage: shifted, len} = right_pad(nibbles);
     if (len % 2 == 1) {
         shift_right_by_one(&mut shifted);
         len += 1;
@@ -97,7 +97,7 @@ pub(crate) fn left_byte_shift<N>(input: [u8; N], n: u64) -> [u8; N] {
 ///
 /// # Arguments
 /// * `in_value` - Byte array representing a number in big-endian form.
-pub(crate) fn byte_value<N>(in_value: [u8; N]) -> ([u8; N], u64) {
+pub(crate) fn byte_value<N>(in_value: [u8; N]) -> BoundedVec<u8, N> {
     let mut value_length = 0;
 
     for i in 0..N {
@@ -108,5 +108,5 @@ pub(crate) fn byte_value<N>(in_value: [u8; N]) -> ([u8; N], u64) {
 
     let value = left_byte_shift(in_value, N - value_length);
 
-    (value, value_length)
+    BoundedVec { storage: value, len: value_length }
 }

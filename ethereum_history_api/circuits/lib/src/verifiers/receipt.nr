@@ -47,7 +47,7 @@ pub fn verify_receipt<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN>(
     receipt_root: [u8; HASH_LENGTH]
 ) {
     assert_tx_idx_equals(key_as_nibbles(receipt_proof.key), tx_idx);
-    let (value, _) = byte_value(receipt_proof.value);
+    let value = byte_value(receipt_proof.value).storage;
     assert_receipt_equals(block_number, tx_type, value, receipt);
     assert_receipt_proof(receipt_proof, receipt_root);
 }

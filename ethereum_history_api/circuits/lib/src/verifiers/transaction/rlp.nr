@@ -1,6 +1,6 @@
 use crate::{verifiers::transaction::MAX_TX_RLP_LENGTH, transaction::{TxType, TxPartial}};
 use crate::rlp::decode::{RlpList, decode_list};
-use crate::misc::{types::{PaddedValue, ADDRESS_LENGTH, U128_LENGTH}, bytes::byte_value};
+use crate::misc::{types::{ADDRESS_LENGTH, U128_LENGTH}, bytes::byte_value};
 use dep::u2b::u64_to_u8;
 use dep::proof::const::HASH_LENGTH;
 
@@ -32,19 +32,20 @@ pub(crate) fn assert_tx_rlp_equals<MAX_DATA_LEN>(
     assert(num_fields == field_count, "Invalid number of fields in tx RLP");
 
     let nonce = u64_to_u8(tx.nonce);
-    fragments[nonce_idx].assert_string_eq("Nonce", tx_rlp, Into::into(byte_value(nonce)));
+    fragments[nonce_idx].assert_string_eq("Nonce", tx_rlp, byte_value(nonce));
 
     let gas_limit = u64_to_u8(tx.gas_limit);
-    fragments[gas_limit_idx].assert_string_eq("Gas limit", tx_rlp, Into::into(byte_value(gas_limit)));
+    fragments[gas_limit_idx].assert_string_eq("Gas limit", tx_rlp, byte_value(gas_limit));
 
     if (tx.to.is_some()) {
         fragments[to_idx].assert_string_eq(
             "To",
             tx_rlp,
-            Into::into((tx.to.expect(f"to is missing"), ADDRESS_LENGTH))
+            BoundedVec { storage: tx.to.expect(f"to is missing"), len: ADDRESS_LENGTH }
         );
     } else {
-        fragments[to_idx].assert_string_eq("To", tx_rlp, PaddedValue::zero());
+        let zero: BoundedVec<u8, 0> = BoundedVec::new();
+        fragments[to_idx].assert_string_eq("To", tx_rlp, zero);
     }
 
     fragments[to_idx + 1].assert_string_eq(
@@ -55,7 +56,7 @@ pub(crate) fn assert_tx_rlp_equals<MAX_DATA_LEN>(
 
     fragments[to_idx + 2].assert_string_eq("Data", tx_rlp, tx.data);
 
-    fragments[signature_idx].assert_string_eq("V", tx_rlp, Into::into(byte_value([tx.v as u8])));
-    fragments[signature_idx + 1].assert_string_eq("R", tx_rlp, Into::into((tx.r, HASH_LENGTH)));
-    fragments[signature_idx + 2].assert_string_eq("S", tx_rlp, Into::into((tx.s, HASH_LENGTH)));
+    fragments[signature_idx].assert_string_eq("V", tx_rlp, byte_value([tx.v as u8]));
+    fragments[signature_idx + 1].assert_string_eq("R", tx_rlp, BoundedVec { storage: tx.r, len: HASH_LENGTH });
+    fragments[signature_idx + 2].assert_string_eq("S", tx_rlp, BoundedVec { storage: tx.s, len: HASH_LENGTH });
 }

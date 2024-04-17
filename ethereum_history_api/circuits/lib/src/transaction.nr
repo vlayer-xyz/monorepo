@@ -1,4 +1,4 @@
-use crate::misc::{types::{Bytes32, Address, PaddedValue}, option::make_option};
+use crate::misc::{types::{Bytes32, Address}, option::make_option};
 use dep::std::unsafe::zeroed;
 use dep::proof::transaction_proof::TransactionProof;
 
@@ -12,7 +12,7 @@ struct TxPartial<MAX_DATA_LEN> {
     gas_limit: u64,
     to: Option<Address>,
     value: U128,
-    data: PaddedValue<MAX_DATA_LEN>,
+    data: BoundedVec<u8, MAX_DATA_LEN>,
     v: Field,  // ECDSA recovery id
     r: Bytes32,  // ECDSA signature part
     s: Bytes32,  // ECDSA signature part
@@ -81,7 +81,7 @@ unconstrained fn get_transaction_unconstrained<MAX_DATA_LEN, MAX_PROOF_LEN, MAX_
         gas_limit: transaction.gas_limit,
         to: make_option(transaction.to, transaction.to_is_some),
         value: U128::from_integer(transaction.value),
-        data: PaddedValue::new(transaction.data, transaction.data_len),
+        data: BoundedVec { storage: transaction.data, len: transaction.data_len },
         v: transaction.v,
         r: transaction.r,
         s: transaction.s

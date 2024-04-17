@@ -40,7 +40,7 @@ pub fn verify_tx<MAX_DATA_LEN, MAX_PROOF_LEN, MAX_ENCODED_TX_LEN>(
     tx_root: [u8; HASH_LENGTH]
 ) {
     assert_tx_idx_equals(key_as_nibbles(tx_proof.key), tx_idx);
-    let (value, _) = byte_value(tx_proof.value);
+    let value = byte_value(tx_proof.value).storage;
     assert_tx_equals(tx_type, value, tx);
     assert_tx_proof(tx_proof, tx_root);
 }

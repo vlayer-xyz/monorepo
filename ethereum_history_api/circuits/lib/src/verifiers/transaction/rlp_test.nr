@@ -3,7 +3,7 @@ use crate::fixtures::mainnet::{
     cancun::transfer::transaction::{transaction as eip1559_tx, tx_type as eip1559_tx_type, tx_rlp as eip1559_tx_rlp}
 };
 use crate::verifiers::transaction::rlp::assert_tx_rlp_equals;
-use crate::misc::{types::PaddedValue, arrays::{alter_array, resize}};
+use crate::misc::{arrays::{alter_array, resize}};
 use dep::std::wrapping_add;
 
 #[test]
@@ -67,7 +67,7 @@ fn invalid_value_value() {
 #[test(should_fail_with="Data: Invalid RLP length")]
 fn invalid_data_length() {
     let mut tx = eip1559_tx;
-    tx.data.length += 1;
+    tx.data.len += 1;
     assert_tx_rlp_equals(eip1559_tx_rlp, eip1559_tx_type, tx);
 }
 
