@@ -33,15 +33,15 @@ pub fn decode_list<MAX_BYTES_LEN, MAX_FIELDS>(input: [u8; MAX_BYTES_LEN]) -> Rlp
         if (current_offset < total_len) {
             let header: [u8; MAX_BYTES_LEN] = copy_subarray(input, current_offset);
 
-            let RlpHeader {offset: field_off, length: field_len, data_type: field_type} = decode_to_rlp_header(header);
+            let RlpHeader {offset: field_off, length: field_len, data_type} = decode_to_rlp_header(header);
 
-            let mut fragment: FragmentWithDataType<MAX_BYTES_LEN> = FragmentWithDataType {
+            let fragment = FragmentWithDataType {
                 fragment: Fragment {
-                    offset: current_offset + (1 - field_type) * field_off, // If the ith slot contains a list, include its RLP header.
-                    length: field_len + field_type * field_off, // If the ith slot contains a list, include the length of its header.
+                    offset: current_offset + (1 - data_type) * field_off, // If the ith slot contains a list, include its RLP header.
+                    length: field_len + data_type * field_off, // If the ith slot contains a list, include the length of its header.
                     data: input
                 },
-                data_type: field_type
+                data_type
             };
             rlp_list.push(fragment);
 
