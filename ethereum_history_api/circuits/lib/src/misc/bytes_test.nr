@@ -180,7 +180,7 @@ mod byte_value {
     #[test]
     fn small() {
         let actual = byte_value([0, 0, 0, 1, 2, 3]);
-        
+
         assert_eq(actual.len, 3);
         assert_eq(actual.storage, [1, 2, 3, 0, 0, 0]);
     }
