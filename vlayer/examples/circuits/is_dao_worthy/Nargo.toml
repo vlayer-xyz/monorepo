@@ -5,4 +5,4 @@ compiler_version = ">=0.26.0"
 
 [dependencies]
 ethereum_history_api = { path = "../../../../ethereum_history_api/circuits/lib" }
-token = { path = "../lib" }
+token = { path = "../../../ethereum/circuits/lib" }
