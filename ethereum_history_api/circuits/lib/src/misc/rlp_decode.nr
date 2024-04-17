@@ -1,4 +1,5 @@
-use crate::misc::rlp_list::{RlpList, FragmentWithDataType};
+use crate::misc::rlp_list::RlpList;
+use crate::misc::rlp_fragment::RlpFragment;
 use crate::misc::fragment::Fragment;
 use crate::rlp::decode::{RlpHeader, decode_to_rlp_header, LIST, copy_subarray, STRING};
 
@@ -22,7 +23,7 @@ pub fn decode_list<MAX_BYTES_LEN, MAX_FIELDS>(input: [u8; MAX_BYTES_LEN]) -> Rlp
 
             let RlpHeader {offset: field_off, length: field_len, data_type} = decode_to_rlp_header(header);
 
-            let fragment = FragmentWithDataType {
+            let fragment = RlpFragment {
                 fragment: Fragment {
                     offset: current_offset + (1 - data_type) * field_off, // If the ith slot contains a list, include its RLP header.
                     length: field_len + data_type * field_off, // If the ith slot contains a list, include the length of its header.

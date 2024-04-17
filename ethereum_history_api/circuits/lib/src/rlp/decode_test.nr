@@ -104,7 +104,7 @@ mod decode_string {
 }
 
 mod decode_list {
-    use crate::rlp::decode::{decode_list, RlpList, STRING, RlpFragment};
+    use crate::rlp::decode::{decode_list, RlpList, STRING, RlpFragmentOld};
 
     #[test]
     fn empty() {
@@ -117,10 +117,10 @@ mod decode_list {
         let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0]; // ["0x636174","0x646f68","0x00"]
         let expected = RlpList {
             fragments: [
-                RlpFragment { offset: 2, length: 3, data_type: STRING },
-                RlpFragment { offset: 6, length: 3, data_type: STRING },
-                RlpFragment { offset: 9, length: 1, data_type: STRING },
-                RlpFragment { offset: 0, length: 0, data_type: STRING }
+                RlpFragmentOld { offset: 2, length: 3, data_type: STRING },
+                RlpFragmentOld { offset: 6, length: 3, data_type: STRING },
+                RlpFragmentOld { offset: 9, length: 1, data_type: STRING },
+                RlpFragmentOld { offset: 0, length: 0, data_type: STRING }
             ],
             num_fields: 3
         };
@@ -147,7 +147,7 @@ mod decode_list {
 }
 
 mod decode_list_of_small_strings {
-    use crate::rlp::decode::{decode_list_of_small_strings, RlpList, RlpFragment, STRING};
+    use crate::rlp::decode::{decode_list_of_small_strings, RlpList, RlpFragmentOld, STRING};
 
     #[test]
     fn success_empty_list() {
@@ -162,9 +162,9 @@ mod decode_list_of_small_strings {
         let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13]; //["0x636174","0x646f68","0x13"]
         let expected = RlpList {
             fragments: [
-                RlpFragment { offset: 2, length: 3, data_type: STRING },
-                RlpFragment { offset: 6, length: 3, data_type: STRING },
-                RlpFragment { offset: 9, length: 1, data_type: STRING }
+                RlpFragmentOld { offset: 2, length: 3, data_type: STRING },
+                RlpFragmentOld { offset: 6, length: 3, data_type: STRING },
+                RlpFragmentOld { offset: 9, length: 1, data_type: STRING }
             ],
             num_fields: 3
         };
@@ -177,10 +177,10 @@ mod decode_list_of_small_strings {
         let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13]; // ["0x636174","0x646f68","0x13"]
         let expected = RlpList {
             fragments: [
-                RlpFragment { offset: 2, length: 3, data_type: STRING },
-                RlpFragment { offset: 6, length: 3, data_type: STRING },
-                RlpFragment { offset: 9, length: 1, data_type: STRING },
-                RlpFragment { offset: 0, length: 0, data_type: STRING }
+                RlpFragmentOld { offset: 2, length: 3, data_type: STRING },
+                RlpFragmentOld { offset: 6, length: 3, data_type: STRING },
+                RlpFragmentOld { offset: 9, length: 1, data_type: STRING },
+                RlpFragmentOld { offset: 0, length: 0, data_type: STRING }
             ],
             num_fields: 3
         };

@@ -1,5 +1,5 @@
 use dep::std::wrapping_sub;
-use crate::misc::rlp_fragment::RlpFragment;
+use crate::misc::{arrays::sub_array_equals_up_to_length, types::PaddedValue};
 
 /// Max number of bytes required to represent length of a string or list
 global MAX_LEN_IN_BYTES: u64 = 2;
@@ -20,8 +20,41 @@ impl Eq for RlpHeader {
     }
 }
 
+struct RlpFragmentOld {
+    offset: u64,
+    length: u64,    
+    data_type: u64 // STRING or LIST
+}
+
+impl RlpFragmentOld {
+    fn assert_string_eq<FIELD_NAME_LEN, MAX_RLP_LEN, MAX_VALUE_LEN>(
+        self,
+        field_name: str<FIELD_NAME_LEN>,
+        rlp: [u8; MAX_RLP_LEN],
+        value: PaddedValue<MAX_VALUE_LEN>
+    ) {
+        assert(self.data_type == STRING, f"{field_name}: Invalid RLP type");
+        assert(self.length == value.length, f"{field_name}: Invalid RLP length");
+        assert(
+            sub_array_equals_up_to_length(value.value, rlp, self.offset, value.length), f"{field_name}: Invalid RLP value"
+        );
+    }
+}
+
+impl Default for RlpFragmentOld {
+    fn default() -> Self {
+        RlpFragmentOld { offset: 0, length: 0, data_type: 0 }
+    }
+}
+
+impl Eq for RlpFragmentOld {
+    fn eq(self, other: Self) -> bool {
+        (self.offset == other.offset) & (self.length == other.length) & (self.data_type == other.data_type)
+    }
+}
+
 struct RlpList<NUM_FIELDS> {
-    fragments: [RlpFragment; NUM_FIELDS],
+    fragments: [RlpFragmentOld; NUM_FIELDS],
     num_fields: u64
 }
 
@@ -101,7 +134,7 @@ pub fn decode_string<N>(input: [u8; N]) -> (u64, u64) {
 ///   of a list element points to the RLP header of that element.
 pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
     let mut num_fields: u64 = 0;
-    let mut fragments = [RlpFragment::default(); NUM_FIELDS];
+    let mut fragments = [RlpFragmentOld::default(); NUM_FIELDS];
 
     let RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
     assert(data_type == LIST, "Expected a list");
@@ -133,7 +166,7 @@ pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
 /// Returns an RLP list look-up table.
 pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
     let mut num_fields: u64 = 0;
-    let mut fragments = [RlpFragment::default(); NUM_FIELDS];
+    let mut fragments = [RlpFragmentOld::default(); NUM_FIELDS];
 
     let RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
     assert(data_type == LIST, "Expected a list");

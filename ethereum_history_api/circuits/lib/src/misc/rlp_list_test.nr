@@ -1,9 +1,10 @@
-use crate::misc::rlp_list::{RlpList, create_rlp_list, FragmentWithDataType};
+use crate::misc::rlp_list::{RlpList, create_rlp_list};
+use crate::misc::rlp_fragment::RlpFragment;
 use crate::misc::fragment::Fragment;
 use crate::rlp::decode::{LIST, STRING};
 
 global fragments = [
-    FragmentWithDataType { 
+    RlpFragment { 
       fragment: Fragment {
         data: [1, 2, 3], 
         offset: 0, 
@@ -11,7 +12,7 @@ global fragments = [
       }, 
       data_type: LIST
     },
-    FragmentWithDataType { 
+    RlpFragment { 
       fragment: Fragment {
         data: [4, 5, 6], 
         offset: 2, 
@@ -19,7 +20,7 @@ global fragments = [
       }, 
       data_type: STRING
     },
-    FragmentWithDataType { 
+    RlpFragment { 
       fragment: Fragment {
         data: [7, 8, 9], 
         offset: 0, 
