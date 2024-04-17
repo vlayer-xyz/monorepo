@@ -23,46 +23,18 @@ pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_ST
     let balance = U128::from_integer(account.balance).to_be_bytes();
     let balance = byte_value(balance);
 
-    assert(account_rlp_list.fragments[NONCE_INDEX].length == nonce.len, "Nonce length mismatch");
-    assert(
-        sub_array_equals_up_to_length(
-            nonce.storage,
-            account_rlp_right_padded,
-            account_rlp_list.fragments[NONCE_INDEX].offset,
-            nonce.len
-        ), "Nonce mismatch"
-    );
+    account_rlp_list.fragments[NONCE_INDEX].assert_string_eq("Nonce", account_rlp_right_padded, nonce);
+    account_rlp_list.fragments[BALANCE_INDEX].assert_string_eq("Balance", account_rlp_right_padded, balance);
 
-    assert(account_rlp_list.fragments[BALANCE_INDEX].length == balance.len, "Balance length mismatch");
-    assert(
-        sub_array_equals_up_to_length(
-            balance.storage,
-            account_rlp_right_padded,
-            account_rlp_list.fragments[BALANCE_INDEX].offset,
-            balance.len
-        ), "Balance mismatch"
+    account_rlp_list.fragments[STORAGE_ROOT_INDEX].assert_string_eq(
+        "Storage root",
+        account_rlp_right_padded,
+        BoundedVec { storage: account.storage_root, len: HASH_LEN }
     );
-
-    assert(
-        account_rlp_list.fragments[STORAGE_ROOT_INDEX].length == HASH_LEN, "Storage root length mismatch"
-    );
-    assert(
-        sub_array_equals_up_to_length(
-            account.storage_root,
-            account_rlp_right_padded,
-            account_rlp_list.fragments[STORAGE_ROOT_INDEX].offset,
-            HASH_LEN as u64
-        ), "Storage root mismatch"
-    );
-
-    assert(account_rlp_list.fragments[CODE_HASH_INDEX].length == HASH_LEN, "Code hash length mismatch");
-    assert(
-        sub_array_equals_up_to_length(
-            account.code_hash,
-            account_rlp_right_padded,
-            account_rlp_list.fragments[CODE_HASH_INDEX].offset,
-            HASH_LEN as u64
-        ), "Code hash mismatch"
+    account_rlp_list.fragments[CODE_HASH_INDEX].assert_string_eq(
+        "Code hash",
+        account_rlp_right_padded,
+        BoundedVec { storage: account.code_hash, len: HASH_LEN }
     );
 }
 

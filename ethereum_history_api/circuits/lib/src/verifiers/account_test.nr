@@ -17,8 +17,7 @@ fn test_assert_account_equals() {
 
 global RLP_SHORT_STRING_TYPE = 0x80;
 
-// TODO: Add correct assertion message when noir-trie-proofs is updated
-#[test(should_fail)]
+#[test(should_fail_with = "Expected a list")]
 fn test_account_rlp_invalid_type() {
     let mut rlp_empty_string_encoding = [0; MAX_ACCOUNT_STATE_LENGTH];
     rlp_empty_string_encoding[MAX_ACCOUNT_STATE_LENGTH - 1] = RLP_SHORT_STRING_TYPE;
@@ -36,42 +35,42 @@ fn test_account_rlp_invalid_field_count() {
     )
 }
 
-#[test(should_fail_with = "Nonce length mismatch")]
+#[test(should_fail_with = "Nonce: Invalid RLP length")]
 fn test_assert_account_equals_nonce_with_wrong_length() {
     let nonce_with_wrong_length = 0;
     let account = Account { nonce: nonce_with_wrong_length, balance, storage_root, code_hash };
     assert_account_equals(rlp_encoded_left_padded_account, account);
 }
 
-#[test(should_fail_with = "Nonce mismatch")]
+#[test(should_fail_with = "Nonce: Invalid RLP value")]
 fn test_assert_account_equals_nonce_with_wrong_value() {
     let nonce_with_wrong_value = nonce + 1;
     let account = Account { nonce: nonce_with_wrong_value, balance, storage_root, code_hash };
     assert_account_equals(rlp_encoded_left_padded_account, account);
 }
 
-#[test(should_fail_with = "Balance length mismatch")]
+#[test(should_fail_with = "Balance: Invalid RLP length")]
 fn test_assert_account_equals_balance_with_wrong_length() {
     let balance_with_wrong_length = 0;
     let account = Account { nonce, balance: balance_with_wrong_length, storage_root, code_hash };
     assert_account_equals(rlp_encoded_left_padded_account, account);
 }
 
-#[test(should_fail_with = "Balance mismatch")]
+#[test(should_fail_with = "Balance: Invalid RLP value")]
 fn test_assert_account_equals_balance_with_wrong_value() {
     let balance_with_wrong_value = balance + 1;
     let account = Account { nonce, balance: balance_with_wrong_value, storage_root, code_hash };
     assert_account_equals(rlp_encoded_left_padded_account, account);
 }
 
-#[test(should_fail_with = "Storage root mismatch")]
+#[test(should_fail_with = "Storage root: Invalid RLP value")]
 fn test_assert_account_equals_storage_root_with_wrong_value() {
     let storage_root_with_wrong_value = alter_array(storage_root);
     let account = Account { nonce, balance, storage_root: storage_root_with_wrong_value, code_hash };
     assert_account_equals(rlp_encoded_left_padded_account, account);
 }
 
-#[test(should_fail_with = "Code hash mismatch")]
+#[test(should_fail_with = "Code hash: Invalid RLP value")]
 fn test_assert_account_equals_code_hash_with_wrong_value() {
     let code_hash_with_wrong_value = alter_array(code_hash);
     let account = Account { nonce, balance, storage_root, code_hash: code_hash_with_wrong_value };
