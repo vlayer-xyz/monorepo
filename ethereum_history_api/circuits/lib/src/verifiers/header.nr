@@ -47,7 +47,6 @@ pub fn verify_header(
         expected_header_fields_count == header_rlp_list.num_fields, "number of header RLP fields does not match"
     );
 
-    // We use u40 for block number because even if block time is 1s - it would take 34865 years to reach u40
     let block_number = u64_to_u8(block_header_partial.number as u64);
     let block_number = byte_value(block_number);
 
