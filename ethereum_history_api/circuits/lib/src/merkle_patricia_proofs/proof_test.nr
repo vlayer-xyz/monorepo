@@ -58,14 +58,15 @@ mod extract_hash {
     use crate::misc::{fragment::Fragment, bytes::bytes_to_nibbles};
     use crate::fixtures::merkle_proofs::{
         branch_then_leaf::{key as branch_key, nodes as branch_nodes},
-        extension_odd::{key as extension_odd_key, nodes as extension_odd_nodes}
+        extension_odd::{key as extension_odd_key, nodes as extension_odd_nodes},
+        extension_even::{key as extension_even_key, nodes as extension_even_nodes}
     };
 
     global branch_hash = [0x4d, 0xf3, 0xf1, 0x5d, 0xfc, 0x22, 0x96, 0x36, 0xc2, 0x7f, 0x5f, 0xfb, 0x66, 0x73, 0x0d, 0x90, 0x41, 0x23, 0xd3, 0xd8, 0xd6, 0xe3, 0xbc, 0xf0, 0x32, 0x5d, 0xf7, 0x1e, 0x13, 0xfb, 0xec, 0xbb];
-    global extension_odd_hash = [0x60, 0xc1, 0xdf, 0x16, 0xda, 0x26, 0x84, 0x73, 0xae, 0xe6, 0xb0, 0x02, 0xca, 0xe7, 0x9c, 0xf9, 0x10, 0xd1, 0xfa, 0x0b, 0xc8, 0xc0, 0x66, 0x9a, 0xfa, 0x63, 0x1b, 0xae, 0xd0, 0xeb, 0x6f, 0x52];
-    
+    global extension_hash = [0x60, 0xc1, 0xdf, 0x16, 0xda, 0x26, 0x84, 0x73, 0xae, 0xe6, 0xb0, 0x02, 0xca, 0xe7, 0x9c, 0xf9, 0x10, 0xd1, 0xfa, 0x0b, 0xc8, 0xc0, 0x66, 0x9a, 0xfa, 0x63, 0x1b, 0xae, 0xd0, 0xeb, 0x6f, 0x52];
+
     #[test]
-    fn branch_node() {
+    fn branch() {
         let branch_node = branch_nodes[0];
         let key_nibbles = bytes_to_nibbles(Fragment::new(3, 1, branch_key));
         let mut key_ptr = 0;
@@ -76,7 +77,7 @@ mod extract_hash {
     }
 
     #[test(should_fail_with="Expected a hash at position given by the key nibble")]
-    fn fail_branch_node() {
+    fn fail_branch() {
         let branch_node = branch_nodes[0];
         let mut altered_key_nibbles = bytes_to_nibbles(Fragment::new(3, 1, branch_key));
         altered_key_nibbles.set(0, 0x2);
@@ -87,14 +88,25 @@ mod extract_hash {
     }
 
     #[test]
-    fn extension_node_odd() {
+    fn extension_odd() {
         let extension_node = extension_odd_nodes[0];
         let mut key_ptr = 0;
         let key_nibbles = bytes_to_nibbles(Fragment::new(4, 2, extension_odd_key));
         assert(
-            extract_hash(extension_node, key_nibbles, &mut key_ptr) == extension_odd_hash, "Incorrect hash extracted"
+            extract_hash(extension_node, key_nibbles, &mut key_ptr) == extension_hash, "Incorrect hash extracted"
         );
         assert(key_ptr == 3, "Key pointer didn't advance correctly");
+    }
+
+    #[test]
+    fn extension_even() {
+        let extension_node = extension_even_nodes[1];
+        let mut key_ptr = 1;
+        let key_nibbles = bytes_to_nibbles(Fragment::new(5, 3, extension_even_key));
+        assert(
+            extract_hash(extension_node, key_nibbles, &mut key_ptr) == extension_hash, "Incorrect hash extracted"
+        );
+        assert(key_ptr == 5, "Key pointer didn't advance correctly");
     }
 }
 

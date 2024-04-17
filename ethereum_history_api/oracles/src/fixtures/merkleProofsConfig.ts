@@ -31,10 +31,11 @@ export const PROOF_FIXTURES: ProofFixtures = {
     ]
   },
   extension_even: {
-    key: '0x1234a',
+    key: '0xa1234a',
     keyValuePairs: [
-      { key: '0x1234a', value: BIG_VALUE },
-      { key: '0x1234b', value: BIG_VALUE }
+      { key: '0xa1234a', value: BIG_VALUE },
+      { key: '0xa1234b', value: BIG_VALUE },
+      { key: '0xb00000', value: BIG_VALUE }
     ]
   }
 };
