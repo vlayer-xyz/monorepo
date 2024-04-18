@@ -69,9 +69,15 @@ mod decode_list_of_small_strings {
         let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13]; //["0x636174","0x646f68","0x13"]
         let rlp_list: RlpList<10, 5> = decode_list_of_small_strings(rlp);
         assert_eq(rlp_list.len(), 3);
-        assert_eq(rlp_list.get(0), RlpFragment { fragment: Fragment {offset: 2, length: 3, data: rlp}, data_type: STRING });
-        assert_eq(rlp_list.get(1), RlpFragment { fragment: Fragment {offset: 6, length: 3, data: rlp}, data_type: STRING });
-        assert_eq(rlp_list.get(2), RlpFragment { fragment: Fragment {offset: 9, length: 1, data: rlp}, data_type: STRING });
+        assert_eq(
+            rlp_list.get(0), RlpFragment { fragment: Fragment { offset: 2, length: 3, data: rlp }, data_type: STRING }
+        );
+        assert_eq(
+            rlp_list.get(1), RlpFragment { fragment: Fragment { offset: 6, length: 3, data: rlp }, data_type: STRING }
+        );
+        assert_eq(
+            rlp_list.get(2), RlpFragment { fragment: Fragment { offset: 9, length: 1, data: rlp }, data_type: STRING }
+        );
     }
 
     #[test]
@@ -79,9 +85,15 @@ mod decode_list_of_small_strings {
         let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13]; // ["0x636174","0x646f68","0x13"]
         let rlp_list: RlpList<10, 5> = decode_list_of_small_strings(rlp);
         assert_eq(rlp_list.len(), 3);
-        assert_eq(rlp_list.get(0), RlpFragment { fragment: Fragment {offset: 2, length: 3, data: rlp}, data_type: STRING });
-        assert_eq(rlp_list.get(1), RlpFragment { fragment: Fragment {offset: 6, length: 3, data: rlp}, data_type: STRING });
-        assert_eq(rlp_list.get(2), RlpFragment { fragment: Fragment {offset: 9, length: 1, data: rlp}, data_type: STRING });
+        assert_eq(
+            rlp_list.get(0), RlpFragment { fragment: Fragment { offset: 2, length: 3, data: rlp }, data_type: STRING }
+        );
+        assert_eq(
+            rlp_list.get(1), RlpFragment { fragment: Fragment { offset: 6, length: 3, data: rlp }, data_type: STRING }
+        );
+        assert_eq(
+            rlp_list.get(2), RlpFragment { fragment: Fragment { offset: 9, length: 1, data: rlp }, data_type: STRING }
+        );
     }
 
     #[test(should_fail_with="Inconsistent rlp length")]
@@ -236,9 +248,15 @@ mod decode_list {
 
         let decoded: RlpList<10, 3> = decode_list(rlp);
         assert_eq(decoded.len(), 3);
-        assert_eq(decoded.get(0), RlpFragment {fragment: Fragment {offset: 2, length: 3, data: rlp}, data_type: STRING});
-        assert_eq(decoded.get(1), RlpFragment {fragment: Fragment {offset: 6, length: 3, data: rlp}, data_type: STRING});
-        assert_eq(decoded.get(2), RlpFragment {fragment: Fragment {offset: 9, length: 1, data: rlp}, data_type: STRING});
+        assert_eq(
+            decoded.get(0), RlpFragment { fragment: Fragment { offset: 2, length: 3, data: rlp }, data_type: STRING }
+        );
+        assert_eq(
+            decoded.get(1), RlpFragment { fragment: Fragment { offset: 6, length: 3, data: rlp }, data_type: STRING }
+        );
+        assert_eq(
+            decoded.get(2), RlpFragment { fragment: Fragment { offset: 9, length: 1, data: rlp }, data_type: STRING }
+        );
     }
 
     #[test(should_fail_with = "Expected a list")]

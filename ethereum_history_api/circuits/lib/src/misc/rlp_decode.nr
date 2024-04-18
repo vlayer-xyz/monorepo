@@ -81,11 +81,7 @@ pub fn decode_list_of_small_strings<MAX_BYTES_LEN, MAX_FIELDS>(input: [u8; MAX_B
             let (field_off, field_len) = get_small_string_offset_and_length(first_byte);
 
             let fragment = RlpFragment {
-                fragment: Fragment {
-                    offset: current_offset + field_off,
-                    length: field_len,
-                    data: input
-                },
+                fragment: Fragment { offset: current_offset + field_off, length: field_len, data: input },
                 data_type: STRING
             };
             rlp_list.push(fragment);
