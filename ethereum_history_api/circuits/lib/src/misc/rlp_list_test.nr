@@ -1,7 +1,7 @@
 use crate::misc::rlp_list::{RlpList, create_rlp_list};
 use crate::misc::rlp_fragment::RlpFragment;
 use crate::misc::fragment::Fragment;
-use crate::rlp::decode::{LIST, STRING};
+use crate::misc::rlp_decode::{LIST, STRING};
 
 global fragments = [
     RlpFragment { 

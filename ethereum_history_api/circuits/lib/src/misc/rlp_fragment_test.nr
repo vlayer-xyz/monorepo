@@ -1,4 +1,4 @@
-use crate::rlp::decode::{STRING, LIST};
+use crate::misc::rlp_decode::{STRING, LIST};
 use crate::misc::rlp_fragment::RlpFragment;
 use crate::misc::fragment::Fragment;
 

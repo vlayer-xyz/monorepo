@@ -1,5 +1,5 @@
 use crate::misc::fragment::Fragment;
-use crate::rlp::decode::STRING;
+use crate::misc::rlp_decode::STRING;
 use crate::misc::types::PaddedValue;
 use crate::misc::arrays::sub_array_equals_up_to_length;
 
