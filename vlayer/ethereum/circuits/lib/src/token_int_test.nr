@@ -28,7 +28,7 @@ mod test_ERC20Token {
         ];
         let block_number = 19000000;
         let balance = usdc_token.get_balance(circle_address, block_number);
-        let expected_usdc_balnce_of_circle = 125761774888720;
+        let expected_usdc_balnce_of_circle = U128::from_integer(125761774888720);
         assert_eq(expected_usdc_balnce_of_circle, balance);
     }
 }
