@@ -7,8 +7,8 @@ use dep::std::hash::keccak256;
 
 global MAX_NODE_LEN = 532;
 global MAX_NODE_FIELDS = 17;
-global BRANCH_NODE = 17;
-global EXTENSION_NODE = 2;
+global BRANCH_NODE_NUM_FIELDS = 17;
+global EXTENSION_NODE_NUM_FIELDS = 2;
 global EVEN = 0;
 global ODD = 1;
 
@@ -104,9 +104,9 @@ pub fn extract_hash<MAX_PREFIXED_KEY_NIBBLE_LEN>(
     let mut hash = Fragment::new_focused([0; HASH_LEN]);
     let node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list_of_small_strings(node);
 
-    if (node_rlp_list.num_fields == BRANCH_NODE) {
+    if (node_rlp_list.num_fields == BRANCH_NODE_NUM_FIELDS) {
         hash = extract_hash_from_branch_node(node, node_rlp_list, key_nibbles, key_ptr);
-    } else if (node_rlp_list.num_fields == EXTENSION_NODE) {
+    } else if (node_rlp_list.num_fields == EXTENSION_NODE_NUM_FIELDS) {
         hash = extract_hash_from_extension_node(node, node_rlp_list, key_nibbles, key_ptr);
     } else {
         assert(false, "Invalid node type");
