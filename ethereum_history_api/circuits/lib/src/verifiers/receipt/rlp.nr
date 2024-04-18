@@ -5,7 +5,6 @@ use crate::{
 use dep::proof::const::HASH_LENGTH;
 use crate::misc::arrays::sub_array_equals_up_to_length;
 use crate::misc::bytes::byte_value;
-use crate::misc::types::PaddedValue;
 use crate::rlp::decode::{RlpList, decode_list, STRING};
 use dep::u2b::u32_to_u8;
 
@@ -27,13 +26,13 @@ pub(crate) fn assert_receipt_rlp_equals<LOG_NUM, MAX_LOG_DATA_LEN>(
         receipt_rlp_list.fragments[STATE_ROOT_INDEX].assert_string_eq(
             "State root",
             receipt_rlp,
-            Into::into((receipt.state_root.expect(f"State root is missing"), HASH_LENGTH))
+            BoundedVec { storage: receipt.state_root.expect(f"State root is missing"), len: HASH_LENGTH }
         );
     } else {
         receipt_rlp_list.fragments[STATUS_INDEX].assert_string_eq(
             "Status",
             receipt_rlp,
-            Into::into(([receipt.status.expect(f"Status is missing") as u8], 1 as u64))
+            BoundedVec { storage: [receipt.status.expect(f"Status is missing") as u8], len: 1 }
         );
     }
 
@@ -41,12 +40,12 @@ pub(crate) fn assert_receipt_rlp_equals<LOG_NUM, MAX_LOG_DATA_LEN>(
     receipt_rlp_list.fragments[CUMULATIVE_GAS_USED_INDEX].assert_string_eq(
         "Cumulative gas used",
         receipt_rlp,
-        Into::into(byte_value(cumulative_gas_used))
+        byte_value(cumulative_gas_used)
     );
 
     receipt_rlp_list.fragments[LOGS_BLOOM_INDEX].assert_string_eq(
         "Logs bloom",
         receipt_rlp,
-        Into::into((receipt.logs_bloom, BLOOM_FILTER_LEN))
+        BoundedVec { storage: receipt.logs_bloom, len: BLOOM_FILTER_LEN }
     );
 }

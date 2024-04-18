@@ -6,7 +6,7 @@ import { padArray } from '../../util/array.js';
 import { TxRlpEncoder, encodeTx } from '../../ethereum/transaction.js';
 import { MAX_TX_RLP_LEN, MAX_TX_ENCODED_LEN } from '../../noir/oracles/transactionOracle/encode.js';
 import { ZERO_PAD_VALUE } from '../../noir/oracles/common/const.js';
-import { createPaddedValueFixture } from './paddedValue.js';
+import { createBoundedVecFixture } from './boundedVec.js';
 
 export function createTransactionFixture(tx: GetTransactionReturnType): string {
   const rlpFields = TxRlpEncoder.txToFields(tx);
@@ -20,7 +20,6 @@ export function createTransactionFixture(tx: GetTransactionReturnType): string {
   const s = encodeHex(tx.s);
 
   return `use crate::transaction::TxPartial;
-use crate::misc::types::PaddedValue;
 
 global tx_idx = ${txIdx};
 
@@ -33,7 +32,7 @@ global transaction = TxPartial {
   gas_limit: ${tx.gas},
   to: ${indentBlock(to, 1)},
   value: U128::from_integer(${tx.value}),
-  data: ${indentBlock(createPaddedValueFixture(tx.input), 1)},
+  data: ${indentBlock(createBoundedVecFixture(tx.input), 1)},
   v: ${v},
   r: ${indentBlock(joinArray(r), 1)},
   s: ${indentBlock(joinArray(s), 1)}

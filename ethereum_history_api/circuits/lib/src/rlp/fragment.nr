@@ -1,4 +1,4 @@
-use crate::misc::{arrays::sub_array_equals_up_to_length, types::PaddedValue};
+use crate::misc::{arrays::sub_array_equals_up_to_length};
 use crate::rlp::decode::STRING;
 
 struct RlpFragment {
@@ -12,12 +12,12 @@ impl RlpFragment {
         self,
         field_name: str<FIELD_NAME_LEN>,
         rlp: [u8; MAX_RLP_LEN],
-        value: PaddedValue<MAX_VALUE_LEN>
+        value: BoundedVec<u8, MAX_VALUE_LEN>
     ) {
         assert(self.data_type == STRING, f"{field_name}: Invalid RLP type");
-        assert(self.length == value.length, f"{field_name}: Invalid RLP length");
+        assert(self.length == value.len, f"{field_name}: Invalid RLP length");
         assert(
-            sub_array_equals_up_to_length(value.value, rlp, self.offset, value.length), f"{field_name}: Invalid RLP value"
+            sub_array_equals_up_to_length(value.storage, rlp, self.offset, value.len), f"{field_name}: Invalid RLP value"
         );
     }
 }

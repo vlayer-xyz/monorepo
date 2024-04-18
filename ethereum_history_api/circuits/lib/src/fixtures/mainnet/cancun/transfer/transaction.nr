@@ -1,5 +1,4 @@
 use crate::transaction::TxPartial;
-use crate::misc::types::PaddedValue;
 
 global tx_idx = 0x58;
 
@@ -18,11 +17,11 @@ global transaction = TxPartial {
     0xac, 0xd8, 0x8b, 0xe8, 0x98, 0xea, 0x10, 0xe6, 0x6c, 0x74, 0x42, 0xc4, 0xc2, 0x5d, 0x2c, 0x2d, 0x90, 0x7b, 0x5b, 0x0d
   ]),
   value: U128::from_integer(1000000000000000),
-  data: PaddedValue {
-    value: [
+  data: BoundedVec {
+    storage: [
       
     ],
-    length: 0
+    len: 0
   },
   v: 0,
   r: [

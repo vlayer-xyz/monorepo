@@ -79,7 +79,7 @@ fn test_verify_cancun_with_blob_header_success() {
     );
 }
 
-#[test(should_fail_with = "block number does not match")]
+#[test(should_fail_with = "Block number: Invalid RLP value")]
 fn test_verify_header_invalid_block_number() {
     let wrong_number = number + 1;
     let paris_block_header_partial = BlockHeaderPartial { number: wrong_number, hash, state_root, transactions_root, receipts_root };
@@ -90,7 +90,7 @@ fn test_verify_header_invalid_block_number() {
     );
 }
 
-#[test(should_fail_with = "block number length does not match")]
+#[test(should_fail_with = "Block number: Invalid RLP length")]
 fn test_verify_header_invalid_block_number_length() {
     // This is 0x100000000 which takes up 6 bytes which is not equal to the 5 bytes that original cancun block number 19432086 takes up
     let wrong_number_length = 4294967296;
@@ -119,7 +119,7 @@ fn test_verify_header_invalid_hash() {
     );
 }
 
-#[test(should_fail_with = "state_root does not match")]
+#[test(should_fail_with = "State root: Invalid RLP value")]
 fn test_verify_header_invalid_state_root() {
     let state_root = alter_array(state_root);
     let paris_block_header_partial = BlockHeaderPartial { number, hash, state_root, transactions_root, receipts_root };
@@ -130,7 +130,7 @@ fn test_verify_header_invalid_state_root() {
     );
 }
 
-#[test(should_fail_with = "transactions_root does not match")]
+#[test(should_fail_with = "Transactions root: Invalid RLP value")]
 fn test_verify_header_invalid_transactions_root() {
     let transactions_root = alter_array(transactions_root);
     let paris_block_header_partial = BlockHeaderPartial { number, hash, state_root, transactions_root, receipts_root };
@@ -141,7 +141,7 @@ fn test_verify_header_invalid_transactions_root() {
     );
 }
 
-#[test(should_fail_with = "receipts_root does not match")]
+#[test(should_fail_with = "Receipts root: Invalid RLP value")]
 fn test_verify_header_invalid_receipt_root() {
     let receipts_root = alter_array(receipts_root);
     let paris_block_header_partial = BlockHeaderPartial { number, hash, state_root, transactions_root, receipts_root };

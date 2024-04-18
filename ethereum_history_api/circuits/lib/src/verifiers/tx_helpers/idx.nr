@@ -16,7 +16,7 @@ pub fn assert_tx_idx_equals(key_as_rlp: [u8; KEY_NIBBLE_LEN], tx_idx: Field) {
         assert(tx_idx == 0, "Key does not match rlp-encoded transaction index");
     } else {
         let mut tx_idx_bytes = [0; MAX_TX_IDX_BYTES_LEN];
-        let (tx_idx_right_padded, _) = right_pad(u64_to_u8(tx_idx as u64));
+        let tx_idx_right_padded = right_pad(u64_to_u8(tx_idx as u64)).storage;
         memcpy(&mut tx_idx_bytes, tx_idx_right_padded, 0);
 
         assert(
