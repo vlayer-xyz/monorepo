@@ -152,27 +152,27 @@ mod resize {
     }
 }
 
-mod subarray {
-    use crate::misc::arrays::subarray;
+mod subarray_inferred_len {
+    use crate::misc::arrays::subarray_inferred_len;
 
     #[test]
     fn success() {
         let array = [1, 2, 3, 4, 5];
-        assert_eq(subarray(array, 0), array);
-        assert_eq(subarray(array, 1), []);
-        assert_eq(subarray(array, 1), [2]);
-        assert_eq(subarray(array, 1), [2, 3]);
-        assert_eq(subarray(array, 1), [2, 3, 4]);
-        assert_eq(subarray(array, 1), [2, 3, 4, 5]);
-        assert_eq(subarray(array, 4), []);
-        assert_eq(subarray(array, 4), [5]);
-        assert_eq(subarray(array, 5), []);
+        assert_eq(subarray_inferred_len(array, 0), array);
+        assert_eq(subarray_inferred_len(array, 1), []);
+        assert_eq(subarray_inferred_len(array, 1), [2]);
+        assert_eq(subarray_inferred_len(array, 1), [2, 3]);
+        assert_eq(subarray_inferred_len(array, 1), [2, 3, 4]);
+        assert_eq(subarray_inferred_len(array, 1), [2, 3, 4, 5]);
+        assert_eq(subarray_inferred_len(array, 4), []);
+        assert_eq(subarray_inferred_len(array, 4), [5]);
+        assert_eq(subarray_inferred_len(array, 5), []);
     }
 
     #[test]
     fn success_empty_src() {
         let array = [];
-        assert_eq(subarray(array, 0), []);
+        assert_eq(subarray_inferred_len(array, 0), []);
     }
 
     #[test]
@@ -181,13 +181,13 @@ mod subarray {
             0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31
         ];
         assert_eq(
-            subarray(array, 12), [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+            subarray_inferred_len(array, 12), [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
         );
     }
 
     #[test(should_fail_with = "Source index out of bound")]
     fn source_index_out_of_bound() {
         let array = [1, 2, 3, 4, 5];
-        let _: [Field; 0] = subarray(array, 6);
+        let _: [Field; 0] = subarray_inferred_len(array, 6);
     }
 }

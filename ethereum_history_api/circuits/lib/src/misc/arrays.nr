@@ -35,7 +35,7 @@ pub(crate) fn memcpy<TItem, SRC_LEN, DEST_LEN>(dest: &mut [TItem; DEST_LEN], src
     memcpy_up_to_length(dest, src, offset, DEST_LEN);
 }
 
-pub fn subarray<TItem, SRC_LEN, DEST_LEN>(src: [TItem; SRC_LEN], offset: u64) -> [TItem; DEST_LEN] {
+pub fn subarray_inferred_len<TItem, SRC_LEN, DEST_LEN>(src: [TItem; SRC_LEN], offset: u64) -> [TItem; DEST_LEN] {
     let mut dest = [zeroed(); DEST_LEN];
     memcpy(&mut dest, src, offset);
     dest
