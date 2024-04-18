@@ -67,7 +67,7 @@ mod sub_array_equals_up_to_length {
         assert(sub_array_equals_up_to_length(value, array, 1, 4), "Not equals");
     }
 
-    #[test(should_fail_with = "subarray index out of bound")]
+    #[test(should_fail_with = "Subarray index out of bound")]
     fn subarray_out_of_bound() {
         let value: [Field; 4] = [1, 2, 0, 0];
         let array: [Field; 6] = [42, 1, 2, 0, 0, 5];
@@ -94,7 +94,7 @@ mod sub_array_equals {
         assert(!sub_array_equals(sub_array, array, 2));
     }
 
-    #[test(should_fail_with = "array index out of bound")]
+    #[test(should_fail_with = "Array index out of bound")]
     fn index_out_of_bound() -> bool {
         let sub_array: [Field; 3] = [2, 3, 4];
         let array: [Field; 5] = [1, 2, 3, 4, 5];

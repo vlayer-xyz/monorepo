@@ -47,8 +47,8 @@ pub fn sub_array_equals_up_to_length<TItem, SUBARRAY_LEN, ARRAY_LEN>(
     offset: u64,
     length: u64
 ) -> bool where TItem: Eq {
-    assert(length <= SUBARRAY_LEN, "subarray index out of bound");
-    assert(offset + SUBARRAY_LEN <= ARRAY_LEN, "array index out of bound");
+    assert(length <= SUBARRAY_LEN, "Subarray index out of bound");
+    assert(offset + SUBARRAY_LEN <= ARRAY_LEN, "Array index out of bound");
     let mut result = true;
     for i in 0..SUBARRAY_LEN {
         let loop_p = i < length;
@@ -63,7 +63,7 @@ pub fn sub_array_equals<TItem, SUBARRAY_LEN, ARRAY_LEN>(
     array: [TItem; ARRAY_LEN],
     offset: u64
 ) -> bool where TItem: Eq {
-    assert(offset + SUBARRAY_LEN <= ARRAY_LEN, "array index out of bound");
+    assert(offset + SUBARRAY_LEN <= ARRAY_LEN, "Array index out of bound");
     let mut result = true;
     for i in 0..SUBARRAY_LEN {
         result &= subarray[i] == array[offset + i];
