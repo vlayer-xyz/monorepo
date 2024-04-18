@@ -1,7 +1,7 @@
 use crate::rlp::decode::{decode_to_rlp_header, decode_list_of_small_strings, RlpList};
 use crate::misc::{
-    fragment::Fragment, arrays::{sub_array_equals_up_to_length, memcpy_up_to_length}, types::Bytes32,
-    bytes::{bytes_to_nibbles, byte_to_nibbles, right_pad}
+    fragment::Fragment, arrays::{sub_array_equals_up_to_length, memcpy_up_to_length},
+    types::{Hash, HASH_LEN}, bytes::{bytes_to_nibbles, byte_to_nibbles, right_pad}
 };
 use dep::std::hash::keccak256;
 
@@ -9,7 +9,6 @@ global MAX_NODE_LEN = 532;
 global MAX_NODE_FIELDS = 17;
 global BRANCH_NODE = 17;
 global EXTENSION_NODE = 2;
-global HASH_LEN = 32;
 global EVEN = 0;
 global ODD = 1;
 
@@ -47,8 +46,7 @@ pub fn parity(prefix: u8) -> u64 {
 pub fn strip_prefix<MAX_PREFIXED_KEY_NIBBLE_LEN>(prefixed_key_bytes: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN>) -> Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> {
     let mut prefixed_key_nibbles = bytes_to_nibbles(prefixed_key_bytes);
 
-    let prefix = prefixed_key_nibbles.pop_front();
-    let parity = parity(prefix);
+    let parity = parity(prefixed_key_nibbles.pop_front());
     if (parity == EVEN) {
         assert(prefixed_key_nibbles.pop_front() == 0, "Expected a zero after a prefix of even parity");
     }
@@ -61,15 +59,14 @@ pub fn extract_hash_from_branch_node<MAX_PREFIXED_KEY_NIBBLE_LEN>(
     node_rlp_list: RlpList<MAX_NODE_FIELDS>,
     key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN>,
     key_ptr: &mut u64
-) -> [u8; HASH_LEN] {
+) -> Fragment<HASH_LEN> {
     let curr_nibble = key_nibbles.at(*key_ptr);
     assert(
         node_rlp_list.fragments[curr_nibble].length == HASH_LEN, "Expected a hash at position given by the key nibble"
     );
-    let hash = Fragment::new(node_rlp_list.fragments[curr_nibble].offset, HASH_LEN, node).focus();
     *key_ptr += 1;
 
-    hash.data
+    Fragment::new(node_rlp_list.fragments[curr_nibble].offset, HASH_LEN, node).focus()
 }
 
 pub fn extract_hash_from_extension_node<MAX_PREFIXED_KEY_NIBBLE_LEN>(
@@ -77,7 +74,7 @@ pub fn extract_hash_from_extension_node<MAX_PREFIXED_KEY_NIBBLE_LEN>(
     node_rlp_list: RlpList<MAX_NODE_FIELDS>,
     key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN>,
     key_ptr: &mut u64
-) -> [u8; HASH_LEN] {
+) -> Fragment<HASH_LEN> {
     let prefixed_extension_key_part: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> = Fragment::new(
         node_rlp_list.fragments[0].offset,
         node_rlp_list.fragments[0].length,
@@ -87,30 +84,24 @@ pub fn extract_hash_from_extension_node<MAX_PREFIXED_KEY_NIBBLE_LEN>(
     let (prefix, _) = byte_to_nibbles(prefixed_extension_key_part.at(0));
     assert((prefix == 0) | (prefix == 1), "Extension parity prefix must be 0 or 1");
     let extension_key_part = strip_prefix(prefixed_extension_key_part); // Extension nodes have a prefix that needs to be removed.
-    let curr_key_nibbles_part = Fragment::new(
-        key_nibbles.offset + *key_ptr,
-        extension_key_part.length,
-        key_nibbles.data
-    );
+    let curr_key_nibbles_part = key_nibbles.subfragment(*key_ptr, extension_key_part.length);
     assert(
         extension_key_part == curr_key_nibbles_part, "Extension key part does not correspond to given key nibbles"
     );
     assert(
         node_rlp_list.fragments[1].length == HASH_LEN, "Expected a hash at the end of the extension node"
     );
-
-    let hash = Fragment::new(node_rlp_list.fragments[1].offset, HASH_LEN, node).focus();
     *key_ptr += extension_key_part.length;
 
-    hash.data
+    Fragment::new(node_rlp_list.fragments[1].offset, HASH_LEN, node).focus()
 }
 
 pub fn extract_hash<MAX_PREFIXED_KEY_NIBBLE_LEN>(
     node: Node,
     key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN>,
     key_ptr: &mut u64
-) -> [u8; HASH_LEN] {
-    let mut hash = [0; HASH_LEN];
+) -> Fragment<HASH_LEN> {
+    let mut hash = Fragment::new_focused([0; HASH_LEN]);
     let node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list_of_small_strings(node);
 
     if (node_rlp_list.num_fields == BRANCH_NODE) {
@@ -127,7 +118,7 @@ pub fn extract_hash<MAX_PREFIXED_KEY_NIBBLE_LEN>(
 pub fn assert_merkle_proof<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH, MAX_LEAF_LEN>(
     key: Key<MAX_PREFIXED_KEY_NIBBLE_LEN>,
     value: Value<MAX_VALUE_LEN>,
-    root: Bytes32,
+    root: Hash,
     proof: Proof<MAX_DEPTH, MAX_LEAF_LEN>
 ) {
     let (key_right_padded, key_len) = right_pad(key);
