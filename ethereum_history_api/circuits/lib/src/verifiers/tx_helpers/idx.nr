@@ -1,7 +1,7 @@
 use dep::u2b::u64_to_u8;
 use crate::misc::arrays::{memcpy, sub_array_equals_up_to_length};
 use crate::misc::bytes::{nibbles_to_bytes, left_to_right_padding, right_pad};
-use crate::rlp::decode::decode_string;
+use crate::misc::rlp_decode::decode_string;
 
 global KEY_NIBBLE_LEN = 6;
 global MAX_TX_IDX_BYTES_LEN = 2;
