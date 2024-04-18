@@ -13,6 +13,9 @@ export function encodeHexStringToArray(value: string): Uint8Array {
   if (!isHex(value)) {
     throw new Error(`Invalid hex string: ${value}`);
   }
+  if (value.length % BYTE_HEX_LEN !== 0) {
+    value = value.slice(0, BYTE_HEX_LEN) + '0' + value.slice(BYTE_HEX_LEN);
+  }
   const arr = [];
   for (let i = 2; i < value.length; i += BYTE_HEX_LEN) {
     arr.push(parseInt(value.substr(i, BYTE_HEX_LEN), 16));

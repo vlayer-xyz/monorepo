@@ -55,6 +55,10 @@ describe('encodeHex', () => {
     expect(encodeHex('0x1')).toStrictEqual(['0x01']);
   });
 
+  it('values should be padded', () => {
+    expect(encodeHex('0x123')).toStrictEqual(['0x01', '0x23']);
+  });
+
   it('invalid hex string', () => {
     expect(() => encodeHex('0xg')).toThrow('Invalid hex string: 0xg');
   });

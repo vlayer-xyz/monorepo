@@ -32,6 +32,12 @@ impl<MAX_DATA_LEN> Fragment<MAX_DATA_LEN> {
         Fragment { offset: 0, length: self.length, data: new_data }
     }
 
+    pub fn subfragment(self, offset: u64, length: u64) -> Fragment<MAX_DATA_LEN> {
+        assert(offset + length <= self.length, "Subfragment overflows fragment");
+
+        Fragment { offset: self.offset + offset, length, data: self.data }
+    }
+
     pub fn is_empty(self) -> bool {
         self.length == 0
     }

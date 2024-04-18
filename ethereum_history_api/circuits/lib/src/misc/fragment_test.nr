@@ -66,6 +66,37 @@ mod focus {
     }
 }
 
+mod subfragment {
+
+    use crate::misc::fragment::Fragment;
+
+    #[test]
+    fn simple() {
+        let fragment = Fragment::new_focused([1, 2, 3, 4]);
+        let subfragment = fragment.subfragment(1, 2);
+        assert(subfragment.at(0) == 2);
+        assert(subfragment.at(1) == 3);
+        assert(subfragment.offset == 1);
+        assert(subfragment.length == 2);
+    }
+
+    #[test]
+    fn simple_offset() {
+        let fragment = Fragment::new(1, 4, [1, 2, 3, 4, 5]);
+        let subfragment = fragment.subfragment(2, 2);
+        assert(subfragment.at(0) == 4);
+        assert(subfragment.at(1) == 5);
+        assert(subfragment.offset == 3);
+        assert(subfragment.length == 2);
+    }
+
+    #[test(should_fail_with="Subfragment overflows fragment")]
+    fn fail() {
+        let fragment = Fragment::new(1, 4, [1, 2, 3, 4, 5]);
+        let _ = fragment.subfragment(2, 3);
+    }
+}
+
 mod is_empty {
 
     use crate::misc::fragment::Fragment;
