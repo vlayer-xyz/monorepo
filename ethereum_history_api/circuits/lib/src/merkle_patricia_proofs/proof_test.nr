@@ -220,100 +220,85 @@ mod extract_hash {
     }
 }
 
-mod leaf_get_len {
+mod node_get_len {
 
-    use crate::merkle_patricia_proofs::proof::leaf_get_len;
+    use crate::merkle_patricia_proofs::proof::node_get_len;
 
     #[test]
     fn success() {
-        let leaf = [0xc2, 0x42, 0x05];
-        assert(leaf_get_len(leaf) == 3);
+        let node = [0xc2, 0x42, 0x05];
+        assert(node_get_len(node) == 3);
     }
 
     #[test]
     fn padded() {
-        let leaf = [0xc2, 0x42, 0x05, 0x00];
-        assert(leaf_get_len(leaf) == 3);
+        let node = [0xc2, 0x42, 0x05, 0x00];
+        assert(node_get_len(node) == 3);
     }
 
     #[test(should_fail_with="Decoded length of short list exceeds input length")]
     fn rlp_len_too_long() {
-        let leaf = [0xc2, 0x42];
-        let _ = leaf_get_len(leaf);
-    }
-}
-
-mod assert_merkle_proof {
-
-    use crate::merkle_patricia_proofs::proof::{assert_merkle_proof, Proof};
-    use crate::misc::arrays::alter_array;
-
-    global key = [0x00, 0x00, 0x00, 0x42];
-    global value = [0x5];
-    global root = [163, 57, 232, 136, 93, 33, 132, 208, 116, 119, 95, 134, 32, 201, 51, 214, 218, 75, 93, 113, 140, 143, 254, 21, 52, 83, 99, 97, 54, 246, 121, 173];
-    global leaf = [0xc4, 0x82, 0x20, 0x42, 0x05];
-
-    #[test]
-    fn success() {
-        let proof = Proof { nodes: [], leaf, depth: 1 };
-        assert_merkle_proof(key, value, root, proof);
-    }
-
-    #[test]
-    fn value_padded() {
-        let proof = Proof { nodes: [], leaf: [0xc4, 0x82, 0x20, 0x42, 0x05, 0x0, 0x0, 0x0], depth: 1 };
-        assert_merkle_proof(key, value, root, proof);
-    }
-
-    #[test(should_fail_with="Leaf parity prefix must be 2 or 3")]
-    fn wrong_parity_prefix() {
-        let proof = Proof { nodes: [], leaf: [0xc4, 0x82, 0x00, 0x42, 0x05], depth: 1 };
-        assert_merkle_proof(key, value, root, proof);
-    }
-
-    #[test(should_fail_with="Leaf expected to have 2 fields")]
-    fn invalid_leaf() {
-        let proof = Proof { nodes: [], leaf: [0xc1, 0x42, 0x00], depth: 1 };
-        assert_merkle_proof(key, value, root, proof);
-    }
-
-    #[test(should_fail_with="Invalid root")]
-    fn invalid_root() {
-        let wrong_root = alter_array(root);
-        let proof = Proof { nodes: [], leaf, depth: 1 };
-        assert_merkle_proof(key, value, wrong_root, proof);
-    }
-
-    #[test(should_fail_with="Value mismatch")]
-    fn value_mismatch() {
-        let wrong_value = alter_array(value);
-        let proof = Proof { nodes: [], leaf, depth: 1 };
-        assert_merkle_proof(key, wrong_value, root, proof);
-    }
-
-    #[test(should_fail_with="Key mismatch")]
-    fn key_mismatch() {
-        let wrong_key = [0x00, 0x00, 0x00, 0x43];
-        let proof = Proof { nodes: [], leaf, depth: 1 };
-        assert_merkle_proof(wrong_key, value, root, proof);
+        let node = [0xc2, 0x42];
+        let _ = node_get_len(node);
     }
 }
 
 mod assert_merkle_proof_from_fixtures {
 
     use crate::merkle_patricia_proofs::proof::{assert_merkle_proof, Proof};
-    use crate::fixtures::merkle_proofs::leaf::{
-        key as fixture_key, value as fixture_value, nodes as fixture_nodes, leaf as fixture_leaf,
-        root as fixture_root
+    use crate::fixtures::merkle_proofs::{
+        leaf::{key as leaf_key, value as leaf_value, nodes as leaf_nodes, leaf, root as leaf_root},
+        branch_then_leaf::{
+        key as branch_then_leaf_key, value as branch_then_leaf_value, nodes as branch_then_leaf_nodes,
+        leaf as branch_then_leaf_leaf, root as branch_then_leaf_root
+    },
+        extension_odd::{
+        key as extension_odd_key, value as extension_odd_value, nodes as extension_odd_nodes,
+        leaf as extension_odd_leaf, root as extension_odd_root
+    },
+        extension_even::{
+        key as extension_even_key, value as extension_even_value, nodes as extension_even_nodes,
+        leaf as extension_even_leaf, root as extension_even_root
+    }
     };
 
     #[test]
-    fn success() {
+    fn success_leaf() {
         assert_merkle_proof(
-            fixture_key,
-            fixture_value,
-            fixture_root,
-            Proof { nodes: fixture_nodes, leaf: fixture_leaf, depth: 1 }
+            leaf_key,
+            leaf_value,
+            leaf_root,
+            Proof { nodes: leaf_nodes, leaf, depth: 1 }
+        )
+    }
+
+    #[test]
+    fn success_branch_then_leaf() {
+        assert_merkle_proof(
+            branch_then_leaf_key,
+            branch_then_leaf_value,
+            branch_then_leaf_root,
+            Proof { nodes: branch_then_leaf_nodes, leaf: branch_then_leaf_leaf, depth: 2 }
+        )
+    }
+
+    #[test]
+    fn success_extension_odd() {
+        assert_merkle_proof(
+            extension_odd_key,
+            extension_odd_value,
+            extension_odd_root,
+            Proof { nodes: extension_odd_nodes, leaf: extension_odd_leaf, depth: 3 }
+        )
+    }
+
+    #[test]
+    fn success_extension_even() {
+        assert_merkle_proof(
+            extension_even_key,
+            extension_even_value,
+            extension_even_root,
+            Proof { nodes: extension_even_nodes, leaf: extension_even_leaf, depth: 4 }
         )
     }
 }

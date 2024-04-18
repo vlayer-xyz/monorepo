@@ -1,4 +1,4 @@
-use crate::rlp::decode::{decode_to_rlp_header, decode_list_of_small_strings, RlpList};
+use crate::rlp::decode::{decode_to_rlp_header, decode_list, RlpList};
 use crate::misc::{
     fragment::Fragment, arrays::{sub_array_equals_up_to_length, memcpy_up_to_length},
     types::{Hash, HASH_LEN}, bytes::{bytes_to_nibbles, byte_to_nibbles, right_pad}
@@ -24,11 +24,12 @@ struct Proof<MAX_DEPTH, MAX_LEAF_LEN> {
 	depth: u64
 }
 
-pub fn leaf_get_len<MAX_LEN>(leaf: Leaf<MAX_LEN>) -> u32 {
-    let rlp_leaf_header = decode_to_rlp_header(leaf);
-    let leaf_unpadded_len = rlp_leaf_header.offset + rlp_leaf_header.length;
-    assert(leaf_unpadded_len <= MAX_LEN, "Leaf RLP length exceeds MAX_LEN");
-    leaf_unpadded_len as u32
+pub fn node_get_len<MAX_LEN>(node: [u8; MAX_LEN]) -> u32 {
+    let node_rlp_header = decode_to_rlp_header(node);
+    let node_unpadded_len = node_rlp_header.offset + node_rlp_header.length;
+    assert(node_unpadded_len <= MAX_LEN, "Leaf RLP length exceeds MAX_LEN");
+
+    node_unpadded_len as u32
 }
 
 // Prefixes mean:
@@ -116,6 +117,50 @@ pub fn extract_hash<MAX_PREFIXED_KEY_NIBBLE_LEN>(
     hash
 }
 
+pub fn verify_node_hash<MAX_LEN>(node: [u8; MAX_LEN], hash: [u8; HASH_LEN]) {
+    assert(keccak256(node, node_get_len(node)) == hash, "Node doesn't hash to the expected hash");
+}
+
+pub fn verify_leaf<MAX_LEAF_LEN, MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN>(
+    leaf: Leaf<MAX_LEAF_LEN>,
+    key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN>,
+    key_ptr: &mut u64,
+    value: Value<MAX_VALUE_LEN>
+) {
+    let leaf_rlp_list: RlpList<2> = decode_list(leaf);
+    assert(leaf_rlp_list.num_fields == 2, "Leaf expected to have 2 fields");
+
+    let prefixed_leaf_key_part: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> = Fragment::new(
+        leaf_rlp_list.fragments[0].offset,
+        leaf_rlp_list.fragments[0].length,
+        leaf
+    ).focus();
+
+    let (prefix, _) = byte_to_nibbles(prefixed_leaf_key_part.at(0));
+    assert((prefix == 2) | (prefix == 3), "Leaf parity prefix must be 2 or 3");
+    let leaf_key_part = strip_prefix(prefixed_leaf_key_part);
+    let left_key_ending = Fragment::new(
+        key_nibbles.offset + *key_ptr,
+        leaf_key_part.length,
+        key_nibbles.data
+    );
+    assert(
+        leaf_key_part == left_key_ending, "Leaf key part does not correspond to left key nibbles"
+    );
+    *key_ptr += leaf_key_part.length;
+    assert(*key_ptr == key_nibbles.length, "Expected to consume all key nibbles");
+
+    // Verify that extracted value matches the expected value.
+    assert(
+        sub_array_equals_up_to_length(
+            value,
+            leaf,
+            leaf_rlp_list.fragments[1].offset,
+            leaf_rlp_list.fragments[1].length
+        ), "Value mismatch"
+    );
+}
+
 pub fn assert_merkle_proof<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH, MAX_LEAF_LEN>(
     key: Key<MAX_PREFIXED_KEY_NIBBLE_LEN>,
     value: Value<MAX_VALUE_LEN>,
@@ -125,29 +170,15 @@ pub fn assert_merkle_proof<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH
     let key = right_pad(key);
     let key_nibbles = bytes_to_nibbles(Fragment::new_with_length(key.len, key.storage));
 
-    let leaf_rlp_list: RlpList<2> = decode_list_of_small_strings(proof.leaf);
-    assert(leaf_rlp_list.num_fields == 2, "Leaf expected to have 2 fields");
-
-    let prefixed_leaf_key_part: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> = Fragment::new(
-        leaf_rlp_list.fragments[0].offset,
-        leaf_rlp_list.fragments[0].length,
-        proof.leaf
-    ).focus();
-
-    let (prefix, _) = byte_to_nibbles(prefixed_leaf_key_part.at(0));
-    assert((prefix == 2) | (prefix == 3), "Leaf parity prefix must be 2 or 3");
-    let leaf_key_part = strip_prefix(prefixed_leaf_key_part);
-    assert(leaf_key_part == key_nibbles, "Key mismatch");
-
-    assert(
-        sub_array_equals_up_to_length(
-            value,
-            proof.leaf,
-            leaf_rlp_list.fragments[1].offset,
-            leaf_rlp_list.fragments[1].length
-        ), "Value mismatch"
-    );
-
-    assert(keccak256(proof.leaf, leaf_get_len(proof.leaf)) == root, "Invalid root");
+    // Verify hashes of all the nodes in the proof path.
+    let mut curr_hash = root;
+    for i in 0..MAX_DEPTH {
+        if i < proof.depth {
+            verify_node_hash(proof.nodes[i], curr_hash);
+            curr_hash = extract_hash(proof.nodes[i], key_nibbles, &mut key_ptr);
+        }
+    }
+    verify_node_hash(proof.leaf, curr_hash);
+    verify_leaf(proof.leaf, key_nibbles, &mut key_ptr, value);
 }
 
