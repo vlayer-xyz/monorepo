@@ -67,7 +67,7 @@ mod sub_array_equals_up_to_length {
         assert(sub_array_equals_up_to_length(value, array, 1, 4), "Not equals");
     }
 
-    #[test(should_fail_with = "subarray index out of bound")]
+    #[test(should_fail_with = "Subarray index out of bound")]
     fn subarray_out_of_bound() {
         let value: [Field; 4] = [1, 2, 0, 0];
         let array: [Field; 6] = [42, 1, 2, 0, 0, 5];
@@ -94,7 +94,7 @@ mod sub_array_equals {
         assert(!sub_array_equals(sub_array, array, 2));
     }
 
-    #[test(should_fail_with = "array index out of bound")]
+    #[test(should_fail_with = "Array index out of bound")]
     fn index_out_of_bound() -> bool {
         let sub_array: [Field; 3] = [2, 3, 4];
         let array: [Field; 5] = [1, 2, 3, 4, 5];
@@ -149,5 +149,45 @@ mod resize {
     #[test(should_fail_with = "New length must be greater than or equal to old length")]
     fn new_length_is_shorter() {
         let _ = array_equals(resize([1, 2]), [1]);
+    }
+}
+
+mod subarray_inferred_len {
+    use crate::misc::arrays::subarray_inferred_len;
+
+    #[test]
+    fn success() {
+        let array = [1, 2, 3, 4, 5];
+        assert_eq(subarray_inferred_len(array, 0), array);
+        assert_eq(subarray_inferred_len(array, 1), []);
+        assert_eq(subarray_inferred_len(array, 1), [2]);
+        assert_eq(subarray_inferred_len(array, 1), [2, 3]);
+        assert_eq(subarray_inferred_len(array, 1), [2, 3, 4]);
+        assert_eq(subarray_inferred_len(array, 1), [2, 3, 4, 5]);
+        assert_eq(subarray_inferred_len(array, 4), []);
+        assert_eq(subarray_inferred_len(array, 4), [5]);
+        assert_eq(subarray_inferred_len(array, 5), []);
+    }
+
+    #[test]
+    fn success_empty_src() {
+        let array = [];
+        assert_eq(subarray_inferred_len(array, 0), []);
+    }
+
+    #[test]
+    fn success_convert_bytes32_to_bytes20() {
+        let array = [
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31
+        ];
+        assert_eq(
+            subarray_inferred_len(array, 12), [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+        );
+    }
+
+    #[test(should_fail_with = "Source index out of bound")]
+    fn source_index_out_of_bound() {
+        let array = [1, 2, 3, 4, 5];
+        let _: [Field; 0] = subarray_inferred_len(array, 6);
     }
 }

@@ -1,6 +1,6 @@
 use dep::std::{unsafe::zeroed, wrapping_add};
 
-pub fn alter_array<N>(array: [u8; N]) -> [u8; N] {
+pub fn alter_array<ARRAY_LEN>(array: [u8; ARRAY_LEN]) -> [u8; ARRAY_LEN] {
     let mut copy = array.map(|x| x);
     copy[0] = wrapping_add(copy[0], 1);
     copy
@@ -15,10 +15,10 @@ pub fn resize<TItem, NEW_LEN, OLD_LEN>(src: [TItem; OLD_LEN]) -> [TItem; NEW_LEN
     dest
 }
 
-pub(crate) fn memcpy_up_to_length<N, M>(dest: &mut [u8; N], src: [u8; M], offset: u64, length: u64) {
-    assert(length <= N, "Destination index out of bound");
-    assert(offset + length <= M, "Source index out of bound");
-    for i in 0..N {
+pub(crate) fn memcpy_up_to_length<TItem, SRC_LEN, DEST_LEN>(dest: &mut [TItem; DEST_LEN], src: [TItem; SRC_LEN], offset: u64, length: u64) {
+    assert(length <= DEST_LEN, "Destination index out of bound");
+    assert(offset + length <= SRC_LEN, "Source index out of bound");
+    for i in 0..DEST_LEN {
         if i < length {
             (*dest)[i] = src[offset + i];
         }
@@ -31,20 +31,26 @@ pub(crate) fn memcpy_up_to_length<N, M>(dest: &mut [u8; N], src: [u8; M], offset
 /// * `dest` - Destination array
 /// * `src` - Source array
 /// * `offset` - Offset in source array 
-pub(crate) fn memcpy<N, M>(dest: &mut [u8; N], src: [u8; M], offset: u64) {
-    memcpy_up_to_length(dest, src, offset, N);
+pub(crate) fn memcpy<TItem, SRC_LEN, DEST_LEN>(dest: &mut [TItem; DEST_LEN], src: [TItem; SRC_LEN], offset: u64) {
+    memcpy_up_to_length(dest, src, offset, DEST_LEN);
 }
 
-pub fn sub_array_equals_up_to_length<T, N, M>(
-    subarray: [T; N],
-    array: [T; M],
+pub fn subarray_inferred_len<TItem, SRC_LEN, DEST_LEN>(src: [TItem; SRC_LEN], offset: u64) -> [TItem; DEST_LEN] {
+    let mut dest = [zeroed(); DEST_LEN];
+    memcpy(&mut dest, src, offset);
+    dest
+}
+
+pub fn sub_array_equals_up_to_length<TItem, SUBARRAY_LEN, ARRAY_LEN>(
+    subarray: [TItem; SUBARRAY_LEN],
+    array: [TItem; ARRAY_LEN],
     offset: u64,
     length: u64
-) -> bool where T: Eq {
-    assert(length <= N, "subarray index out of bound");
-    assert(offset + N <= M, "array index out of bound");
+) -> bool where TItem: Eq {
+    assert(length <= SUBARRAY_LEN, "Subarray index out of bound");
+    assert(offset + SUBARRAY_LEN <= ARRAY_LEN, "Array index out of bound");
     let mut result = true;
-    for i in 0..N {
+    for i in 0..SUBARRAY_LEN {
         let loop_p = i < length;
         let equals_p = (subarray[i] == array[offset + i]);
         result &= !loop_p | equals_p;
@@ -52,15 +58,22 @@ pub fn sub_array_equals_up_to_length<T, N, M>(
     result
 }
 
-pub fn sub_array_equals<T, N, M>(subarray: [T; N], array: [T; M], offset: u64) -> bool where T: Eq {
-    assert(offset + N <= M, "array index out of bound");
+pub fn sub_array_equals<TItem, SUBARRAY_LEN, ARRAY_LEN>(
+    subarray: [TItem; SUBARRAY_LEN],
+    array: [TItem; ARRAY_LEN],
+    offset: u64
+) -> bool where TItem: Eq {
+    assert(offset + SUBARRAY_LEN <= ARRAY_LEN, "Array index out of bound");
     let mut result = true;
-    for i in 0..N {
+    for i in 0..SUBARRAY_LEN {
         result &= subarray[i] == array[offset + i];
     }
     result
 }
 
-pub fn array_equals<T, N>(array1: [T; N], array2: [T; N]) -> bool where T: Eq {
+pub fn array_equals<TItem, ARRAY_LEN>(
+    array1: [TItem; ARRAY_LEN],
+    array2: [TItem; ARRAY_LEN]
+) -> bool where TItem: Eq {
     sub_array_equals(array1, array2, 0)
 }
