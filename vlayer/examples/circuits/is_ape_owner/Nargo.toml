@@ -1,0 +1,7 @@
+[package]
+name = "is_ape_owner"
+type = "bin"
+authors = [""]
+compiler_version = ">=0.26.0"
+
+[dependencies]
