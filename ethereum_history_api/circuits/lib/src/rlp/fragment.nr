@@ -1,13 +1,13 @@
-use crate::misc::{arrays::sub_array_equals_up_to_length};
+use crate::misc::fragment::Fragment;
 use crate::rlp::decode::STRING;
+use crate::misc::arrays::sub_array_equals_up_to_length;
 
-struct RlpFragment {
-    offset: u64,
-    length: u64,    
-    data_type: u64 // STRING or LIST
-}
+struct RlpFragment<MAX_BYTES_LEN> {
+     fragment: Fragment<MAX_BYTES_LEN>,
+     data_type: u64 // STRING or LIST
+ }
 
-impl RlpFragment {
+impl<MAX_BYTES_LEN> RlpFragment<MAX_BYTES_LEN> {
     fn assert_string_eq<FIELD_NAME_LEN, MAX_RLP_LEN, MAX_VALUE_LEN>(
         self,
         field_name: str<FIELD_NAME_LEN>,
@@ -15,21 +15,21 @@ impl RlpFragment {
         value: BoundedVec<u8, MAX_VALUE_LEN>
     ) {
         assert(self.data_type == STRING, f"{field_name}: Invalid RLP type");
-        assert(self.length == value.len, f"{field_name}: Invalid RLP length");
+        assert(self.fragment.length == value.len, f"{field_name}: Invalid RLP length");
         assert(
-            sub_array_equals_up_to_length(value.storage, rlp, self.offset, value.len), f"{field_name}: Invalid RLP value"
+            sub_array_equals_up_to_length(value.storage, rlp, self.fragment.offset, value.len), f"{field_name}: Invalid RLP value"
         );
     }
 }
 
-impl Default for RlpFragment {
-    fn default() -> Self {
-        RlpFragment { offset: 0, length: 0, data_type: 0 }
-    }
-}
+impl<MAX_BYTES_LEN> Default for RlpFragment<MAX_BYTES_LEN> {
+     fn default() -> Self {
+         RlpFragment { fragment: Fragment {offset: 0, length: 0, data: [0; MAX_BYTES_LEN]}, data_type: STRING }
+     }
+ }
 
-impl Eq for RlpFragment {
-    fn eq(self, other: Self) -> bool {
-        (self.offset == other.offset) & (self.length == other.length) & (self.data_type == other.data_type)
-    }
-}
+impl<MAX_BYTES_LEN> Eq for RlpFragment<MAX_BYTES_LEN> {
+     fn eq(self, other: Self) -> bool {
+         (self.data_type == other.data_type) & (self.fragment == other.fragment)
+     }
+ }
