@@ -17,11 +17,11 @@ pub(crate) fn is_pre_byzantium(block_number: u64) -> bool {
     block_number < BYZANTIUM_BLOCK_NUM as u64
 }
 
-pub(crate) fn assert_receipt_equals<LOG_NUM, MAX_LOG_DATA_LEN>(
+pub(crate) fn assert_receipt_equals(
     block_number: Field,
     tx_type: TxType,
     encoded_receipt: [u8; MAX_ENCODED_RECEIPT_LENGTH],
-    receipt: TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>
+    receipt: TxReceiptPartial
 ) {
     let is_legacy = tx_type == 0;
     let (actual_tx_type, receipt_rlp) = split_into_tx_type_and_rlp(is_legacy, encoded_receipt);
@@ -42,7 +42,7 @@ pub fn verify_receipt<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN>(
     block_number: Field,
     tx_idx: Field,
     tx_type: TxType,
-    receipt: TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>,
+    receipt: TxReceiptPartial,
     receipt_proof: ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_ENCODED_RECEIPT_LENGTH>,
     receipt_root: [u8; HASH_LENGTH]
 ) {
