@@ -1,5 +1,7 @@
 use dep::std::wrapping_sub;
 use crate::rlp::fragment::RlpFragment;
+use crate::rlp::list::RlpList;
+use crate::misc::fragment::Fragment;
 
 /// Max number of bytes required to represent length of a string or list
 global MAX_LEN_IN_BYTES: u64 = 2;
@@ -17,16 +19,6 @@ struct RlpHeader {
 impl Eq for RlpHeader {
     fn eq(self, other: Self) -> bool {
         (self.offset == other.offset) & (self.length == other.length) & (self.data_type == other.data_type)
-    }
-}
-struct RlpList<NUM_FIELDS> {
-    fragments: [RlpFragment; NUM_FIELDS],
-    num_fields: u64
-}
-
-impl<N> Eq for RlpList<N> {
-    fn eq(self, other: Self) -> bool {
-        (self.num_fields == other.num_fields) & (self.fragments == other.fragments)
     }
 }
 
@@ -98,9 +90,9 @@ pub fn decode_string<N>(input: [u8; N]) -> (u64, u64) {
 /// Returns an RLP list look-up table.
 /// For string elements, the offset points to the payload, whereas the offset
 ///   of a list element points to the RLP header of that element.
-pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
+pub fn decode_list<MAX_BYTES_LEN, MAX_FIELDS>(input: [u8; MAX_BYTES_LEN]) -> RlpList<MAX_BYTES_LEN, MAX_FIELDS> {
     let mut num_fields: u64 = 0;
-    let mut fragments = [RlpFragment::default(); NUM_FIELDS];
+    let mut rlp_list: RlpList<MAX_BYTES_LEN, MAX_FIELDS> = BoundedVec::new();
 
     let RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
     assert(data_type == LIST, "Expected a list");
@@ -109,15 +101,21 @@ pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
     assert(total_len <= input.len(), "Total length exceeds input length");
 
     let mut current_offset = offset;
-    for i in 0..NUM_FIELDS {
+    for _ in 0..MAX_FIELDS {
         if (current_offset < total_len) {
-            let header: [u8; N] = copy_subarray(input, current_offset);
+            let header: [u8; MAX_BYTES_LEN] = copy_subarray(input, current_offset);
 
-            let RlpHeader {offset: field_off, length: field_len, data_type: field_type} = decode_to_rlp_header(header);
+            let RlpHeader {offset: field_off, length: field_len, data_type} = decode_to_rlp_header(header);
 
-            fragments[i].offset = current_offset + (1 - field_type) * field_off; // If the ith slot contains a list, include its RLP header.
-            fragments[i].length = field_len + field_type * field_off; // If the ith slot contains a list, include the length of its header.
-            fragments[i].data_type = field_type;
+            let fragment = RlpFragment {
+                fragment: Fragment {
+                    offset: current_offset + (1 - data_type) * field_off, // If the ith slot contains a list, include its RLP header.
+                    length: field_len + data_type * field_off, // If the ith slot contains a list, include the length of its header.
+                    data: input
+                },
+                data_type
+            };
+            rlp_list.push(fragment);
 
             current_offset += field_off + field_len;
             num_fields += 1;
@@ -125,14 +123,14 @@ pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
     }
     assert(current_offset == total_len, "Inconsistent rlp length");
 
-    RlpList { fragments, num_fields }
+    rlp_list
 }
 
 /// RLP list decoder for lists of strings of length < 56 bytes.
 /// Returns an RLP list look-up table.
-pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
+pub fn decode_list_of_small_strings<MAX_BYTES_LEN, MAX_FIELDS>(input: [u8; MAX_BYTES_LEN]) -> RlpList<MAX_BYTES_LEN, MAX_FIELDS> {
     let mut num_fields: u64 = 0;
-    let mut fragments = [RlpFragment::default(); NUM_FIELDS];
+    let mut rlp_list: RlpList<MAX_BYTES_LEN, MAX_FIELDS> = BoundedVec::new();
 
     let RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
     assert(data_type == LIST, "Expected a list");
@@ -141,15 +139,17 @@ pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NU
     assert(total_len <= input.len(), "Total length exceeds input length");
 
     let mut current_offset = offset;
-    for i in 0..NUM_FIELDS {
+    for _ in 0..MAX_FIELDS {
         if (current_offset < total_len) {
             let first_byte = input[current_offset];
 
             let (field_off, field_len) = get_small_string_offset_and_length(first_byte);
 
-            fragments[i].offset = current_offset + field_off;
-            fragments[i].length = field_len;
-            fragments[i].data_type = STRING;
+            let fragment = RlpFragment {
+                fragment: Fragment { offset: current_offset + field_off, length: field_len, data: input },
+                data_type: STRING
+            };
+            rlp_list.push(fragment);
 
             current_offset += field_off + field_len;
             num_fields += 1;
@@ -157,7 +157,7 @@ pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NU
     }
     assert(current_offset == total_len, "Inconsistent rlp length");
 
-    RlpList { fragments, num_fields }
+    rlp_list
 }
 
 pub fn get_small_string_offset_and_length(first_byte: u8) -> (u64, u64) {
