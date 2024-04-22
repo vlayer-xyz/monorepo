@@ -104,7 +104,7 @@ pub fn extract_hash<MAX_PREFIXED_KEY_NIBBLE_LEN>(
     key_ptr: &mut u64
 ) -> Fragment<HASH_LEN> {
     let mut hash = Fragment::new_focused([0; HASH_LEN]);
-    let node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list_of_small_strings(node);
+    let node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list(node);
 
     if (node_rlp_list.num_fields == BRANCH_NODE_NUM_FIELDS) {
         hash = extract_hash_from_branch_node(node, node_rlp_list, key_nibbles, key_ptr);
@@ -139,24 +139,23 @@ pub fn verify_leaf<MAX_LEAF_LEN, MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN>(
     let (prefix, _) = byte_to_nibbles(prefixed_leaf_key_part.at(0));
     assert((prefix == 2) | (prefix == 3), "Leaf parity prefix must be 2 or 3");
     let leaf_key_part = strip_prefix(prefixed_leaf_key_part);
-    let left_key_ending = Fragment::new(
-        key_nibbles.offset + *key_ptr,
-        leaf_key_part.length,
-        key_nibbles.data
-    );
+    let left_key_ending = key_nibbles.subfragment(*key_ptr, leaf_key_part.length);
     assert(
         leaf_key_part == left_key_ending, "Leaf key part does not correspond to left key nibbles"
     );
     *key_ptr += leaf_key_part.length;
     assert(*key_ptr == key_nibbles.length, "Expected to consume all key nibbles");
 
+    let value = right_pad(value);
+    let value_rlp_fragment = leaf_rlp_list.fragments[1];
     // Verify that extracted value matches the expected value.
+    assert(value_rlp_fragment.length == value.len, "Value length mismatch");
     assert(
         sub_array_equals_up_to_length(
-            value,
+            value.storage,
             leaf,
-            leaf_rlp_list.fragments[1].offset,
-            leaf_rlp_list.fragments[1].length
+            value_rlp_fragment.offset,
+            value_rlp_fragment.length
         ), "Value mismatch"
     );
 }
@@ -169,16 +168,17 @@ pub fn assert_merkle_proof<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH
 ) {
     let key = right_pad(key);
     let key_nibbles = bytes_to_nibbles(Fragment::new_with_length(key.len, key.storage));
+    let mut key_ptr = 0;
 
     // Verify hashes of all the nodes in the proof path.
-    let mut curr_hash = root;
+    let mut curr_hash = Fragment::new_focused(root);
     for i in 0..MAX_DEPTH {
         if i < proof.depth {
-            verify_node_hash(proof.nodes[i], curr_hash);
+            verify_node_hash(proof.nodes[i], curr_hash.data);
             curr_hash = extract_hash(proof.nodes[i], key_nibbles, &mut key_ptr);
         }
     }
-    verify_node_hash(proof.leaf, curr_hash);
+    verify_node_hash(proof.leaf, curr_hash.data);
     verify_leaf(proof.leaf, key_nibbles, &mut key_ptr, value);
 }
 
