@@ -19,14 +19,14 @@ type TxType = u8;
 struct PhantomReceiptProofLen<MAX_RECEIPT_PROOF_LEN> {}
 struct PhantomReceiptRlpLen<MAX_RECEIPT_ENCODED_LEN> {}
 
-struct TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN> {
+struct TxReceiptPartial {
     status: Option<u1>,
     state_root: Option<Bytes32>,
     cumulative_gas_used: u32,
     logs_bloom: [u8; BLOOM_FILTER_LEN]
 }
 
-struct ForeignCallTxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN> {
+struct ForeignCallTxReceiptPartial {
     status: u1,
     status_is_some: bool,
     state_root: Bytes32,
@@ -35,8 +35,8 @@ struct ForeignCallTxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN> {
     logs_bloom: [u8; BLOOM_FILTER_LEN]
 }
 
-struct TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_LEN> {
-    receipt: TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>,
+struct TxReceiptWithinBlock {
+    receipt: TxReceiptPartial,
     block_hash: Bytes32
 }
 
@@ -45,8 +45,8 @@ pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT
     tx_idx: Field,
     _max_receipt_proof_len: PhantomReceiptProofLen<MAX_RECEIPT_PROOF_LEN>,
     _max_receipt_rlp_len: PhantomReceiptRlpLen<MAX_RECEIPT_ENCODED_LEN>
-) -> TxReceiptWithinBlock<LOG_NUM, MAX_LOG_DATA_LEN> {
-    let (tx_type, receipt, proof): (TxType, TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>, ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_ENCODED_RECEIPT_LENGTH>) = get_receipt_unconstrained(block_number, tx_idx);
+) -> TxReceiptWithinBlock {
+    let (tx_type, receipt, proof): (TxType, TxReceiptPartial, ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_ENCODED_RECEIPT_LENGTH>) = get_receipt_unconstrained(block_number, tx_idx);
     let header = get_header(block_number);
     verify_receipt(
         block_number,
@@ -63,12 +63,12 @@ pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT
 unconstrained fn get_receipt_oracle<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_ENCODED_LEN>(
     _block_number: Field,
     _tx_idx: Field
-) -> (TxType, ForeignCallTxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>, ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_ENCODED_RECEIPT_LENGTH>) {}
+) -> (TxType, ForeignCallTxReceiptPartial, ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_ENCODED_RECEIPT_LENGTH>) {}
 
 unconstrained fn get_receipt_unconstrained<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_ENCODED_LEN>(
     block_number: Field,
     tx_idx: Field
-) -> (TxType, TxReceiptPartial<LOG_NUM, MAX_LOG_DATA_LEN>, ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_ENCODED_RECEIPT_LENGTH>) {
+) -> (TxType, TxReceiptPartial, ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_ENCODED_RECEIPT_LENGTH>) {
     let (tx_type, receipt, proof) = get_receipt_oracle(block_number, tx_idx);
 
     let receipt = TxReceiptPartial {
