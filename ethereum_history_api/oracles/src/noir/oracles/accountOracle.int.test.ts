@@ -1,14 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { getAccountOracle } from './accountOracle.js';
+import { OFFSETS, getAccountOracle } from './accountOracle.js';
 import { createMockClient } from '../../ethereum/mockClient.js';
 
 describe('accountOracle', () => {
-  const OFFSETS = {
-    NONCE: 0,
-    BALANCE: 1,
-    ADDRESS: 4,
-    DEPTH: 7
-  };
   it('getAccountOracle', async () => {
     // prettier-ignore
     const cryptoPunksAccountAddressInNoirFormat = [
@@ -27,7 +21,7 @@ describe('accountOracle', () => {
     ]);
     expect(account[OFFSETS.NONCE]).toStrictEqual('0x01');
     expect(account[OFFSETS.BALANCE]).toStrictEqual('0x0313570a84bf378efd25');
-    expect(account[OFFSETS.ADDRESS]).toStrictEqual(cryptoPunksAccountAddressInNoirFormat);
-    expect(account[OFFSETS.DEPTH]).toStrictEqual('0x08');
+    expect(account[OFFSETS.PROOF_KEY]).toStrictEqual(cryptoPunksAccountAddressInNoirFormat);
+    expect(account[OFFSETS.PROOF_DEPTH]).toStrictEqual('0x08');
   });
 });

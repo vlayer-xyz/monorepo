@@ -5,10 +5,24 @@ import { encodeAccount, encodeStateProof } from './accountOracle/encode.js';
 import { decodeAddress, decodeField } from './common/decode.js';
 import { NoirArguments } from './oracles.js';
 import { AlchemyClient } from '../../ethereum/client.js';
+import { ENUM_LEN_TO_ENUM_KEY_LEN_RATO } from '../../util/const.js';
 
-const GET_ACCOUNT_ARGS_COUNT = 2;
-const BLOCK_NUM_INDEX = 0;
-const ADDRESS_INDEX = 1;
+export enum ARGS {
+  BLOCK_NUM,
+  ADDRESS
+}
+const ARGS_COUNT = Object.keys(ARGS).length / ENUM_LEN_TO_ENUM_KEY_LEN_RATO;
+
+export enum OFFSETS {
+  NONCE,
+  BALANCE,
+  STORAGE_ROOT,
+  CODE_HASH,
+  PROOF_KEY,
+  PROOF_VALUE,
+  PROOF,
+  PROOF_DEPTH
+}
 
 export async function getAccountOracle(client: AlchemyClient, args: NoirArguments): Promise<ForeignCallOutput[]> {
   const { blockNumber, address } = decodeGetAccountArguments(args);
@@ -26,11 +40,11 @@ export function decodeGetAccountArguments(args: NoirArguments): {
   blockNumber: bigint;
   address: Hex;
 } {
-  assert(args.length === GET_ACCOUNT_ARGS_COUNT, 'get_account requires 2 arguments');
+  assert(args.length === ARGS_COUNT, `get_account requires ${ARGS_COUNT} arguments`);
 
-  assert(args[BLOCK_NUM_INDEX].length === 1, 'blockNumber should be a single value');
-  const blockNumber = decodeField(args[BLOCK_NUM_INDEX][0]);
-  const address = decodeAddress(args[ADDRESS_INDEX]);
+  assert(args[ARGS.BLOCK_NUM].length === 1, 'blockNumber should be a single value');
+  const blockNumber = decodeField(args[ARGS.BLOCK_NUM][0]);
+  const address = decodeAddress(args[ARGS.ADDRESS]);
 
   return { blockNumber, address };
 }

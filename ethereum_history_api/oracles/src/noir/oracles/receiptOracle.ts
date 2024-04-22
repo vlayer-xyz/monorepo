@@ -6,10 +6,13 @@ import { AlchemyClient } from '../../ethereum/client.js';
 import { getReceiptProof } from '../../ethereum/receiptProof.js';
 import { encodeReceipt, encodeReceiptProof } from './receiptOracle/encode.js';
 import { txTypeToHex } from '../../ethereum/receipt.js';
+import { ENUM_LEN_TO_ENUM_KEY_LEN_RATO } from '../../util/const.js';
 
-const GET_RECEIPT_ARGS_COUNT = 2;
-const BLOCK_NUM_INDEX = 0;
-const TX_ID_INDEX = 1;
+export enum ARGS {
+  BLOCK_NUM,
+  TX_ID
+}
+const ARGS_COUNT = Object.keys(ARGS).length / ENUM_LEN_TO_ENUM_KEY_LEN_RATO;
 
 export enum OFFSETS {
   TX_TYPE,
@@ -47,11 +50,11 @@ export function decodeGetReceiptArguments(args: NoirArguments): {
   blockNumber: bigint;
   txId: number;
 } {
-  assert(args.length === GET_RECEIPT_ARGS_COUNT, `get_receipt requires ${GET_RECEIPT_ARGS_COUNT} arguments`);
+  assert(args.length === ARGS_COUNT, `get_receipt requires ${ARGS_COUNT} arguments`);
 
-  assert(args[BLOCK_NUM_INDEX].length === 1, 'blockNumber should be a single value');
-  const blockNumber = decodeField(args[BLOCK_NUM_INDEX][0]);
-  const txId = Number(decodeField(args[TX_ID_INDEX][0]));
+  assert(args[ARGS.BLOCK_NUM].length === 1, 'blockNumber should be a single value');
+  const blockNumber = decodeField(args[ARGS.BLOCK_NUM][0]);
+  const txId = Number(decodeField(args[ARGS.TX_ID][0]));
 
   return { blockNumber, txId };
 }
