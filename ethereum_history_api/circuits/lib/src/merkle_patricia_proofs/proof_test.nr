@@ -278,6 +278,66 @@ mod verify_leaf {
     #[test(should_fail_with="Leaf expected to have 2 fields")]
     fn fail_invalid_rlp() {
         let invalid_leaf_rlp = [0xc1, 0x12];
-        verify_leaf(invalid_leaf_rlp, Fragment::new_with_length(0, [0; 2]), &mut 0, [])
+        verify_leaf(
+            invalid_leaf_rlp,
+            Fragment::new_with_length(0, [0; 2]),
+            &mut 0,
+            []
+        )
+    }
+
+    #[test(should_fail_with="Leaf parity prefix must be 2 or 3")]
+    fn fail_invalid_prefix() {
+        let leaf_with_invalid_prefix = [0xc6, 0x82, 0x00, 0xbc, 0x82, 0x12, 0x34];
+        verify_leaf(
+            leaf_with_invalid_prefix,
+            Fragment::new_with_length(0, [0; 2]),
+            &mut 0,
+            []
+        )
+    }
+
+    #[test(should_fail_with="Leaf key part does not correspond to left key nibbles")]
+    fn fail_wrong_key() {
+        let wrong_key = Fragment::new_with_length(3, [0xa, 0xb, 0xd, 0x0, 0x0, 0x0, 0x0, 0x0]);
+        verify_leaf(
+            [0xc6, 0x82, 0x20, 0xbc, 0x82, 0x12, 0x34],
+            wrong_key,
+            &mut 1,
+            [0x00, 0x12, 0x34]
+        )
+    }
+
+    #[test(should_fail_with="Expected to consume all key nibbles")]
+    fn fail_key_not_consumed() {
+        let long_key = Fragment::new_with_length(4, [0xa, 0xb, 0xc, 0xd, 0x0, 0x0, 0x0, 0x0]);
+        verify_leaf(
+            [0xc6, 0x82, 0x20, 0xbc, 0x82, 0x12, 0x34],
+            long_key,
+            &mut 1,
+            [0x00, 0x12, 0x34]
+        )
+    }
+
+    #[test(should_fail_with="Value length mismatch")]
+    fn fail_value_len_mismatch() {
+        let long_value = [0x0, 0x12, 0x34, 0x56];
+        verify_leaf(
+            [0xc6, 0x82, 0x20, 0xbc, 0x82, 0x12, 0x34],
+            Fragment::new_with_length(3, [0xa, 0xb, 0xc, 0x0, 0x0, 0x0, 0x0, 0x0]),
+            &mut 1,
+            long_value
+        )
+    }
+
+    #[test(should_fail_with="Value mismatch")]
+    fn fail_value_mismatch() {
+        let wrong_value = [0x0, 0x12, 0x35];
+        verify_leaf(
+            [0xc6, 0x82, 0x20, 0xbc, 0x82, 0x12, 0x34],
+            Fragment::new_with_length(3, [0xa, 0xb, 0xc, 0x0, 0x0, 0x0, 0x0, 0x0]),
+            &mut 1,
+            wrong_value
+        )
     }
 }

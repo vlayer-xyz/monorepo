@@ -140,9 +140,7 @@ pub fn verify_leaf<MAX_LEAF_LEN, MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN>(
     assert((prefix == 2) | (prefix == 3), "Leaf parity prefix must be 2 or 3");
     let leaf_key_part = strip_prefix(prefixed_leaf_key_part);
     let left_key_ending = key_nibbles.subfragment(*key_ptr, leaf_key_part.length);
-    assert(
-        leaf_key_part == left_key_ending, "Leaf key part does not correspond to left key nibbles"
-    );
+    assert(leaf_key_part == left_key_ending, "Leaf key part does not correspond to left key nibbles");
     *key_ptr += leaf_key_part.length;
     assert(*key_ptr == key_nibbles.length, "Expected to consume all key nibbles");
 
