@@ -60,7 +60,7 @@ mod sub_array_equals_up_to_length {
         assert(sub_array_equals_up_to_length(value, array, 1, 4));
     }
 
-     #[test]
+    #[test]
     fn success_big_subarray() {
         let value: [Field; 4] = [1, 2, 0, 0];
         let array: [Field; 5] = [0, 0, 1, 2, 0];
