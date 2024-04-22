@@ -1,0 +1,86 @@
+10.62s user 0.46s system 124% cpu 8.930 total:
+pub fn set_fragment<N>(data: [u8; N]) -> BoundedVec<Fragment<500>, 20> {
+    let mut result = BoundedVec::new();
+    let mut counter = 0;
+
+    for _ in 0..20 {
+        if (counter < 20) {
+            let tmp = Fragment { offset: 1, length: 1, data: [0; 500] };
+            result.push(tmp);
+            counter +=1;
+        }
+    }
+
+    result
+}
+
+
+Bez countera:
+2.65s user 0.13s system 500% cpu 0.555 total:
+pub fn set_fragment<N>(data: [u8; N]) -> BoundedVec<Fragment<500>, 20> {
+    let mut result = BoundedVec::new();
+    // let mut counter = 0;
+
+    for _ in 0..20 {
+        // if (counter < 20) {
+        let tmp = Fragment { offset: 1, length: 1, data: [0; 500] };
+        result.push(tmp);
+        //     counter +=1;
+        // }
+    }
+
+    result
+}
+
+
+Zamienione długości i ilości fragmentów:
+125.21s user 70.95s system 86% cpu 3:47.53 total:
+pub fn set_fragment<N>(data: [u8; N]) -> BoundedVec<Fragment<20>, 500> {
+    let mut result = BoundedVec::new();
+    let mut counter = 0;
+
+    for _ in 0..500 {
+        if (counter < 500) {
+            let tmp = Fragment { offset: 1, length: 1, data: [0; 20] };
+            result.push(tmp);
+            counter +=1;
+        }
+    }
+
+    result
+}
+
+
+Bez push:
+10.78s user 0.46s system 125% cpu 8.955 total:
+pub fn set_fragment<N>() -> BoundedVec<Fragment<500>, 20> {
+    let mut fragments = [zeroed(); 20];
+    let mut counter = 0;
+
+    for i in 0..20 {
+        if (counter < 20) {
+            fragments[i] = Fragment { offset: 1, length: 1, data: [0; 500] };
+            counter +=1;
+        }
+    }
+
+    bounded_vec_from_array(fragments)
+}
+
+
+RlpFragment zamiast Fragment:
+10.88s user 0.48s system 124% cpu 9.110 total
+pub fn set_fragment<N>() -> BoundedVec<RlpFragment<500>, 20> {
+    let mut result = BoundedVec::new();
+    let mut counter = 0;
+
+    for _ in 0..20 {
+        if (counter < 20) {
+            let tmp = RlpFragment { fragment: Fragment { offset: 1, length: 1, data: [0; 500] }, data_type: 0 };
+            result.push(tmp);
+            counter +=1;
+        }
+    }
+
+    result
+}
