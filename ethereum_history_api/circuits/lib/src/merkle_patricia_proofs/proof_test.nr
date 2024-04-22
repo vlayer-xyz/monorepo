@@ -242,3 +242,29 @@ mod extract_hash {
         let _ = extract_hash(invalid_node, key_nibbles, &mut key_ptr);
     }
 }
+
+mod verify_leaf {
+
+    use crate::merkle_patricia_proofs::proof::verify_leaf;
+    use crate::misc::fragment::Fragment;
+
+    #[test]
+    fn success_empty() {
+        verify_leaf(
+            [0xc2, 0x20, 0x80],
+            Fragment::new_with_length(0, [0; 2]),
+            &mut 0,
+            []
+        )
+    }
+
+    #[test]
+    fn success_simple() {
+        verify_leaf(
+            [0xc6, 0x82, 0x20, 0xbc, 0x82, 0x12, 0x34],
+            Fragment::new_with_length(3, [0xa, 0xb, 0xc, 0x0, 0x0, 0x0, 0x0, 0x0]),
+            &mut 1,
+            [0x00, 0x12, 0x34]
+        )
+    }
+}
