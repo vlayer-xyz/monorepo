@@ -80,6 +80,13 @@ mod sub_array_equals_up_to_length {
         let array: [Field; 6] = [42, 1, 2, 0, 0, 5];
         assert(sub_array_equals_up_to_length(value, array, 1, 5));
     }
+
+    #[test(should_fail)] // Unfortunately in-loop index access happens before the assert
+    fn array_out_of_bound() {
+        let value: [Field; 5] = [1, 2, 0, 0, 5];
+        let array: [Field; 5] = [42, 1, 2, 0, 0];
+        assert(sub_array_equals_up_to_length(value, array, 1, 5));
+    }
 }
 
 mod sub_array_equals {

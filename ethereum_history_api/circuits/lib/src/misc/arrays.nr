@@ -48,6 +48,7 @@ pub fn sub_array_equals_up_to_length<TItem, SUBARRAY_LEN, ARRAY_LEN>(
     length: u64
 ) -> bool where TItem: Eq {
     assert(length <= SUBARRAY_LEN, "Subarray index out of bound");
+    assert(offset + length <= ARRAY_LEN, "Array index out of bound");
     let mut result = true;
     for i in 0..SUBARRAY_LEN {
         if i < length {
