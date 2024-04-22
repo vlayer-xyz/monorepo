@@ -246,7 +246,8 @@ mod extract_hash {
 mod verify_leaf {
 
     use crate::merkle_patricia_proofs::proof::verify_leaf;
-    use crate::misc::fragment::Fragment;
+    use crate::misc::{bytes::bytes_to_nibbles, fragment::Fragment};
+    use crate::fixtures::merkle_proofs::branch_then_leaf::{leaf, key, value};
 
     #[test]
     fn success_empty() {
@@ -266,5 +267,17 @@ mod verify_leaf {
             &mut 1,
             [0x00, 0x12, 0x34]
         )
+    }
+
+    #[test]
+    fn success() {
+        let key_nibbles = bytes_to_nibbles(Fragment::new(3, 1, key));
+        verify_leaf(leaf, key_nibbles, &mut 1, value)
+    }
+
+    #[test(should_fail_with="Leaf expected to have 2 fields")]
+    fn fail_invalid_rlp() {
+        let invalid_leaf_rlp = [0xc1, 0x12];
+        verify_leaf(invalid_leaf_rlp, Fragment::new_with_length(0, [0; 2]), &mut 0, [])
     }
 }
