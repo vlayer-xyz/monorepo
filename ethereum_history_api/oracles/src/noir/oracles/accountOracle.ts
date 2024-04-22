@@ -5,13 +5,13 @@ import { encodeAccount, encodeStateProof } from './accountOracle/encode.js';
 import { decodeAddress, decodeField } from './common/decode.js';
 import { NoirArguments } from './oracles.js';
 import { AlchemyClient } from '../../ethereum/client.js';
-import { ENUM_LEN_TO_ENUM_KEY_LEN_RATIO } from '../../util/const.js';
 
 export enum ARGS {
   BLOCK_NUM,
-  ADDRESS
+  ADDRESS,
+  _LENGTH
 }
-const ARGS_COUNT = Object.keys(ARGS).length / ENUM_LEN_TO_ENUM_KEY_LEN_RATIO;
+const ARGS_COUNT: number = ARGS._LENGTH;
 
 export enum OFFSETS {
   NONCE,

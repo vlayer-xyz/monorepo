@@ -6,12 +6,12 @@ import { decodeField } from './common/decode.js';
 import { NoirArguments } from './oracles.js';
 import { type Block } from '../../ethereum/blockHeader.js';
 import { AlchemyClient } from '../../ethereum/client.js';
-import { ENUM_LEN_TO_ENUM_KEY_LEN_RATIO } from '../../util/const.js';
 
 export enum ARGS {
-  BLOCK_NUM
+  BLOCK_NUM,
+  _LENGTH
 }
-const ARGS_COUNT = Object.keys(ARGS).length / ENUM_LEN_TO_ENUM_KEY_LEN_RATIO;
+const ARGS_COUNT: number = ARGS._LENGTH;
 
 export async function getHeaderOracle(client: AlchemyClient, args: NoirArguments): Promise<ForeignCallOutput[]> {
   const blockNumber: bigint = decodeGetHeaderArguments(args);
