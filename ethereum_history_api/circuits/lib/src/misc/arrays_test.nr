@@ -62,9 +62,20 @@ mod sub_array_equals_up_to_length {
 
     #[test]
     fn success_big_subarray() {
-        let value: [Field; 4] = [1, 2, 0, 0];
+        let subarray: [Field; 4] = [1, 2, 0, 0];
         let array: [Field; 5] = [0, 0, 1, 2, 0];
-        assert(sub_array_equals_up_to_length(value, array, 2, 3));
+        assert(sub_array_equals_up_to_length(subarray, array, 2, 3));
+    }
+
+    #[test]
+    fn success_big() {
+        let subarray: [Field; 90] = [
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0
+        ];
+        let array: [Field; 100] = [
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0
+        ];
+        assert(sub_array_equals_up_to_length(subarray, array, 20, 80));
     }
 
     #[test(should_fail_with = "Not equals")]
