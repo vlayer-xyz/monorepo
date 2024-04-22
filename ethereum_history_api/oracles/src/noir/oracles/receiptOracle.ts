@@ -6,13 +6,12 @@ import { AlchemyClient } from '../../ethereum/client.js';
 import { getReceiptProof } from '../../ethereum/receiptProof.js';
 import { encodeReceipt, encodeReceiptProof } from './receiptOracle/encode.js';
 import { txTypeToHex } from '../../ethereum/receipt.js';
+import { Enum } from '../../util/enum.js';
 
 export enum ARGS {
   BLOCK_NUM,
-  TX_ID,
-  _LENGTH
+  TX_ID
 }
-const ARGS_COUNT: number = ARGS._LENGTH;
 
 export enum OFFSETS {
   TX_TYPE,
@@ -50,7 +49,7 @@ export function decodeGetReceiptArguments(args: NoirArguments): {
   blockNumber: bigint;
   txId: number;
 } {
-  assert(args.length === ARGS_COUNT, `get_receipt requires ${ARGS_COUNT} arguments`);
+  assert(args.length === Enum.size(ARGS), `get_receipt requires ${Enum.size(ARGS)} arguments`);
 
   assert(args[ARGS.BLOCK_NUM].length === 1, 'blockNumber should be a single value');
   const blockNumber = decodeField(args[ARGS.BLOCK_NUM][0]);

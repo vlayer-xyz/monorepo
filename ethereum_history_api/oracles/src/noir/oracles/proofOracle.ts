@@ -5,14 +5,13 @@ import { decodeAddress, decodeBytes32, decodeField } from './common/decode.js';
 import { NoirArguments } from './oracles.js';
 import { Hex } from 'viem';
 import { AlchemyClient } from '../../ethereum/client.js';
+import { Enum } from '../../util/enum.js';
 
 export enum ARGS {
   BLOCK_NUM,
   ADDRESS,
-  STORAGE_KEY,
-  _LENGTH
+  STORAGE_KEY
 }
-const ARGS_COUNT: number = ARGS._LENGTH;
 
 export const getProofOracle = async (client: AlchemyClient, args: NoirArguments): Promise<ForeignCallOutput[]> => {
   const { blockNumber, address, storageKey } = decodeGetProofArguments(args);
@@ -32,7 +31,7 @@ export function decodeGetProofArguments(args: NoirArguments): {
   address: Hex;
   storageKey: Hex;
 } {
-  assert(args.length === ARGS_COUNT, `get_proof requires ${ARGS_COUNT} arguments`);
+  assert(args.length === Enum.size(ARGS), `get_proof requires ${Enum.size(ARGS)} arguments`);
 
   assert(args[ARGS.BLOCK_NUM].length === 1, 'blockNumber should be a single value');
   const blockNumber = decodeField(args[ARGS.BLOCK_NUM][0]);

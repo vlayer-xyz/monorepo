@@ -5,13 +5,12 @@ import { encodeAccount, encodeStateProof } from './accountOracle/encode.js';
 import { decodeAddress, decodeField } from './common/decode.js';
 import { NoirArguments } from './oracles.js';
 import { AlchemyClient } from '../../ethereum/client.js';
+import { Enum } from '../../util/enum.js';
 
 export enum ARGS {
   BLOCK_NUM,
-  ADDRESS,
-  _LENGTH
+  ADDRESS
 }
-const ARGS_COUNT: number = ARGS._LENGTH;
 
 export enum OFFSETS {
   NONCE,
@@ -40,7 +39,7 @@ export function decodeGetAccountArguments(args: NoirArguments): {
   blockNumber: bigint;
   address: Hex;
 } {
-  assert(args.length === ARGS_COUNT, `get_account requires ${ARGS_COUNT} arguments`);
+  assert(args.length === Enum.size(ARGS), `get_account requires ${Enum.size(ARGS)} arguments`);
 
   assert(args[ARGS.BLOCK_NUM].length === 1, 'blockNumber should be a single value');
   const blockNumber = decodeField(args[ARGS.BLOCK_NUM][0]);
