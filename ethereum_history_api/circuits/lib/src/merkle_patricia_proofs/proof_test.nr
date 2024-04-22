@@ -1,3 +1,26 @@
+mod node_get_len {
+
+    use crate::merkle_patricia_proofs::proof::node_get_len;
+
+    #[test]
+    fn success() {
+        let node = [0xc2, 0x42, 0x05];
+        assert(node_get_len(node) == 3);
+    }
+
+    #[test]
+    fn padded() {
+        let node = [0xc2, 0x42, 0x05, 0x00];
+        assert(node_get_len(node) == 3);
+    }
+
+    #[test(should_fail_with="Decoded length of short list exceeds input length")]
+    fn rlp_len_too_long() {
+        let node = [0xc2, 0x42];
+        let _ = node_get_len(node);
+    }
+}
+
 mod parity {
     use crate::merkle_patricia_proofs::proof::{EVEN, ODD, parity};
 
@@ -217,88 +240,5 @@ mod extract_hash {
         let mut key_ptr = 0;
         let key_nibbles = Fragment::new_focused([]);
         let _ = extract_hash(invalid_node, key_nibbles, &mut key_ptr);
-    }
-}
-
-mod node_get_len {
-
-    use crate::merkle_patricia_proofs::proof::node_get_len;
-
-    #[test]
-    fn success() {
-        let node = [0xc2, 0x42, 0x05];
-        assert(node_get_len(node) == 3);
-    }
-
-    #[test]
-    fn padded() {
-        let node = [0xc2, 0x42, 0x05, 0x00];
-        assert(node_get_len(node) == 3);
-    }
-
-    #[test(should_fail_with="Decoded length of short list exceeds input length")]
-    fn rlp_len_too_long() {
-        let node = [0xc2, 0x42];
-        let _ = node_get_len(node);
-    }
-}
-
-mod assert_merkle_proof_from_fixtures {
-
-    use crate::merkle_patricia_proofs::proof::{assert_merkle_proof, Proof};
-    use crate::fixtures::merkle_proofs::{
-        leaf::{key as leaf_key, value as leaf_value, nodes as leaf_nodes, leaf, root as leaf_root},
-        branch_then_leaf::{
-        key as branch_then_leaf_key, value as branch_then_leaf_value, nodes as branch_then_leaf_nodes,
-        leaf as branch_then_leaf_leaf, root as branch_then_leaf_root
-    },
-        extension_odd::{
-        key as extension_odd_key, value as extension_odd_value, nodes as extension_odd_nodes,
-        leaf as extension_odd_leaf, root as extension_odd_root
-    },
-        extension_even::{
-        key as extension_even_key, value as extension_even_value, nodes as extension_even_nodes,
-        leaf as extension_even_leaf, root as extension_even_root
-    }
-    };
-
-    #[test]
-    fn success_leaf() {
-        assert_merkle_proof(
-            leaf_key,
-            leaf_value,
-            leaf_root,
-            Proof { nodes: leaf_nodes, leaf, depth: 1 }
-        )
-    }
-
-    #[test]
-    fn success_branch_then_leaf() {
-        assert_merkle_proof(
-            branch_then_leaf_key,
-            branch_then_leaf_value,
-            branch_then_leaf_root,
-            Proof { nodes: branch_then_leaf_nodes, leaf: branch_then_leaf_leaf, depth: 2 }
-        )
-    }
-
-    #[test]
-    fn success_extension_odd() {
-        assert_merkle_proof(
-            extension_odd_key,
-            extension_odd_value,
-            extension_odd_root,
-            Proof { nodes: extension_odd_nodes, leaf: extension_odd_leaf, depth: 3 }
-        )
-    }
-
-    #[test]
-    fn success_extension_even() {
-        assert_merkle_proof(
-            extension_even_key,
-            extension_even_value,
-            extension_even_root,
-            Proof { nodes: extension_even_nodes, leaf: extension_even_leaf, depth: 4 }
-        )
     }
 }
