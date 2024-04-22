@@ -6,13 +6,13 @@ import { AlchemyClient } from '../../ethereum/client.js';
 import { getReceiptProof } from '../../ethereum/receiptProof.js';
 import { encodeReceipt, encodeReceiptProof } from './receiptOracle/encode.js';
 import { txTypeToHex } from '../../ethereum/receipt.js';
-import { ENUM_LEN_TO_ENUM_KEY_LEN_RATO } from '../../util/const.js';
+import { ENUM_LEN_TO_ENUM_KEY_LEN_RATIO } from '../../util/const.js';
 
 export enum ARGS {
   BLOCK_NUM,
   TX_ID
 }
-const ARGS_COUNT = Object.keys(ARGS).length / ENUM_LEN_TO_ENUM_KEY_LEN_RATO;
+const ARGS_COUNT = Object.keys(ARGS).length / ENUM_LEN_TO_ENUM_KEY_LEN_RATIO;
 
 export enum OFFSETS {
   TX_TYPE,
