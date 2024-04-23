@@ -1,23 +1,23 @@
 mod node_get_len {
 
-    use crate::merkle_patricia_proofs::proof::node_get_len;
+    use crate::merkle_patricia_proofs::proof::get_node_len;
 
     #[test]
     fn success() {
-        let node = [0xc2, 0x42, 0x05];
-        assert(node_get_len(node) == 3);
+        let node = [0xc2, 0x42, 0x05]; // ["0x42","0x05"]
+        assert(get_node_len(node) == 3);
     }
 
     #[test]
     fn padded() {
         let node = [0xc2, 0x42, 0x05, 0x00];
-        assert(node_get_len(node) == 3);
+        assert(get_node_len(node) == 3);
     }
 
     #[test(should_fail_with="Decoded length of short list exceeds input length")]
     fn rlp_len_too_long() {
         let node = [0xc2, 0x42];
-        let _ = node_get_len(node);
+        let _ = get_node_len(node);
     }
 }
 
@@ -252,7 +252,7 @@ mod verify_leaf {
     #[test]
     fn success_empty() {
         verify_leaf(
-            [0xc2, 0x20, 0x80],
+            [0xc2, 0x20, 0x80], // ["0x20","0x"]
             Fragment::new_with_length(0, [0; 2]),
             &mut 0,
             []
@@ -262,7 +262,7 @@ mod verify_leaf {
     #[test]
     fn success_simple() {
         verify_leaf(
-            [0xc6, 0x82, 0x20, 0xbc, 0x82, 0x12, 0x34],
+            [0xc6, 0x82, 0x20, 0xbc, 0x82, 0x12, 0x34], // ["0x20bc","0x1234"]
             Fragment::new_with_length(3, [0xa, 0xb, 0xc, 0x0, 0x0, 0x0, 0x0, 0x0]),
             &mut 1,
             [0x00, 0x12, 0x34]
@@ -277,7 +277,7 @@ mod verify_leaf {
 
     #[test(should_fail_with="Leaf expected to have 2 fields")]
     fn fail_invalid_rlp() {
-        let invalid_leaf_rlp = [0xc1, 0x12];
+        let invalid_leaf_rlp = [0xc1, 0x12]; // ["0x12"]
         verify_leaf(
             invalid_leaf_rlp,
             Fragment::new_with_length(0, [0; 2]),
@@ -288,7 +288,7 @@ mod verify_leaf {
 
     #[test(should_fail_with="Leaf parity prefix must be 2 or 3")]
     fn fail_invalid_prefix() {
-        let leaf_with_invalid_prefix = [0xc6, 0x82, 0x00, 0xbc, 0x82, 0x12, 0x34];
+        let leaf_with_invalid_prefix = [0xc6, 0x82, 0x00, 0xbc, 0x82, 0x12, 0x34]; // ["0x00bc","0x1234"]
         verify_leaf(
             leaf_with_invalid_prefix,
             Fragment::new_with_length(0, [0; 2]),
@@ -301,7 +301,7 @@ mod verify_leaf {
     fn fail_wrong_key() {
         let wrong_key = Fragment::new_with_length(3, [0xa, 0xb, 0xd, 0x0, 0x0, 0x0, 0x0, 0x0]);
         verify_leaf(
-            [0xc6, 0x82, 0x20, 0xbc, 0x82, 0x12, 0x34],
+            [0xc6, 0x82, 0x20, 0xbc, 0x82, 0x12, 0x34], // ["0x20bc","0x1234"]
             wrong_key,
             &mut 1,
             [0x00, 0x12, 0x34]
@@ -312,7 +312,7 @@ mod verify_leaf {
     fn fail_key_not_consumed() {
         let long_key = Fragment::new_with_length(4, [0xa, 0xb, 0xc, 0xd, 0x0, 0x0, 0x0, 0x0]);
         verify_leaf(
-            [0xc6, 0x82, 0x20, 0xbc, 0x82, 0x12, 0x34],
+            [0xc6, 0x82, 0x20, 0xbc, 0x82, 0x12, 0x34], // ["0x20bc","0x1234"]
             long_key,
             &mut 1,
             [0x00, 0x12, 0x34]
@@ -323,7 +323,7 @@ mod verify_leaf {
     fn fail_value_len_mismatch() {
         let long_value = [0x0, 0x12, 0x34, 0x56];
         verify_leaf(
-            [0xc6, 0x82, 0x20, 0xbc, 0x82, 0x12, 0x34],
+            [0xc6, 0x82, 0x20, 0xbc, 0x82, 0x12, 0x34], // ["0x20bc","0x1234"]
             Fragment::new_with_length(3, [0xa, 0xb, 0xc, 0x0, 0x0, 0x0, 0x0, 0x0]),
             &mut 1,
             long_value
@@ -334,7 +334,7 @@ mod verify_leaf {
     fn fail_value_mismatch() {
         let wrong_value = [0x0, 0x12, 0x35];
         verify_leaf(
-            [0xc6, 0x82, 0x20, 0xbc, 0x82, 0x12, 0x34],
+            [0xc6, 0x82, 0x20, 0xbc, 0x82, 0x12, 0x34], // ["0x20bc","0x1234"]
             Fragment::new_with_length(3, [0xa, 0xb, 0xc, 0x0, 0x0, 0x0, 0x0, 0x0]),
             &mut 1,
             wrong_value

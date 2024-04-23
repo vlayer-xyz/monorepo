@@ -24,12 +24,12 @@ struct Proof<MAX_DEPTH, MAX_LEAF_LEN> {
 	depth: u64
 }
 
-pub fn node_get_len<MAX_LEN>(node: [u8; MAX_LEN]) -> u32 {
+pub fn get_node_len<MAX_LEN>(node: [u8; MAX_LEN]) -> u64 {
     let node_rlp_header = decode_to_rlp_header(node);
     let node_unpadded_len = node_rlp_header.offset + node_rlp_header.length;
-    assert(node_unpadded_len <= MAX_LEN, "Leaf RLP length exceeds MAX_LEN");
+    assert(node_unpadded_len <= MAX_LEN, "Node RLP length exceeds MAX_LEN");
 
-    node_unpadded_len as u32
+    node_unpadded_len
 }
 
 // Prefixes mean:
@@ -118,7 +118,7 @@ pub fn extract_hash<MAX_PREFIXED_KEY_NIBBLE_LEN>(
 }
 
 pub fn verify_node_hash<MAX_LEN>(node: [u8; MAX_LEN], hash: [u8; HASH_LEN]) {
-    assert(keccak256(node, node_get_len(node)) == hash, "Node doesn't hash to the expected hash");
+    assert(keccak256(node, get_node_len(node) as u32) == hash, "Node hash mismatch");
 }
 
 pub fn verify_leaf<MAX_LEAF_LEN, MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN>(
