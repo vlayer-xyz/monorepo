@@ -24,6 +24,12 @@ struct Proof<MAX_DEPTH, MAX_LEAF_LEN> {
 	depth: u64
 }
 
+struct ProofInput<MAX_KEY_LEN, MAX_VALUE_LEN, MAX_DEPTH, MAX_LEAF_LEN> {
+    key: Key<MAX_KEY_LEN>,
+    value: Value<MAX_VALUE_LEN>,
+    proof: Proof<MAX_DEPTH, MAX_LEAF_LEN>
+}
+
 pub fn get_node_len<MAX_LEN>(node: [u8; MAX_LEN]) -> u64 {
     let node_rlp_header = decode_to_rlp_header(node);
     let node_unpadded_len = node_rlp_header.offset + node_rlp_header.length;
