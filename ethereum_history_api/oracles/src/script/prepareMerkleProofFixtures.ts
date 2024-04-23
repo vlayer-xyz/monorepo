@@ -4,6 +4,7 @@ import { Trie } from '@ethereumjs/trie';
 import { PROOF_FIXTURES } from '../fixtures/merkleProofsConfig.js';
 import { assert, encodeHexStringToArray } from '../main.js';
 import { hasDuplicates } from '../util/array.js';
+import { bytesToHex } from 'viem';
 
 const NOIR_PROOF_FIXTURES_DIRECTORY = '../circuits/lib/src/fixtures/merkle_proofs';
 
@@ -32,8 +33,7 @@ for (const fixtureName in PROOF_FIXTURES) {
   const proofFixture = {
     key,
     value,
-    root: trie.root(),
-    proof: { nodes: proof.slice(0, proof.length - 1), leaf: proof[proof.length - 1] }
+    proof: proof.map((node) => bytesToHex(node))
   };
   await writeFile(`${NOIR_PROOF_FIXTURES_DIRECTORY}/${fixtureName}.nr`, createMerkleProofFixture(proofFixture));
 

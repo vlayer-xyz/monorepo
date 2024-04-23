@@ -16,6 +16,7 @@ import { getTxProof } from '../ethereum/txProof.js';
 import { createTransactionProofFixture } from './noir_fixtures/transaction_proof.js';
 import { createReceiptFixture } from './noir_fixtures/receipt.js';
 import { createLogFixture } from './noir_fixtures/log.js';
+import { createMerkleProofFixture } from './noir_fixtures/merkle_proof.js';
 
 const INDEX_NOT_FOUND = -1;
 
@@ -72,6 +73,7 @@ for (const chain in HISTORY_API_FIXTURES) {
         const txReceiptProof = await getReceiptProof(block, blockReceipts, txIdx);
         await writeFile(join(modulePath, 'receipt.nr'), createReceiptFixture(receipt));
         await writeFile(join(modulePath, 'receipt_proof.nr'), createReceiptProofFixture(txReceiptProof));
+        await writeFile(join(modulePath, 'receipt_proof_new.nr'), createMerkleProofFixture(txReceiptProof));
         fixtureModules.push('receipt_proof', 'receipt');
 
         const tx = await client.getTransaction({ hash: transactionHash });
