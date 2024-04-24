@@ -2,7 +2,7 @@ use dep::proof::{const::{MAX_ACCOUNT_STATE_LENGTH, HASH_LENGTH}, trie_proof::Tri
 use dep::u2b::u64_to_u8;
 
 use crate::account::{Account, StateProof};
-use crate::misc::{arrays::{sub_array_equals_up_to_length, array_equals}, types::{Address, Bytes32}, bytes::byte_value};
+use crate::misc::{arrays::sub_array_equals_up_to_length, types::{Address, Bytes32}, bytes::byte_value};
 use crate::rlp::decode::decode_list_of_small_strings;
 use crate::rlp::types::RlpList;
 
@@ -40,7 +40,7 @@ pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_ST
 }
 
 fn assert_address_equals(address1: Address, address2: Address) {
-    assert(array_equals(address1, address2), "Address mismatch");
+    assert_eq(address1, address2, "Address mismatch");
 }
 
 fn assert_account_proof(account_state_proof: StateProof, state_root: [u8; HASH_LENGTH]) {
