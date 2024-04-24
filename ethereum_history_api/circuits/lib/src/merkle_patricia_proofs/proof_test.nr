@@ -254,7 +254,8 @@ mod verify_leaf {
     global empty_leaf = [0xc2, 0x20, 0x80]; // ["0x20","0x"]
 
     global MAX_PREFIXED_KEY_NIBBLE_LEN = 6;
-    global some_key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> = bytes_to_nibbles(Fragment::new_with_length(2, [0xab, 0xcd, 0x00, 0x00, 0x00, 0x00])); // Fragment::new_with_length(3, [0xa, 0xb, 0xc, 0x0]);
+    global some_key = [0xab, 0xcd, 0x00, 0x00, 0x00, 0x00];
+    global some_key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> = bytes_to_nibbles(Fragment::new_with_length(2, some_key));
     global some_value = [0x00, 0x12, 0x34];
     global some_leaf = [0xc6, 0x82, 0x20, 0xcd, 0x82, 0x12, 0x34]; // ["0x20bc","0x1234"]
 
