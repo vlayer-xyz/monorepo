@@ -1,4 +1,5 @@
-use crate::rlp::decode::{decode_to_rlp_header, decode_list_of_small_strings, RlpList};
+use crate::rlp::decode::{decode_to_rlp_header, decode_list_of_small_strings};
+use crate::rlp::list::RlpList;
 use crate::misc::{
     fragment::Fragment, arrays::{sub_array_equals_up_to_length, memcpy_up_to_length},
     types::{Hash, HASH_LEN}, bytes::{bytes_to_nibbles, byte_to_nibbles, right_pad}
@@ -60,13 +61,13 @@ pub fn extract_hash_from_branch_node<MAX_PREFIXED_KEY_NIBBLE_LEN>(
     key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN>,
     key_ptr: &mut u64
 ) -> Fragment<HASH_LEN> {
-    let curr_nibble = key_nibbles.at(*key_ptr);
+    let curr_nibble = key_nibbles.at(*key_ptr) as u64;
     assert(
-        node_rlp_list.fragments[curr_nibble].length == HASH_LEN, "Expected a hash at position given by the key nibble"
+        node_rlp_list.get(curr_nibble).length == HASH_LEN, "Expected a hash at position given by the key nibble"
     );
     *key_ptr += 1;
 
-    Fragment::new(node_rlp_list.fragments[curr_nibble].offset, HASH_LEN, node).focus()
+    Fragment::new(node_rlp_list.get(curr_nibble).offset, HASH_LEN, node).focus()
 }
 
 pub fn extract_hash_from_extension_node<MAX_PREFIXED_KEY_NIBBLE_LEN>(
@@ -75,11 +76,7 @@ pub fn extract_hash_from_extension_node<MAX_PREFIXED_KEY_NIBBLE_LEN>(
     key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN>,
     key_ptr: &mut u64
 ) -> Fragment<HASH_LEN> {
-    let prefixed_extension_key_part: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> = Fragment::new(
-        node_rlp_list.fragments[0].offset,
-        node_rlp_list.fragments[0].length,
-        node
-    ).focus();
+    let prefixed_extension_key_part: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> = Fragment::new(node_rlp_list.get(0).offset, node_rlp_list.get(0).length, node).focus();
 
     let (prefix, _) = byte_to_nibbles(prefixed_extension_key_part.at(0));
     assert((prefix == 0) | (prefix == 1), "Extension parity prefix must be 0 or 1");
@@ -88,12 +85,10 @@ pub fn extract_hash_from_extension_node<MAX_PREFIXED_KEY_NIBBLE_LEN>(
     assert(
         extension_key_part == curr_key_nibbles_part, "Extension key part does not correspond to given key nibbles"
     );
-    assert(
-        node_rlp_list.fragments[1].length == HASH_LEN, "Expected a hash at the end of the extension node"
-    );
+    assert(node_rlp_list.get(1).length == HASH_LEN, "Expected a hash at the end of the extension node");
     *key_ptr += extension_key_part.length;
 
-    Fragment::new(node_rlp_list.fragments[1].offset, HASH_LEN, node).focus()
+    Fragment::new(node_rlp_list.get(1).offset, HASH_LEN, node).focus()
 }
 
 pub fn extract_hash<MAX_PREFIXED_KEY_NIBBLE_LEN>(
@@ -104,9 +99,9 @@ pub fn extract_hash<MAX_PREFIXED_KEY_NIBBLE_LEN>(
     let mut hash = Fragment::new_focused([0; HASH_LEN]);
     let node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list_of_small_strings(node);
 
-    if (node_rlp_list.num_fields == BRANCH_NODE_NUM_FIELDS) {
+    if (node_rlp_list.len == BRANCH_NODE_NUM_FIELDS) {
         hash = extract_hash_from_branch_node(node, node_rlp_list, key_nibbles, key_ptr);
-    } else if (node_rlp_list.num_fields == EXTENSION_NODE_NUM_FIELDS) {
+    } else if (node_rlp_list.len == EXTENSION_NODE_NUM_FIELDS) {
         hash = extract_hash_from_extension_node(node, node_rlp_list, key_nibbles, key_ptr);
     } else {
         assert(false, "Invalid node type");
@@ -125,11 +120,11 @@ pub fn assert_merkle_proof<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH
     let key_nibbles = bytes_to_nibbles(Fragment::new_with_length(key.len, key.storage));
 
     let leaf_rlp_list: RlpList<2> = decode_list_of_small_strings(proof.leaf);
-    assert(leaf_rlp_list.num_fields == 2, "Leaf expected to have 2 fields");
+    assert(leaf_rlp_list.len == 2, "Leaf expected to have 2 fields");
 
     let prefixed_leaf_key_part: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> = Fragment::new(
-        leaf_rlp_list.fragments[0].offset,
-        leaf_rlp_list.fragments[0].length,
+        leaf_rlp_list.get(0).offset,
+        leaf_rlp_list.get(0).length,
         proof.leaf
     ).focus();
 
@@ -142,8 +137,8 @@ pub fn assert_merkle_proof<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH
         sub_array_equals_up_to_length(
             value,
             proof.leaf,
-            leaf_rlp_list.fragments[1].offset,
-            leaf_rlp_list.fragments[1].length
+            leaf_rlp_list.get(1).offset,
+            leaf_rlp_list.get(1).length
         ), "Value mismatch"
     );
 

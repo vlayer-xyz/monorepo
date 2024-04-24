@@ -1,5 +1,6 @@
 use crate::{verifiers::transaction::MAX_TX_RLP_LENGTH, transaction::{TxType, TxPartial}};
-use crate::rlp::decode::{RlpList, decode_list};
+use crate::rlp::decode::decode_list;
+use crate::rlp::list::RlpList;
 use crate::misc::{types::{ADDRESS_LENGTH, U128_LENGTH}, bytes::byte_value};
 use dep::u2b::u64_to_u8;
 use dep::proof::const::HASH_LENGTH;
@@ -26,10 +27,11 @@ pub(crate) fn assert_tx_rlp_equals<MAX_DATA_LEN>(
     tx_type: TxType,
     tx: TxPartial<MAX_DATA_LEN>
 ) {
-    let RlpList {num_fields, fragments}: RlpList<MAX_TX_FIELDS_COUNT> = decode_list(tx_rlp);
+    let rlp_list: RlpList<MAX_TX_FIELDS_COUNT> = decode_list(tx_rlp);
+    let fragments = rlp_list.storage();
 
     let FieldLayout {field_count, nonce_idx, gas_limit_idx, to_idx, signature_idx} = TX_TYPE_TO_FIELD_LAYOUT[tx_type];
-    assert(num_fields == field_count, "Invalid number of fields in tx RLP");
+    assert(rlp_list.len == field_count, "Invalid number of fields in tx RLP");
 
     let nonce = u64_to_u8(tx.nonce);
     fragments[nonce_idx].assert_string_eq("Nonce", tx_rlp, byte_value(nonce));
