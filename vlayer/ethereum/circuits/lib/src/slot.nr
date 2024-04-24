@@ -15,7 +15,11 @@ pub(crate) fn mapping(slot: Bytes32, address: Address) -> Bytes32 {
 
 pub(crate) fn dynamic_array(slot: Bytes32, size: Field, index: Field) -> Bytes32 {
     let start = keccak256(slot, 32);
-    add_bytes(start, field_to_bytes32(size * index))
+    dynamic_array_with_precalculated_slot(start, size, index)
+}
+
+pub(crate) fn dynamic_array_with_precalculated_slot(slot: Bytes32, size: Field, index: Field) -> Bytes32 {
+    add_bytes(slot, field_to_bytes32(size * index))
 }
 
 pub(crate) fn struct_slot(slot: Bytes32, offset: Field) -> Bytes32 {
