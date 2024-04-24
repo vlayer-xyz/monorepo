@@ -5,14 +5,20 @@ import { encodeField, encodeHex, encodeProof, encodeBytes } from '../common/enco
 import { MAX_TRIE_NODE_LEN, ZERO_PAD_VALUE } from '../common/const.js';
 import { Proof } from '../../../ethereum/proof.js';
 import { TransactionReceipt } from '../../../types.js';
-import { BYTES_32_ZERO, U1_ZERO } from '../../../util/const.js';
+import { BYTES_32_ZERO, BYTE_HEX_LEN, U1_ZERO } from '../../../util/const.js';
 
 export const MAX_RECEIPT_KEY_LEN = 3;
 export const MAX_RECEIPT_KEY_NIBBLE_LEN = 6;
+export const MAX_RECEIPT_PREFIXED_KEY_NIBBLE_LEN = MAX_RECEIPT_KEY_NIBBLE_LEN + BYTE_HEX_LEN;
 export const MAX_RECEIPT_TREE_DEPTH = MAX_RECEIPT_KEY_NIBBLE_LEN + 1;
 export const MAX_RECEIPT_PROOF_LEN = MAX_TRIE_NODE_LEN * MAX_RECEIPT_TREE_DEPTH;
 export const MAX_RECEIPT_ENCODED_LEN = 525;
 export const MAX_RECEIPT_RLP_LEN = MAX_RECEIPT_ENCODED_LEN - 1;
+export const MAX_RECEIPT_SIZE_M = 1000;
+// MAX_LEAF_SIZE_M = 1043 = 32 + 1000 + 11 = MAX_KEY_SIZE + MAX_RECEIPT_SIZE_M + MAX_RLP_HEADERS_SIZE
+// MAX_KEY_SIZE = 32 in Ethereum
+// MAX_RLP_HEADERS_SIZE = 1 (key) + 5 (receipt) + 5 (key & receipt)
+export const MAX_LEAF_SIZE_M = 1043;
 
 export enum RECEIPT_OFFSETS {
   STATUS,
