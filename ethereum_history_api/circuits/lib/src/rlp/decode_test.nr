@@ -105,26 +105,29 @@ mod decode_string {
 
 mod decode_list {
     use crate::rlp::{decode::{decode_list, RlpList, STRING}, fragment::RlpFragment};
+    use crate::rlp::list::create_rlp_list;
 
     #[test]
     fn empty() {
         let empty_list: RlpList<1> = decode_list([0xc0]);
-        assert(empty_list.num_fields == 0);
+        assert(empty_list.len() == 0);
     }
 
     #[test]
     fn three_elements() {
         let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0]; // ["0x636174","0x646f68","0x00"]
-        let expected = RlpList {
-            fragments: [
-                RlpFragment { offset: 2, length: 3, data_type: STRING },
-                RlpFragment { offset: 6, length: 3, data_type: STRING },
-                RlpFragment { offset: 9, length: 1, data_type: STRING },
-                RlpFragment { offset: 0, length: 0, data_type: STRING }
-            ],
-            num_fields: 3
-        };
-        assert(decode_list(rlp) == expected);
+        let expected = create_rlp_list(
+            [
+            RlpFragment { offset: 2, length: 3, data_type: STRING },
+            RlpFragment { offset: 6, length: 3, data_type: STRING },
+            RlpFragment { offset: 9, length: 1, data_type: STRING },
+            RlpFragment { offset: 0, length: 0, data_type: STRING }
+        ]
+        );
+
+        let decoded = decode_list(rlp);
+        assert_eq(decoded.len(), expected.len());
+        assert_eq(decoded.storage(), expected.storage());
     }
 
     #[test(should_fail_with = "Expected a list")]
@@ -148,44 +151,49 @@ mod decode_list {
 
 mod decode_list_of_small_strings {
     use crate::rlp::decode::{decode_list_of_small_strings, RlpList, RlpFragment, STRING};
+    use crate::rlp::list::create_rlp_list;
 
     #[test]
     fn success_empty_list() {
         let rlp = [0xc0];
-        let expected = RlpList { fragments: [], num_fields: 0 };
+        let expected = create_rlp_list([]);
 
-        assert(decode_list_of_small_strings(rlp) == expected);
+        let decoded = decode_list_of_small_strings(rlp);
+        assert_eq(decoded.len(), expected.len());
+        assert_eq(decoded.storage(), expected.storage());
     }
 
     #[test]
     fn success() {
         let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13]; //["0x636174","0x646f68","0x13"]
-        let expected = RlpList {
-            fragments: [
-                RlpFragment { offset: 2, length: 3, data_type: STRING },
-                RlpFragment { offset: 6, length: 3, data_type: STRING },
-                RlpFragment { offset: 9, length: 1, data_type: STRING }
-            ],
-            num_fields: 3
-        };
+        let expected = create_rlp_list(
+            [
+            RlpFragment { offset: 2, length: 3, data_type: STRING },
+            RlpFragment { offset: 6, length: 3, data_type: STRING },
+            RlpFragment { offset: 9, length: 1, data_type: STRING }
+        ]
+        );
 
-        assert(decode_list_of_small_strings(rlp) == expected);
+        let decoded = decode_list_of_small_strings(rlp);
+        assert_eq(decoded.len(), expected.len());
+        assert_eq(decoded.storage(), expected.storage());
     }
 
     #[test]
     fn success_comparing_with_zeros() {
         let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13]; // ["0x636174","0x646f68","0x13"]
-        let expected = RlpList {
-            fragments: [
-                RlpFragment { offset: 2, length: 3, data_type: STRING },
-                RlpFragment { offset: 6, length: 3, data_type: STRING },
-                RlpFragment { offset: 9, length: 1, data_type: STRING },
-                RlpFragment { offset: 0, length: 0, data_type: STRING }
-            ],
-            num_fields: 3
-        };
+        let expected = create_rlp_list(
+            [
+            RlpFragment { offset: 2, length: 3, data_type: STRING },
+            RlpFragment { offset: 6, length: 3, data_type: STRING },
+            RlpFragment { offset: 9, length: 1, data_type: STRING },
+            RlpFragment { offset: 0, length: 0, data_type: STRING }
+        ]
+        );
 
-        assert(decode_list_of_small_strings(rlp) == expected);
+        let decoded = decode_list_of_small_strings(rlp);
+        assert_eq(decoded.len(), expected.len());
+        assert_eq(decoded.storage(), expected.storage());
     }
 
     #[test(should_fail_with="Inconsistent rlp length")]
