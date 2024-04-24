@@ -1,10 +1,10 @@
 import { mkdir, rm, writeFile } from 'fs/promises';
-import { createMerkleProofFixture } from './noir_fixtures/merkle_proof.js';
 import { Trie } from '@ethereumjs/trie';
 import { PROOF_FIXTURES } from '../fixtures/merkleProofsConfig.js';
 import { assert, encodeHexStringToArray } from '../main.js';
 import { hasDuplicates } from '../util/array.js';
 import { bytesToHex } from 'viem';
+import { createNewProofFixture } from './noir_fixtures/new_proof.js';
 
 const NOIR_PROOF_FIXTURES_DIRECTORY = '../circuits/lib/src/fixtures/merkle_proofs';
 
@@ -35,7 +35,14 @@ for (const fixtureName in PROOF_FIXTURES) {
     value,
     proof: proof.map((node) => bytesToHex(node))
   };
-  await writeFile(`${NOIR_PROOF_FIXTURES_DIRECTORY}/${fixtureName}.nr`, createMerkleProofFixture(proofFixture));
+  const maxPrefixedKeyNibbleLen = proofFixture.key.length;
+  const maxValueLen = 100;
+  const maxLeafLen = 100;
+  const maxDepth = 10;
+  await writeFile(
+    `${NOIR_PROOF_FIXTURES_DIRECTORY}/${fixtureName}.nr`,
+    createNewProofFixture(proofFixture, maxPrefixedKeyNibbleLen, maxValueLen, maxLeafLen, maxDepth)
+  );
 
   fixtureModule += `mod ${fixtureName};\n`;
 }
