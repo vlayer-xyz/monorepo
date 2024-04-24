@@ -1,5 +1,6 @@
 use crate::misc::bounded_vecs::bounded_vec_from_array;
 use crate::misc::arrays::sub_array_equals_up_to_length;
+use crate::rlp::fragment::RlpFragment;
 
 #[test]
   fn success() {
@@ -8,6 +9,15 @@ use crate::misc::arrays::sub_array_equals_up_to_length;
     assert_eq(vec.len(), 5);
     assert_eq(vec.max_len(), 10);
     assert(sub_array_equals_up_to_length(arr, vec.storage(), 0, 5));
+}
+
+#[test]
+fn fragments() {
+    let arr = [RlpFragment { offset: 1, length: 2, data_type: 0 }];
+    let vec: BoundedVec <RlpFragment, 10> = bounded_vec_from_array(arr);
+    assert_eq(vec.len, 1);
+    assert_eq(vec.max_len(), 10);
+    assert(sub_array_equals_up_to_length(arr, vec.storage(), 0, 1));
 }
 
 #[test(should_fail_with = "Array size exceeds bounded vector size")]
