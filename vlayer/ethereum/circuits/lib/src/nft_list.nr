@@ -9,7 +9,11 @@ mod mainnet {
 
     global BORED_APE_YACHT_CLUB = ERC721Token {
         address: [0xbc, 0x4c, 0xa0, 0xed, 0xa7, 0x64, 0x7a, 0x8a, 0xb7, 0xc2, 0x06, 0x1c, 0x2e, 0x11, 0x8a, 0x18, 0xa9, 0x36, 0xf1, 0x3d],
-        token_id_to_slot: |token_id| add_bytes(add_bytes(BORED_APE_YACHT_CLUB_TOKEN_OWNERS_INNER_SLOT, token_id), token_id),
+        token_id_to_slot: |token_id| {
+            
+
+            add_bytes(add_bytes(BORED_APE_YACHT_CLUB_TOKEN_OWNERS_INNER_SLOT, token_id), token_id)
+        },
         chain_id: chain_id::MAINNET
     };
 }

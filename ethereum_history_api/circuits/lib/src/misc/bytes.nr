@@ -112,17 +112,17 @@ pub(crate) fn byte_value<N>(in_value: [u8; N]) -> BoundedVec<u8, N> {
 }
 
 pub fn add_bytes<N>(left: [u8; N], right: [u8; N]) -> [u8; N] {
-    let mut carry_over: u64 = 0;
+    let mut carry: u32 = 0;
     let mut result: [u8; N] = [0; N];
 
     for j in 0..N {
         let index = N - j - 1;
-        let sum = left[index] as u64 + right[index] as u64 + carry_over;
+        let sum = left[index] as u32 + right[index] as u32 + carry;
         result[index] = sum as u8;
-        carry_over = sum >> 8;
+        carry = sum >> 8;
     }
 
-    assert(carry_over == 0, "Overflow detected in addition");
+    assert(carry == 0, "Addition overflow");
 
     result
 }
