@@ -5,7 +5,7 @@ import { MAX_TRIE_NODE_LEN, ZERO_PAD_VALUE } from '../../noir/oracles/common/con
 import { Proof } from '../../ethereum/proof.js';
 import { padHex } from 'viem';
 
-export function createMerkleProofFixture(
+export function createNewProofFixture(
   proof: Proof,
   maxPrefixedKeyNibbleLen: number,
   maxValueLen: number,
@@ -16,8 +16,8 @@ export function createMerkleProofFixture(
   const key = encodeHex(paddedKey);
   const paddedValue = padHex(proof.value, { size: maxValueLen, dir: 'left' });
   const value = encodeHex(paddedValue);
-  const proof_nodes = padArray(proof.proof.slice(0, proof.proof.length - 1), maxDepth, ZERO_PAD_VALUE);
-  const nodes = proof_nodes.map((node) =>
+  const paddedNodes = padArray(proof.proof.slice(0, proof.proof.length - 1), maxDepth, ZERO_PAD_VALUE);
+  const nodes = paddedNodes.map((node) =>
     indentBlock(joinArray(padArray(encodeHex(node), MAX_TRIE_NODE_LEN, ZERO_PAD_VALUE)), 1)
   );
   const leaf = padArray(encodeHex(proof.proof[proof.proof.length - 1]), maxLeafLen, ZERO_PAD_VALUE);
