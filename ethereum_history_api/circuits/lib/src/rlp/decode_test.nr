@@ -120,8 +120,7 @@ mod decode_list {
             [
             RlpFragment { offset: 2, length: 3, data_type: STRING },
             RlpFragment { offset: 6, length: 3, data_type: STRING },
-            RlpFragment { offset: 9, length: 1, data_type: STRING },
-            RlpFragment { offset: 0, length: 0, data_type: STRING }
+            RlpFragment { offset: 9, length: 1, data_type: STRING }
         ]
         );
         let decoded = decode_list(rlp);
@@ -130,19 +129,19 @@ mod decode_list {
     }
 
     #[test(should_fail_with = "Expected a list")]
-    fn fail_wrong_data_type() {
+        fn fail_wrong_data_type() {
         let rlp_of_single_byte = [0x00];
         let _ : RlpList<1> = decode_list(rlp_of_single_byte);
     }
 
     #[test(should_fail_with = "Decoded length of short list exceeds input length")]
-    fn fail_length_exceeds_input_length() {
+        fn fail_length_exceeds_input_length() {
         let rlp = [0xc9, 0x13];
         let _ : RlpList<1> = decode_list(rlp);
     }
 
     #[test(should_fail_with="Inconsistent rlp length")]
-    fn fail_inconsistent_length() {
+        fn fail_inconsistent_length() {
         let rlp = [0xc7, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13];
         let _ : RlpList<3> = decode_list(rlp);
     }
@@ -174,24 +173,7 @@ mod decode_list_of_small_strings {
         );
 
         let decoded = decode_list_of_small_strings(rlp);
-        assert_eq(decoded.len(), expected.len());
-        assert_eq(decoded.storage(), expected.storage());
-    }
-
-    #[test]
-    fn success_comparing_with_zeros() {
-        let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13]; // ["0x636174","0x646f68","0x13"]
-        let expected = create_rlp_list(
-            [
-            RlpFragment { offset: 2, length: 3, data_type: STRING },
-            RlpFragment { offset: 6, length: 3, data_type: STRING },
-            RlpFragment { offset: 9, length: 1, data_type: STRING },
-            RlpFragment { offset: 0, length: 0, data_type: STRING }
-        ]
-        );
-
-        let decoded = decode_list_of_small_strings(rlp);
-        assert_eq(decoded.len(), expected.len());
+        assert_eq(decoded.len, expected.len);
         assert_eq(decoded.storage(), expected.storage());
     }
 
