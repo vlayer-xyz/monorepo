@@ -163,12 +163,36 @@ mod pop_front {
         assert(fragment.length == 0);
     }
 
-    #[test(should_fail_with="Cannot pop from an empty slice")]
+    #[test(should_fail_with="Cannot pop from an empty fragment")]
     fn fail() {
         let mut fragment = Fragment::new(1, 2, [1, 2, 3]);
         let _ = fragment.pop_front();
         let _ = fragment.pop_front();
         let _ = fragment.pop_front();
+    }
+}
+
+mod push_back {
+
+    use crate::misc::fragment::Fragment;
+
+    #[test]
+    fn success() {
+        let mut fragment = Fragment::new(1, 1, [-1, 0, 1, 2]);
+        assert(fragment.at(0) == 0);
+        fragment.push_back(1);
+        assert(fragment.at(1) == 1);
+        fragment.push_back(2);
+        assert(fragment.at(2) == 2);
+        assert(fragment.length == 3);
+    }
+
+    #[test(should_fail_with="Cannot push: fragment is full")]
+    fn fail() {
+        let mut fragment = Fragment::new(1, 1, [0, 1, 0, 0]);
+        fragment.push_back(2);
+        fragment.push_back(3);
+        fragment.push_back(4);
     }
 }
 
