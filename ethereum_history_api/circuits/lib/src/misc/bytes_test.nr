@@ -222,22 +222,45 @@ mod add_bytes {
     use crate::misc::bytes::add_bytes;
 
     #[test]
-    fn success() {
+    fn empty() {
         assert_eq([], add_bytes([], []));
+    }
+
+    #[test]
+    fn zero() {
         assert_eq([0], add_bytes([0], [0]));
         assert_eq([0, 0, 0, 0, 0], add_bytes([0, 0, 0, 0, 0], [0, 0, 0, 0, 0]));
+    }
 
+    #[test]
+    fn simple() {
         assert_eq([2], add_bytes([1], [1]));
         assert_eq([100], add_bytes([37], [63]));
         assert_eq([7, 9, 11, 13, 15], add_bytes([1, 2, 3, 4, 5], [6, 7, 8, 9, 10]));
+        assert_eq([0xff, 0xff, 0xff], add_bytes([0xff, 0xff, 0xfe], [0, 0, 1]));
+        assert_eq([0xff, 0xff, 0xff], add_bytes([0, 0, 1], [0xff, 0xff, 0xfe]));
+        assert_eq([0xff, 0xff, 0xff], add_bytes([0xaa, 0xbb, 0xcc], [0x55, 0x44, 0x33]));
+    }
+
+    #[test]
+    fn carry() {
         assert_eq([1, 0], add_bytes([0, 255], [0, 1]));
         assert_eq([0x11, 0xa, 0x4], add_bytes([0x10, 0xff, 0xfa], [0x0, 0xa, 0xa]));
         assert_eq([0xff, 0xff, 0xff, 0xfe], add_bytes([0x00, 0xff, 0xff, 0xff], [0xfe, 0xff, 0xff, 0xff]));
     }
 
-    #[test(should_fail_with="Overflow detected in addition")]
-    fn overflow() {
+    #[test(should_fail_with="Addition overflow")]
+    fn overflow_simple() {
         let _ = add_bytes([0xff], [0x1]);
-        let _ = add_bytes([0xff, 0x00, 0x00], [0x1, 0x00, 0x00]);
+    }
+
+    #[test(should_fail_with="Addition overflow")]
+    fn overflow_full_traversal() {
+        let _ = add_bytes([0xff, 0xaa, 0xbb], [0x0, 0x55, 0x45]);
+    }
+
+    #[test(should_fail_with="Addition overflow")]
+    fn overflow_two_max() {
+        let _ = add_bytes([0xff, 0xff, 0xff], [0xff, 0xff, 0xff]);
     }
 }
