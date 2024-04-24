@@ -116,7 +116,7 @@ mod decode_list {
     #[test]
     fn three_elements() {
         let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0]; // ["0x636174","0x646f68","0x00"]
-        let expected = create_rlp_list(
+        let expected: RlpList<10> = create_rlp_list(
             [
             RlpFragment { offset: 2, length: 3, data_type: STRING },
             RlpFragment { offset: 6, length: 3, data_type: STRING },
@@ -155,7 +155,7 @@ mod decode_list_of_small_strings {
     #[test]
     fn success_empty_list() {
         let rlp = [0xc0];
-        let expected = create_rlp_list([]);
+        let expected: RlpList<10> = create_rlp_list([]);
 
         let decoded = decode_list_of_small_strings(rlp);
         assert_eq(decoded.len, expected.len);
@@ -165,7 +165,7 @@ mod decode_list_of_small_strings {
     #[test]
     fn success() {
         let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13]; //["0x636174","0x646f68","0x13"]
-        let expected = create_rlp_list(
+        let expected: RlpList<10> = create_rlp_list(
             [
             RlpFragment { offset: 2, length: 3, data_type: STRING },
             RlpFragment { offset: 6, length: 3, data_type: STRING },
