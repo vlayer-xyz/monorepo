@@ -260,12 +260,7 @@ mod verify_leaf {
 
     #[test]
     fn success_empty() {
-        verify_leaf(
-            empty_leaf,
-            empty_key,
-            &mut 0,
-            empty_value
-        )
+        verify_leaf(empty_leaf, empty_key, &mut 0, empty_value)
     }
 
     #[test]
@@ -283,23 +278,13 @@ mod verify_leaf {
     #[test(should_fail_with="Leaf expected to have 2 fields")]
     fn fail_invalid_rlp() {
         let invalid_leaf_rlp = [0xc1, 0x12]; // ["0x12"]
-        verify_leaf(
-            invalid_leaf_rlp,
-            empty_key,
-            &mut 0,
-            empty_value
-        )
+        verify_leaf(invalid_leaf_rlp, empty_key, &mut 0, empty_value)
     }
 
     #[test(should_fail_with="Leaf parity prefix must be 2 or 3")]
     fn fail_invalid_prefix() {
         let leaf_with_invalid_prefix = [0xc6, 0x82, 0x00, 0xbc, 0x82, 0x12, 0x34]; // ["0x00bc","0x1234"]
-        verify_leaf(
-            leaf_with_invalid_prefix,
-            empty_key,
-            &mut 0,
-            empty_value
-        )
+        verify_leaf(leaf_with_invalid_prefix, empty_key, &mut 0, empty_value)
     }
 
     #[test(should_fail_with="Leaf key part does not correspond to left key nibbles")]
