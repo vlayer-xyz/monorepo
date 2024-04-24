@@ -105,7 +105,7 @@ mod decode_string {
 
 mod decode_list {
     use crate::rlp::{decode::{decode_list, RlpList, STRING}, fragment::RlpFragment};
-    use crate::rlp::list::create_rlp_list;
+    use crate::misc::bounded_vecs::bounded_vec_from_array;
 
     #[test]
     fn empty() {
@@ -116,7 +116,7 @@ mod decode_list {
     #[test]
     fn three_elements() {
         let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0]; // ["0x636174","0x646f68","0x00"]
-        let expected: RlpList<10> = create_rlp_list(
+        let expected: RlpList<10> = bounded_vec_from_array(
             [
             RlpFragment { offset: 2, length: 3, data_type: STRING },
             RlpFragment { offset: 6, length: 3, data_type: STRING },
@@ -149,12 +149,12 @@ mod decode_list {
 
 mod decode_list_of_small_strings {
     use crate::rlp::decode::{decode_list_of_small_strings, RlpList, RlpFragment, STRING};
-    use crate::rlp::list::create_rlp_list;
+    use crate::misc::bounded_vecs::bounded_vec_from_array;
 
     #[test]
     fn success_empty_list() {
         let rlp = [0xc0];
-        let expected: RlpList<10> = create_rlp_list([]);
+        let expected: RlpList<10> = bounded_vec_from_array([]);
 
         let decoded = decode_list_of_small_strings(rlp);
         assert_eq(decoded.len, expected.len);
@@ -164,7 +164,7 @@ mod decode_list_of_small_strings {
     #[test]
     fn success() {
         let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13]; //["0x636174","0x646f68","0x13"]
-        let expected: RlpList<10> = create_rlp_list(
+        let expected: RlpList<10> = bounded_vec_from_array(
             [
             RlpFragment { offset: 2, length: 3, data_type: STRING },
             RlpFragment { offset: 6, length: 3, data_type: STRING },

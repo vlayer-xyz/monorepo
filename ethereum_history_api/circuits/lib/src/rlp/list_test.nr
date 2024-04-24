@@ -1,7 +1,8 @@
-use crate::rlp::list::{RlpList, create_rlp_list};
+use crate::rlp::list::RlpList;
 use crate::rlp::fragment::RlpFragment;
 use crate::misc::fragment::Fragment;
 use crate::rlp::decode::{LIST, STRING};
+use crate::misc::bounded_vecs::bounded_vec_from_array;
 
 global fragments = [
     RlpFragment { 
@@ -23,7 +24,7 @@ global fragments = [
 
 #[test]
 fn success_create() {
-    let rlp_list: RlpList<5> = create_rlp_list([fragments[0], fragments[1]]);
+    let rlp_list: RlpList<5> = bounded_vec_from_array([fragments[0], fragments[1]]);
 
     assert_eq(rlp_list.len, 2);
     assert_eq(rlp_list.max_len(), 5);
@@ -31,7 +32,7 @@ fn success_create() {
 
 #[test]
 fn modify_rlp_list() {
-    let mut rlp_list: RlpList<5> = create_rlp_list([fragments[0], fragments[1]]);
+    let mut rlp_list: RlpList<5> = bounded_vec_from_array([fragments[0], fragments[1]]);
 
     assert_eq(rlp_list.len, 2);
 
