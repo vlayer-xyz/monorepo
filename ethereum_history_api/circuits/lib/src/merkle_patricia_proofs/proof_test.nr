@@ -10,13 +10,13 @@ mod node_get_len {
 
     #[test]
     fn padded() {
-        let node = [0xc2, 0x42, 0x05, 0x00];
+        let node = [0xc2, 0x42, 0x05, 0x00]; // ["0x42","0x05"] padded
         assert(get_node_len(node) == 3);
     }
 
     #[test(should_fail_with="Decoded length of short list exceeds input length")]
     fn rlp_len_too_long() {
-        let node = [0xc2, 0x42];
+        let node = [0xc2, 0x42]; // Invalid rlp
         let _ = get_node_len(node);
     }
 }
