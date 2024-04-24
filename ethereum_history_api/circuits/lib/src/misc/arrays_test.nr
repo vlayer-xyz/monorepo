@@ -60,6 +60,24 @@ mod sub_array_equals_up_to_length {
         assert(sub_array_equals_up_to_length(value, array, 1, 4));
     }
 
+    #[test]
+    fn success_big_subarray() {
+        let subarray: [Field; 4] = [1, 2, 0, 0];
+        let array: [Field; 5] = [0, 0, 1, 2, 0];
+        assert(sub_array_equals_up_to_length(subarray, array, 2, 3));
+    }
+
+    #[test]
+    fn success_big() {
+        let subarray: [Field; 90] = [
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0
+        ];
+        let array: [Field; 100] = [
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0
+        ];
+        assert(sub_array_equals_up_to_length(subarray, array, 20, 80));
+    }
+
     #[test(should_fail_with = "Not equals")]
     fn full_length_not_equals() {
         let value: [Field; 4] = [1, 2, 0, 0];
@@ -76,9 +94,9 @@ mod sub_array_equals_up_to_length {
 
     #[test(should_fail)] // Unfortunately in-loop index access happens before the assert
     fn array_out_of_bound() {
-        let value: [Field; 4] = [1, 2, 0, 0];
-        let array: [Field; 5] = [0, 0, 1, 2, 0];
-        assert(sub_array_equals_up_to_length(value, array, 2, 3));
+        let value: [Field; 5] = [1, 2, 0, 0, 5];
+        let array: [Field; 5] = [42, 1, 2, 0, 0];
+        assert(sub_array_equals_up_to_length(value, array, 1, 5));
     }
 }
 
