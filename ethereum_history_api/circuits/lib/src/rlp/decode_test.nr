@@ -110,7 +110,7 @@ mod decode_list {
     #[test]
     fn empty() {
         let empty_list: RlpList<1> = decode_list([0xc0]);
-        assert(empty_list.len() == 0);
+        assert(empty_list.len == 0);
     }
 
     #[test]
@@ -124,9 +124,8 @@ mod decode_list {
             RlpFragment { offset: 0, length: 0, data_type: STRING }
         ]
         );
-
         let decoded = decode_list(rlp);
-        assert_eq(decoded.len(), expected.len());
+        assert_eq(decoded.len, expected.len);
         assert_eq(decoded.storage(), expected.storage());
     }
 
@@ -159,7 +158,7 @@ mod decode_list_of_small_strings {
         let expected = create_rlp_list([]);
 
         let decoded = decode_list_of_small_strings(rlp);
-        assert_eq(decoded.len(), expected.len());
+        assert_eq(decoded.len, expected.len);
         assert_eq(decoded.storage(), expected.storage());
     }
 

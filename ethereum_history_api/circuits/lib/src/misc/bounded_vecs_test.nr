@@ -3,10 +3,10 @@ use crate::misc::arrays::sub_array_equals_up_to_length;
 use crate::rlp::fragment::RlpFragment;
 
 #[test]
-  fn success() {
+fn success() {
     let arr = [1, 2, 3, 4, 5];
     let vec: BoundedVec <u8, 10> = bounded_vec_from_array(arr);
-    assert_eq(vec.len(), 5);
+    assert_eq(vec.len, 5);
     assert_eq(vec.max_len(), 10);
     assert(sub_array_equals_up_to_length(arr, vec.storage(), 0, 5));
 }
@@ -21,7 +21,7 @@ fn fragments() {
 }
 
 #[test(should_fail_with = "Array size exceeds bounded vector size")]
-  fn fail() {
+fn fail() {
     let arr = [1, 2, 3, 4, 5];
     let _: BoundedVec <u8, 3> = bounded_vec_from_array(arr);
 }
