@@ -1,4 +1,4 @@
-mod test_mapping {
+mod mapping {
     use crate::slot::mapping;
 
     #[test]
@@ -38,8 +38,9 @@ mod test_mapping {
     }
 }
 
-mod test_dynamic_array {
+mod dynamic_array {
     use crate::slot::dynamic_array;
+    use dep::ethereum_history_api::misc::field_test::MAX_FIELD_VALUE;
 
     #[test]
     fn index_zero() {
@@ -61,5 +62,40 @@ mod test_dynamic_array {
             0x40, 0x57, 0x87, 0xfa, 0x12, 0xa8, 0x23, 0xe0, 0xf2, 0xb7, 0x63, 0x1c, 0xc4, 0x1b, 0x3b, 0xa8, 0x82, 0x8b, 0x33, 0x21, 0xca, 0x81, 0x11, 0x11, 0xfa, 0x75, 0xcd, 0x3a, 0xa3, 0xbb, 0x5a, 0xdc
         ];
         assert_eq(expected_slot, dynamic_array(slot, 7, 2));
+    }
+
+    #[test(should_fail_with="Addition overflow")]
+    fn fail_overflow() {
+        let slot = [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6
+        ];
+        let expected_slot = [
+            0x40, 0x57, 0x87, 0xfa, 0x12, 0xa8, 0x23, 0xe0, 0xf2, 0xb7, 0x63, 0x1c, 0xc4, 0x1b, 0x3b, 0xa8, 0x82, 0x8b, 0x33, 0x21, 0xca, 0x81, 0x11, 0x11, 0xfa, 0x75, 0xcd, 0x3a, 0xa3, 0xbb, 0x5a, 0xdc
+        ];
+        assert_eq(expected_slot, dynamic_array(slot, MAX_FIELD_VALUE, 2));
+    }
+}
+
+mod struct_slot {
+    use crate::slot::struct_slot;
+
+    #[test]
+    fn success() {
+        let slot = [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2
+        ];
+        let expected_slot = [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2
+        ];
+        assert_eq(expected_slot, struct_slot(slot, 256));
+    }
+
+    #[test(should_fail_with="Addition overflow")]
+    fn overflow() {
+        let slot = [0xff; 32];
+        let expected_slot = [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1
+        ];
+        assert_eq(expected_slot, struct_slot(slot, 256));
     }
 }
