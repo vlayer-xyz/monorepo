@@ -18,7 +18,7 @@ export const MAX_RECEIPT_SIZE_M = 1000;
 // MAX_LEAF_SIZE_M = 1043 = 32 + 1000 + 11 = MAX_KEY_SIZE + MAX_RECEIPT_SIZE_M + MAX_RLP_HEADERS_SIZE
 // MAX_KEY_SIZE = 32 in Ethereum
 // MAX_RLP_HEADERS_SIZE = 1 (key) + 5 (receipt) + 5 (key & receipt)
-export const MAX_LEAF_SIZE_M = 1043;
+export const MAX_RECEIPT_LEAF_SIZE_M = 1043;
 
 export enum RECEIPT_OFFSETS {
   STATUS,
