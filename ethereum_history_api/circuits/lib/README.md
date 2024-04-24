@@ -71,7 +71,7 @@ pub fn verify_receipt<...>(
 All the function in this library prove that the objects are contained within some block hash. We can't prove that this block hash is in fact a member of a canonical chain. This is user's responsibility. We provide Solidity [contract](../../contracts/src/EthereumHistoryVerifier.sol) that can prove block hash inclusion for the last 256 block on EVM and plan to maintain the Merkle Mountain Range on-chain in the future to allow for historical block hash inclusion proofs.
 
 > [!CAUTION]
-> For now - just remember that it's your responsibility to prove block hash. Otherwise - an attacker can generate valid proofs for non-existent blocks.
+>  Remember that it's your responsibility to prove block hash belongs to the chain. Otherwise - an attacker can generate valid proofs for non-existent blocks.
 
 ## Package structure
 
