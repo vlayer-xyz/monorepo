@@ -249,27 +249,33 @@ mod verify_leaf {
     use crate::misc::{bytes::bytes_to_nibbles, fragment::Fragment};
     use crate::fixtures::merkle_proofs::branch_then_leaf::{leaf, key, value};
 
+    global empty_key = Fragment::new_with_length(0, [0; 2]);
+    global empty_value = [];
+    global empty_leaf = [0xc2, 0x20, 0x80]; // ["0x20","0x"]
+
+    global MAX_PREFIXED_KEY_NIBBLE_LEN = 6;
+    global some_key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> = bytes_to_nibbles(Fragment::new_with_length(2, [0xab, 0xcd, 0x00, 0x00, 0x00, 0x00])); // Fragment::new_with_length(3, [0xa, 0xb, 0xc, 0x0]);
+    global some_value = [0x00, 0x12, 0x34];
+    global some_leaf = [0xc6, 0x82, 0x20, 0xcd, 0x82, 0x12, 0x34]; // ["0x20bc","0x1234"]
+
     #[test]
     fn success_empty() {
         verify_leaf(
-            [0xc2, 0x20, 0x80], // ["0x20","0x"]
-            Fragment::new_with_length(0, [0; 2]),
+            empty_leaf,
+            empty_key,
             &mut 0,
-            []
+            empty_value
         )
     }
 
     #[test]
     fn success_simple() {
-        let leaf = [0xc6, 0x82, 0x20, 0xbc, 0x82, 0x12, 0x34]; // ["0x20bc","0x1234"]
-        let key_nibbles = Fragment::new_with_length(3, [0xa, 0xb, 0xc, 0x0, 0x0, 0x0, 0x0, 0x0]);
-        let mut key_ptr = 1;
-        let value = [0x00, 0x12, 0x34];
-        verify_leaf(leaf, key_nibbles, &mut key_ptr, value)
+        let mut key_ptr = 2;
+        verify_leaf(some_leaf, some_key_nibbles, &mut key_ptr, some_value)
     }
 
     #[test]
-    fn success() {
+    fn success_from_fixtures() {
         let key_nibbles = bytes_to_nibbles(Fragment::new(3, 1, key));
         verify_leaf(leaf, key_nibbles, &mut 1, value)
     }
@@ -279,9 +285,9 @@ mod verify_leaf {
         let invalid_leaf_rlp = [0xc1, 0x12]; // ["0x12"]
         verify_leaf(
             invalid_leaf_rlp,
-            Fragment::new_with_length(0, [0; 2]),
+            empty_key,
             &mut 0,
-            []
+            empty_value
         )
     }
 
@@ -290,45 +296,40 @@ mod verify_leaf {
         let leaf_with_invalid_prefix = [0xc6, 0x82, 0x00, 0xbc, 0x82, 0x12, 0x34]; // ["0x00bc","0x1234"]
         verify_leaf(
             leaf_with_invalid_prefix,
-            Fragment::new_with_length(0, [0; 2]),
+            empty_key,
             &mut 0,
-            []
+            empty_value
         )
     }
 
     #[test(should_fail_with="Leaf key part does not correspond to left key nibbles")]
     fn fail_wrong_key() {
-        let leaf = [0xc6, 0x82, 0x20, 0xbc, 0x82, 0x12, 0x34]; // ["0x20bc","0x1234"]
-        let wrong_key_nibbles = Fragment::new_with_length(3, [0xa, 0xb, 0xd, 0x0, 0x0, 0x0, 0x0, 0x0]);
-        let mut key_ptr = 1;
-        let value = [0x00, 0x12, 0x34];
-        verify_leaf(leaf, wrong_key_nibbles, &mut key_ptr, value)
+        let mut wrong_key_nibbles = some_key_nibbles;
+        wrong_key_nibbles.set(2, 0xd);
+        let mut key_ptr = 2;
+        verify_leaf(some_leaf, wrong_key_nibbles, &mut key_ptr, some_value)
     }
 
     #[test(should_fail_with="Expected to consume all key nibbles")]
     fn fail_key_not_consumed() {
-        let leaf = [0xc6, 0x82, 0x20, 0xbc, 0x82, 0x12, 0x34]; // ["0x20bc","0x1234"]
-        let long_key_nibbles = Fragment::new_with_length(4, [0xa, 0xb, 0xc, 0xd, 0x0, 0x0, 0x0, 0x0]);
-        let mut key_ptr = 1;
-        let value = [0x00, 0x12, 0x34];
-        verify_leaf(leaf, long_key_nibbles, &mut key_ptr, value)
+        let mut long_key_nibbles = some_key_nibbles;
+        long_key_nibbles.push_back(0xd);
+        let mut key_ptr = 2;
+        verify_leaf(some_leaf, long_key_nibbles, &mut key_ptr, some_value)
     }
 
     #[test(should_fail_with="Value length mismatch")]
     fn fail_value_len_mismatch() {
-        let leaf = [0xc6, 0x82, 0x20, 0xbc, 0x82, 0x12, 0x34]; // ["0x20bc","0x1234"]
-        let key_nibbles = Fragment::new_with_length(3, [0xa, 0xb, 0xc, 0x0, 0x0, 0x0, 0x0, 0x0]);
-        let mut key_ptr = 1;
+        let mut key_ptr = 2;
         let long_value = [0x0, 0x12, 0x34, 0x56];
-        verify_leaf(leaf, key_nibbles, &mut key_ptr, long_value)
+        verify_leaf(some_leaf, some_key_nibbles, &mut key_ptr, long_value)
     }
 
     #[test(should_fail_with="Value mismatch")]
     fn fail_value_mismatch() {
-        let leaf = [0xc6, 0x82, 0x20, 0xbc, 0x82, 0x12, 0x34]; // ["0x20bc","0x1234"]
-        let key_nibbles = Fragment::new_with_length(3, [0xa, 0xb, 0xc, 0x0, 0x0, 0x0, 0x0, 0x0]);
-        let mut key_ptr = 1;
-        let wrong_value = [0x0, 0x12, 0x35];
-        verify_leaf(leaf, key_nibbles, &mut key_ptr, wrong_value)
+        let mut key_ptr = 2;
+        let mut wrong_value = some_value;
+        wrong_value[2] += 1;
+        verify_leaf(some_leaf, some_key_nibbles, &mut key_ptr, wrong_value)
     }
 }
