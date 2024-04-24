@@ -129,19 +129,19 @@ mod decode_list {
     }
 
     #[test(should_fail_with = "Expected a list")]
-        fn fail_wrong_data_type() {
+    fn fail_wrong_data_type() {
         let rlp_of_single_byte = [0x00];
         let _ : RlpList<1> = decode_list(rlp_of_single_byte);
     }
 
     #[test(should_fail_with = "Decoded length of short list exceeds input length")]
-        fn fail_length_exceeds_input_length() {
+    fn fail_length_exceeds_input_length() {
         let rlp = [0xc9, 0x13];
         let _ : RlpList<1> = decode_list(rlp);
     }
 
     #[test(should_fail_with="Inconsistent rlp length")]
-        fn fail_inconsistent_length() {
+    fn fail_inconsistent_length() {
         let rlp = [0xc7, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13];
         let _ : RlpList<3> = decode_list(rlp);
     }
@@ -290,25 +290,25 @@ mod decode_to_rlp_header {
     }
 
     #[test(should_fail_with = "Decoded length of short string exceeds input length")]
-     fn fail_wrong_short_string_rlp() {
+    fn fail_wrong_short_string_rlp() {
         let rlp = [0x81];
         let _ = decode_to_rlp_header(rlp);
     }
 
     #[test(should_fail_with = "Decoded length of long string exceeds input length")]
-     fn fail_wrong_long_string_rlp() {
+    fn fail_wrong_long_string_rlp() {
         let rlp = [0xb8, 60];
         let _ = decode_to_rlp_header(rlp);
     }
 
     #[test(should_fail_with = ""Decoded length of short list exceeds input length")]
-     fn fail_wrong_short_list_rlp() {
+    fn fail_wrong_short_list_rlp() {
         let rlp = [0xc1];
         let _ = decode_to_rlp_header(rlp);
     }
 
     #[test(should_fail_with = ""Decoded length of long list exceeds input length")]
-     fn fail_wrong_long_list_rlp() {
+    fn fail_wrong_long_list_rlp() {
         let rlp = [0xf8, 60];
         let _ = decode_to_rlp_header(rlp);
     }
