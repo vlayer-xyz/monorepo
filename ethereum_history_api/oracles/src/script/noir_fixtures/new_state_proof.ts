@@ -1,4 +1,5 @@
 import { GetProofReturnType } from 'viem';
+
 import {
   MAX_ACCOUNT_LEAF_SIZE,
   MAX_ACCOUNT_PREFIXED_KEY_NIBBLE_LEN,
