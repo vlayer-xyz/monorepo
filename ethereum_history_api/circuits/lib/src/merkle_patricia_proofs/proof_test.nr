@@ -248,21 +248,19 @@ mod verify_node_hash {
     use crate::merkle_patricia_proofs::proof::verify_node_hash;
     use crate::fixtures::merkle_proofs::branch_then_leaf::nodes;
 
+    global node = nodes[0];
+    global node_hash = [
+        0x50, 0x7A, 0x49, 0xDF, 0x2B, 0x19, 0x39, 0x4B, 0x69, 0xA1, 0xDD, 0x55, 0x3B, 0x47, 0x4C, 0x65, 0xE1, 0xD1, 0xE6, 0x54, 0x36, 0xA2, 0x21, 0xE9, 0xC6, 0x52, 0xDB, 0x84, 0x3F, 0xF3, 0xED, 0x12
+    ];
+
     #[test]
     fn success() {
-        let node = nodes[0];
-        let node_hash = [
-            80, 122, 73, 223, 43, 25, 57, 75, 105, 161, 221, 85, 59, 71, 76, 101, 225, 209, 230, 84, 54, 162, 33, 233, 198, 82, 219, 132, 63, 243, 237, 18
-        ];
         verify_node_hash(node, node_hash);
     }
 
     #[test(should_fail_with="Invalid node hash")]
     fn fail() {
-        let node = nodes[0];
-        let mut invalid_node_hash = [
-            80, 122, 73, 223, 43, 25, 57, 75, 105, 161, 221, 85, 59, 71, 76, 101, 225, 209, 230, 84, 54, 162, 33, 233, 198, 82, 219, 132, 63, 243, 237, 18
-        ];
+        let mut invalid_node_hash = node_hash;
         invalid_node_hash[0] += 1;
         verify_node_hash(node, invalid_node_hash);
     }
