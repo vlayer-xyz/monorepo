@@ -1,4 +1,4 @@
-use crate::rlp::decode::{decode_to_rlp_header, decode_list, RlpList};
+use crate::rlp::decode::{decode_to_rlp_header, decode_list_of_small_strings, decode_list, RlpList};
 use crate::misc::{
     fragment::Fragment, arrays::{sub_array_equals_up_to_length, memcpy_up_to_length},
     types::{Hash, HASH_LEN}, bytes::{bytes_to_nibbles, byte_to_nibbles, right_pad}
@@ -104,7 +104,7 @@ pub fn extract_hash<MAX_PREFIXED_KEY_NIBBLE_LEN>(
     key_ptr: &mut u64
 ) -> Fragment<HASH_LEN> {
     let mut hash = Fragment::new_focused([0; HASH_LEN]);
-    let node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list(node);
+    let node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list_of_small_strings(node);
 
     if (node_rlp_list.num_fields == BRANCH_NODE_NUM_FIELDS) {
         hash = extract_hash_from_branch_node(node, node_rlp_list, key_nibbles, key_ptr);
@@ -118,7 +118,8 @@ pub fn extract_hash<MAX_PREFIXED_KEY_NIBBLE_LEN>(
 }
 
 pub fn verify_node_hash<MAX_LEN>(node: [u8; MAX_LEN], hash: [u8; HASH_LEN]) {
-    assert(keccak256(node, get_node_len(node) as u32) == hash, "Node hash mismatch");
+    println(keccak256(node, get_node_len(node) as u32));
+    assert(keccak256(node, get_node_len(node) as u32) == hash, "Invalid node hash");
 }
 
 pub fn verify_leaf<MAX_LEAF_LEN, MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN>(
@@ -158,7 +159,7 @@ pub fn verify_leaf<MAX_LEAF_LEN, MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN>(
     );
 }
 
-pub fn assert_merkle_proof<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH, MAX_LEAF_LEN>(
+pub fn verify_merkle_proof<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH, MAX_LEAF_LEN>(
     _key: Key<MAX_PREFIXED_KEY_NIBBLE_LEN>,
     _value: Value<MAX_VALUE_LEN>,
     _root: Hash,

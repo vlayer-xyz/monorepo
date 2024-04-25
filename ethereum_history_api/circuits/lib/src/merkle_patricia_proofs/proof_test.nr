@@ -243,6 +243,27 @@ mod extract_hash {
     }
 }
 
+mod verify_node_hash {
+
+    use crate::merkle_patricia_proofs::proof::verify_node_hash;
+    use crate::fixtures::merkle_proofs::branch_then_leaf::nodes;
+    
+    #[test]
+    fn success() {
+        let node = nodes[0];
+        let node_hash = [80, 122, 73, 223, 43, 25, 57, 75, 105, 161, 221, 85, 59, 71, 76, 101, 225, 209, 230, 84, 54, 162, 33, 233, 198, 82, 219, 132, 63, 243, 237, 18];
+        verify_node_hash(node, node_hash);
+    }
+
+    #[test(should_fail_with="Invalid node hash")]
+    fn fail() {
+        let node = nodes[0];
+        let mut invalid_node_hash = [80, 122, 73, 223, 43, 25, 57, 75, 105, 161, 221, 85, 59, 71, 76, 101, 225, 209, 230, 84, 54, 162, 33, 233, 198, 82, 219, 132, 63, 243, 237, 18];
+        invalid_node_hash[0] += 1;
+        verify_node_hash(node, invalid_node_hash);
+    }
+}
+
 mod verify_leaf {
 
     use crate::merkle_patricia_proofs::proof::verify_leaf;
