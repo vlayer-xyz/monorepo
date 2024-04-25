@@ -1,4 +1,4 @@
-mod rlp_fragment {
+mod rlp_fragment_assert_string_eq {
     use crate::rlp::{decode::{STRING, LIST}, types::RlpFragment};
 
     #[test]
