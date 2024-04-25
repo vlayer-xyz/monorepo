@@ -29,7 +29,7 @@ global proof_input = ProofInput {\n
 }
 
 function createProofFixture(proof: Proof, maxDepth: number, maxLeafLen: number): string {
-  const paddedNodes = padArray(proof.proof.slice(0, proof.proof.length - 1), maxDepth, ZERO_PAD_VALUE);
+  const paddedNodes = padArray(proof.proof.slice(0, proof.proof.length - 1), maxDepth - 1, ZERO_PAD_VALUE);
   const nodes = paddedNodes.map((node) =>
     indentBlock(joinArray(padArray(encodeHex(node), MAX_TRIE_NODE_LEN, ZERO_PAD_VALUE)), 1)
   );
