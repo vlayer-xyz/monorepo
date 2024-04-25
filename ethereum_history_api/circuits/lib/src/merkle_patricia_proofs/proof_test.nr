@@ -87,13 +87,14 @@ mod extract_hash_from_branch_node {
     use crate::misc::{fragment::Fragment, bytes::bytes_to_nibbles};
     use crate::fixtures::merkle_proofs::{branch_then_leaf::proof_input as branch_input};
 
+    global key = branch_input.key;
+    global branch_node = branch_input.proof.nodes[0];
     global branch_hash = Fragment::new_focused([0x4d, 0xf3, 0xf1, 0x5d, 0xfc, 0x22, 0x96, 0x36, 0xc2, 0x7f, 0x5f, 0xfb, 0x66, 0x73, 0x0d, 0x90, 0x41, 0x23, 0xd3, 0xd8, 0xd6, 0xe3, 0xbc, 0xf0, 0x32, 0x5d, 0xf7, 0x1e, 0x13, 0xfb, 0xec, 0xbb]);
 
     #[test]
     fn branch() {
-        let branch_node = branch_input.proof.nodes[0];
         let branch_node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list_of_small_strings(branch_node);
-        let key_nibbles = bytes_to_nibbles(Fragment::new(3, 1, branch_input.key));
+        let key_nibbles = bytes_to_nibbles(Fragment::new(3, 1, key));
         let mut key_ptr = 0;
         assert(
             extract_hash_from_branch_node(branch_node, branch_node_rlp_list, key_nibbles, &mut key_ptr)
@@ -104,9 +105,8 @@ mod extract_hash_from_branch_node {
 
     #[test(should_fail_with="Expected a hash at position given by the key nibble")]
     fn fail_branch() {
-        let branch_node = branch_input.proof.nodes[0];
         let branch_node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list_of_small_strings(branch_node);
-        let mut altered_key_nibbles = bytes_to_nibbles(Fragment::new(3, 1, branch_input.key));
+        let mut altered_key_nibbles = bytes_to_nibbles(Fragment::new(3, 1, key));
         altered_key_nibbles.set(0, 0x2);
         let mut key_ptr = 0;
         assert(
