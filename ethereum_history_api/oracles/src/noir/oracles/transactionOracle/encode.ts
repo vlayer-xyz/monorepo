@@ -8,20 +8,20 @@ import { padArray } from '../../../util/array.js';
 import { removeHexPrefix } from '../../../util/hex.js';
 
 const MAX_TX_KEY_LEN = 3;
-export const MAX_TX_KEY_NIBBLE_LEN = 6;
+export const MAX_TX_KEY_NIBBLE_LEN = MAX_TX_KEY_LEN * BYTE_HEX_LEN;
 export const MAX_TX_PREFIXED_KEY_NIBBLE_LEN = MAX_TX_KEY_NIBBLE_LEN + BYTE_HEX_LEN;
 export const MAX_TX_TREE_DEPTH = MAX_TX_KEY_NIBBLE_LEN + 1;
 export const MAX_TX_ENCODED_LEN = 525;
 export const MAX_TX_RLP_LEN = MAX_TX_ENCODED_LEN - 1;
 export const MAX_TX_PROOF_LEN = MAX_TRIE_NODE_LEN * MAX_TX_TREE_DEPTH;
 export const MAX_TX_SIZE_M = 1000;
-// MAX_LEAF_SIZE_M = MAX_RLP_LIST_HEADER_SIZE + ((MAX_KEY_RLP_HEADER_SIZE + MAX_KEY_SIZE) + (MAX_TX_HEADER_SIZE_M + MAX_TX_SIZE_M))
-// MAX_KEY_SIZE = 32 in Ethereum
-// MAX_KEY_RLP_HEADER_SIZE = 1
+// MAX_LEAF_SIZE_M = MAX_RLP_LIST_HEADER_SIZE + ((MAX_KEY_RLP_HEADER_SIZE + MAX_PREFIXED_KEY_SIZE) + (MAX_TX_HEADER_SIZE_M + MAX_TX_SIZE_M))
+// MAX_PREFIXED_KEY_SIZE = 1 + 3
+// MAX_KEY_RLP_HEADER_SIZE = 0
 // MAX_TX_HEADER_SIZE_M = 1 + 2 = 3 - Length of RLP header for 1000 element string
 // MAX_RLP_LIST_HEADER_SIZE = 1 + 2 = 3 - Length of RLP header for 1000 element list
-// MAX_LEAF_SIZE_M = 3 + ((1 +32) + (3 + 1000)) = 1039
-export const MAX_TX_LEAF_SIZE_M = 1039;
+// MAX_LEAF_SIZE_M = 3 + ((1 + (1 + 3)) + (3 + 1000)) = 1011
+export const MAX_TX_LEAF_SIZE_M = 1011;
 
 export enum TX_OFFSETS {
   NONCE,
