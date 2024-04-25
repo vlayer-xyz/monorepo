@@ -2,7 +2,6 @@ mod mainnet {
     use crate::nft::ERC721Token;
     use crate::chain_id;
     use crate::slot::{struct_slot, dynamic_array_with_precalculated_slot};
-    use dep::ethereum_history_api::misc::bytes::add_bytes;
     use dep::std::field::bytes32_to_field;
     use dep::ethereum_history_api::misc::{types::Bytes32, field::field_to_bytes32};
 

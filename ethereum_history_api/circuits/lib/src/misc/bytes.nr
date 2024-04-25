@@ -111,7 +111,7 @@ pub(crate) fn byte_value<N>(in_value: [u8; N]) -> BoundedVec<u8, N> {
     BoundedVec { storage: value, len: value_length }
 }
 
-pub fn add_bytes<N>(left: [u8; N], right: [u8; N]) -> [u8; N] {
+pub fn add_bigint<N>(left: [u8; N], right: [u8; N]) -> [u8; N] {
     let mut carry: u32 = 0;
     let mut result: [u8; N] = [0; N];
 
