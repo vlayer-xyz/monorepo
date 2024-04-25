@@ -90,7 +90,6 @@ pub fn decode_string<N>(input: [u8; N]) -> (u64, u64) {
 /// For string elements, the offset points to the payload, whereas the offset
 ///   of a list element points to the RLP header of that element.
 pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
-    let mut num_fields: u64 = 0;
     let mut rlp_list: RlpList<NUM_FIELDS> = BoundedVec::new();
 
     let RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
@@ -114,7 +113,6 @@ pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
             rlp_list.push(fragment);
 
             current_offset += field_off + field_len;
-            num_fields += 1;
         }
     }
     assert(current_offset == total_len, "Inconsistent rlp length");
@@ -125,7 +123,6 @@ pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
 /// RLP list decoder for lists of strings of length < 56 bytes.
 /// Returns an RLP list look-up table.
 pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
-    let mut num_fields: u64 = 0;
     let mut rlp_list: RlpList<NUM_FIELDS> = BoundedVec::new();
 
     let RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
@@ -145,7 +142,6 @@ pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NU
             rlp_list.push(fragment);
 
             current_offset += field_off + field_len;
-            num_fields += 1;
         }
     }
     assert(current_offset == total_len, "Inconsistent rlp length");
