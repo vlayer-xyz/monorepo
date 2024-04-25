@@ -64,7 +64,7 @@ mod rlp_fragment {
         fn invalid_value() {
             let fragment = RlpFragment { offset: 1, length: 2, data_type: STRING };
             let rlp = [0x82, 0x12, 0x34]; // "0x1234"
-            let invalid_value = 0;
+            let invalid_value = 0x1235;
             fragment.assert_u64_eq("Field", rlp, invalid_value)
         }
     }
