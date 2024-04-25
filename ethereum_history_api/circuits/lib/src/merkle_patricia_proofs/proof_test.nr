@@ -1,3 +1,26 @@
+mod node_get_len {
+
+    use crate::merkle_patricia_proofs::proof::get_node_len;
+
+    #[test]
+    fn success() {
+        let node = [0xc2, 0x42, 0x05]; // ["0x42","0x05"]
+        assert(get_node_len(node) == 3);
+    }
+
+    #[test]
+    fn padded() {
+        let node = [0xc2, 0x42, 0x05, 0x00]; // ["0x42","0x05"] padded
+        assert(get_node_len(node) == 3);
+    }
+
+    #[test(should_fail_with="Decoded length of short list exceeds input length")]
+    fn rlp_len_too_long() {
+        let node = [0xc2, 0x42]; // Invalid rlp
+        let _ = get_node_len(node);
+    }
+}
+
 mod parity {
     use crate::merkle_patricia_proofs::proof::{EVEN, ODD, parity};
 
@@ -222,100 +245,104 @@ mod extract_hash {
     }
 }
 
-mod leaf_get_len {
+mod verify_node_hash {
 
-    use crate::merkle_patricia_proofs::proof::leaf_get_len;
+    use crate::merkle_patricia_proofs::proof::verify_node_hash;
+    use crate::fixtures::merkle_proofs::branch_then_leaf::nodes;
+
+    global node = nodes[0];
+    global node_hash = [
+        0x50, 0x7A, 0x49, 0xDF, 0x2B, 0x19, 0x39, 0x4B, 0x69, 0xA1, 0xDD, 0x55, 0x3B, 0x47, 0x4C, 0x65, 0xE1, 0xD1, 0xE6, 0x54, 0x36, 0xA2, 0x21, 0xE9, 0xC6, 0x52, 0xDB, 0x84, 0x3F, 0xF3, 0xED, 0x12
+    ];
 
     #[test]
     fn success() {
-        let leaf = [0xc2, 0x42, 0x05];
-        assert(leaf_get_len(leaf) == 3);
+        verify_node_hash(node, node_hash);
     }
 
-    #[test]
-    fn padded() {
-        let leaf = [0xc2, 0x42, 0x05, 0x00];
-        assert(leaf_get_len(leaf) == 3);
-    }
-
-    #[test(should_fail_with="Decoded length of short list exceeds input length")]
-    fn rlp_len_too_long() {
-        let leaf = [0xc2, 0x42];
-        let _ = leaf_get_len(leaf);
+    #[test(should_fail_with="Invalid node hash")]
+    fn fail() {
+        let mut invalid_node_hash = node_hash;
+        invalid_node_hash[0] += 1;
+        verify_node_hash(node, invalid_node_hash);
     }
 }
 
-mod assert_merkle_proof {
+mod verify_leaf {
 
-    use crate::merkle_patricia_proofs::proof::{assert_merkle_proof, Proof};
-    use crate::misc::arrays::alter_array;
+    use crate::merkle_patricia_proofs::proof::verify_leaf;
+    use crate::misc::{bytes::bytes_to_nibbles, fragment::Fragment, arrays::resize};
+    use crate::fixtures::merkle_proofs::branch_then_leaf::{leaf, key, value};
 
-    global key = [0x00, 0x00, 0x00, 0x42];
-    global value = [0x5];
-    global root = [163, 57, 232, 136, 93, 33, 132, 208, 116, 119, 95, 134, 32, 201, 51, 214, 218, 75, 93, 113, 140, 143, 254, 21, 52, 83, 99, 97, 54, 246, 121, 173];
-    global leaf = [0xc4, 0x82, 0x20, 0x42, 0x05];
+    global empty_key = Fragment::new_with_length(0, [0; 2]);
+    global empty_value = [];
+    global empty_leaf = [0xc2, 0x20, 0x80]; // ["0x20","0x"]
+
+    global MAX_PREFIXED_KEY_NIBBLE_LEN = 6;
+    global MAX_VALUE_LEN = 3;
+    global some_key = [0xab, 0xcd];
+    global some_key_fragment: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> = Fragment::from_array(some_key);
+    global some_key_nibbles = bytes_to_nibbles(some_key_fragment);
+    global some_value: [u8; MAX_VALUE_LEN] = [0x00, 0x12, 0x34];
+    global some_leaf = [0xc6, 0x82, 0x20, 0xcd, 0x82, 0x12, 0x34]; // ["0x20bc","0x1234"]
 
     #[test]
-    fn success() {
-        let proof = Proof { nodes: [], leaf, depth: 1 };
-        assert_merkle_proof(key, value, root, proof);
+    fn success_empty() {
+        verify_leaf(empty_leaf, empty_key, &mut 0, empty_value)
     }
 
     #[test]
-    fn value_padded() {
-        let proof = Proof { nodes: [], leaf: [0xc4, 0x82, 0x20, 0x42, 0x05, 0x0, 0x0, 0x0], depth: 1 };
-        assert_merkle_proof(key, value, root, proof);
+    fn success_simple() {
+        let mut key_ptr = 2;
+        verify_leaf(some_leaf, some_key_nibbles, &mut key_ptr, some_value)
     }
 
-    #[test(should_fail_with="Leaf parity prefix must be 2 or 3")]
-    fn wrong_parity_prefix() {
-        let proof = Proof { nodes: [], leaf: [0xc4, 0x82, 0x00, 0x42, 0x05], depth: 1 };
-        assert_merkle_proof(key, value, root, proof);
+    #[test]
+    fn success_from_fixtures() {
+        let key_nibbles = bytes_to_nibbles(Fragment::new(3, 1, key));
+        verify_leaf(leaf, key_nibbles, &mut 1, value)
     }
 
     #[test(should_fail_with="Leaf expected to have 2 fields")]
-    fn invalid_leaf() {
-        let proof = Proof { nodes: [], leaf: [0xc1, 0x42, 0x00], depth: 1 };
-        assert_merkle_proof(key, value, root, proof);
+    fn fail_invalid_rlp() {
+        let invalid_leaf_rlp = [0xc1, 0x12]; // ["0x12"]
+        verify_leaf(invalid_leaf_rlp, empty_key, &mut 0, empty_value)
     }
 
-    #[test(should_fail_with="Invalid root")]
-    fn invalid_root() {
-        let wrong_root = alter_array(root);
-        let proof = Proof { nodes: [], leaf, depth: 1 };
-        assert_merkle_proof(key, value, wrong_root, proof);
+    #[test(should_fail_with="Leaf parity prefix must be 2 or 3")]
+    fn fail_invalid_prefix() {
+        let leaf_with_invalid_prefix = [0xc6, 0x82, 0x00, 0xbc, 0x82, 0x12, 0x34]; // ["0x00bc","0x1234"]
+        verify_leaf(leaf_with_invalid_prefix, empty_key, &mut 0, empty_value)
+    }
+
+    #[test(should_fail_with="Leaf key part does not correspond to left key nibbles")]
+    fn fail_wrong_key() {
+        let mut wrong_key_nibbles = some_key_nibbles;
+        wrong_key_nibbles.set(2, 0xd);
+        let mut key_ptr = 2;
+        verify_leaf(some_leaf, wrong_key_nibbles, &mut key_ptr, some_value)
+    }
+
+    #[test(should_fail_with="Expected to consume all key nibbles")]
+    fn fail_key_not_consumed() {
+        let mut long_key_nibbles = some_key_nibbles;
+        long_key_nibbles.push_back(0xd);
+        let mut key_ptr = 2;
+        verify_leaf(some_leaf, long_key_nibbles, &mut key_ptr, some_value)
+    }
+
+    #[test(should_fail_with="Value length mismatch")]
+    fn fail_value_len_mismatch() {
+        let mut key_ptr = 2;
+        let long_value = [0x0, 0x12, 0x34, 0x56];
+        verify_leaf(some_leaf, some_key_nibbles, &mut key_ptr, long_value)
     }
 
     #[test(should_fail_with="Value mismatch")]
-    fn value_mismatch() {
-        let wrong_value = alter_array(value);
-        let proof = Proof { nodes: [], leaf, depth: 1 };
-        assert_merkle_proof(key, wrong_value, root, proof);
-    }
-
-    #[test(should_fail_with="Key mismatch")]
-    fn key_mismatch() {
-        let wrong_key = [0x00, 0x00, 0x00, 0x43];
-        let proof = Proof { nodes: [], leaf, depth: 1 };
-        assert_merkle_proof(wrong_key, value, root, proof);
-    }
-}
-
-mod assert_merkle_proof_from_fixtures {
-
-    use crate::merkle_patricia_proofs::proof::{assert_merkle_proof, Proof};
-    use crate::fixtures::merkle_proofs::leaf::{
-        key as fixture_key, value as fixture_value, nodes as fixture_nodes, leaf as fixture_leaf,
-        root as fixture_root
-    };
-
-    #[test]
-    fn success() {
-        assert_merkle_proof(
-            fixture_key,
-            fixture_value,
-            fixture_root,
-            Proof { nodes: fixture_nodes, leaf: fixture_leaf, depth: 1 }
-        )
+    fn fail_value_mismatch() {
+        let mut key_ptr = 2;
+        let mut wrong_value = some_value;
+        wrong_value[2] += 1;
+        verify_leaf(some_leaf, some_key_nibbles, &mut key_ptr, wrong_value)
     }
 }
