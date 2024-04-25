@@ -15,7 +15,13 @@ export const MAX_TX_ENCODED_LEN = 525;
 export const MAX_TX_RLP_LEN = MAX_TX_ENCODED_LEN - 1;
 export const MAX_TX_PROOF_LEN = MAX_TRIE_NODE_LEN * MAX_TX_TREE_DEPTH;
 export const MAX_TX_SIZE_M = 1000;
-export const MAX_TX_LEAF_SIZE_M = 1043; // See calculations in receiptOracle/encode.ts
+// MAX_LEAF_SIZE_M = MAX_RLP_LIST_HEADER_SIZE + ((MAX_KEY_RLP_HEADER_SIZE + MAX_KEY_SIZE) + (MAX_TX_HEADER_SIZE_M + MAX_TX_SIZE_M))
+// MAX_KEY_SIZE = 32 in Ethereum
+// MAX_KEY_RLP_HEADER_SIZE = 1
+// MAX_TX_HEADER_SIZE_M = 1 + 2 = 3 - Length of RLP header for 1000 element string
+// MAX_RLP_LIST_HEADER_SIZE = 1 + 2 = 3 - Length of RLP header for 1000 element list
+// MAX_LEAF_SIZE_M = 3 + ((1 +32) + (3 + 1000)) = 1039
+export const MAX_TX_LEAF_SIZE_M = 1039;
 
 export enum TX_OFFSETS {
   NONCE,

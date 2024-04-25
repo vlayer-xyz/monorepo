@@ -7,6 +7,9 @@ import { bytesToHex } from 'viem';
 import { createNewProofInputFixture } from './noir_fixtures/new_proof.js';
 
 const NOIR_PROOF_FIXTURES_DIRECTORY = '../circuits/lib/src/fixtures/merkle_proofs';
+const MAX_VALUE_LEN = 100;
+const MAX_LEAF_LEN = 100;
+const MAX_DEPTH = 10;
 
 let fixtureModule = ``;
 const fixtureModuleFile = `${NOIR_PROOF_FIXTURES_DIRECTORY}.nr`;
@@ -36,12 +39,9 @@ for (const fixtureName in PROOF_FIXTURES) {
     proof: proof.map((node) => bytesToHex(node))
   };
   const maxPrefixedKeyNibbleLen = proofFixture.key.length;
-  const maxValueLen = 100;
-  const maxLeafLen = 100;
-  const maxDepth = 10;
   await writeFile(
     `${NOIR_PROOF_FIXTURES_DIRECTORY}/${fixtureName}.nr`,
-    createNewProofInputFixture(proofFixture, maxPrefixedKeyNibbleLen, maxValueLen, maxLeafLen, maxDepth)
+    createNewProofInputFixture(proofFixture, maxPrefixedKeyNibbleLen, MAX_VALUE_LEN, MAX_LEAF_LEN, MAX_DEPTH)
   );
 
   fixtureModule += `mod ${fixtureName};\n`;

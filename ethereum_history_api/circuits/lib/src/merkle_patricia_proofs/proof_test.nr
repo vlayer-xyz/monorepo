@@ -248,9 +248,10 @@ mod verify_node_hash {
     use crate::merkle_patricia_proofs::proof::verify_node_hash;
     use crate::fixtures::merkle_proofs::branch_then_leaf::proof_input;
 
+    global node = proof_input.proof.nodes[0];
+
     #[test]
     fn success() {
-        let node = proof_input.proof.nodes[0];
         let node_hash = [
             80, 122, 73, 223, 43, 25, 57, 75, 105, 161, 221, 85, 59, 71, 76, 101, 225, 209, 230, 84, 54, 162, 33, 233, 198, 82, 219, 132, 63, 243, 237, 18
         ];
@@ -259,7 +260,6 @@ mod verify_node_hash {
 
     #[test(should_fail_with="Invalid node hash")]
     fn fail() {
-        let node = proof_input.proof.nodes[0];
         let mut invalid_node_hash = [
             80, 122, 73, 223, 43, 25, 57, 75, 105, 161, 221, 85, 59, 71, 76, 101, 225, 209, 230, 84, 54, 162, 33, 233, 198, 82, 219, 132, 63, 243, 237, 18
         ];
@@ -297,8 +297,9 @@ mod verify_leaf {
 
     #[test]
     fn success_from_fixtures() {
-        let key_nibbles = bytes_to_nibbles(Fragment::new(3, 1, proof_input.key));
-        verify_leaf(proof_input.proof.leaf, key_nibbles, &mut 1, proof_input.value)
+        let ( key, value, leaf ) = (proof_input.key, proof_input.value, proof_input.proof.leaf);
+        let key_nibbles = bytes_to_nibbles(Fragment::new(3, 1, key));
+        verify_leaf(leaf, key_nibbles, &mut 1, value)
     }
 
     #[test(should_fail_with="Leaf expected to have 2 fields")]
