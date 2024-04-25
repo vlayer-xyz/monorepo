@@ -271,7 +271,7 @@ mod verify_node_hash {
 mod verify_leaf {
 
     use crate::merkle_patricia_proofs::proof::verify_leaf;
-    use crate::misc::{bytes::bytes_to_nibbles, fragment::Fragment};
+    use crate::misc::{bytes::bytes_to_nibbles, fragment::Fragment, arrays::resize};
     use crate::fixtures::merkle_proofs::branch_then_leaf::{leaf, key, value};
 
     global empty_key = Fragment::new_with_length(0, [0; 2]);
@@ -279,9 +279,11 @@ mod verify_leaf {
     global empty_leaf = [0xc2, 0x20, 0x80]; // ["0x20","0x"]
 
     global MAX_PREFIXED_KEY_NIBBLE_LEN = 6;
-    global some_key = [0xab, 0xcd, 0x00, 0x00, 0x00, 0x00];
-    global some_key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> = bytes_to_nibbles(Fragment::new_with_length(2, some_key));
-    global some_value = [0x00, 0x12, 0x34];
+    global MAX_VALUE_LEN = 3;
+    global some_key = [0xab, 0xcd];
+    global some_key_fragment: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> = Fragment::from_array(some_key);
+    global some_key_nibbles = bytes_to_nibbles(some_key_fragment);
+    global some_value: [u8; MAX_VALUE_LEN] = [0x00, 0x12, 0x34];
     global some_leaf = [0xc6, 0x82, 0x20, 0xcd, 0x82, 0x12, 0x34]; // ["0x20bc","0x1234"]
 
     #[test]
