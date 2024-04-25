@@ -1,5 +1,5 @@
 use crate::rlp::decode::{decode_to_rlp_header, decode_list_of_small_strings};
-use crate::rlp::list::RlpList;
+use crate::rlp::types::RlpList;
 use crate::misc::{
     fragment::Fragment, arrays::{sub_array_equals_up_to_length, memcpy_up_to_length},
     types::{Hash, HASH_LEN}, bytes::{bytes_to_nibbles, byte_to_nibbles, right_pad}

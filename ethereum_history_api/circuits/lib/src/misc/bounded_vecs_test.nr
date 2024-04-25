@@ -1,6 +1,6 @@
 use crate::misc::bounded_vecs::bounded_vec_from_array;
 use crate::misc::arrays::sub_array_equals_up_to_length;
-use crate::rlp::fragment::RlpFragment;
+use crate::rlp::types::RlpFragment;
 
 #[test]
 fn success() {

@@ -1,6 +1,5 @@
 use dep::std::wrapping_sub;
-use crate::rlp::fragment::RlpFragment;
-use crate::rlp::list::RlpList;
+use crate::rlp::types::{RlpList, RlpFragment, RlpHeader};
 
 /// Max number of bytes required to represent length of a string or list
 global MAX_LEN_IN_BYTES: u64 = 2;
@@ -8,18 +7,6 @@ global MAX_LEN_IN_BYTES: u64 = 2;
 /// RLP data type enum
 global STRING: u64 = 0;
 global LIST: u64 = 1;
-
-struct RlpHeader {
-    offset: u64,
-    length: u64, 
-    data_type: u64 // STRING or LIST    
-}
-
-impl Eq for RlpHeader {
-    fn eq(self, other: Self) -> bool {
-        (self.offset == other.offset) & (self.length == other.length) & (self.data_type == other.data_type)
-    }
-}
 
 pub fn extract_payload_len<N>(arr: [u8; N], lenlen: u64) -> u64 {
     assert(lenlen <= MAX_LEN_IN_BYTES, "Length of length exceeds maximum");

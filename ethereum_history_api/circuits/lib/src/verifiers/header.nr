@@ -6,7 +6,7 @@ use crate::misc::arrays::{sub_array_equals, sub_array_equals_up_to_length};
 use crate::misc::bytes::byte_value;
 use crate::HASH_LEN;
 use crate::rlp::decode::decode_list;
-use crate::rlp::list::RlpList;
+use crate::rlp::types::RlpList;
 
 global MAX_HEADER_FIELDS_COUNT = 20;
 global STATE_ROOT_INDEX = 3;

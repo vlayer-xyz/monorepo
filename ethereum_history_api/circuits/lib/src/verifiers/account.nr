@@ -4,7 +4,7 @@ use dep::u2b::u64_to_u8;
 use crate::account::{Account, StateProof};
 use crate::misc::{arrays::{sub_array_equals_up_to_length, array_equals}, types::{Address, Bytes32}, bytes::byte_value};
 use crate::rlp::decode::decode_list_of_small_strings;
-use crate::rlp::list::RlpList;
+use crate::rlp::types::RlpList;
 
 use crate::HASH_LEN;
 

@@ -6,7 +6,7 @@ use dep::proof::const::HASH_LENGTH;
 use crate::misc::arrays::sub_array_equals_up_to_length;
 use crate::misc::bytes::byte_value;
 use crate::rlp::decode::{decode_list, STRING};
-use crate::rlp::list::RlpList;
+use crate::rlp::types::RlpList;
 use dep::u2b::u32_to_u8;
 
 global RECEIPT_FIELDS_COUNT = 4;
