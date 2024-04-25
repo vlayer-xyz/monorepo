@@ -118,7 +118,6 @@ pub fn extract_hash<MAX_PREFIXED_KEY_NIBBLE_LEN>(
 }
 
 pub fn verify_node_hash<MAX_LEN>(node: [u8; MAX_LEN], hash: [u8; HASH_LEN]) {
-    println(keccak256(node, get_node_len(node) as u32));
     assert(keccak256(node, get_node_len(node) as u32) == hash, "Invalid node hash");
 }
 
