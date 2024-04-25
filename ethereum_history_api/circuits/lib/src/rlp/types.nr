@@ -1,6 +1,20 @@
 use crate::misc::{arrays::sub_array_equals_up_to_length};
 use crate::rlp::decode::STRING;
 
+type RlpList<MAX_FIELDS> = BoundedVec<RlpFragment, MAX_FIELDS>;
+
+struct RlpHeader {
+    offset: u64,
+    length: u64, 
+    data_type: u64 // STRING or LIST    
+}
+
+impl Eq for RlpHeader {
+    fn eq(self, other: Self) -> bool {
+        (self.offset == other.offset) & (self.length == other.length) & (self.data_type == other.data_type)
+    }
+}
+
 struct RlpFragment {
     offset: u64,
     length: u64,    

@@ -1,5 +1,7 @@
 mod arrays;
 mod arrays_test;
+mod bounded_vecs;
+mod bounded_vecs_test;
 mod bytes;
 mod bytes_test;
 mod fragment;

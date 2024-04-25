@@ -5,7 +5,8 @@ use crate::header::{BlockHeaderPartial, BlockHeaderRlp, ETHEREUM_MAINNET_ID, ETH
 use crate::misc::arrays::{sub_array_equals, sub_array_equals_up_to_length};
 use crate::misc::bytes::byte_value;
 use crate::HASH_LEN;
-use crate::rlp::decode::{decode_list, RlpList};
+use crate::rlp::decode::decode_list;
+use crate::rlp::types::RlpList;
 
 global MAX_HEADER_FIELDS_COUNT = 20;
 global STATE_ROOT_INDEX = 3;
@@ -44,24 +45,24 @@ pub fn verify_header(
     let expected_header_fields_count = get_header_fields_count(chain_id, block_header_partial.number as u64);
 
     assert(
-        expected_header_fields_count == header_rlp_list.num_fields, "number of header RLP fields does not match"
+        expected_header_fields_count == header_rlp_list.len, "number of header RLP fields does not match"
     );
 
     let block_number = u64_to_u8(block_header_partial.number as u64);
     let block_number = byte_value(block_number);
 
-    header_rlp_list.fragments[BLOCK_NUM_INDEX].assert_string_eq("Block number", block_header_rlp.data, block_number);
-    header_rlp_list.fragments[STATE_ROOT_INDEX].assert_string_eq(
+    header_rlp_list.get(BLOCK_NUM_INDEX).assert_string_eq("Block number", block_header_rlp.data, block_number);
+    header_rlp_list.get(STATE_ROOT_INDEX).assert_string_eq(
         "State root",
         block_header_rlp.data,
         BoundedVec { storage: block_header_partial.state_root, len: HASH_LEN }
     );
-    header_rlp_list.fragments[TRANSACTIONS_ROOT_INDEX].assert_string_eq(
+    header_rlp_list.get(TRANSACTIONS_ROOT_INDEX).assert_string_eq(
         "Transactions root",
         block_header_rlp.data,
         BoundedVec { storage: block_header_partial.transactions_root, len: HASH_LEN }
     );
-    header_rlp_list.fragments[RECEIPTS_ROOT_INDEX].assert_string_eq(
+    header_rlp_list.get(RECEIPTS_ROOT_INDEX).assert_string_eq(
         "Receipts root",
         block_header_rlp.data,
         BoundedVec { storage: block_header_partial.receipts_root, len: HASH_LEN }

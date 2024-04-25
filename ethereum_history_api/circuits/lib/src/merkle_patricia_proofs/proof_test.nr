@@ -83,7 +83,8 @@ mod strip_prefix {
 mod extract_hash_from_branch_node {
 
     use crate::merkle_patricia_proofs::proof::{extract_hash_from_branch_node, MAX_NODE_FIELDS};
-    use crate::rlp::decode::{RlpList, decode_list_of_small_strings};
+    use crate::rlp::decode::decode_list_of_small_strings;
+    use crate::rlp::types::RlpList;
     use crate::misc::{fragment::Fragment, bytes::bytes_to_nibbles};
     use crate::fixtures::merkle_proofs::{branch_then_leaf::{key as branch_key, nodes as branch_nodes}};
 
@@ -124,7 +125,8 @@ mod extract_hash_from_branch_node {
 mod extract_hash_from_extension_node {
 
     use crate::merkle_patricia_proofs::proof::{extract_hash_from_extension_node, MAX_NODE_FIELDS};
-    use crate::rlp::decode::{RlpList, decode_list_of_small_strings};
+    use crate::rlp::decode::decode_list_of_small_strings;
+    use crate::rlp::types::RlpList;
     use crate::misc::{fragment::Fragment, bytes::bytes_to_nibbles};
     use crate::fixtures::merkle_proofs::{
         branch_then_leaf::{key as branch_key, nodes as branch_nodes},

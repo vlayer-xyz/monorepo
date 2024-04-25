@@ -1,4 +1,5 @@
-use crate::rlp::decode::{decode_to_rlp_header, decode_list_of_small_strings, decode_list, RlpList};
+use crate::rlp::types::RlpList;
+use crate::rlp::decode::{decode_to_rlp_header, decode_list_of_small_strings, decode_list};
 use crate::misc::{
     fragment::Fragment, arrays::{sub_array_equals_up_to_length, memcpy_up_to_length},
     types::{Hash, HASH_LEN}, bytes::{bytes_to_nibbles, byte_to_nibbles, right_pad}
@@ -62,13 +63,13 @@ pub fn extract_hash_from_branch_node<MAX_PREFIXED_KEY_NIBBLE_LEN>(
     key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN>,
     key_ptr: &mut u64
 ) -> Fragment<HASH_LEN> {
-    let curr_nibble = key_nibbles.at(*key_ptr);
+    let curr_nibble = key_nibbles.at(*key_ptr) as u64;
     assert(
-        node_rlp_list.fragments[curr_nibble].length == HASH_LEN, "Expected a hash at position given by the key nibble"
+        node_rlp_list.get(curr_nibble).length == HASH_LEN, "Expected a hash at position given by the key nibble"
     );
     *key_ptr += 1;
 
-    Fragment::new(node_rlp_list.fragments[curr_nibble].offset, HASH_LEN, node).focus()
+    Fragment::new(node_rlp_list.get(curr_nibble).offset, HASH_LEN, node).focus()
 }
 
 pub fn extract_hash_from_extension_node<MAX_PREFIXED_KEY_NIBBLE_LEN>(
@@ -77,11 +78,7 @@ pub fn extract_hash_from_extension_node<MAX_PREFIXED_KEY_NIBBLE_LEN>(
     key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN>,
     key_ptr: &mut u64
 ) -> Fragment<HASH_LEN> {
-    let prefixed_extension_key_part: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> = Fragment::new(
-        node_rlp_list.fragments[0].offset,
-        node_rlp_list.fragments[0].length,
-        node
-    ).focus();
+    let prefixed_extension_key_part: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> = Fragment::new(node_rlp_list.get(0).offset, node_rlp_list.get(0).length, node).focus();
 
     let (prefix, _) = byte_to_nibbles(prefixed_extension_key_part.at(0));
     assert((prefix == 0) | (prefix == 1), "Extension parity prefix must be 0 or 1");
@@ -90,12 +87,10 @@ pub fn extract_hash_from_extension_node<MAX_PREFIXED_KEY_NIBBLE_LEN>(
     assert(
         extension_key_part == curr_key_nibbles_part, "Extension key part does not correspond to given key nibbles"
     );
-    assert(
-        node_rlp_list.fragments[1].length == HASH_LEN, "Expected a hash at the end of the extension node"
-    );
+    assert(node_rlp_list.get(1).length == HASH_LEN, "Expected a hash at the end of the extension node");
     *key_ptr += extension_key_part.length;
 
-    Fragment::new(node_rlp_list.fragments[1].offset, HASH_LEN, node).focus()
+    Fragment::new(node_rlp_list.get(1).offset, HASH_LEN, node).focus()
 }
 
 pub fn extract_hash<MAX_PREFIXED_KEY_NIBBLE_LEN>(
@@ -106,9 +101,9 @@ pub fn extract_hash<MAX_PREFIXED_KEY_NIBBLE_LEN>(
     let mut hash = Fragment::new_focused([0; HASH_LEN]);
     let node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list_of_small_strings(node);
 
-    if (node_rlp_list.num_fields == BRANCH_NODE_NUM_FIELDS) {
+    if (node_rlp_list.len == BRANCH_NODE_NUM_FIELDS) {
         hash = extract_hash_from_branch_node(node, node_rlp_list, key_nibbles, key_ptr);
-    } else if (node_rlp_list.num_fields == EXTENSION_NODE_NUM_FIELDS) {
+    } else if (node_rlp_list.len == EXTENSION_NODE_NUM_FIELDS) {
         hash = extract_hash_from_extension_node(node, node_rlp_list, key_nibbles, key_ptr);
     } else {
         assert(false, "Invalid node type");
@@ -128,13 +123,9 @@ pub fn verify_leaf<MAX_LEAF_LEN, MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN>(
     value: Value<MAX_VALUE_LEN>
 ) {
     let leaf_rlp_list: RlpList<2> = decode_list(leaf);
-    assert(leaf_rlp_list.num_fields == 2, "Leaf expected to have 2 fields");
+    assert(leaf_rlp_list.len == 2, "Leaf expected to have 2 fields");
 
-    let prefixed_leaf_key_part: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> = Fragment::new(
-        leaf_rlp_list.fragments[0].offset,
-        leaf_rlp_list.fragments[0].length,
-        leaf
-    ).focus();
+    let prefixed_leaf_key_part: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> = Fragment::new(leaf_rlp_list.get(0).offset, leaf_rlp_list.get(0).length, leaf).focus();
 
     let (prefix, _) = byte_to_nibbles(prefixed_leaf_key_part.at(0));
     assert((prefix == 2) | (prefix == 3), "Leaf parity prefix must be 2 or 3");
@@ -145,7 +136,7 @@ pub fn verify_leaf<MAX_LEAF_LEN, MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN>(
     assert(*key_ptr == key_nibbles.length, "Expected to consume all key nibbles");
 
     let value = right_pad(value);
-    let value_rlp_fragment = leaf_rlp_list.fragments[1];
+    let value_rlp_fragment = leaf_rlp_list.get(1);
     // Verify that extracted value matches the expected value.
     assert(value_rlp_fragment.length == value.len, "Value length mismatch");
     assert(
