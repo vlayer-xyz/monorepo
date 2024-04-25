@@ -4,9 +4,21 @@ import { encodeBytes32, encodeField, encodeHex, encodeProof } from '../common/en
 import { padArray } from '../../../util/array.js';
 import { MAX_TRIE_NODE_LEN, ZERO_PAD_VALUE } from '../common/const.js';
 import { assert } from '../../../util/assert.js';
+import { BYTE_HEX_LEN } from '../../../util/const.js';
 
-const MAX_ACCOUNT_STATE_LEN = 134;
-const MAX_STATE_PROOF_LEVELS = 11;
+export const MAX_ACCOUNT_STATE_LEN = 134;
+const MAX_ACCOUNT_KEY_LEN = 20; // Length of Ethereum address
+const MAX_ACCOUNT_KEY_NIBBLE_LEN = MAX_ACCOUNT_KEY_LEN * BYTE_HEX_LEN;
+export const MAX_ACCOUNT_PREFIXED_KEY_NIBBLE_LEN = MAX_ACCOUNT_KEY_NIBBLE_LEN + BYTE_HEX_LEN;
+// MAX_ACCOUNT_LEAF_SIZE = MAX_RLP_LIST_HEADER_SIZE + ((MAX_KEY_RLP_HEADER_SIZE + MAX_PREFIXED_KEY_SIZE) + (MAX_ACCOUNT_HEADER_SIZE + MAX_ACCOUNT_STATE_LEN))
+// MAX_PREFIXED_KEY_SIZE = 1 + 20
+// MAX_KEY_RLP_HEADER_SIZE = 1
+// MAX_ACCOUNT_HEADER_SIZE = 1 + 1 = 2 - Length of RLP header for 134 element string
+// MAX_RLP_LIST_HEADER_SIZE = 1 + 1 = 2 - Length of RLP header for 1000 element list
+// MAX_ACCOUNT_LEAF_SIZE = 2 + ((1 + (1 + 20)) + (2 + 134)) = 160
+export const MAX_ACCOUNT_LEAF_SIZE = 160;
+
+export const MAX_STATE_PROOF_LEVELS = 11;
 export const STATE_PROOF_LEN = MAX_TRIE_NODE_LEN * MAX_STATE_PROOF_LEVELS;
 
 const MAX_STORAGE_PROOF_LEVELS = 7;
@@ -32,11 +44,14 @@ export function encodeStateProof(ethProof: GetProofReturnType): ForeignCallOutpu
   return [key, value, proof, depth];
 }
 
-export function encodeValue(proof: Hex[]): string[] {
+export function getValue(proof: Hex[]): Hex {
   const lastProofEntry = fromRlp(proof[proof.length - 1], 'hex');
   const value = lastProofEntry[RLP_VALUE_INDEX];
   assert(isHex(value), 'value should be of type Hex');
-  return padArray(encodeHex(value), MAX_ACCOUNT_STATE_LEN, ZERO_PAD_VALUE, 'left');
+  return value;
+}
+export function encodeValue(proof: Hex[]): string[] {
+  return padArray(encodeHex(getValue(proof)), MAX_ACCOUNT_STATE_LEN, ZERO_PAD_VALUE, 'left');
 }
 
 type StorageProof = GetProofReturnType['storageProof'][number];
