@@ -5,10 +5,10 @@ import {
   MAX_TX_SIZE_M,
   MAX_TX_TREE_DEPTH
 } from '../../noir/oracles/transactionOracle/encode.js';
-import { createNewProofFixture } from './new_proof.js';
+import { createNewProofInputFixture } from './new_proof.js';
 
 export function createNewTransactionProofFixture(proof: Proof): string {
-  return createNewProofFixture(
+  return createNewProofInputFixture(
     proof,
     MAX_TX_PREFIXED_KEY_NIBBLE_LEN,
     MAX_TX_SIZE_M,
