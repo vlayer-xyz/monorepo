@@ -29,32 +29,34 @@ export class AccountCircuitConfig {
     BYTES32_LEN; /* Code hash */
   public static readonly MAX_VALUE = getRlpHeaderSize(this.MAX_VALUE_CONTENT_LEN) + this.MAX_VALUE_CONTENT_LEN;
   private static readonly KEY_LEN = ADDRESS_LEN;
-  private static readonly MAX_PREFIXED_KEY_LEN = 1 + this.KEY_LEN;
-  public static readonly MAX_PREFIXED_KEY_NIBBLE_LEN = this.MAX_PREFIXED_KEY_LEN * BYTE_HEX_LEN;
-  private static readonly KEY_RLP_HEADER_LEN = getRlpHeaderSize(this.MAX_PREFIXED_KEY_LEN);
+  private static readonly PREFIXED_KEY_LEN = 1 + this.KEY_LEN;
+  public static readonly PREFIXED_KEY_NIBBLE_LEN = this.PREFIXED_KEY_LEN * BYTE_HEX_LEN;
+  private static readonly KEY_RLP_HEADER_LEN = getRlpHeaderSize(this.PREFIXED_KEY_LEN);
   private static readonly MAX_VALUE_RLP_HEADER_LEN = getRlpHeaderSize(this.MAX_VALUE);
   private static readonly MAX_LEAF_CONTENT_LEN =
-    this.KEY_RLP_HEADER_LEN + this.MAX_PREFIXED_KEY_LEN + this.MAX_VALUE_RLP_HEADER_LEN + this.MAX_VALUE;
+    this.KEY_RLP_HEADER_LEN + this.PREFIXED_KEY_LEN + this.MAX_VALUE_RLP_HEADER_LEN + this.MAX_VALUE;
   private static readonly MAX_LEAF_RLP_HEADER_LEN = getRlpHeaderSize(this.MAX_LEAF_CONTENT_LEN);
   public static readonly MAX_LEAF_LEN = this.MAX_LEAF_RLP_HEADER_LEN + this.MAX_LEAF_CONTENT_LEN;
 
-  public static readonly MAX_STATE_PROOF_LEVELS = 11;
-  public static readonly STATE_PROOF_LEN = MAX_TRIE_NODE_LEN * this.MAX_STATE_PROOF_LEVELS;
+  public static readonly MAX_PROOF_LEVELS = 11;
+  public static readonly PROOF_LEN = MAX_TRIE_NODE_LEN * this.MAX_PROOF_LEVELS;
 }
 
-export const MAX_STORAGE_SLOT_LEN = 32; // Storage slots in Ethereum are 32 bytes.
-const MAX_STORAGE_KEY_LEN = 32; // Keys are hashes which are 32 bytes long.
-const MAX_STORAGE_KEY_NIBBLE_LEN = MAX_STORAGE_KEY_LEN * BYTE_HEX_LEN;
-export const MAX_STORAGE_PREFIXED_KEY_NIBBLE_LEN = MAX_STORAGE_KEY_NIBBLE_LEN + BYTE_HEX_LEN;
-// MAX_STORAGE_LEAF_SIZE = MAX_RLP_LIST_HEADER_SIZE + ((MAX_KEY_RLP_HEADER_SIZE + MAX_PREFIXED_KEY_SIZE) + (MAX_STORAGE_HEADER_SIZE + MAX_STORAGE_STATE_LEN))
-// MAX_PREFIXED_KEY_SIZE = 1 + 32
-// MAX_KEY_RLP_HEADER_SIZE = 1
-// MAX_STORAGE_HEADER_SIZE = 1
-// MAX_RLP_LIST_HEADER_SIZE = 1 + 1 = 2
-// MAX_STORAGE_LEAF_SIZE = 2 + ((1 + (1 + 32)) + (1 + 32)) = 69
-export const MAX_STORAGE_LEAF_SIZE = 69;
-export const MAX_STORAGE_PROOF_LEVELS = 7;
-export const STORAGE_PROOF_LEN = MAX_TRIE_NODE_LEN * MAX_STORAGE_PROOF_LEVELS;
+export class StorageCircuitConfig {
+  public static readonly VALUE_LEN = BYTES32_LEN;
+  private static readonly KEY_LEN = BYTES32_LEN;
+  private static readonly PREFIXED_KEY_LEN = 1 + this.KEY_LEN;
+  public static readonly PREFIXED_KEY_NIBBLE_LEN = this.PREFIXED_KEY_LEN * BYTE_HEX_LEN;
+  private static readonly KEY_RLP_HEADER_LEN = getRlpHeaderSize(this.PREFIXED_KEY_LEN);
+  private static readonly VALUE_RLP_HEADER_LEN = getRlpHeaderSize(this.VALUE_LEN);
+  private static readonly MAX_LEAF_CONTENT_LEN =
+    this.KEY_RLP_HEADER_LEN + this.PREFIXED_KEY_LEN + this.VALUE_RLP_HEADER_LEN + this.VALUE_LEN;
+  private static readonly MAX_LEAF_RLP_HEADER_LEN = getRlpHeaderSize(this.MAX_LEAF_CONTENT_LEN);
+  public static readonly MAX_LEAF_LEN = this.MAX_LEAF_RLP_HEADER_LEN + this.MAX_LEAF_CONTENT_LEN;
+
+  public static readonly MAX_PROOF_LEVELS = 7;
+  public static readonly PROOF_LEN = MAX_TRIE_NODE_LEN * this.MAX_PROOF_LEVELS;
+}
 
 const RLP_VALUE_INDEX = 1;
 
@@ -70,7 +72,7 @@ export function encodeAccount(ethProof: GetProofReturnType): ForeignCallOutput[]
 export function encodeStateProof(ethProof: GetProofReturnType): ForeignCallOutput[] {
   const key = encodeHex(ethProof.address);
   const value = encodeValue(ethProof.accountProof);
-  const proof = encodeProof(ethProof.accountProof, AccountCircuitConfig.STATE_PROOF_LEN);
+  const proof = encodeProof(ethProof.accountProof, AccountCircuitConfig.PROOF_LEN);
   const depth = encodeField(ethProof.accountProof.length);
 
   return [key, value, proof, depth];
@@ -91,7 +93,7 @@ type StorageProof = GetProofReturnType['storageProof'][number];
 export function encodeStorageProof(storageKey: Hex, storageProof: StorageProof): ForeignCallOutput[] {
   const key = encodeHex(storageKey);
   const value = encodeBytes32(storageProof.value);
-  const proof = encodeProof(storageProof.proof, STORAGE_PROOF_LEN);
+  const proof = encodeProof(storageProof.proof, StorageCircuitConfig.PROOF_LEN);
   const depth = encodeField(storageProof.proof.length);
 
   return [key, value, proof, depth];

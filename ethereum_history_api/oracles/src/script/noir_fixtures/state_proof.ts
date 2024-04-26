@@ -6,7 +6,7 @@ import { AccountCircuitConfig, encodeValue } from '../../noir/oracles/accountOra
 export function createStateProofFixture(stateProof: GetProofReturnType): string {
   const key = encodeHexString(stateProof.address);
   const value = encodeValue(stateProof.accountProof);
-  const proof = encodeProof(stateProof.accountProof, AccountCircuitConfig.STATE_PROOF_LEN);
+  const proof = encodeProof(stateProof.accountProof, AccountCircuitConfig.PROOF_LEN);
   const depth = stateProof.accountProof.length;
   const stateProofFixture = `use crate::account::StateProof;
 
