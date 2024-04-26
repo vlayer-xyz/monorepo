@@ -33,7 +33,7 @@ impl RlpFragment {
         assert(self.data_type == STRING, f"{field_name}: Invalid RLP type");
         assert(self.length == value.len, f"{field_name}: Invalid RLP length");
         assert(
-            sub_array_equals_up_to_length(value.storage, rlp, self.offset, value.len), f"{field_name}: Invalid RLP value"
+            sub_array_equals_up_to_length(value.storage, rlp, self.offset, self.length), f"{field_name}: Invalid RLP value"
         );
     }
 

@@ -50,13 +50,21 @@ mod rlp_fragment {
     }
 
     mod assert_u64_eq {
-        use crate::rlp::{decode::{STRING, LIST}, types::RlpFragment};
+        use crate::rlp::{decode::STRING, types::RlpFragment};
 
         #[test]
         fn success() {
             let fragment = RlpFragment { offset: 1, length: 2, data_type: STRING };
             let rlp = [0x82, 0x12, 0x34]; // "0x1234"
             let value = 0x1234;
+            fragment.assert_u64_eq("Field", rlp, value)
+        }
+
+        #[test(should_fail_with = "Field: Invalid RLP length")]
+        fn invalid_length() {
+            let fragment = RlpFragment { offset: 1, length: 2, data_type: STRING };
+            let rlp = [0x82, 0x12, 0x34]; // "0x1234"
+            let value = 0x123456;
             fragment.assert_u64_eq("Field", rlp, value)
         }
 
