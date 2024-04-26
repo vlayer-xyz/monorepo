@@ -1,5 +1,5 @@
 import { Hex } from 'viem';
-import { StorageCircuitConfig } from '../../noir/oracles/accountOracle/encode.js';
+import { StorageProofConfig } from '../../noir/oracles/accountOracle/encode.js';
 import { createNewProofInputFixture } from './new_proof.js';
 import { joinArrayVertical } from '../../noir/noir_js/encode.js';
 import { toHexString } from '../../ethereum/blockHeader.js';
@@ -21,9 +21,9 @@ global proofs = ${joinArrayVertical(storageProofsNoir)};
 function createSingleStorageProofFixture(storageProof: StorageProof): string {
   return createNewProofInputFixture(
     { key: storageProof.key, value: toHexString(storageProof.value), proof: storageProof.proof },
-    StorageCircuitConfig.PREFIXED_KEY_NIBBLE_LEN,
-    StorageCircuitConfig.VALUE_LEN,
-    StorageCircuitConfig.MAX_LEAF_LEN,
-    StorageCircuitConfig.MAX_PROOF_LEVELS
+    StorageProofConfig.MAX_PREFIXED_KEY_NIBBLE_LEN,
+    StorageProofConfig.VALUE_LEN,
+    StorageProofConfig.MAX_LEAF_LEN,
+    StorageProofConfig.MAX_PROOF_LEVELS
   );
 }

@@ -1,17 +1,14 @@
 import { Proof } from '../../ethereum/proof.js';
-import {
-  MAX_RECEIPT_ENCODED_LEN,
-  MAX_RECEIPT_KEY_NIBBLE_LEN,
-  MAX_RECEIPT_PROOF_LEN
-} from '../../noir/oracles/receiptOracle/encode.js';
+import { MAX_RECEIPT_ENCODED_LEN, ReceiptProofConfigM } from '../../noir/oracles/receiptOracle/encode.js';
+import { BYTE_HEX_LEN } from '../../util/const.js';
 import { createProofFixture } from './proof.js';
 
 export function createReceiptProofFixture(proof: Proof): string {
   return createProofFixture(
     proof,
-    MAX_RECEIPT_KEY_NIBBLE_LEN,
+    ReceiptProofConfigM.MAX_KEY_LEN * BYTE_HEX_LEN,
     MAX_RECEIPT_ENCODED_LEN,
-    MAX_RECEIPT_PROOF_LEN,
+    ReceiptProofConfigM.MAX_PROOF_LEN,
     'dep::proof::trie_proof::TrieProof',
     'TrieProof'
   );
