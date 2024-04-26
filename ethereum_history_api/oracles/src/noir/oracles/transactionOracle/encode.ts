@@ -6,22 +6,25 @@ import { BYTE_HEX_LEN, U1_ZERO } from '../../../util/const.js';
 import { Proof } from '../../../ethereum/proof.js';
 import { padArray } from '../../../util/array.js';
 import { removeHexPrefix } from '../../../util/hex.js';
+import { getProofConfig } from '../common/proofConfig.js';
 
-const MAX_TX_KEY_LEN = 3;
-export const MAX_TX_KEY_NIBBLE_LEN = MAX_TX_KEY_LEN * BYTE_HEX_LEN;
-export const MAX_TX_PREFIXED_KEY_NIBBLE_LEN = MAX_TX_KEY_NIBBLE_LEN + BYTE_HEX_LEN;
-export const MAX_TX_TREE_DEPTH = MAX_TX_KEY_NIBBLE_LEN + 1;
+// TODO: Remove these constants
 export const MAX_TX_ENCODED_LEN = 525;
 export const MAX_TX_RLP_LEN = MAX_TX_ENCODED_LEN - 1;
-export const MAX_TX_PROOF_LEN = MAX_TRIE_NODE_LEN * MAX_TX_TREE_DEPTH;
-export const MAX_TX_SIZE_M = 1000;
-// MAX_LEAF_SIZE_M = MAX_RLP_LIST_HEADER_SIZE + ((MAX_KEY_RLP_HEADER_SIZE + MAX_PREFIXED_KEY_SIZE) + (MAX_TX_HEADER_SIZE_M + MAX_TX_SIZE_M))
-// MAX_PREFIXED_KEY_SIZE = 1 + 3
-// MAX_KEY_RLP_HEADER_SIZE = 0
-// MAX_TX_HEADER_SIZE_M = 1 + 2 = 3 - Length of RLP header for 1000 element string
-// MAX_RLP_LIST_HEADER_SIZE = 1 + 2 = 3 - Length of RLP header for 1000 element list
-// MAX_LEAF_SIZE_M = 3 + ((1 + (1 + 3)) + (3 + 1000)) = 1011
-export const MAX_TX_LEAF_SIZE_M = 1011;
+
+class TxProofConfig {
+  public static readonly MAX_KEY_LEN = 3;
+  public static readonly MAX_PROOF_LEVELS = 7;
+}
+
+export class TxProofConfigM extends TxProofConfig {
+  public static MAX_VALUE_LEN = 1000;
+
+  private static readonly config = getProofConfig(this.MAX_KEY_LEN, this.MAX_VALUE_LEN, this.MAX_PROOF_LEVELS);
+  public static readonly MAX_PREFIXED_KEY_NIBBLE_LEN = this.config.maxPrefixedKeyNibbleLen;
+  public static readonly MAX_LEAF_LEN = this.config.maxLeafLen;
+  public static readonly MAX_PROOF_LEN = this.config.maxProofLen;
+}
 
 export enum TX_OFFSETS {
   NONCE,
@@ -52,9 +55,9 @@ export function encodeTx(transaction: Transaction): ForeignCallOutput[] {
 }
 
 export function encodeTxProof(txProof: Proof): ForeignCallOutput[] {
-  const key = encodeBytes(BigInt(txProof.key), MAX_TX_KEY_LEN);
+  const key = encodeBytes(BigInt(txProof.key), TxProofConfig.MAX_KEY_LEN);
   const value = padArray(encodeHex(txProof.value), MAX_TX_RLP_LEN, ZERO_PAD_VALUE);
-  const proof = encodeProof(txProof.proof, MAX_TX_PROOF_LEN);
+  const proof = encodeProof(txProof.proof, TxProofConfigM.MAX_PROOF_LEN);
   const depth = encodeField(txProof.proof.length);
 
   return [key, value, proof, depth];
