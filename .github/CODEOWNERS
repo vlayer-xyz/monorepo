@@ -1,6 +1,5 @@
-# Leon Logvinon is an owner of the whole codebase except for Circuits and Contracts projects.
+# Leon Logvinov is an owner of the whole codebase except for Ethereum History Api contracts projects.
 *                               @LogvinovLeon
-/ethereum_history_api/circuits  @marekkirejczyk
 /ethereum_history_api/contracts @marekkirejczyk
 
 # Marek Kirejczyk is an owner of this CODEOWNERS file so that he is required to approve any changes in code ownership.
