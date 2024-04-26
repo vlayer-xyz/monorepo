@@ -12,7 +12,7 @@ export function createAccountFixture(stateProof: GetProofReturnType): string {
 global rlp_encoded_left_padded_account = ${joinArray(value)};
 
 global nonce = ${stateProof.nonce};
-global balance = ${balance};
+global balance = U128::from_integer(${balance});
 global storage_root = ${joinArray(storageHash)};
 global code_hash = ${joinArray(codeHash)};
 

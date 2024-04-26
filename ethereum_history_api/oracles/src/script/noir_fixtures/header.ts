@@ -18,7 +18,7 @@ export function createHeaderFixture(block: GetBlockReturnType): string {
 
   const headerFixture = `use crate::header::{BlockHeaderPartial, BlockHeaderRlp};
 
-global number: Field = ${block.number};
+global number: u64 = ${block.number};
 global hash = ${joinArray(blockHash)};
 global state_root = ${joinArray(stateRoot)};
 global transactions_root = ${joinArray(transactionsRoot)};

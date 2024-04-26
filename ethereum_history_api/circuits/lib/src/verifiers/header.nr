@@ -42,13 +42,13 @@ pub fn verify_header(
     block_header_rlp: BlockHeaderRlp
 ) {
     let header_rlp_list: RlpList<MAX_HEADER_FIELDS_COUNT> = decode_list(block_header_rlp.data);
-    let expected_header_fields_count = get_header_fields_count(chain_id, block_header_partial.number as u64);
+    let expected_header_fields_count = get_header_fields_count(chain_id, block_header_partial.number);
 
     assert(
         expected_header_fields_count == header_rlp_list.len, "number of header RLP fields does not match"
     );
 
-    let block_number = u64_to_u8(block_header_partial.number as u64);
+    let block_number = u64_to_u8(block_header_partial.number);
     let block_number = byte_value(block_number);
 
     header_rlp_list.get(BLOCK_NUM_INDEX).assert_string_eq("Block number", block_header_rlp.data, block_number);

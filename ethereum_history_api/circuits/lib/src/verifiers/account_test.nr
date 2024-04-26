@@ -51,14 +51,14 @@ fn test_assert_account_equals_nonce_with_wrong_value() {
 
 #[test(should_fail_with = "Balance: Invalid RLP length")]
 fn test_assert_account_equals_balance_with_wrong_length() {
-    let balance_with_wrong_length = 0;
+    let balance_with_wrong_length = U128::from_integer(0);
     let account = Account { nonce, balance: balance_with_wrong_length, storage_root, code_hash };
     assert_account_equals(rlp_encoded_left_padded_account, account);
 }
 
 #[test(should_fail_with = "Balance: Invalid RLP value")]
 fn test_assert_account_equals_balance_with_wrong_value() {
-    let balance_with_wrong_value = balance + 1;
+    let balance_with_wrong_value = balance + U128::from_integer(1);
     let account = Account { nonce, balance: balance_with_wrong_value, storage_root, code_hash };
     assert_account_equals(rlp_encoded_left_padded_account, account);
 }

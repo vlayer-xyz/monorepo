@@ -19,9 +19,9 @@ pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_ST
     let account_rlp_list: RlpList<ACCOUNT_FIELDS_COUNT> = decode_list_of_small_strings(account_rlp_right_padded);
     assert(account_rlp_list.len == ACCOUNT_FIELDS_COUNT, "Invalid number of fields in account RLP");
 
-    let nonce = u64_to_u8(account.nonce as u64);
+    let nonce = u64_to_u8(account.nonce);
     let nonce = byte_value(nonce);
-    let balance = U128::from_integer(account.balance).to_be_bytes();
+    let balance = account.balance.to_be_bytes();
     let balance = byte_value(balance);
 
     account_rlp_list.get(NONCE_INDEX).assert_string_eq("Nonce", account_rlp_right_padded, nonce);
