@@ -7,10 +7,10 @@ import {
   MAX_STATE_PROOF_LEVELS,
   getValue
 } from '../../noir/oracles/accountOracle/encode.js';
-import { createNewProofInputFixture } from './new_proof.js';
+import { createNewTopLevelProofInputFixture } from './new_proof.js';
 
 export function createNewStateProofFixture(stateProof: GetProofReturnType): string {
-  return createNewProofInputFixture(
+  return createNewTopLevelProofInputFixture(
     { key: stateProof.address, value: getValue(stateProof.accountProof), proof: stateProof.accountProof },
     MAX_ACCOUNT_PREFIXED_KEY_NIBBLE_LEN,
     MAX_ACCOUNT_STATE_LEN,

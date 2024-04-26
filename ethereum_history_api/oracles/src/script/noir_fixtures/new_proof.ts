@@ -10,31 +10,32 @@ export function createNewProofInputFixture(
   maxPrefixedKeyNibbleLen: number,
   maxValueLen: number,
   maxLeafLen: number,
-  maxDepth: number,
-  isInner = false
+  maxDepth: number
 ): string {
   const paddedKey = padHex(proof.key, { size: maxPrefixedKeyNibbleLen, dir: 'left' });
   const key = encodeHex(paddedKey);
   const paddedValue = padHex(proof.value, { size: maxValueLen, dir: 'left' });
   const value = encodeHex(paddedValue);
 
-  let result = !isInner
-    ? `use crate::merkle_patricia_proofs::proof::{Proof, ProofInput};
-
-global proof_input = `
-    : '';
-
-  result += `ProofInput {\n
+  return `ProofInput {\n
   key: ${indentBlock(joinArray(key), 1)},
   value: ${indentBlock(joinArray(value), 1)},
 
   proof: ${indentBlock(createProofFixture(proof, maxDepth, maxLeafLen), 1)}
 }`;
+}
 
-  if (!isInner) {
-    result += ';\n';
-  }
-  return result;
+export function createNewTopLevelProofInputFixture(
+  proof: Proof,
+  maxPrefixedKeyNibbleLen: number,
+  maxValueLen: number,
+  maxLeafLen: number,
+  maxDepth: number
+): string {
+  return `use crate::merkle_patricia_proofs::proof::{Proof, ProofInput};
+
+global proof_input = ${createNewProofInputFixture(proof, maxPrefixedKeyNibbleLen, maxValueLen, maxLeafLen, maxDepth)};
+`;
 }
 
 function createProofFixture(proof: Proof, maxDepth: number, maxLeafLen: number): string {

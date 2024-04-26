@@ -4,7 +4,7 @@ import { PROOF_FIXTURES } from '../fixtures/merkleProofsConfig.js';
 import { assert, encodeHexStringToArray } from '../main.js';
 import { hasDuplicates } from '../util/array.js';
 import { bytesToHex } from 'viem';
-import { createNewProofInputFixture } from './noir_fixtures/new_proof.js';
+import { createNewTopLevelProofInputFixture } from './noir_fixtures/new_proof.js';
 
 const NOIR_PROOF_FIXTURES_DIRECTORY = '../circuits/lib/src/fixtures/merkle_proofs';
 const MAX_VALUE_LEN = 100;
@@ -41,7 +41,7 @@ for (const fixtureName in PROOF_FIXTURES) {
   const maxPrefixedKeyNibbleLen = proofFixture.key.length;
   await writeFile(
     `${NOIR_PROOF_FIXTURES_DIRECTORY}/${fixtureName}.nr`,
-    createNewProofInputFixture(proofFixture, maxPrefixedKeyNibbleLen, MAX_VALUE_LEN, MAX_LEAF_LEN, MAX_DEPTH)
+    createNewTopLevelProofInputFixture(proofFixture, maxPrefixedKeyNibbleLen, MAX_VALUE_LEN, MAX_LEAF_LEN, MAX_DEPTH)
   );
 
   fixtureModule += `mod ${fixtureName};\n`;

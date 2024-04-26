@@ -29,7 +29,6 @@ function createSingleStorageProofFixture(storageProof: StorageProof): string {
     MAX_STORAGE_PREFIXED_KEY_NIBBLE_LEN,
     MAX_STORAGE_SLOT_LEN,
     MAX_STORAGE_LEAF_SIZE,
-    MAX_STORAGE_PROOF_LEVELS,
-    true
+    MAX_STORAGE_PROOF_LEVELS
   );
 }
