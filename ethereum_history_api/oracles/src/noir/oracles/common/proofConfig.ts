@@ -1,6 +1,6 @@
-import { BYTE_HEX_LEN } from "../../../util/const.js";
-import { MAX_TRIE_NODE_LEN } from "./const.js";
-import { getRlpHeaderSize } from "./util.js";
+import { BYTE_HEX_LEN } from '../../../util/const.js';
+import { MAX_TRIE_NODE_LEN } from './const.js';
+import { getRlpHeaderSize } from './util.js';
 
 export interface ProofConfig {
   maxPrefixedKeyNibbleLen: number;

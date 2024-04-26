@@ -1,5 +1,5 @@
 import { Transaction } from 'viem';
-import { MAX_TRIE_NODE_LEN, ZERO_PAD_VALUE } from '../common/const.js';
+import { ZERO_PAD_VALUE } from '../common/const.js';
 import { ForeignCallOutput } from '@noir-lang/noir_js';
 import { encodeAddress, encodeBytes, encodeField, encodeHex, encodeProof } from '../common/encode.js';
 import { BYTE_HEX_LEN, U1_ZERO } from '../../../util/const.js';

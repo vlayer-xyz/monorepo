@@ -7,14 +7,14 @@ import { assert } from '../../../util/assert.js';
 import { getRlpHeaderSize } from '../common/util.js';
 import { getProofConfig } from '../common/proofConfig.js';
 
-// TODO: Remove this constant
+// TODO: Remove this
 export const MAX_ACCOUNT_STATE_LEN = 134;
 
 export class AccountProofConfig {
-  private static readonly BYTES8_LEN = 8;
+  private static readonly U64_BYTES = 8;
   private static readonly MAX_VALUE_CONTENT_LEN =
-    getRlpHeaderSize(this.BYTES8_LEN) +
-    this.BYTES8_LEN /* Nonce */ +
+    getRlpHeaderSize(this.U64_BYTES) +
+    this.U64_BYTES /* Nonce */ +
     getRlpHeaderSize(BYTES32_LEN) +
     BYTES32_LEN /* Balance */ +
     getRlpHeaderSize(BYTES32_LEN) +
