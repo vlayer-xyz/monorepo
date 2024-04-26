@@ -1,5 +1,5 @@
 import { encodeHex } from '../../noir/oracles/common/encode.js';
-import { indentBlock, joinArray } from '../../noir/noir_js/encode.js';
+import { indentBlock, joinArray, joinArrayVertical } from '../../noir/noir_js/encode.js';
 import { padArray } from '../../util/array.js';
 import { MAX_TRIE_NODE_LEN, ZERO_PAD_VALUE } from '../../noir/oracles/common/const.js';
 import { Proof } from '../../ethereum/proof.js';
@@ -39,14 +39,12 @@ global proof_input = `
 
 function createProofFixture(proof: Proof, maxDepth: number, maxLeafLen: number): string {
   const paddedNodes = padArray(proof.proof.slice(0, proof.proof.length - 1), maxDepth - 1, ZERO_PAD_VALUE);
-  const nodes = paddedNodes.map((node) =>
-    indentBlock(joinArray(padArray(encodeHex(node), MAX_TRIE_NODE_LEN, ZERO_PAD_VALUE)), 1)
-  );
+  const nodes = paddedNodes.map((node) => joinArray(padArray(encodeHex(node), MAX_TRIE_NODE_LEN, ZERO_PAD_VALUE)));
   const leaf = padArray(encodeHex(proof.proof[proof.proof.length - 1]), maxLeafLen, ZERO_PAD_VALUE);
   const depth = proof.proof.length;
 
   return `Proof {
-  nodes: ${indentBlock(joinArray(nodes), 1)},
+  nodes: ${indentBlock(joinArrayVertical(nodes), 1)},
   leaf: ${indentBlock(joinArray(leaf), 1)},
   depth: ${depth}
 }`;
