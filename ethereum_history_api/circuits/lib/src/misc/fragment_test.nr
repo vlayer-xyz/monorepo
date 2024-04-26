@@ -62,7 +62,7 @@ mod focus {
     #[test(should_fail_with = "New max length is smaller than fragment length")]
     fn fail() {
         let fragment = Fragment::new(1, 2, [1, 2, 3, 4]);
-        let _: Fragment<1> = fragment.focus();
+        let _: Fragment<1, u8> = fragment.focus();
     }
 }
 
