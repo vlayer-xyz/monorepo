@@ -1,4 +1,4 @@
-use crate::misc::arrays::memcpy_up_to_length;
+use crate::misc::arrays::{memcpy_up_to_length, resize};
 
 struct Fragment<MAX_DATA_LEN> {
     offset: u64,
@@ -17,6 +17,10 @@ impl<MAX_DATA_LEN> Fragment<MAX_DATA_LEN> {
         assert(length <= data.len() as u64, "Fragment length exceeds data length");
 
         Fragment { offset: 0, length, data }
+    }
+
+    pub fn from_array<DATA_LEN>(data: [u8; DATA_LEN]) -> Fragment<MAX_DATA_LEN> {
+        Fragment { offset: 0, length: data.len() as u64, data: resize(data) }
     }
 
     pub fn new_focused(data: [u8; MAX_DATA_LEN]) -> Fragment<MAX_DATA_LEN> {

@@ -5,3 +5,4 @@ mod slot_test;
 mod token_list;
 mod chain_id;
 mod nft;
+mod nft_list;

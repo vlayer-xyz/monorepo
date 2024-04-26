@@ -120,53 +120,32 @@ mod sub_array_equals {
     }
 }
 
-mod array_equals {
-    use crate::misc::arrays::array_equals;
-    #[test]
-    fn success_empty_array() {
-        let empty_array: [Field; 0] = [];
-        assert(array_equals(empty_array, empty_array));
-    }
-
-    #[test]
-    fn success() {
-        let array: [Field; 3] = [1, 2, 3];
-        assert(array_equals(array, array));
-    }
-
-    #[test(should_fail_with = "Arrays not equal")]
-    fn array_not_equals() {
-        let array: [Field; 3] = [1, 2, 3];
-        let other_array: [Field; 3] = [1, 2, 4];
-        assert(array_equals(array, other_array), "Arrays not equal");
-    }
-}
-
 mod resize {
-    use crate::misc::arrays::{array_equals, resize};
+    use crate::misc::arrays::resize;
     #[test]
     fn success() {
-        assert(array_equals(resize([1, 2]), [1, 2, 0]));
+        assert_eq(resize([1, 2]), [1, 2, 0]);
+        assert_eq(resize([1, 2]), [1, 2, 0, 0]);
+        assert_eq(resize([1, 2]), [1, 2, 0, 0, 0]);
     }
 
     #[test]
     fn success_empty() {
-        assert(array_equals(resize([]), []));
+        assert_eq(resize([]), []);
     }
 
     #[test]
     fn success_2d() {
-        assert(array_equals(resize([[1], [2]]), [[1], [2], [0]]));
-    }
-
-    #[test(should_fail_with = "Arrays not equal")]
-    fn not_equal() {
-        assert(array_equals(resize([1, 2]), [0, 1, 2]), "Arrays not equal");
+        let result: [[Field; 1]; 3] = resize([[1], [2]]);
+        let expected_result = [[1], [2], [0]];
+        for i in 0..3 {
+            assert_eq(result[i], expected_result[i]);
+        }
     }
 
     #[test(should_fail_with = "New length must be greater than or equal to old length")]
     fn new_length_is_shorter() {
-        let _ = array_equals(resize([1, 2]), [1]);
+        let _ : [Field; 1] = resize([1, 2]);
     }
 }
 

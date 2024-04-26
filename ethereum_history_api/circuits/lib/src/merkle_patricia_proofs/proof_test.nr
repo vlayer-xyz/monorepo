@@ -83,7 +83,8 @@ mod strip_prefix {
 mod extract_hash_from_branch_node {
 
     use crate::merkle_patricia_proofs::proof::{extract_hash_from_branch_node, MAX_NODE_FIELDS};
-    use crate::rlp::decode::{RlpList, decode_list_of_small_strings};
+    use crate::rlp::decode::decode_list_of_small_strings;
+    use crate::rlp::types::RlpList;
     use crate::misc::{fragment::Fragment, bytes::bytes_to_nibbles};
     use crate::fixtures::merkle_proofs::{branch_then_leaf::proof_input as branch_input};
 
@@ -124,7 +125,8 @@ mod extract_hash_from_branch_node {
 mod extract_hash_from_extension_node {
 
     use crate::merkle_patricia_proofs::proof::{extract_hash_from_extension_node, MAX_NODE_FIELDS};
-    use crate::rlp::decode::{RlpList, decode_list_of_small_strings};
+    use crate::rlp::decode::decode_list_of_small_strings;
+    use crate::rlp::types::RlpList;
     use crate::misc::{fragment::Fragment, bytes::bytes_to_nibbles};
     use crate::fixtures::merkle_proofs::{
         branch_then_leaf::proof_input as branch_input,
@@ -249,20 +251,18 @@ mod verify_node_hash {
     use crate::fixtures::merkle_proofs::branch_then_leaf::proof_input;
 
     global node = proof_input.proof.nodes[0];
+    global node_hash = [
+            80, 122, 73, 223, 43, 25, 57, 75, 105, 161, 221, 85, 59, 71, 76, 101, 225, 209, 230, 84, 54, 162, 33, 233, 198, 82, 219, 132, 63, 243, 237, 18
+        ];
 
     #[test]
     fn success() {
-        let node_hash = [
-            80, 122, 73, 223, 43, 25, 57, 75, 105, 161, 221, 85, 59, 71, 76, 101, 225, 209, 230, 84, 54, 162, 33, 233, 198, 82, 219, 132, 63, 243, 237, 18
-        ];
         verify_node_hash(node, node_hash);
     }
 
     #[test(should_fail_with="Invalid node hash")]
     fn fail() {
-        let mut invalid_node_hash = [
-            80, 122, 73, 223, 43, 25, 57, 75, 105, 161, 221, 85, 59, 71, 76, 101, 225, 209, 230, 84, 54, 162, 33, 233, 198, 82, 219, 132, 63, 243, 237, 18
-        ];
+        let mut invalid_node_hash = node_hash;
         invalid_node_hash[0] += 1;
         verify_node_hash(node, invalid_node_hash);
     }
@@ -279,9 +279,11 @@ mod verify_leaf {
     global empty_leaf = [0xc2, 0x20, 0x80]; // ["0x20","0x"]
 
     global MAX_PREFIXED_KEY_NIBBLE_LEN = 6;
-    global some_key = [0xab, 0xcd, 0x00, 0x00, 0x00, 0x00];
-    global some_key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> = bytes_to_nibbles(Fragment::new_with_length(2, some_key));
-    global some_value = [0x00, 0x12, 0x34];
+    global MAX_VALUE_LEN = 3;
+    global some_key = [0xab, 0xcd];
+    global some_key_fragment: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN> = Fragment::from_array(some_key);
+    global some_key_nibbles = bytes_to_nibbles(some_key_fragment);
+    global some_value: [u8; MAX_VALUE_LEN] = [0x00, 0x12, 0x34];
     global some_leaf = [0xc6, 0x82, 0x20, 0xcd, 0x82, 0x12, 0x34]; // ["0x20bc","0x1234"]
 
     #[test]

@@ -1,4 +1,4 @@
-mod test_mapping {
+mod mapping {
     use crate::slot::mapping;
 
     #[test]
@@ -28,12 +28,108 @@ mod test_mapping {
             0x00, 0x00, 0x00, 0x47, 0xbb, 0x99, 0xea, 0x4d, 0x79, 0x1b, 0xb7, 0x49, 0xd9, 0x70, 0xde, 0x71, 0xee, 0x0b, 0x1a, 0x34
         ];
 
-        println(mapping(mapping(slot, owner), spender));
-
         assert_eq(
             [
             0x51, 0x5a, 0xd6, 0x04, 0x70, 0x94, 0xbd, 0x71, 0x0c, 0x10, 0x72, 0xcd, 0xa4, 0x7b, 0xc6, 0xcf, 0x43, 0x9c, 0x55, 0xdc, 0xf0, 0xb0, 0xd6, 0x0e, 0x8a, 0x9b, 0xe5, 0x57, 0xf1, 0x86, 0x81, 0x1c
         ], mapping(mapping(slot, owner), spender)
         );
+    }
+}
+
+mod dynamic_array {
+    use crate::slot::dynamic_array;
+    use dep::ethereum_history_api::misc::field_test::MAX_FIELD_VALUE;
+
+    #[test]
+    fn index_zero() {
+        let slot = [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2
+        ];
+        let expected_slot = [
+            0x40, 0x57, 0x87, 0xfa, 0x12, 0xa8, 0x23, 0xe0, 0xf2, 0xb7, 0x63, 0x1c, 0xc4, 0x1b, 0x3b, 0xa8, 0x82, 0x8b, 0x33, 0x21, 0xca, 0x81, 0x11, 0x11, 0xfa, 0x75, 0xcd, 0x3a, 0xa3, 0xbb, 0x5a, 0xce
+        ];
+        assert_eq(expected_slot, dynamic_array(slot, 0, 2));
+    }
+
+    #[test]
+    fn index_positive() {
+        let slot = [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2
+        ];
+        let expected_slot = [
+            0x40, 0x57, 0x87, 0xfa, 0x12, 0xa8, 0x23, 0xe0, 0xf2, 0xb7, 0x63, 0x1c, 0xc4, 0x1b, 0x3b, 0xa8, 0x82, 0x8b, 0x33, 0x21, 0xca, 0x81, 0x11, 0x11, 0xfa, 0x75, 0xcd, 0x3a, 0xa3, 0xbb, 0x5a, 0xdc
+        ];
+        assert_eq(expected_slot, dynamic_array(slot, 7, 2));
+    }
+
+    #[test(should_fail_with="Addition overflow")]
+    fn fail_overflow() {
+        let slot = [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6
+        ];
+        let _ = dynamic_array(slot, MAX_FIELD_VALUE, 2);
+    }
+}
+
+mod dynamic_array_with_precalculated_slot {
+    use crate::slot::dynamic_array_with_precalculated_slot;
+    use dep::ethereum_history_api::misc::field_test::MAX_FIELD_VALUE;
+
+    #[test]
+    fn index_zero() {
+        let slot = [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2
+        ];
+        assert_eq(slot, dynamic_array_with_precalculated_slot(slot, 0, 2));
+    }
+
+    #[test]
+    fn index_positive() {
+        let slot = [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2
+        ];
+        let expected_slot = [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 + 7 * 2
+        ];
+        assert_eq(expected_slot, dynamic_array_with_precalculated_slot(slot, 7, 2));
+    }
+
+    #[test]
+    fn big_index() {
+        let slot = [0x09; 32];
+        let expected_slot = [
+            0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x0b, 0x5d, 0x14, 0xed, 9
+        ];
+        assert_eq(expected_slot, dynamic_array_with_precalculated_slot(slot, 1_000_000_000, 10));
+    }
+
+    #[test(should_fail_with="Addition overflow")]
+    fn fail_overflow() {
+        let slot = [0xfe; 32];
+        let _ = dynamic_array_with_precalculated_slot(slot, MAX_FIELD_VALUE, 2);
+    }
+}
+
+mod struct_slot {
+    use crate::slot::struct_slot;
+
+    #[test]
+    fn success() {
+        let slot = [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2
+        ];
+        let expected_slot = [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2
+        ];
+        assert_eq(expected_slot, struct_slot(slot, 256));
+    }
+
+    #[test(should_fail_with="Addition overflow")]
+    fn overflow() {
+        let slot = [0xff; 32];
+        let expected_slot = [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1
+        ];
+        assert_eq(expected_slot, struct_slot(slot, 256));
     }
 }

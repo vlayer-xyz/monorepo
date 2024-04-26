@@ -110,3 +110,19 @@ pub(crate) fn byte_value<N>(in_value: [u8; N]) -> BoundedVec<u8, N> {
 
     BoundedVec { storage: value, len: value_length }
 }
+
+pub fn add_bigint<N>(left: [u8; N], right: [u8; N]) -> [u8; N] {
+    let mut carry: u32 = 0;
+    let mut result: [u8; N] = [0; N];
+
+    for j in 0..N {
+        let index = N - j - 1;
+        let sum = left[index] as u32 + right[index] as u32 + carry;
+        result[index] = sum as u8;
+        carry = sum >> 8;
+    }
+
+    assert(carry == 0, "Addition overflow");
+
+    result
+}
