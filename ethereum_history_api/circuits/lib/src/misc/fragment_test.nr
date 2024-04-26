@@ -221,3 +221,22 @@ mod eq {
         assert(fragment1 != fragment2);
     }
 }
+
+mod to_array {
+
+    use crate::misc::fragment::Fragment;
+
+    #[test]
+    fn simple() {
+        let fragment = Fragment::new(1, 2, [1, 2, 3]);
+        let array = fragment.to_array();
+        assert(array == [2, 3]);
+    }
+
+    #[test]
+    fn full() {
+        let fragment = Fragment::new(0, 4, [1, 2, 3, 4]);
+        let array = fragment.to_array();
+        assert(array == [1, 2, 3, 4]);
+    }
+}
