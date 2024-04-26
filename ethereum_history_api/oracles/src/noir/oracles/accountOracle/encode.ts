@@ -5,16 +5,7 @@ import { padArray } from '../../../util/array.js';
 import { ADDRESS_LEN, BYTES32_LEN, MAX_TRIE_NODE_LEN, ZERO_PAD_VALUE } from '../common/const.js';
 import { assert } from '../../../util/assert.js';
 import { BYTE_HEX_LEN } from '../../../util/const.js';
-
-export const RLP_SHORT_ENTITY_MAX_LEN = 55;
-
-export function getRlpHeaderSize(strLen: number): number {
-  if (strLen <= RLP_SHORT_ENTITY_MAX_LEN) {
-    return 1;
-  } else {
-    return 1 + Math.ceil(strLen.toString(16).length / BYTE_HEX_LEN);
-  }
-}
+import { getRlpHeaderSize } from '../common/util.js';
 
 export class AccountCircuitConfig {
   private static readonly BYTES8_LEN = 8;
