@@ -21,7 +21,7 @@ pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_ST
 
     let nonce = u64_to_u8(account.nonce);
     let nonce = byte_value(nonce);
-    let balance = account.balance.to_be_bytes();
+    let balance = U128::from_integer(account.balance).to_be_bytes();
     let balance = byte_value(balance);
 
     account_rlp_list.get(NONCE_INDEX).assert_string_eq("Nonce", account_rlp_right_padded, nonce);

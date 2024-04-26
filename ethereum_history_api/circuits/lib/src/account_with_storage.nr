@@ -10,7 +10,7 @@ global STORAGE_PROOF_LEN = 3724; // = 7 (MAX_STORAGE_PROOF_LEVELS) * 532 (MAX_TR
 
 struct Account {
     nonce: u64,
-    balance: U128,
+    balance: Field,
     storage_root: Bytes32,
     code_hash: Bytes32,
 }
