@@ -24,14 +24,14 @@ pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_ST
     let balance = U128::from_integer(account.balance).to_be_bytes();
     let balance = byte_value(balance);
 
-    account_rlp_list.get(NONCE_INDEX).assert_string_eq("Nonce", account_rlp_right_padded, nonce);
-    account_rlp_list.get(BALANCE_INDEX).assert_string_eq("Balance", account_rlp_right_padded, balance);
+    account_rlp_list.get(NONCE_INDEX).assert_eq_string("Nonce", account_rlp_right_padded, nonce);
+    account_rlp_list.get(BALANCE_INDEX).assert_eq_string("Balance", account_rlp_right_padded, balance);
 
-    account_rlp_list.get(STORAGE_ROOT_INDEX).assert_bytes32_eq("Storage root", account_rlp_right_padded, account.storage_root);
-    account_rlp_list.get(CODE_HASH_INDEX).assert_bytes32_eq("Code hash", account_rlp_right_padded, account.code_hash);
+    account_rlp_list.get(STORAGE_ROOT_INDEX).assert_eq_bytes32("Storage root", account_rlp_right_padded, account.storage_root);
+    account_rlp_list.get(CODE_HASH_INDEX).assert_eq_bytes32("Code hash", account_rlp_right_padded, account.code_hash);
 }
 
-fn assert_address_equals(address1: Address, address2: Address) {
+fn assert_eq_addressuals(address1: Address, address2: Address) {
     assert_eq(address1, address2, "Address mismatch");
 }
 
@@ -51,7 +51,7 @@ pub fn verify_account(
     state_proof: StateProof,
     state_root: [u8; HASH_LENGTH]
 ) {
-    assert_address_equals(state_proof.key, address);
+    assert_eq_addressuals(state_proof.key, address);
     assert_account_equals(state_proof.value, account);
     assert_account_proof(state_proof, state_root);
 }
