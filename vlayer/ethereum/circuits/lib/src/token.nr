@@ -7,6 +7,7 @@ global TOKEN_BALANCE_INDEX = 0;
 struct ERC20Token {
     address: Address,
     balances_slot: Bytes32,
+    allowances_slot: Bytes32,
     chain_id: Field
 }
 
