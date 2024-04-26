@@ -24,6 +24,10 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
         Fragment { offset: 0, length: data.len() as u64, data: resize(data) }
     }
 
+    pub fn to_array<NEW_MAX_LEN>(self) -> [T; NEW_MAX_LEN] {
+        self.focus().data
+    }
+
     pub fn new_focused(data: [T; MAX_DATA_LEN]) -> Fragment<MAX_DATA_LEN, T> {
         Fragment { offset: 0, length: data.len() as u64, data }
     }
