@@ -2,7 +2,7 @@ import { ForeignCallOutput } from '@noir-lang/noir_js';
 import { GetProofReturnType, Hex, fromRlp, isHex } from 'viem';
 import { encodeBytes32, encodeField, encodeHex, encodeProof } from '../common/encode.js';
 import { padArray } from '../../../util/array.js';
-import { ADDRESS_LEN, MAX_TRIE_NODE_LEN, ZERO_PAD_VALUE } from '../common/const.js';
+import { ADDRESS_LEN, BYTES32_LEN, MAX_TRIE_NODE_LEN, ZERO_PAD_VALUE } from '../common/const.js';
 import { assert } from '../../../util/assert.js';
 import { BYTE_HEX_LEN } from '../../../util/const.js';
 
@@ -17,9 +17,18 @@ export function getRlpHeaderSize(strLen: number): number {
 }
 
 export class AccountCircuitConfig {
-  public static readonly MAX_VALUE = 134; // TODO
+  private static readonly BYTES8_LEN = 8;
+  private static readonly MAX_VALUE_CONTENT_LEN =
+    getRlpHeaderSize(this.BYTES8_LEN) +
+    this.BYTES8_LEN /* Nonce */ +
+    getRlpHeaderSize(BYTES32_LEN) +
+    BYTES32_LEN /* Balance */ +
+    getRlpHeaderSize(BYTES32_LEN) +
+    BYTES32_LEN /* Storage root */ +
+    getRlpHeaderSize(BYTES32_LEN) +
+    BYTES32_LEN; /* Code hash */
+  public static readonly MAX_VALUE = getRlpHeaderSize(this.MAX_VALUE_CONTENT_LEN) + this.MAX_VALUE_CONTENT_LEN;
   private static readonly KEY_LEN = ADDRESS_LEN;
-  private static readonly KEY_NIBBLE_LEN = this.KEY_LEN * BYTE_HEX_LEN;
   private static readonly MAX_PREFIXED_KEY_LEN = 1 + this.KEY_LEN;
   public static readonly MAX_PREFIXED_KEY_NIBBLE_LEN = this.MAX_PREFIXED_KEY_LEN * BYTE_HEX_LEN;
   private static readonly KEY_RLP_HEADER_LEN = getRlpHeaderSize(this.MAX_PREFIXED_KEY_LEN);
