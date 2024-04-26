@@ -149,6 +149,35 @@ mod resize {
     }
 }
 
+mod resize_left {
+    use crate::misc::arrays::resize_left;
+    #[test]
+    fn success() {
+        assert_eq(resize_left([1, 2]), [0, 1, 2]);
+        assert_eq(resize_left([1, 2]), [0, 0, 1, 2]);
+        assert_eq(resize_left([1, 2]), [0, 0, 0, 1, 2]);
+    }
+
+    #[test]
+    fn success_empty() {
+        assert_eq(resize_left([]), []);
+    }
+
+    #[test]
+    fn success_2d() {
+        let result: [[Field; 1]; 3] = resize_left([[1], [2]]);
+        let expected_result = [[0], [1], [2]];
+        for i in 0..3 {
+            assert_eq(result[i], expected_result[i]);
+        }
+    }
+
+    #[test(should_fail_with = "New length must be greater than or equal to old length")]
+    fn new_length_is_shorter() {
+        let _ : [Field; 1] = resize_left([1, 2]);
+    }
+}
+
 mod subarray_inferred_len {
     use crate::misc::arrays::subarray_inferred_len;
 
