@@ -13,7 +13,7 @@ struct TxPartial<MAX_DATA_LEN> {
     to: Option<Address>,
     value: U128,
     data: BoundedVec<u8, MAX_DATA_LEN>,
-    v: Field,  // ECDSA recovery id
+    v: u8,  // ECDSA recovery id
     r: Bytes32,  // ECDSA signature part
     s: Bytes32,  // ECDSA signature part
 }
@@ -26,7 +26,7 @@ struct ForeignCallTransaction<MAX_DATA_LEN> {
     value: Field,
     data: [u8; MAX_DATA_LEN],
     data_len: u64,
-    v: Field,  // ECDSA recovery id
+    v: u8,  // ECDSA recovery id
     r: Bytes32,  // ECDSA signature part
     s: Bytes32,  // ECDSA signature part
 }

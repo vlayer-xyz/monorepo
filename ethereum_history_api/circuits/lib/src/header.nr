@@ -6,7 +6,7 @@ global ETHEREUM_MAINNET_ID = 1;
 global ETHEREUM_SEPOLIA_ID = 58008;
 
 struct BlockHeaderPartial {
-    number: Field,
+    number: u64,
     hash: Bytes32,
     state_root: Bytes32,
     transactions_root: Bytes32,
@@ -18,7 +18,7 @@ struct BlockHeaderRlp {
     data: [u8; MAX_HEADER_RLP_LEN]
 }
 
-pub fn get_header(block_number: Field) -> BlockHeaderPartial {
+pub fn get_header(block_number: u64) -> BlockHeaderPartial {
     let (block_header_partial, block_header_rlp) = get_header_unconstrained(block_number);
     verify_header(ETHEREUM_MAINNET_ID, block_header_partial, block_header_rlp);
     assert(block_header_partial.number == block_number, "Block number does not match the argument");
@@ -26,8 +26,8 @@ pub fn get_header(block_number: Field) -> BlockHeaderPartial {
 }
 
 #[oracle(get_header)]
-unconstrained fn get_header_oracle(_block_no: Field) -> (BlockHeaderPartial, BlockHeaderRlp) {}
+unconstrained fn get_header_oracle(_block_no: u64) -> (BlockHeaderPartial, BlockHeaderRlp) {}
 
-unconstrained fn get_header_unconstrained(block_no: Field) -> (BlockHeaderPartial, BlockHeaderRlp) {
+unconstrained fn get_header_unconstrained(block_no: u64) -> (BlockHeaderPartial, BlockHeaderRlp) {
     get_header_oracle(block_no)
 }
