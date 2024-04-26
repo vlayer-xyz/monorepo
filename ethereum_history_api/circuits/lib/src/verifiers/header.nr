@@ -1,9 +1,7 @@
 use dep::std::hash::keccak256;
-use dep::u2b::u64_to_u8;
 
 use crate::header::{BlockHeaderPartial, BlockHeaderRlp, ETHEREUM_MAINNET_ID, ETHEREUM_SEPOLIA_ID};
 use crate::misc::arrays::{sub_array_equals, sub_array_equals_up_to_length};
-use crate::misc::bytes::byte_value;
 use crate::HASH_LEN;
 use crate::rlp::decode::decode_list;
 use crate::rlp::types::RlpList;
@@ -48,10 +46,11 @@ pub fn verify_header(
         expected_header_fields_count == header_rlp_list.len, "number of header RLP fields does not match"
     );
 
-    let block_number = u64_to_u8(block_header_partial.number);
-    let block_number = byte_value(block_number);
-
-    header_rlp_list.get(BLOCK_NUM_INDEX).assert_string_eq("Block number", block_header_rlp.data, block_number);
+    header_rlp_list.get(BLOCK_NUM_INDEX).assert_u64_eq(
+        "Block number",
+        block_header_rlp.data,
+        block_header_partial.number as u64
+    );
     header_rlp_list.get(STATE_ROOT_INDEX).assert_string_eq(
         "State root",
         block_header_rlp.data,
