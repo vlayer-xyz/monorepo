@@ -58,6 +58,6 @@ pub(crate) fn assert_tx_rlp_equals<MAX_DATA_LEN>(
     rlp_list.get(to_idx + 2).assert_string_eq("Data", tx_rlp, tx.data);
 
     rlp_list.get(signature_idx).assert_string_eq("V", tx_rlp, byte_value([tx.v as u8]));
-    rlp_list.get(signature_idx + 1).assert_string_eq("R", tx_rlp, BoundedVec { storage: tx.r, len: HASH_LENGTH });
-    rlp_list.get(signature_idx + 2).assert_string_eq("S", tx_rlp, BoundedVec { storage: tx.s, len: HASH_LENGTH });
+    rlp_list.get(signature_idx + 1).assert_bytes32_eq("R", tx_rlp, tx.r);
+    rlp_list.get(signature_idx + 2).assert_bytes32_eq("S", tx_rlp, tx.s);
 }

@@ -48,24 +48,25 @@ pub fn verify_header(
         expected_header_fields_count == header_rlp_list.len, "number of header RLP fields does not match"
     );
 
-    let block_number = u64_to_u8(block_header_partial.number as u64);
-    let block_number = byte_value(block_number);
-
-    header_rlp_list.get(BLOCK_NUM_INDEX).assert_string_eq("Block number", block_header_rlp.data, block_number);
-    header_rlp_list.get(STATE_ROOT_INDEX).assert_string_eq(
+    header_rlp_list.get(BLOCK_NUM_INDEX).assert_u64_eq(
+        "Block number",
+        block_header_rlp.data,
+        block_header_partial.number as u64
+    );
+    header_rlp_list.get(STATE_ROOT_INDEX).assert_bytes32_eq(
         "State root",
         block_header_rlp.data,
-        BoundedVec { storage: block_header_partial.state_root, len: HASH_LEN }
+        block_header_partial.state_root
     );
-    header_rlp_list.get(TRANSACTIONS_ROOT_INDEX).assert_string_eq(
+    header_rlp_list.get(TRANSACTIONS_ROOT_INDEX).assert_bytes32_eq(
         "Transactions root",
         block_header_rlp.data,
-        BoundedVec { storage: block_header_partial.transactions_root, len: HASH_LEN }
+        block_header_partial.transactions_root
     );
-    header_rlp_list.get(RECEIPTS_ROOT_INDEX).assert_string_eq(
+    header_rlp_list.get(RECEIPTS_ROOT_INDEX).assert_bytes32_eq(
         "Receipts root",
         block_header_rlp.data,
-        BoundedVec { storage: block_header_partial.receipts_root, len: HASH_LEN }
+        block_header_partial.receipts_root
     );
 
     assert(
