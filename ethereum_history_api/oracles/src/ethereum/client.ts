@@ -5,9 +5,14 @@ import { type AlchemyClient, alchemyActions } from './alchemyClient.js';
 
 dotenv.config();
 
+enum Chain {
+  MAINNET = 'mainnet',
+  SEPOLIA = 'sepolia'
+}
+
 export const createClient = new Map<string, () => AlchemyClient>([
-  ['mainnet', createDefaultClient],
-  ['sepolia', createSepoliaClient]
+  [Chain.MAINNET, createDefaultClient],
+  [Chain.SEPOLIA, createSepoliaClient]
 ]);
 
 export function createDefaultClient(): AlchemyClient {

@@ -30,6 +30,7 @@
     "json-rpc-2.0": "^1.7.0",
     "lodash.isequal": "^4.5.0",
     "toml": "^3.0.0",
+    "ts-command-line-args": "^2.5.1",
     "viem": "^2.0.0"
   },
   "devDependencies": {
