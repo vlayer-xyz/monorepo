@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { getProofConfig } from './proofConfig.js';
 
 describe('getProofConfig', () => {
-  it('', () => {
+  it('simple', () => {
     const maxKeyLen = 3;
     const maxValueLen = 110;
     const maxProofLevels = 11;
