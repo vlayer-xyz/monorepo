@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import { createPublicClient, http } from 'viem';
 import { mainnet, sepolia } from 'viem/chains';
 import { type AlchemyClient, alchemyActions } from './alchemyClient.js';
-import { assert } from 'console';
+import { assert } from '../util/assert.js';
 
 dotenv.config();
 
@@ -37,7 +37,7 @@ export class MultiChainClient {
   public getClient(chain: string): AlchemyClient {
     const client = this.clientMap[chain as Chain];
     assert(client !== undefined, `No client for chain ${chain}`);
-    return client!;
+    return client;
   }
 
   public getClientByChainId(chainId: bigint): AlchemyClient {
