@@ -44,7 +44,7 @@ pub(crate) fn assert_receipt_rlp_equals(
         byte_value(cumulative_gas_used)
     );
 
-    receipt_rlp_list.get(LOGS_BLOOM_INDEX).assert_eq_string(
+    receipt_rlp_list.get(LOGS_BLOOM_INDEX).assert_eq_bytes(
         "Logs bloom",
         receipt_rlp,
         BoundedVec { storage: receipt.logs_bloom, len: BLOOM_FILTER_LEN }
