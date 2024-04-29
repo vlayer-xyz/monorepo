@@ -22,7 +22,7 @@ pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_ST
     let balance = byte_value(balance);
 
     account_rlp_list.get(NONCE_INDEX).assert_eq_u64("Nonce", account_rlp_right_padded, account.nonce as u64);
-    account_rlp_list.get(BALANCE_INDEX).assert_string_eq("Balance", account_rlp_right_padded, balance);
+    account_rlp_list.get(BALANCE_INDEX).assert_eq_string("Balance", account_rlp_right_padded, balance);
 
     account_rlp_list.get(STORAGE_ROOT_INDEX).assert_eq_bytes32("Storage root", account_rlp_right_padded, account.storage_root);
     account_rlp_list.get(CODE_HASH_INDEX).assert_eq_bytes32("Code hash", account_rlp_right_padded, account.code_hash);
