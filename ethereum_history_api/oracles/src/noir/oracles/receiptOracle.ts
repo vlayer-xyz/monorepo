@@ -2,13 +2,14 @@ import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { assert } from '../../util/assert.js';
 import { decodeField } from './common/decode.js';
 import { NoirArguments } from './oracles.js';
-import { AlchemyClient } from '../../ethereum/client.js';
+import { MultiChainClient } from '../../ethereum/client.js';
 import { getReceiptProof } from '../../ethereum/receiptProof.js';
 import { encodeReceipt, encodeReceiptProof } from './receiptOracle/encode.js';
 import { txTypeToHex } from '../../ethereum/receipt.js';
 import { Enum } from '../../util/enum.js';
 
 export enum ARGS {
+  CHAIN_ID,
   BLOCK_NUM,
   TX_ID
 }
@@ -27,8 +28,12 @@ export enum OFFSETS {
   PROOF_VALUE
 }
 
-export const getReceiptOracle = async (client: AlchemyClient, args: NoirArguments): Promise<ForeignCallOutput[]> => {
-  const { blockNumber, txId } = decodeGetReceiptArguments(args);
+export const getReceiptOracle = async (
+  multiChainClient: MultiChainClient,
+  args: NoirArguments
+): Promise<ForeignCallOutput[]> => {
+  const { blockNumber, txId, chainId } = decodeGetReceiptArguments(args);
+  const client = multiChainClient.getClientByChainId(chainId);
   const blockReceipts = await client.getTransactionReceipts({
     blockNumber
   });
@@ -46,14 +51,17 @@ export const getReceiptOracle = async (client: AlchemyClient, args: NoirArgument
 };
 
 export function decodeGetReceiptArguments(args: NoirArguments): {
+  chainId: bigint;
   blockNumber: bigint;
   txId: number;
 } {
   assert(args.length === Enum.size(ARGS), `get_receipt requires ${Enum.size(ARGS)} arguments`);
 
+  assert(args[ARGS.CHAIN_ID].length === 1, 'chainId should be a single value');
+  const chainId = decodeField(args[ARGS.CHAIN_ID][0]);
   assert(args[ARGS.BLOCK_NUM].length === 1, 'blockNumber should be a single value');
   const blockNumber = decodeField(args[ARGS.BLOCK_NUM][0]);
   const txId = Number(decodeField(args[ARGS.TX_ID][0]));
 
-  return { blockNumber, txId };
+  return { blockNumber, txId, chainId };
 }

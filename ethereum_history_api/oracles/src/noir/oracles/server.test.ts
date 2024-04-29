@@ -2,11 +2,12 @@ import { describe, it, expect } from 'vitest';
 import { withMockOracleServer } from './server.js';
 
 const LONDON_BLOCK_NUM_HEX = 'd895ce';
+const MAINNET_CHAIN_ID_HEX = '01';
 
 const JSON_RPC_PAYLOAD = {
   jsonrpc: '2.0',
   method: 'get_header',
-  params: [{ Single: LONDON_BLOCK_NUM_HEX }],
+  params: [{ Single: MAINNET_CHAIN_ID_HEX }, { Single: LONDON_BLOCK_NUM_HEX }],
   id: 1
 };
 

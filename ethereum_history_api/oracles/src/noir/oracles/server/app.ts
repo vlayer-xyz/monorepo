@@ -2,7 +2,7 @@ import { JSONRPCRequest, JSONRPCServer, TypedJSONRPCServer } from 'json-rpc-2.0'
 import Fastify from 'fastify';
 import http from 'http';
 import { JSONRPCServerMethods, ServerParams, getOracleHandler } from './handlers.js';
-import { AlchemyClient, createDefaultClient } from '../../../ethereum/client.js';
+import { MultiChainClient } from '../../../ethereum/client.js';
 import { getHeaderOracle } from '../headerOracle.js';
 import { getAccountOracle } from '../accountOracle.js';
 import { getProofOracle } from '../proofOracle.js';
@@ -20,10 +20,10 @@ jsonRPCServer.addMethod('get_transaction', getOracleHandler.bind(this, getTransa
 
 export function buildOracleServer(
   opts: Fastify.FastifyHttpOptions<http.Server> = {},
-  client: AlchemyClient = createDefaultClient()
+  multiChainClient: MultiChainClient = MultiChainClient.create()
 ): Fastify.FastifyInstance {
   const app = Fastify(opts);
-  const serverParams = { client };
+  const serverParams = { client: multiChainClient };
 
   app.post('/', async (request, reply) => {
     const jsonRPCRequest = request.body as JSONRPCRequest;

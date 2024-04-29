@@ -7,6 +7,7 @@ describe('proofOracle', () => {
   it('decodeGetProofArguments success', () => {
     expect(
       decodeGetProofArguments([
+        ['0x01'],
         ['0xf'],
         // prettier-ignore
         [
@@ -22,6 +23,7 @@ describe('proofOracle', () => {
         ]
       ])
     ).toStrictEqual({
+      chainId: 1n,
       blockNumber: 15n,
       address: CRYPTO_PUNKS_ADDRESS,
       storageKey: CIRCLE_USDC_BALANCE_STORAGE_KEY
