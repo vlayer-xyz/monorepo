@@ -15,15 +15,6 @@ pub fn resize<TItem, NEW_LEN, OLD_LEN>(src: [TItem; OLD_LEN]) -> [TItem; NEW_LEN
     dest
 }
 
-pub fn resize_left<TItem, NEW_LEN, OLD_LEN>(src: [TItem; OLD_LEN]) -> [TItem; NEW_LEN] {
-    assert(NEW_LEN >= OLD_LEN, "New length must be greater than or equal to old length");
-    let mut dest = [zeroed(); NEW_LEN];
-    for i in 0..OLD_LEN {
-        dest[NEW_LEN - OLD_LEN + i] = src[i];
-    }
-    dest
-}
-
 pub(crate) fn memcpy_up_to_length<TItem, SRC_LEN, DEST_LEN>(dest: &mut [TItem; DEST_LEN], src: [TItem; SRC_LEN], offset: u64, length: u64) {
     assert(length <= DEST_LEN, "Destination index out of bound");
     assert(offset + length <= SRC_LEN, "Source index out of bound");
