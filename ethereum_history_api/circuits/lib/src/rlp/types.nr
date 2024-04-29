@@ -1,7 +1,7 @@
 use crate::misc::{arrays::sub_array_equals_up_to_length};
 use crate::rlp::decode::STRING;
 use crate::misc::bytes::byte_value;
-use dep::u2b::u64_to_u8;
+use dep::u2b::{u64_to_u8, u32_to_u8};
 use crate::misc::types::{Bytes32, BYTES32_LENGTH, Address, ADDRESS_LENGTH};
 
 type RlpList<MAX_FIELDS> = BoundedVec<RlpFragment, MAX_FIELDS>;
@@ -92,8 +92,16 @@ impl RlpFragment {
     ) {
         assert(self.data_type == STRING, f"{field_name}: Invalid RLP type");
         assert(self.length == 1, f"{field_name}: Invalid RLP length");
-        assert(rlp[0] <= 1, f"{field_name}: Invalid RLP value");
-        assert_eq(value, rlp[0] as u1, f"{field_name}: Invalid RLP value");
+        assert_eq(value, (rlp[0] % 2) as u1, f"{field_name}: Invalid RLP value");
+    }
+
+    fn assert_eq_u32<FIELD_NAME_LEN, MAX_RLP_LEN>(
+        self,
+        field_name: str<FIELD_NAME_LEN>,
+        rlp: [u8; MAX_RLP_LEN],
+        value: u32
+    ) {
+        self.assert_eq_bounded_vec(field_name, rlp, byte_value(u32_to_u8(value)));
     }
 }
 
