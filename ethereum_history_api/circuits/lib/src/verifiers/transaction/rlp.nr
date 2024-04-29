@@ -38,7 +38,8 @@ pub(crate) fn assert_tx_rlp_equals<MAX_DATA_LEN>(
     if (tx.to.is_some()) {
         rlp_list.get(to_idx).assert_eq_address("To", tx_rlp, tx.to.expect(f"to is missing"));
     } else {
-        assert_eq(rlp_list.get(to_idx).length, 0, "To: Invalid RLP length");
+        let zero: BoundedVec<u8, 0> = BoundedVec::new();
+        rlp_list.get(to_idx).assert_eq_string("To", tx_rlp, zero);
     }
 
     rlp_list.get(to_idx + 1).assert_eq_string(
