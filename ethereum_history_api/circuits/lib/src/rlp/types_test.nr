@@ -163,4 +163,39 @@ mod rlp_fragment {
             fragment.assert_eq_address("Field", address, alter_array(address))
         }
     }
+
+    mod assert_eq_u1 {
+        use crate::rlp::{decode::STRING, types::RlpFragment};
+
+        global byte = 1;
+        global rlp = [0x01];
+        global fragment = RlpFragment { offset: 0, length: 1, data_type: STRING };
+
+        #[test]
+        fn succes() {
+            fragment.assert_eq_u1("Field", rlp, byte)
+        }
+
+        #[test(should_fail_with = "Field: Invalid RLP length")]
+        fn invalid_length() {
+            let rlp = [0x01, 0x01];
+            let fragment = RlpFragment { offset: 0, length: 2, data_type: STRING };
+
+            fragment.assert_eq_u1("Field", rlp, byte)
+        }
+
+        #[test(should_fail_with = "Field: Invalid RLP value")]
+        fn invalid_value() {
+            let invalid_value = 0;
+
+            fragment.assert_eq_u1("Field", rlp, invalid_value)
+        }
+
+        #[test(should_fail_with = "Field: Invalid RLP value")]
+        fn rlp_exceeds_u1() {
+            let rlp = [0x21];
+
+            fragment.assert_eq_u1("Field", rlp, byte)
+        }
+    }
 }

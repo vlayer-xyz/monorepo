@@ -83,6 +83,17 @@ impl RlpFragment {
     ) {
         self.assert_eq_bytes_length(field_name, rlp, value, ADDRESS_LENGTH);
     }
+
+    fn assert_eq_u1<FIELD_NAME_LEN, MAX_RLP_LEN>(
+        self,
+        field_name: str<FIELD_NAME_LEN>,
+        rlp: [u8; MAX_RLP_LEN],
+        value: u1
+    ) {
+        assert(self.data_type == STRING, f"{field_name}: Invalid RLP type");
+        assert(self.length == 1, f"{field_name}: Invalid RLP length");
+        assert(rlp[0] <= 1, f"{field_name}: Invalid RLP value");
+        assert_eq(value, rlp[0] as u1, f"{field_name}: Invalid RLP value");
     }
 }
 
