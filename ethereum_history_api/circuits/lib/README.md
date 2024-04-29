@@ -19,19 +19,19 @@ If you decide to use our Oracles - you don't need to provide all the data by han
 Here is a list of public functions that you should use it you decide to go the **oracles route**:
 
 ```rust
-pub fn get_header(block_number: Field) -> BlockHeaderPartial;
+pub fn get_header(chain_id: Field, block_number: Field) -> BlockHeaderPartial;
 ```
 
 ```rust
-pub fn get_account(block_no: Field, address: Address) -> AccountWithinBlock;
+pub fn get_account(chain_id: Field, block_no: Field, address: Address) -> AccountWithinBlock;
 ```
 
 ```rust
-pub fn get_account_with_storage(block_number: Field, address: Address, storage_key: Bytes32) -> StorageWithinBlock<1>;
+pub fn get_account_with_storage(chain_id: Field, block_number: Field, address: Address, storage_key: Bytes32) -> StorageWithinBlock<1>;
 ```
 
 ```rust
-pub fn get_receipt<...>(block_number: Field, tx_idx: Field, ...) -> TxReceiptWithinBlock<...>;
+pub fn get_receipt<...>(chain_id: Field, block_number: Field, tx_idx: Field, ...) -> TxReceiptWithinBlock<...>;
 ```
 
 ### Without oracles

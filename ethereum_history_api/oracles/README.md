@@ -12,10 +12,10 @@ There are three oracles:
 Below are headers for respective functions in Noir:
 
 ```rust
-fn get_header_oracle(block_no: Field) -> (BlockHeaderPartial, BlockHeaderRlp);
-fn get_account_oracle(block_no: Field, address: Address) -> AccountWithStateProof;
-fn get_proof_oracle(block_no: Field, address: Address, storage_key: Bytes32) -> StateAndStorageProof;
-fn get_receipt_oracle(block_no: Field, tx_idx: Field) -> (TxType, TxReceipt, TxReceiptProof);
+fn get_header_oracle(chain_id: Field, block_no: Field) -> (BlockHeaderPartial, BlockHeaderRlp);
+fn get_account_oracle(chain_id: Field, block_no: Field, address: Address) -> AccountWithStateProof;
+fn get_proof_oracle(chain_id: Field, block_no: Field, address: Address, storage_key: Bytes32) -> StateAndStorageProof;
+fn get_receipt_oracle(chain_id: Field, block_no: Field, tx_idx: Field) -> (TxType, TxReceipt, TxReceiptProof);
 ```
 
 ## Starting oracle server
