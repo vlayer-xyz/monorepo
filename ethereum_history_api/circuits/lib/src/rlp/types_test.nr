@@ -1,5 +1,43 @@
 mod rlp_fragment {
-    mod assert_eq_bytes {
+    mod assert_eq_bytes_length {
+        use crate::rlp::{decode::{STRING, LIST}, types::RlpFragment};
+
+        global bytes = [0x12, 0x34];
+        global fragment = RlpFragment { offset: 0, length: 2, data_type: STRING };
+
+        #[test]
+        fn success() {
+            let rlp = [0x80];
+            let value = [0x80];
+            let fragment = RlpFragment { offset: 0, length: 1, data_type: STRING };
+
+            fragment.assert_eq_bytes_length("Field", rlp, value, 1)
+        }
+
+        #[test(should_fail_with = "Field: Invalid RLP type")]
+        fn invalid_type() {
+            let empty = [];
+            let invalid_type_fragment = RlpFragment { offset: 0, length: 0, data_type: LIST };
+
+            invalid_type_fragment.assert_eq_bytes_length("Field", empty, empty, 0)
+        }
+
+        #[test(should_fail_with = "Field: Invalid RLP length")]
+        fn invalid_length() {
+            let invalid_length_fragment = RlpFragment { offset: 0, length: 2, data_type: STRING };
+
+            invalid_length_fragment.assert_eq_bytes_length("Field", bytes, bytes, 1)
+        }
+
+        #[test(should_fail_with = "Field: Invalid RLP value")]
+        fn invalid_value() {
+            let invalid_value: [u8; 2] = [0x00, 0x00];
+
+            fragment.assert_eq_bytes_length("Field", bytes, invalid_value, 2)
+        }
+    }
+
+    mod assert_eq_bounded_vec {
         use crate::rlp::{decode::{STRING, LIST}, types::RlpFragment};
 
         global bytes = [0x12, 0x34];
@@ -10,27 +48,15 @@ mod rlp_fragment {
             let fragment = RlpFragment { offset: 0, length: 1, data_type: STRING };
             let byte = [0x42];
 
-            fragment.assert_eq_bytes("Field", byte, BoundedVec { storage: byte, len: 1 })
+            fragment.assert_eq_bounded_vec("Field", byte, BoundedVec { storage: byte, len: 1 })
         }
 
         #[test]
         fn success() {
-            fragment.assert_eq_bytes(
+            fragment.assert_eq_bounded_vec(
                 "Field",
                 bytes,
                 BoundedVec { storage: bytes, len: bytes.len() }
-            )
-        }
-
-        #[test(should_fail_with = "Field: Invalid RLP type")]
-        fn invalid_type() {
-            let invalid_type_fragment = RlpFragment { offset: 0, length: 0, data_type: LIST };
-            let empty = [];
-
-            invalid_type_fragment.assert_eq_bytes(
-                "Field",
-                empty,
-                BoundedVec { storage: empty, len: empty.len() }
             )
         }
 
@@ -38,7 +64,7 @@ mod rlp_fragment {
         fn invalid_length() {
             let invalid_length_fragment = RlpFragment { offset: 0, length: 1, data_type: STRING };
 
-            invalid_length_fragment.assert_eq_bytes(
+            invalid_length_fragment.assert_eq_bounded_vec(
                 "Field",
                 bytes,
                 BoundedVec { storage: bytes, len: bytes.len() }
@@ -49,7 +75,7 @@ mod rlp_fragment {
         fn invalid_value() {
             let invalid_value: [u8; 2] = [0x00, 0x00];
 
-            fragment.assert_eq_bytes(
+            fragment.assert_eq_bounded_vec(
                 "Field",
                 bytes,
                 BoundedVec { storage: invalid_value, len: invalid_value.len() }
