@@ -31,6 +31,8 @@ pub(crate) fn get_header_fields_count(chain_id: Field, block_number: u64) -> u64
         }
     } else if chain_id == ETHEREUM_SEPOLIA_ID {
         fields_count = 20;
+    } else {
+        assert(false, "Unsupported chain ID");
     }
     fields_count
 }
