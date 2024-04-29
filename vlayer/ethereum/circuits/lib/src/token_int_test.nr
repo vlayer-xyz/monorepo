@@ -23,7 +23,7 @@ mod test_ERC20Token {
             allowances_slot: [
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10
             ],
-            chain_id: 0
+            chain_id: 1
         };
 
         let circle_address = [
