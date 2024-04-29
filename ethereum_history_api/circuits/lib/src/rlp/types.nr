@@ -103,6 +103,29 @@ impl RlpFragment {
     ) {
         self.assert_eq_bounded_vec(field_name, rlp, byte_value(u32_to_u8(value)));
     }
+
+    fn assert_eq_null<FIELD_NAME_LEN, MAX_RLP_LEN>(self, field_name: str<FIELD_NAME_LEN>) {
+        assert(self.data_type == STRING, f"{field_name}: Invalid RLP type");
+        assert(self.length == 0, f"{field_name}: Invalid RLP length");
+    }
+
+    fn assert_eq_u8<FIELD_NAME_LEN, MAX_RLP_LEN>(
+        self,
+        field_name: str<FIELD_NAME_LEN>,
+        rlp: [u8; MAX_RLP_LEN],
+        value: u8
+    ) {
+        self.assert_eq_bounded_vec(field_name, rlp, byte_value([value]));
+    }
+
+    fn assert_eq_u128<FIELD_NAME_LEN, MAX_RLP_LEN>(
+        self,
+        field_name: str<FIELD_NAME_LEN>,
+        rlp: [u8; MAX_RLP_LEN],
+        value: U128
+    ) {
+        // self.assert_eq_bounded_vec(field_name, rlp, byte_value(u128_to_u8(value)));
+    }
 }
 
 impl Default for RlpFragment {

@@ -214,4 +214,47 @@ mod rlp_fragment {
             fragment.assert_eq_u32("Field", rlp, 0x1234)
         }
     }
+
+    mod assert_eq_null {
+        use crate::rlp::{decode::STRING, types::RlpFragment};
+        #[test]
+        fn success() {
+            let fragment = RlpFragment { offset: 0, length: 0, data_type: STRING };
+
+            fragment.assert_eq_null("Field")
+        }
+
+        #[test(should_fail_with = "Field: Invalid RLP length")]
+        fn invalid_length() {
+            let fragment = RlpFragment { offset: 0, length: 1, data_type: STRING };
+
+            fragment.assert_eq_null("Field")
+        }
+    }
+
+    mod assert_eq_u8 {
+        use crate::rlp::{decode::STRING, types::RlpFragment};
+
+        global rlp = [0x11];
+        global fragment = RlpFragment { offset: 0, length: 1, data_type: STRING };
+        global value = 17;
+
+        #[test]
+        fn success() {
+            fragment.assert_eq_u8("Field", rlp, value)
+        }
+
+        #[test(should_fail_with = "Field: Invalid RLP length")]
+        fn invalid_length() {
+            let rlp = [0x01, 0x01];
+            let fragment = RlpFragment { offset: 0, length: 2, data_type: STRING };
+
+            fragment.assert_eq_u8("Field", rlp, value)
+        }
+
+        #[test(should_fail_with = "Field: Invalid RLP value")]
+        fn invalid_value() {
+            fragment.assert_eq_u8("Field", rlp, 16)
+        }
+    }
 }

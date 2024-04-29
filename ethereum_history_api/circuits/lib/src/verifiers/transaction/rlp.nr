@@ -38,8 +38,7 @@ pub(crate) fn assert_tx_rlp_equals<MAX_DATA_LEN>(
     if (tx.to.is_some()) {
         rlp_list.get(to_idx).assert_eq_address("To", tx_rlp, tx.to.expect(f"to is missing"));
     } else {
-        let zero: BoundedVec<u8, 0> = BoundedVec::new();
-        rlp_list.get(to_idx).assert_eq_string("To", tx_rlp, zero);
+        rlp_list.get(to_idx).assert_eq_null("To");
     }
 
     rlp_list.get(to_idx + 1).assert_eq_string(
@@ -50,7 +49,7 @@ pub(crate) fn assert_tx_rlp_equals<MAX_DATA_LEN>(
 
     rlp_list.get(to_idx + 2).assert_eq_bounded_vec("Data", tx_rlp, tx.data);
 
-    rlp_list.get(signature_idx).assert_eq_string("V", tx_rlp, byte_value([tx.v as u8]));
+    rlp_list.get(signature_idx).assert_eq_string("V", tx_rlp, byte_value([tx.v]));
     rlp_list.get(signature_idx + 1).assert_eq_bytes32("R", tx_rlp, tx.r);
     rlp_list.get(signature_idx + 2).assert_eq_bytes32("S", tx_rlp, tx.s);
 }

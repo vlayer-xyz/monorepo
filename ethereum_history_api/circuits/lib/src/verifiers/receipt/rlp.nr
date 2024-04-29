@@ -37,11 +37,10 @@ pub(crate) fn assert_receipt_rlp_equals(
         );
     }
 
-    let cumulative_gas_used = u32_to_u8(receipt.cumulative_gas_used);
-    receipt_rlp_list.get(CUMULATIVE_GAS_USED_INDEX).assert_eq_string(
+    receipt_rlp_list.get(CUMULATIVE_GAS_USED_INDEX).assert_eq_u32(
         "Cumulative gas used",
         receipt_rlp,
-        byte_value(cumulative_gas_used)
+        receipt.cumulative_gas_used
     );
 
     receipt_rlp_list.get(LOGS_BLOOM_INDEX).assert_eq_bytes_length("Logs bloom", receipt_rlp, receipt.logs_bloom, BLOOM_FILTER_LEN);
