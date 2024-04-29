@@ -31,30 +31,26 @@ pub(crate) fn assert_tx_rlp_equals<MAX_DATA_LEN>(
     let FieldLayout {field_count, nonce_idx, gas_limit_idx, to_idx, signature_idx} = TX_TYPE_TO_FIELD_LAYOUT[tx_type];
     assert(rlp_list.len == field_count, "Invalid number of fields in tx RLP");
 
-    rlp_list.get(nonce_idx).assert_u64_eq("Nonce", tx_rlp, tx.nonce);
+    rlp_list.get(nonce_idx).assert_eq_u64("Nonce", tx_rlp, tx.nonce);
 
-    rlp_list.get(gas_limit_idx).assert_u64_eq("Gas limit", tx_rlp, tx.gas_limit);
+    rlp_list.get(gas_limit_idx).assert_eq_u64("Gas limit", tx_rlp, tx.gas_limit);
 
     if (tx.to.is_some()) {
-        rlp_list.get(to_idx).assert_string_eq(
-            "To",
-            tx_rlp,
-            BoundedVec { storage: tx.to.expect(f"to is missing"), len: ADDRESS_LENGTH }
-        );
+        rlp_list.get(to_idx).assert_eq_address("To", tx_rlp, tx.to.expect(f"to is missing"));
     } else {
         let zero: BoundedVec<u8, 0> = BoundedVec::new();
-        rlp_list.get(to_idx).assert_string_eq("To", tx_rlp, zero);
+        rlp_list.get(to_idx).assert_eq_string("To", tx_rlp, zero);
     }
 
-    rlp_list.get(to_idx + 1).assert_string_eq(
+    rlp_list.get(to_idx + 1).assert_eq_string(
         "Value",
         tx_rlp,
         Into::into(byte_value(tx.value.to_be_bytes()))
     );
 
-    rlp_list.get(to_idx + 2).assert_string_eq("Data", tx_rlp, tx.data);
+    rlp_list.get(to_idx + 2).assert_eq_bytes("Data", tx_rlp, tx.data);
 
-    rlp_list.get(signature_idx).assert_string_eq("V", tx_rlp, byte_value([tx.v as u8]));
-    rlp_list.get(signature_idx + 1).assert_string_eq("R", tx_rlp, BoundedVec { storage: tx.r, len: HASH_LENGTH });
-    rlp_list.get(signature_idx + 2).assert_string_eq("S", tx_rlp, BoundedVec { storage: tx.s, len: HASH_LENGTH });
+    rlp_list.get(signature_idx).assert_eq_string("V", tx_rlp, byte_value([tx.v as u8]));
+    rlp_list.get(signature_idx + 1).assert_eq_bytes32("R", tx_rlp, tx.r);
+    rlp_list.get(signature_idx + 2).assert_eq_bytes32("S", tx_rlp, tx.s);
 }

@@ -21,19 +21,11 @@ pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_ST
     let balance = U128::from_integer(account.balance).to_be_bytes();
     let balance = byte_value(balance);
 
-    account_rlp_list.get(NONCE_INDEX).assert_u64_eq("Nonce", account_rlp_right_padded, account.nonce as u64);
-    account_rlp_list.get(BALANCE_INDEX).assert_string_eq("Balance", account_rlp_right_padded, balance);
+    account_rlp_list.get(NONCE_INDEX).assert_eq_u64("Nonce", account_rlp_right_padded, account.nonce as u64);
+    account_rlp_list.get(BALANCE_INDEX).assert_eq_string("Balance", account_rlp_right_padded, balance);
 
-    account_rlp_list.get(STORAGE_ROOT_INDEX).assert_string_eq(
-        "Storage root",
-        account_rlp_right_padded,
-        BoundedVec { storage: account.storage_root, len: HASH_LEN }
-    );
-    account_rlp_list.get(CODE_HASH_INDEX).assert_string_eq(
-        "Code hash",
-        account_rlp_right_padded,
-        BoundedVec { storage: account.code_hash, len: HASH_LEN }
-    );
+    account_rlp_list.get(STORAGE_ROOT_INDEX).assert_eq_bytes32("Storage root", account_rlp_right_padded, account.storage_root);
+    account_rlp_list.get(CODE_HASH_INDEX).assert_eq_bytes32("Code hash", account_rlp_right_padded, account.code_hash);
 }
 
 fn assert_address_equals(address1: Address, address2: Address) {
