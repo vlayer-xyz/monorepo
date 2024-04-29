@@ -30,10 +30,10 @@ pub(crate) fn assert_receipt_rlp_equals(
             receipt.state_root.expect(f"State root is missing")
         );
     } else {
-        receipt_rlp_list.get(STATUS_INDEX).assert_eq_string(
+        receipt_rlp_list.get(STATUS_INDEX).assert_eq_u1(
             "Status",
             receipt_rlp,
-            BoundedVec { storage: [receipt.status.expect(f"Status is missing") as u8], len: 1 }
+            receipt.status.expect(f"Status is missing")
         );
     }
 
