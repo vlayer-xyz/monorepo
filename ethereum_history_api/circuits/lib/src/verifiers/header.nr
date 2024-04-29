@@ -49,7 +49,7 @@ pub fn verify_header(
     header_rlp_list.get(BLOCK_NUM_INDEX).assert_eq_u64(
         "Block number",
         block_header_rlp.data,
-        block_header_partial.number as u64
+        block_header_partial.number
     );
     header_rlp_list.get(STATE_ROOT_INDEX).assert_eq_bytes32(
         "State root",
