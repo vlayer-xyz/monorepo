@@ -50,7 +50,7 @@ pub fn get_account_with_storage(
     storage_key: Bytes32
 ) -> StorageWithinBlock<1> {
     let BlockHeaderPartial { number: _, hash, state_root, transactions_root: _, receipts_root: _ } = get_header(chain_id, block_number);
-    let StateAndStorageProof { account, state_proof, storage_proof } = get_proof_unconstrained(block_number, address, storage_key);
+    let StateAndStorageProof { account, state_proof, storage_proof } = get_proof_unconstrained(chain_id, block_number, address, storage_key);
 
     verify_account(address, account, state_proof, state_root);
     verify_storage_values(account.storage_root, [storage_proof]);
@@ -61,12 +61,18 @@ pub fn get_account_with_storage(
 }
 
 #[oracle(get_proof)]
-unconstrained fn get_proof_oracle(_block_no: u64, _address: Address, _storage_key: Bytes32) -> StateAndStorageProof {}
+unconstrained fn get_proof_oracle(
+    _chain_id: Field,
+    _block_no: u64,
+    _address: Address,
+    _storage_key: Bytes32
+) -> StateAndStorageProof {}
 
 unconstrained fn get_proof_unconstrained(
+    chain_id: Field,
     block_no: u64,
     address: Address,
     storage_key: Bytes32
 ) -> StateAndStorageProof {
-    get_proof_oracle(block_no, address, storage_key)
+    get_proof_oracle(chain_id, block_no, address, storage_key)
 }

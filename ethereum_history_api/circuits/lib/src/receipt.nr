@@ -47,7 +47,7 @@ pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT
     _max_receipt_proof_len: PhantomReceiptProofLen<MAX_RECEIPT_PROOF_LEN>,
     _max_receipt_rlp_len: PhantomReceiptRlpLen<MAX_RECEIPT_ENCODED_LEN>
 ) -> TxReceiptWithinBlock {
-    let (tx_type, receipt, proof): (TxType, TxReceiptPartial, ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_ENCODED_RECEIPT_LENGTH>) = get_receipt_unconstrained(block_number, tx_idx);
+    let (tx_type, receipt, proof): (TxType, TxReceiptPartial, ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_ENCODED_RECEIPT_LENGTH>) = get_receipt_unconstrained(chain_id, block_number, tx_idx);
     let header = get_header(chain_id, block_number);
     verify_receipt(
         block_number,
@@ -62,15 +62,17 @@ pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT
 
 #[oracle(get_receipt)]
 unconstrained fn get_receipt_oracle<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_ENCODED_LEN>(
+    _chain_id: Field,
     _block_number: u64,
     _tx_idx: Field
 ) -> (TxType, ForeignCallTxReceiptPartial, ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_ENCODED_RECEIPT_LENGTH>) {}
 
 unconstrained fn get_receipt_unconstrained<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_ENCODED_LEN>(
+    chain_id: Field,
     block_number: u64,
     tx_idx: Field
 ) -> (TxType, TxReceiptPartial, ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_ENCODED_RECEIPT_LENGTH>) {
-    let (tx_type, receipt, proof) = get_receipt_oracle(block_number, tx_idx);
+    let (tx_type, receipt, proof) = get_receipt_oracle(chain_id, block_number, tx_idx);
 
     let receipt = TxReceiptPartial {
         status: make_option(receipt.status, receipt.status_is_some),
