@@ -57,6 +57,29 @@ mod rlp_fragment {
         }
     }
 
+    mod assert_eq_u64 {
+        use crate::rlp::{decode::STRING, types::RlpFragment};
+
+        global rlp = [0x82, 0x69, 0x1f]; // "0x691f"
+        global value = 26911;
+        global fragment = RlpFragment { offset: 1, length: 2, data_type: STRING };
+
+        #[test]
+        fn success() {
+            fragment.assert_eq_u64("Field", rlp, value)
+        }
+
+        #[test(should_fail_with = "Field: Invalid RLP length")]
+         fn invalid_length() {
+            fragment.assert_eq_u64("Field", rlp, 0x123456)
+        }
+
+        #[test(should_fail_with = "Field: Invalid RLP value")]
+         fn invalid_value() {
+            fragment.assert_eq_u64("Field", rlp, 0x1235)
+        }
+    }
+
     mod assert_eq_bytes32 {
         use crate::rlp::{decode::STRING, types::RlpFragment};
         use crate::misc::types::Bytes32;
