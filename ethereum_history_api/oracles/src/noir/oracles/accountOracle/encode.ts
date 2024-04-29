@@ -2,7 +2,7 @@ import { ForeignCallOutput } from '@noir-lang/noir_js';
 import { GetProofReturnType, Hex, fromRlp, isHex } from 'viem';
 import { encodeBytes32, encodeField, encodeHex, encodeProof } from '../common/encode.js';
 import { padArray } from '../../../util/array.js';
-import { ADDRESS_LEN, BYTES32_LEN, ZERO_PAD_VALUE } from '../common/const.js';
+import { BYTES32_LEN, ZERO_PAD_VALUE } from '../common/const.js';
 import { assert } from '../../../util/assert.js';
 import { getRlpHeaderSize } from '../common/util.js';
 import { getProofConfig } from '../common/proofConfig.js';
@@ -22,7 +22,7 @@ export class AccountProofConfig {
     getRlpHeaderSize(BYTES32_LEN) +
     BYTES32_LEN; /* Code hash */
   public static readonly MAX_VALUE_LEN = getRlpHeaderSize(this.MAX_VALUE_CONTENT_LEN) + this.MAX_VALUE_CONTENT_LEN;
-  private static readonly KEY_LEN = ADDRESS_LEN;
+  private static readonly KEY_LEN = BYTES32_LEN; // Key is a hash of Ethereum address.
   public static readonly MAX_PROOF_LEVELS = 11;
 
   private static readonly config = getProofConfig(this.KEY_LEN, this.MAX_VALUE_LEN, this.MAX_PROOF_LEVELS);

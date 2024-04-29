@@ -1,4 +1,4 @@
-import { Hex } from 'viem';
+import { Hex, keccak256 } from 'viem';
 import { StorageProofConfig } from '../../noir/oracles/accountOracle/encode.js';
 import { createNewProofInputFixture } from './new_proof.js';
 import { joinArrayVertical } from '../../noir/noir_js/encode.js';
@@ -20,7 +20,7 @@ global proofs = ${joinArrayVertical(storageProofsNoir)};
 
 function createSingleStorageProofFixture(storageProof: StorageProof): string {
   return createNewProofInputFixture(
-    { key: storageProof.key, value: toHexString(storageProof.value), proof: storageProof.proof },
+    { key: keccak256(storageProof.key), value: toHexString(storageProof.value), proof: storageProof.proof },
     StorageProofConfig.MAX_PREFIXED_KEY_NIBBLE_LEN,
     StorageProofConfig.VALUE_LEN,
     StorageProofConfig.MAX_LEAF_LEN,
