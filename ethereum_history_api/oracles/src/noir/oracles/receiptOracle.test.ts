@@ -10,7 +10,7 @@ describe('receiptOracle', () => {
         txId: 180
       });
     });
-    it('get_receipt requires 2 arguments', () => {
+    it('get_receipt requires 3 arguments', () => {
       expect(() => decodeGetReceiptArguments([['0xf']])).toThrow('get_receipt requires 3 arguments');
     });
   });
