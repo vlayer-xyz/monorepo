@@ -7,7 +7,7 @@ pub fn byte_to_nibbles(byte: u8) -> (u8, u8) {
     (upper, lower)
 }
 
-pub fn bytes_to_nibbles<MAX_NIBBLE_LEN>(bytes: Fragment<MAX_NIBBLE_LEN>) -> Fragment<MAX_NIBBLE_LEN> {
+pub fn bytes_to_nibbles<MAX_NIBBLE_LEN>(bytes: Fragment<MAX_NIBBLE_LEN, u8>) -> Fragment<MAX_NIBBLE_LEN, u8> {
     assert(
         MAX_NIBBLE_LEN >= 2 * bytes.length, "Bytes implicit data length must be at least 2 times larger than bytes explicit length"
     );

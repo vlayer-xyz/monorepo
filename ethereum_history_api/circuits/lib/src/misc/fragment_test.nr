@@ -62,7 +62,7 @@ mod focus {
     #[test(should_fail_with = "New max length is smaller than fragment length")]
     fn fail() {
         let fragment = Fragment::new(1, 2, [1, 2, 3, 4]);
-        let _: Fragment<1> = fragment.focus();
+        let _: Fragment<1, u8> = fragment.focus();
     }
 }
 
@@ -219,5 +219,24 @@ mod eq {
         let fragment1 = Fragment::new(2, 3, [0, 0, 3, 4, 5, 0]);
         let fragment2 = Fragment::new(1, 3, [0, 3, 4 + 1, 5, 0, 0]);
         assert(fragment1 != fragment2);
+    }
+}
+
+mod to_array {
+
+    use crate::misc::fragment::Fragment;
+
+    #[test]
+    fn simple() {
+        let fragment = Fragment::new(1, 2, [1, 2, 3]);
+        let array = fragment.to_array();
+        assert(array == [2, 3]);
+    }
+
+    #[test]
+    fn full() {
+        let fragment = Fragment::new(0, 4, [1, 2, 3, 4]);
+        let array = fragment.to_array();
+        assert(array == [1, 2, 3, 4]);
     }
 }

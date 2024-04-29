@@ -10,11 +10,11 @@ struct ERC721Token {
 }
 
 trait ERC721 {
-    fn get_owner(self, token_id: Bytes32, block_number: Field) -> Address;
+    fn get_owner(self, token_id: Bytes32, block_number: u64) -> Address;
 }
 
 impl ERC721 for ERC721Token {
-    fn get_owner(self, token_id: Bytes32, block_number: Field) -> Address {
+    fn get_owner(self, token_id: Bytes32, block_number: u64) -> Address {
         let storage_key = (self.token_id_to_slot)(token_id);
         let account = get_account_with_storage(block_number, self.address, storage_key);
         subarray_inferred_len(account.values[0], BYTES32_LENGTH - ADDRESS_LENGTH)

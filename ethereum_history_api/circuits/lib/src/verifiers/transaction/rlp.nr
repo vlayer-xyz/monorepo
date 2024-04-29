@@ -2,7 +2,6 @@ use crate::{verifiers::transaction::MAX_TX_RLP_LENGTH, transaction::{TxType, TxP
 use crate::rlp::decode::decode_list;
 use crate::rlp::types::RlpList;
 use crate::misc::{types::{ADDRESS_LENGTH, U128_LENGTH}, bytes::byte_value};
-use dep::u2b::u64_to_u8;
 use dep::proof::const::HASH_LENGTH;
 
 struct FieldLayout {
@@ -32,11 +31,9 @@ pub(crate) fn assert_tx_rlp_equals<MAX_DATA_LEN>(
     let FieldLayout {field_count, nonce_idx, gas_limit_idx, to_idx, signature_idx} = TX_TYPE_TO_FIELD_LAYOUT[tx_type];
     assert(rlp_list.len == field_count, "Invalid number of fields in tx RLP");
 
-    let nonce = u64_to_u8(tx.nonce);
-    rlp_list.get(nonce_idx).assert_eq_string("Nonce", tx_rlp, byte_value(nonce));
+    rlp_list.get(nonce_idx).assert_eq_u64("Nonce", tx_rlp, tx.nonce);
 
-    let gas_limit = u64_to_u8(tx.gas_limit);
-    rlp_list.get(gas_limit_idx).assert_eq_string("Gas limit", tx_rlp, byte_value(gas_limit));
+    rlp_list.get(gas_limit_idx).assert_eq_u64("Gas limit", tx_rlp, tx.gas_limit);
 
     if (tx.to.is_some()) {
         rlp_list.get(to_idx).assert_eq_string(
