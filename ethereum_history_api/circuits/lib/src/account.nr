@@ -10,9 +10,9 @@ struct AccountWithinBlock {
 
 type AccountWithStateProof = (Account, StateProof);
 
-pub fn get_account(block_no: u64, address: Address) -> AccountWithinBlock {
+pub fn get_account(chain_id: Field, block_no: u64, address: Address) -> AccountWithinBlock {
     let (account, state_proof) = get_account_unconstrained(block_no, address);
-    let header = get_header(block_no);
+    let header = get_header(chain_id, block_no);
     verify_account(address, account, state_proof, header.state_root);
     AccountWithinBlock { account, block_hash: header.hash }
 }

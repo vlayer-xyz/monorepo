@@ -44,11 +44,12 @@ struct StorageWithinBlock<N> {
 }
 
 pub fn get_account_with_storage(
+    chain_id: Field,
     block_number: u64,
     address: Address,
     storage_key: Bytes32
 ) -> StorageWithinBlock<1> {
-    let BlockHeaderPartial { number: _, hash, state_root, transactions_root: _, receipts_root: _ } = get_header(block_number);
+    let BlockHeaderPartial { number: _, hash, state_root, transactions_root: _, receipts_root: _ } = get_header(chain_id, block_number);
     let StateAndStorageProof { account, state_proof, storage_proof } = get_proof_unconstrained(block_number, address, storage_key);
 
     verify_account(address, account, state_proof, state_root);

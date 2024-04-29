@@ -24,7 +24,7 @@ trait ERC20 {
 impl ERC20 for ERC20Token {
     fn get_balance(self, wallet_address: Address, block_number: u64) -> U128 {
         let storage_key = self.calculate_balance_storage_key(wallet_address);
-        let account = get_account_with_storage(block_number, self.address, storage_key);
+        let account = get_account_with_storage(self.chain_id, block_number, self.address, storage_key);
         let balance = account.values[TOKEN_BALANCE_INDEX];
 
         U128::from_integer(bytes32_to_field(balance))

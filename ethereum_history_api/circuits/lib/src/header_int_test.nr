@@ -1,4 +1,5 @@
 use dep::std::test::OracleMock;
+use crate::chain::ETHEREUM_MAINNET_ID;
 use crate::header::get_header;
 use crate::fixtures::mainnet::{
     paris::usdc_circle::header::{block_header_partial as paris_block_header_partial, block_header_rlp as paris_block_header_rlp},
@@ -8,7 +9,7 @@ use crate::fixtures::mainnet::{
 #[test]
 fn test_get_header_success() {
     let _ = OracleMock::mock("get_header").returns((paris_block_header_partial, paris_block_header_rlp));
-    let header = get_header(number);
+    let header = get_header(ETHEREUM_MAINNET_ID, number);
     assert_eq(paris_block_header_partial.number, header.number);
     assert_eq(paris_block_header_partial.hash, header.hash);
     assert_eq(paris_block_header_partial.state_root, header.state_root);
@@ -20,5 +21,5 @@ fn test_get_header_success() {
 fn test_get_header_invalid_block_number() {
     let wrong_block_number = number + 1;
     let _ = OracleMock::mock("get_header").returns((paris_block_header_partial, paris_block_header_rlp));
-    let _ = get_header(wrong_block_number);
+    let _ = get_header(ETHEREUM_MAINNET_ID, wrong_block_number);
 }

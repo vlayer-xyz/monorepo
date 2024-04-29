@@ -1,4 +1,5 @@
-use crate::header::{BlockHeaderPartial, BlockHeaderRlp, ETHEREUM_MAINNET_ID, MAX_HEADER_RLP_LEN};
+use crate::header::{BlockHeaderPartial, BlockHeaderRlp, MAX_HEADER_RLP_LEN};
+use crate::chain::ETHEREUM_MAINNET_ID;
 use crate::verifiers::header::{get_header_fields_count, verify_header, LONDON_BLOCK_NUM, PARIS_BLOCK_NUM, CANCUN_BLOCK_NUM};
 use crate::misc::arrays::alter_array;
 use crate::fixtures::mainnet::{

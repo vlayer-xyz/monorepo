@@ -41,13 +41,14 @@ struct TxReceiptWithinBlock {
 }
 
 pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_ENCODED_LEN>(
+    chain_id: Field,
     block_number: u64,
     tx_idx: Field,
     _max_receipt_proof_len: PhantomReceiptProofLen<MAX_RECEIPT_PROOF_LEN>,
     _max_receipt_rlp_len: PhantomReceiptRlpLen<MAX_RECEIPT_ENCODED_LEN>
 ) -> TxReceiptWithinBlock {
     let (tx_type, receipt, proof): (TxType, TxReceiptPartial, ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_ENCODED_RECEIPT_LENGTH>) = get_receipt_unconstrained(block_number, tx_idx);
-    let header = get_header(block_number);
+    let header = get_header(chain_id, block_number);
     verify_receipt(
         block_number,
         tx_idx,
