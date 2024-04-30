@@ -1,4 +1,4 @@
-import { Hex } from 'viem';
+import { Hex, keccak256 } from 'viem';
 import { createNewProofInputFixture } from './new_proof.js';
 import { joinArrayVertical } from '../../noir/noir_js/encode.js';
 import { toHexString } from '../../ethereum/blockHeader.js';
@@ -20,7 +20,7 @@ global proofs = ${joinArrayVertical(storageProofsNoir)};
 
 function createSingleStorageProofFixture(storageProof: StorageProof): string {
   return createNewProofInputFixture(
-    { key: storageProof.key, value: toHexString(storageProof.value), proof: storageProof.proof },
+    { key: keccak256(storageProof.key), value: toHexString(storageProof.value), proof: storageProof.proof },
     storageProofConfig
   );
 }
