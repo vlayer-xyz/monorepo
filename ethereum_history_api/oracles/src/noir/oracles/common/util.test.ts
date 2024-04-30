@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { RLP_SHORT_ENTITY_MAX_LEN, getRlpHeaderSize } from './util.js';
+import { RLP_SHORT_ENTITY_MAX_LEN, getRlpEncodedSize, getRlpHeaderSize } from './util.js';
 import { ADDRESS_LEN, BYTES32_LEN } from './const.js';
 
 describe('getRlpHeaderSize', () => {
@@ -29,5 +29,13 @@ describe('getRlpHeaderSize', () => {
 
   it('should return 5 for long strings where length len is 4', () => {
     expect(getRlpHeaderSize(100_000_000)).toBe(5);
+  });
+});
+
+describe('getRlpEncodedSize', () => {
+  it('should return correct size', () => {
+    expect(getRlpEncodedSize(1)).toBe(2);
+    expect(getRlpEncodedSize(ADDRESS_LEN)).toBe(1 + ADDRESS_LEN);
+    expect(getRlpEncodedSize(100_000_000)).toBe(5 + 100_000_000);
   });
 });

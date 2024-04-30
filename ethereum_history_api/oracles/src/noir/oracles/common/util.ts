@@ -9,3 +9,7 @@ export function getRlpHeaderSize(strLen: number): number {
     return 1 + Math.ceil(strLen.toString(16).length / BYTE_HEX_LEN);
   }
 }
+
+export function getRlpEncodedSize(len: number): number {
+  return getRlpHeaderSize(len) + len;
+}
