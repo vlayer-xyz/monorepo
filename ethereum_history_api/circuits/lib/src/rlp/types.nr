@@ -124,7 +124,7 @@ impl RlpFragment {
         rlp: [u8; MAX_RLP_LEN],
         value: U128
     ) {
-        // self.assert_eq_bounded_vec(field_name, rlp, byte_value(u128_to_u8(value)));
+        self.assert_eq_bounded_vec(field_name, rlp, byte_value(value.to_be_bytes()));
     }
 }
 

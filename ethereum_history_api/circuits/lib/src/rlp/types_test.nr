@@ -257,4 +257,27 @@ mod rlp_fragment {
             fragment.assert_eq_u8("Field", rlp, 16)
         }
     }
+
+    mod assert_eq_u128 {
+        use crate::rlp::{decode::STRING, types::RlpFragment};
+
+        global rlp = [0x03, 0x8D, 0x7E, 0xA4, 0xC6, 0x80, 0x00];
+        global fragment = RlpFragment { offset: 0, length: 7, data_type: STRING };
+        global value = U128::from_integer(1000000000000000);
+
+        #[test]
+        fn success() {
+            fragment.assert_eq_u128("Field", rlp, value)
+        }
+
+        #[test(should_fail_with = "Field: Invalid RLP length")]
+        fn invalid_length() {
+            fragment.assert_eq_u128("Field", rlp, U128::from_integer(100000))
+        }
+
+        #[test(should_fail_with = "Field: Invalid RLP value")]
+        fn invalid_value() {
+            fragment.assert_eq_u128("Field", rlp, U128::from_integer(1000000001000000))
+        }
+    }
 }
