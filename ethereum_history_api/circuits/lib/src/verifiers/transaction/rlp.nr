@@ -1,8 +1,6 @@
 use crate::{verifiers::transaction::MAX_TX_RLP_LENGTH, transaction::{TxType, TxPartial}};
 use crate::rlp::decode::decode_list;
 use crate::rlp::types::RlpList;
-use crate::misc::{types::{ADDRESS_LENGTH, U128_LENGTH}, bytes::byte_value};
-use dep::proof::const::HASH_LENGTH;
 
 struct FieldLayout {
     field_count: u64,

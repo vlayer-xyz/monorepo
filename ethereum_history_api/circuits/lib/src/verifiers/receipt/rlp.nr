@@ -2,12 +2,8 @@ use crate::{
     verifiers::receipt::{MAX_RECEIPT_RLP_LENGTH, is_pre_byzantium},
     receipt::{BLOOM_FILTER_LEN, TxReceiptPartial}
 };
-use dep::proof::const::HASH_LENGTH;
-use crate::misc::arrays::sub_array_equals_up_to_length;
-use crate::misc::bytes::byte_value;
-use crate::rlp::decode::{decode_list, STRING};
+use crate::rlp::decode::decode_list;
 use crate::rlp::types::RlpList;
-use dep::u2b::u32_to_u8;
 
 global RECEIPT_FIELDS_COUNT = 4;
 global STATE_ROOT_INDEX = 0;

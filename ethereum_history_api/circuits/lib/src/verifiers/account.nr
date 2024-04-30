@@ -1,7 +1,7 @@
 use dep::proof::{const::{MAX_ACCOUNT_STATE_LENGTH, HASH_LENGTH}, trie_proof::TrieProof};
 
 use crate::account::{Account, StateProof};
-use crate::misc::{arrays::sub_array_equals_up_to_length, types::{Address, Bytes32}, bytes::byte_value};
+use crate::misc::{types::Address, bytes::byte_value};
 use crate::rlp::decode::decode_list_of_small_strings;
 use crate::rlp::types::RlpList;
 

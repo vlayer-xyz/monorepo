@@ -1,8 +1,7 @@
 use dep::std::hash::keccak256;
 
 use crate::header::{BlockHeaderPartial, BlockHeaderRlp, ETHEREUM_MAINNET_ID, ETHEREUM_SEPOLIA_ID};
-use crate::misc::arrays::{sub_array_equals, sub_array_equals_up_to_length};
-use crate::HASH_LEN;
+use crate::misc::arrays::sub_array_equals;
 use crate::rlp::decode::decode_list;
 use crate::rlp::types::RlpList;
 
