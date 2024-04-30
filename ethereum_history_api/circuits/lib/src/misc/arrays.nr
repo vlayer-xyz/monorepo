@@ -70,10 +70,3 @@ pub fn sub_array_equals<TItem, SUBARRAY_LEN, ARRAY_LEN>(
     }
     result
 }
-
-pub fn array_equals<TItem, ARRAY_LEN>(
-    array1: [TItem; ARRAY_LEN],
-    array2: [TItem; ARRAY_LEN]
-) -> bool where TItem: Eq {
-    sub_array_equals(array1, array2, 0)
-}

@@ -4,7 +4,8 @@ import accountAsFields from './fixtures/accountAsFields.json';
 import stateProofAsFields from './fixtures/stateProofAsFields.json';
 import storageProofAsFields from './fixtures/storageProofAsFields.json';
 import { ForeignCallOutput } from '@noir-lang/noir_js';
-import { encodeAccount, encodeStateProof, encodeStorageProof } from './encode.js';
+import { encodeAccount, encodeStateProof, encodeStorageProof, getValue } from './encode.js';
+import { Hex } from 'viem';
 
 describe('AccountOracle encode', () => {
   describe('encodeAccount', () => {
@@ -29,6 +30,17 @@ describe('AccountOracle encode', () => {
         serializeStorageProof(storageProofAsFields)
       );
     });
+  });
+});
+
+describe('getValue', () => {
+  it('get value from proof', () => {
+    const proof = [
+      '0xf851a04df3f15dfc229636c27f5ffb66730d904123d3d8d6e3bcf0325df71e13fbecbba04df3f15dfc229636c27f5ffb66730d904123d3d8d6e3bcf0325df71e13fbecbb808080808080808080808080808080',
+      '0xe231a01234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
+    ] as Hex[];
+    const value = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef';
+    expect(getValue(proof)).toStrictEqual(value);
   });
 });
 

@@ -9,7 +9,7 @@ global STATE_PROOF_LEN = 5852; // = 11 (MAX_STATE_PROOF_LEVELS) * 532 (MAX_TRIE_
 global STORAGE_PROOF_LEN = 3724; // = 7 (MAX_STORAGE_PROOF_LEVELS) * 532 (MAX_TRIE_NODE_LEN)
 
 struct Account {
-    nonce: Field,
+    nonce: u64,
     balance: Field,
     storage_root: Bytes32,
     code_hash: Bytes32,
@@ -44,7 +44,7 @@ struct StorageWithinBlock<N> {
 }
 
 pub fn get_account_with_storage(
-    block_number: Field,
+    block_number: u64,
     address: Address,
     storage_key: Bytes32
 ) -> StorageWithinBlock<1> {
@@ -60,10 +60,10 @@ pub fn get_account_with_storage(
 }
 
 #[oracle(get_proof)]
-unconstrained fn get_proof_oracle(_block_no: Field, _address: Address, _storage_key: Bytes32) -> StateAndStorageProof {}
+unconstrained fn get_proof_oracle(_block_no: u64, _address: Address, _storage_key: Bytes32) -> StateAndStorageProof {}
 
 unconstrained fn get_proof_unconstrained(
-    block_no: Field,
+    block_no: u64,
     address: Address,
     storage_key: Bytes32
 ) -> StateAndStorageProof {

@@ -2,17 +2,11 @@ import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { statusToHex } from '../../../ethereum/receipt.js';
 import { padArray } from '../../../util/array.js';
 import { encodeField, encodeHex, encodeProof, encodeBytes } from '../common/encode.js';
-import { MAX_TRIE_NODE_LEN, ZERO_PAD_VALUE } from '../common/const.js';
+import { ZERO_PAD_VALUE } from '../common/const.js';
 import { Proof } from '../../../ethereum/proof.js';
 import { TransactionReceipt } from '../../../types.js';
 import { BYTES_32_ZERO, U1_ZERO } from '../../../util/const.js';
-
-export const MAX_RECEIPT_KEY_LEN = 3;
-export const MAX_RECEIPT_KEY_NIBBLE_LEN = 6;
-export const MAX_RECEIPT_TREE_DEPTH = MAX_RECEIPT_KEY_NIBBLE_LEN + 1;
-export const MAX_RECEIPT_PROOF_LEN = MAX_TRIE_NODE_LEN * MAX_RECEIPT_TREE_DEPTH;
-export const MAX_RECEIPT_ENCODED_LEN = 525;
-export const MAX_RECEIPT_RLP_LEN = MAX_RECEIPT_ENCODED_LEN - 1;
+import { LEGACY_MAX_RECEIPT_ENCODED_LEN, receiptProofConfigM } from '../common/proofConfig/receipt.js';
 
 export enum RECEIPT_OFFSETS {
   STATUS,
@@ -35,9 +29,9 @@ export function encodeReceipt(receipt: TransactionReceipt): ForeignCallOutput[] 
 }
 
 export function encodeReceiptProof(receiptProof: Proof): ForeignCallOutput[] {
-  const key = encodeBytes(BigInt(receiptProof.key), MAX_RECEIPT_KEY_LEN);
-  const value = padArray(encodeHex(receiptProof.value), MAX_RECEIPT_ENCODED_LEN, ZERO_PAD_VALUE, 'left');
-  const proof = encodeProof(receiptProof.proof, MAX_RECEIPT_PROOF_LEN);
+  const key = encodeBytes(BigInt(receiptProof.key), receiptProofConfigM.maxKeyLen);
+  const value = padArray(encodeHex(receiptProof.value), LEGACY_MAX_RECEIPT_ENCODED_LEN, ZERO_PAD_VALUE, 'left');
+  const proof = encodeProof(receiptProof.proof, receiptProofConfigM.maxProofLen);
   const depth = encodeField(receiptProof.proof.length);
 
   return [key, proof, depth, value];

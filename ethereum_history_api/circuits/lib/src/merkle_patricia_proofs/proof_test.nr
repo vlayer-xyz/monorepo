@@ -1,3 +1,26 @@
+mod node_get_len {
+
+    use crate::merkle_patricia_proofs::proof::get_node_len;
+
+    #[test]
+    fn success() {
+        let node = [0xc2, 0x42, 0x05]; // ["0x42","0x05"]
+        assert(get_node_len(node) == 3);
+    }
+
+    #[test]
+    fn padded() {
+        let node = [0xc2, 0x42, 0x05, 0x00]; // ["0x42","0x05"] padded
+        assert(get_node_len(node) == 3);
+    }
+
+    #[test(should_fail_with="Decoded length of short list exceeds input length")]
+    fn rlp_len_too_long() {
+        let node = [0xc2, 0x42]; // Invalid rlp
+        let _ = get_node_len(node);
+    }
+}
+
 mod parity {
     use crate::merkle_patricia_proofs::proof::{EVEN, ODD, parity};
 
@@ -60,17 +83,19 @@ mod strip_prefix {
 mod extract_hash_from_branch_node {
 
     use crate::merkle_patricia_proofs::proof::{extract_hash_from_branch_node, MAX_NODE_FIELDS};
-    use crate::rlp::decode::{RlpList, decode_list_of_small_strings};
+    use crate::rlp::decode::decode_list_of_small_strings;
+    use crate::rlp::types::RlpList;
     use crate::misc::{fragment::Fragment, bytes::bytes_to_nibbles};
-    use crate::fixtures::merkle_proofs::{branch_then_leaf::{key as branch_key, nodes as branch_nodes}};
+    use crate::fixtures::merkle_proofs::{branch_then_leaf::proof_input as branch_input};
 
+    global key = branch_input.key;
+    global branch_node = branch_input.proof.nodes[0];
     global branch_hash = Fragment::new_focused([0x4d, 0xf3, 0xf1, 0x5d, 0xfc, 0x22, 0x96, 0x36, 0xc2, 0x7f, 0x5f, 0xfb, 0x66, 0x73, 0x0d, 0x90, 0x41, 0x23, 0xd3, 0xd8, 0xd6, 0xe3, 0xbc, 0xf0, 0x32, 0x5d, 0xf7, 0x1e, 0x13, 0xfb, 0xec, 0xbb]);
 
     #[test]
     fn branch() {
-        let branch_node = branch_nodes[0];
         let branch_node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list_of_small_strings(branch_node);
-        let key_nibbles = bytes_to_nibbles(Fragment::new(3, 1, branch_key));
+        let key_nibbles = bytes_to_nibbles(Fragment::new(3, 1, key));
         let mut key_ptr = 0;
         assert(
             extract_hash_from_branch_node(branch_node, branch_node_rlp_list, key_nibbles, &mut key_ptr)
@@ -81,9 +106,8 @@ mod extract_hash_from_branch_node {
 
     #[test(should_fail_with="Expected a hash at position given by the key nibble")]
     fn fail_branch() {
-        let branch_node = branch_nodes[0];
         let branch_node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list_of_small_strings(branch_node);
-        let mut altered_key_nibbles = bytes_to_nibbles(Fragment::new(3, 1, branch_key));
+        let mut altered_key_nibbles = bytes_to_nibbles(Fragment::new(3, 1, key));
         altered_key_nibbles.set(0, 0x2);
         let mut key_ptr = 0;
         assert(
@@ -101,22 +125,23 @@ mod extract_hash_from_branch_node {
 mod extract_hash_from_extension_node {
 
     use crate::merkle_patricia_proofs::proof::{extract_hash_from_extension_node, MAX_NODE_FIELDS};
-    use crate::rlp::decode::{RlpList, decode_list_of_small_strings};
+    use crate::rlp::decode::decode_list_of_small_strings;
+    use crate::rlp::types::RlpList;
     use crate::misc::{fragment::Fragment, bytes::bytes_to_nibbles};
     use crate::fixtures::merkle_proofs::{
-        branch_then_leaf::{key as branch_key, nodes as branch_nodes},
-        extension_odd::{key as extension_odd_key, nodes as extension_odd_nodes},
-        extension_even::{key as extension_even_key, nodes as extension_even_nodes}
+        branch_then_leaf::proof_input as branch_input,
+        extension_odd::proof_input as extension_odd_input,
+        extension_even::proof_input as extension_even_input
     };
 
     global extension_hash = Fragment::new_focused([0x60, 0xc1, 0xdf, 0x16, 0xda, 0x26, 0x84, 0x73, 0xae, 0xe6, 0xb0, 0x02, 0xca, 0xe7, 0x9c, 0xf9, 0x10, 0xd1, 0xfa, 0x0b, 0xc8, 0xc0, 0x66, 0x9a, 0xfa, 0x63, 0x1b, 0xae, 0xd0, 0xeb, 0x6f, 0x52]);
 
     #[test]
     fn extension_odd() {
-        let extension_node = extension_odd_nodes[0];
+        let extension_node = extension_odd_input.proof.nodes[0];
         let extension_node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list_of_small_strings(extension_node);
         let mut key_ptr = 0;
-        let key_nibbles = bytes_to_nibbles(Fragment::new(4, 2, extension_odd_key));
+        let key_nibbles = bytes_to_nibbles(Fragment::new(4, 2, extension_odd_input.key));
         assert(
             extract_hash_from_extension_node(
             extension_node,
@@ -131,10 +156,10 @@ mod extract_hash_from_extension_node {
 
     #[test]
     fn extension_even() {
-        let extension_node = extension_even_nodes[1];
+        let extension_node = extension_even_input.proof.nodes[1];
         let extension_node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list_of_small_strings(extension_node);
         let mut key_ptr = 1;
-        let key_nibbles = bytes_to_nibbles(Fragment::new(5, 3, extension_even_key));
+        let key_nibbles = bytes_to_nibbles(Fragment::new(5, 3, extension_even_input.key));
         assert(
             extract_hash_from_extension_node(
             extension_node,
@@ -149,10 +174,10 @@ mod extract_hash_from_extension_node {
 
     #[test(should_fail_with="Extension key part does not correspond to given key nibbles")]
     fn fail_extension_not_corresponding_nibbles() {
-        let extension_node = extension_even_nodes[1];
+        let extension_node = extension_even_input.proof.nodes[1];
         let extension_node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list_of_small_strings(extension_node);
         let mut key_ptr = 1;
-        let mut altered_key_nibbles = bytes_to_nibbles(Fragment::new(5, 3, extension_even_key));
+        let mut altered_key_nibbles = bytes_to_nibbles(Fragment::new(5, 3, extension_even_input.key));
         altered_key_nibbles.set(2, 0x4b);
         assert(
             extract_hash_from_extension_node(
@@ -172,7 +197,7 @@ mod extract_hash_from_extension_node {
         ];
         let extension_node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list_of_small_strings(extension_node_without_hash);
         let mut key_ptr = 0;
-        let key_nibbles = bytes_to_nibbles(Fragment::new(4, 2, extension_odd_key));
+        let key_nibbles = bytes_to_nibbles(Fragment::new(4, 2, extension_odd_input.key));
         assert(
             extract_hash_from_extension_node(
             extension_node_without_hash,
@@ -191,7 +216,7 @@ mod extract_hash_from_extension_node {
         ];
         let extension_node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list_of_small_strings(extension_node_with_wrong_parity_prefix);
         let mut key_ptr = 0;
-        let key_nibbles = bytes_to_nibbles(Fragment::new(4, 2, extension_odd_key));
+        let key_nibbles = bytes_to_nibbles(Fragment::new(4, 2, extension_odd_input.key));
         assert(
             extract_hash_from_extension_node(
             extension_node_with_wrong_parity_prefix,
@@ -220,100 +245,221 @@ mod extract_hash {
     }
 }
 
-mod leaf_get_len {
+mod verify_node_hash {
 
-    use crate::merkle_patricia_proofs::proof::leaf_get_len;
+    use crate::merkle_patricia_proofs::proof::verify_node_hash;
+    use crate::fixtures::merkle_proofs::branch_then_leaf::proof_input;
+
+    global node = proof_input.proof.nodes[0];
+    global node_hash = [
+            0x50, 0x7A, 0x49, 0xDF, 0x2B, 0x19, 0x39, 0x4B, 0x69, 0xA1, 0xDD, 0x55, 0x3B, 0x47, 0x4C, 0x65, 0xE1, 0xD1, 0xE6, 0x54, 0x36, 0xA2, 0x21, 0xE9, 0xC6, 0x52, 0xDB, 0x84, 0x3F, 0xF3, 0xED, 0x12
+        ];
 
     #[test]
     fn success() {
-        let leaf = [0xc2, 0x42, 0x05];
-        assert(leaf_get_len(leaf) == 3);
+        verify_node_hash(node, node_hash);
     }
 
-    #[test]
-    fn padded() {
-        let leaf = [0xc2, 0x42, 0x05, 0x00];
-        assert(leaf_get_len(leaf) == 3);
-    }
-
-    #[test(should_fail_with="Decoded length of short list exceeds input length")]
-    fn rlp_len_too_long() {
-        let leaf = [0xc2, 0x42];
-        let _ = leaf_get_len(leaf);
+    #[test(should_fail_with="Invalid node hash")]
+    fn fail() {
+        let mut invalid_node_hash = node_hash;
+        invalid_node_hash[0] += 1;
+        verify_node_hash(node, invalid_node_hash);
     }
 }
 
-mod assert_merkle_proof {
+mod verify_leaf {
 
-    use crate::merkle_patricia_proofs::proof::{assert_merkle_proof, Proof};
-    use crate::misc::arrays::alter_array;
+    use crate::merkle_patricia_proofs::proof::verify_leaf;
+    use crate::misc::{bytes::bytes_to_nibbles, fragment::Fragment};
+    use crate::fixtures::merkle_proofs::branch_then_leaf::proof_input;
 
-    global key = [0x00, 0x00, 0x00, 0x42];
-    global value = [0x5];
-    global root = [163, 57, 232, 136, 93, 33, 132, 208, 116, 119, 95, 134, 32, 201, 51, 214, 218, 75, 93, 113, 140, 143, 254, 21, 52, 83, 99, 97, 54, 246, 121, 173];
-    global leaf = [0xc4, 0x82, 0x20, 0x42, 0x05];
+    global empty_key = Fragment::new_with_length(0, [0; 2]);
+    global empty_value = [];
+    global empty_leaf = [0xc2, 0x20, 0x80]; // ["0x20","0x"]
+
+    global MAX_PREFIXED_KEY_NIBBLE_LEN = 6;
+    global MAX_VALUE_LEN = 3;
+    global some_key = [0xab, 0xcd];
+    global some_key_fragment: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8> = Fragment::from_array(some_key);
+    global some_key_nibbles = bytes_to_nibbles(some_key_fragment);
+    global some_value: [u8; MAX_VALUE_LEN] = [0x00, 0x12, 0x34];
+    global some_leaf = [0xc6, 0x82, 0x20, 0xcd, 0x82, 0x12, 0x34]; // ["0x20bc","0x1234"]
 
     #[test]
-    fn success() {
-        let proof = Proof { nodes: [], leaf, depth: 1 };
-        assert_merkle_proof(key, value, root, proof);
+    fn success_empty() {
+        verify_leaf(empty_leaf, empty_key, &mut 0, empty_value)
     }
 
     #[test]
-    fn value_padded() {
-        let proof = Proof { nodes: [], leaf: [0xc4, 0x82, 0x20, 0x42, 0x05, 0x0, 0x0, 0x0], depth: 1 };
-        assert_merkle_proof(key, value, root, proof);
+    fn success_simple() {
+        let mut key_ptr = 2;
+        verify_leaf(some_leaf, some_key_nibbles, &mut key_ptr, some_value)
     }
 
-    #[test(should_fail_with="Leaf parity prefix must be 2 or 3")]
-    fn wrong_parity_prefix() {
-        let proof = Proof { nodes: [], leaf: [0xc4, 0x82, 0x00, 0x42, 0x05], depth: 1 };
-        assert_merkle_proof(key, value, root, proof);
+    #[test]
+    fn success_from_fixtures() {
+        let ( key, value, leaf ) = (proof_input.key, proof_input.value, proof_input.proof.leaf);
+        let key_nibbles = bytes_to_nibbles(Fragment::new(3, 1, key));
+        verify_leaf(leaf, key_nibbles, &mut 1, value)
     }
 
     #[test(should_fail_with="Leaf expected to have 2 fields")]
-    fn invalid_leaf() {
-        let proof = Proof { nodes: [], leaf: [0xc1, 0x42, 0x00], depth: 1 };
-        assert_merkle_proof(key, value, root, proof);
+    fn fail_invalid_rlp() {
+        let invalid_leaf_rlp = [0xc1, 0x12]; // ["0x12"]
+        verify_leaf(invalid_leaf_rlp, empty_key, &mut 0, empty_value)
     }
 
-    #[test(should_fail_with="Invalid root")]
-    fn invalid_root() {
-        let wrong_root = alter_array(root);
-        let proof = Proof { nodes: [], leaf, depth: 1 };
-        assert_merkle_proof(key, value, wrong_root, proof);
+    #[test(should_fail_with="Leaf parity prefix must be 2 or 3")]
+    fn fail_invalid_prefix() {
+        let leaf_with_invalid_prefix = [0xc6, 0x82, 0x00, 0xbc, 0x82, 0x12, 0x34]; // ["0x00bc","0x1234"]
+        verify_leaf(leaf_with_invalid_prefix, empty_key, &mut 0, empty_value)
+    }
+
+    #[test(should_fail_with="Leaf key part does not correspond to left key nibbles")]
+    fn fail_wrong_key() {
+        let mut wrong_key_nibbles = some_key_nibbles;
+        wrong_key_nibbles.set(2, 0xd);
+        let mut key_ptr = 2;
+        verify_leaf(some_leaf, wrong_key_nibbles, &mut key_ptr, some_value)
+    }
+
+    #[test(should_fail_with="Expected to consume all key nibbles")]
+    fn fail_key_not_consumed() {
+        let mut long_key_nibbles = some_key_nibbles;
+        long_key_nibbles.push_back(0xd);
+        let mut key_ptr = 2;
+        verify_leaf(some_leaf, long_key_nibbles, &mut key_ptr, some_value)
+    }
+
+    #[test(should_fail_with="Value length mismatch")]
+    fn fail_value_len_mismatch() {
+        let mut key_ptr = 2;
+        let long_value = [0x0, 0x12, 0x34, 0x56];
+        verify_leaf(some_leaf, some_key_nibbles, &mut key_ptr, long_value)
     }
 
     #[test(should_fail_with="Value mismatch")]
-    fn value_mismatch() {
-        let wrong_value = alter_array(value);
-        let proof = Proof { nodes: [], leaf, depth: 1 };
-        assert_merkle_proof(key, wrong_value, root, proof);
-    }
-
-    #[test(should_fail_with="Key mismatch")]
-    fn key_mismatch() {
-        let wrong_key = [0x00, 0x00, 0x00, 0x43];
-        let proof = Proof { nodes: [], leaf, depth: 1 };
-        assert_merkle_proof(wrong_key, value, root, proof);
+    fn fail_value_mismatch() {
+        let mut key_ptr = 2;
+        let mut wrong_value = some_value;
+        wrong_value[2] += 1;
+        verify_leaf(some_leaf, some_key_nibbles, &mut key_ptr, wrong_value)
     }
 }
 
-mod assert_merkle_proof_from_fixtures {
+mod verify_merkle_proof {
 
-    use crate::merkle_patricia_proofs::proof::{assert_merkle_proof, Proof};
-    use crate::fixtures::merkle_proofs::leaf::{
-        key as fixture_key, value as fixture_value, nodes as fixture_nodes, leaf as fixture_leaf,
-        root as fixture_root
+    use crate::merkle_patricia_proofs::proof::verify_merkle_proof;
+    use crate::fixtures::mainnet::{
+        homestead::fork::{
+        header::receipts_root as homestead_receipts_root,
+        receipt_proof_new::proof_input as homestead_receipt_proof_input,
+        header::transactions_root as homestead_transactions_root,
+        transaction_proof_new::proof_input as homestead_transaction_proof_input
+    },
+        cancun::small_block::{
+        header::receipts_root as cancun_receipts_root,
+        receipt_proof_new::proof_input as cancun_receipt_proof_input,
+        header::transactions_root as cancun_transactions_root,
+        transaction_proof_new::proof_input as cancun_transaction_proof_input
+    }
+    };
+    use crate::fixtures::merkle_proofs::{
+        leaf::proof_input as leaf_proof_input, branch_then_leaf::proof_input as branch_proof_input,
+        extension_odd::proof_input as extension_odd_proof_input,
+        extension_even::proof_input as extension_even_proof_input
     };
 
     #[test]
-    fn success() {
-        assert_merkle_proof(
-            fixture_key,
-            fixture_value,
-            fixture_root,
-            Proof { nodes: fixture_nodes, leaf: fixture_leaf, depth: 1 }
-        )
+    fn success_leaf() {
+        let root = [
+            81, 64, 6, 95, 58, 92, 237, 155, 139, 131, 45, 198, 90, 66, 3, 207, 177, 231, 171, 165, 236, 102, 206, 54, 237, 231, 120, 78, 121, 136, 99, 93
+        ];
+        verify_merkle_proof(
+            leaf_proof_input.key,
+            leaf_proof_input.value,
+            root,
+            leaf_proof_input.proof
+        );
+    }
+
+    #[test]
+    fn success_branch() {
+        let root = [
+            80, 122, 73, 223, 43, 25, 57, 75, 105, 161, 221, 85, 59, 71, 76, 101, 225, 209, 230, 84, 54, 162, 33, 233, 198, 82, 219, 132, 63, 243, 237, 18
+        ];
+        verify_merkle_proof(
+            branch_proof_input.key,
+            branch_proof_input.value,
+            root,
+            branch_proof_input.proof
+        );
+    }
+
+    #[test]
+    fn success_extension_even() {
+        let root = [
+            23, 150, 18, 158, 243, 81, 194, 246, 122, 234, 60, 7, 178, 219, 32, 155, 194, 254, 49, 102, 206, 193, 254, 130, 219, 229, 170, 83, 89, 12, 81, 96
+        ];
+        verify_merkle_proof(
+            extension_even_proof_input.key,
+            extension_even_proof_input.value,
+            root,
+            extension_even_proof_input.proof
+        );
+    }
+
+    #[test]
+    fn success_extension_odd() {
+        let root = [
+            132, 180, 134, 174, 141, 94, 213, 41, 36, 131, 18, 208, 22, 232, 27, 28, 193, 239, 197, 30, 112, 129, 11, 82, 164, 177, 92, 12, 144, 84, 173, 142
+        ];
+        verify_merkle_proof(
+            extension_odd_proof_input.key,
+            extension_odd_proof_input.value,
+            root,
+            extension_odd_proof_input.proof
+        );
+    }
+
+    #[test]
+    fn success_homestead_receipt() {
+        verify_merkle_proof(
+            homestead_receipt_proof_input.key,
+            homestead_receipt_proof_input.value,
+            homestead_receipts_root,
+            homestead_receipt_proof_input.proof
+        );
+    }
+
+    #[test]
+    fn success_cancun_receipt() {
+        verify_merkle_proof(
+            cancun_receipt_proof_input.key,
+            cancun_receipt_proof_input.value,
+            cancun_receipts_root,
+            cancun_receipt_proof_input.proof
+        );
+    }
+
+    #[test]
+    fn success_homestead_transaction() {
+        verify_merkle_proof(
+            homestead_transaction_proof_input.key,
+            homestead_transaction_proof_input.value,
+            homestead_transactions_root,
+            homestead_transaction_proof_input.proof
+        );
+    }
+
+    #[test]
+    fn success_cancun_transaction() {
+        verify_merkle_proof(
+            cancun_transaction_proof_input.key,
+            cancun_transaction_proof_input.value,
+            cancun_transactions_root,
+            cancun_transaction_proof_input.proof
+        );
     }
 }

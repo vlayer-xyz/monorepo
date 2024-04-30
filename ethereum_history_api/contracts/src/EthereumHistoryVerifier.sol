@@ -2,17 +2,19 @@
 pragma solidity ^0.8.13;
 
 error InvalidBlockHash(uint256 blockNo, bytes32 blockHash);
-error InvalidBlockNumber(uint256 blockNo);
+error BlockTooOld(uint256 blockNo);
+error BlockInTheFuture(uint256 blockNo);
 
 contract EthereumHistoryVerifier {
-
-    function verify(uint blockNo, bytes32 blockHash) view public {
+    function verify(uint blockNo, bytes32 blockHash) public view {
+        if (blockNo >= block.number) {
+            revert BlockInTheFuture(blockNo);
+        }
         if (blockhash(blockNo) != blockHash) {
             revert InvalidBlockHash(blockNo, blockHash);
         }
         if (blockhash(blockNo) == bytes32(0)) {
-            revert InvalidBlockNumber(blockNo);
+            revert BlockTooOld(blockNo);
         }
     }
-
 }

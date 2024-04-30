@@ -10,7 +10,7 @@ struct AccountWithinBlock {
 
 type AccountWithStateProof = (Account, StateProof);
 
-pub fn get_account(block_no: Field, address: Address) -> AccountWithinBlock {
+pub fn get_account(block_no: u64, address: Address) -> AccountWithinBlock {
     let (account, state_proof) = get_account_unconstrained(block_no, address);
     let header = get_header(block_no);
     verify_account(address, account, state_proof, header.state_root);
@@ -18,11 +18,8 @@ pub fn get_account(block_no: Field, address: Address) -> AccountWithinBlock {
 }
 
 #[oracle(get_account)]
-unconstrained fn get_account_oracle(_block_no: Field, _address: [u8; 20]) -> AccountWithStateProof {}
+unconstrained fn get_account_oracle(_block_no: u64, _address: [u8; 20]) -> AccountWithStateProof {}
 
-unconstrained fn get_account_unconstrained(
-    block_no: Field,
-    address: Address
-) -> AccountWithStateProof {
+unconstrained fn get_account_unconstrained(block_no: u64, address: Address) -> AccountWithStateProof {
     get_account_oracle(block_no, address)
 }

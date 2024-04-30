@@ -1,4 +1,4 @@
 mod decode;
 mod decode_test;
-mod fragment;
-mod fragment_test;
+mod types;
+mod types_test;

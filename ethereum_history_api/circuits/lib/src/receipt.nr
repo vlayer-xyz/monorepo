@@ -41,7 +41,7 @@ struct TxReceiptWithinBlock {
 }
 
 pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_ENCODED_LEN>(
-    block_number: Field,
+    block_number: u64,
     tx_idx: Field,
     _max_receipt_proof_len: PhantomReceiptProofLen<MAX_RECEIPT_PROOF_LEN>,
     _max_receipt_rlp_len: PhantomReceiptRlpLen<MAX_RECEIPT_ENCODED_LEN>
@@ -61,12 +61,12 @@ pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT
 
 #[oracle(get_receipt)]
 unconstrained fn get_receipt_oracle<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_ENCODED_LEN>(
-    _block_number: Field,
+    _block_number: u64,
     _tx_idx: Field
 ) -> (TxType, ForeignCallTxReceiptPartial, ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_ENCODED_RECEIPT_LENGTH>) {}
 
 unconstrained fn get_receipt_unconstrained<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_ENCODED_LEN>(
-    block_number: Field,
+    block_number: u64,
     tx_idx: Field
 ) -> (TxType, TxReceiptPartial, ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_ENCODED_RECEIPT_LENGTH>) {
     let (tx_type, receipt, proof) = get_receipt_oracle(block_number, tx_idx);

@@ -62,7 +62,7 @@ mod focus {
     #[test(should_fail_with = "New max length is smaller than fragment length")]
     fn fail() {
         let fragment = Fragment::new(1, 2, [1, 2, 3, 4]);
-        let _: Fragment<1> = fragment.focus();
+        let _: Fragment<1, u8> = fragment.focus();
     }
 }
 
@@ -163,12 +163,36 @@ mod pop_front {
         assert(fragment.length == 0);
     }
 
-    #[test(should_fail_with="Cannot pop from an empty slice")]
+    #[test(should_fail_with="Cannot pop from an empty fragment")]
     fn fail() {
         let mut fragment = Fragment::new(1, 2, [1, 2, 3]);
         let _ = fragment.pop_front();
         let _ = fragment.pop_front();
         let _ = fragment.pop_front();
+    }
+}
+
+mod push_back {
+
+    use crate::misc::fragment::Fragment;
+
+    #[test]
+    fn success() {
+        let mut fragment = Fragment::new(1, 1, [-1, 0, 1, 2]);
+        assert(fragment.at(0) == 0);
+        fragment.push_back(1);
+        assert(fragment.at(1) == 1);
+        fragment.push_back(2);
+        assert(fragment.at(2) == 2);
+        assert(fragment.length == 3);
+    }
+
+    #[test(should_fail_with="Cannot push: fragment is full")]
+    fn fail() {
+        let mut fragment = Fragment::new(1, 1, [0, 1, 0, 0]);
+        fragment.push_back(2);
+        fragment.push_back(3);
+        fragment.push_back(4);
     }
 }
 
@@ -195,5 +219,24 @@ mod eq {
         let fragment1 = Fragment::new(2, 3, [0, 0, 3, 4, 5, 0]);
         let fragment2 = Fragment::new(1, 3, [0, 3, 4 + 1, 5, 0, 0]);
         assert(fragment1 != fragment2);
+    }
+}
+
+mod to_array {
+
+    use crate::misc::fragment::Fragment;
+
+    #[test]
+    fn simple() {
+        let fragment = Fragment::new(1, 2, [1, 2, 3]);
+        let array = fragment.to_array();
+        assert(array == [2, 3]);
+    }
+
+    #[test]
+    fn full() {
+        let fragment = Fragment::new(0, 4, [1, 2, 3, 4]);
+        let array = fragment.to_array();
+        assert(array == [1, 2, 3, 4]);
     }
 }

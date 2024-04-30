@@ -7,7 +7,7 @@ pub fn byte_to_nibbles(byte: u8) -> (u8, u8) {
     (upper, lower)
 }
 
-pub fn bytes_to_nibbles<MAX_NIBBLE_LEN>(bytes: Fragment<MAX_NIBBLE_LEN>) -> Fragment<MAX_NIBBLE_LEN> {
+pub fn bytes_to_nibbles<MAX_NIBBLE_LEN>(bytes: Fragment<MAX_NIBBLE_LEN, u8>) -> Fragment<MAX_NIBBLE_LEN, u8> {
     assert(
         MAX_NIBBLE_LEN >= 2 * bytes.length, "Bytes implicit data length must be at least 2 times larger than bytes explicit length"
     );
@@ -109,4 +109,20 @@ pub(crate) fn byte_value<N>(in_value: [u8; N]) -> BoundedVec<u8, N> {
     let value = left_byte_shift(in_value, N - value_length);
 
     BoundedVec { storage: value, len: value_length }
+}
+
+pub fn add_bigint<N>(left: [u8; N], right: [u8; N]) -> [u8; N] {
+    let mut carry: u32 = 0;
+    let mut result: [u8; N] = [0; N];
+
+    for j in 0..N {
+        let index = N - j - 1;
+        let sum = left[index] as u32 + right[index] as u32 + carry;
+        result[index] = sum as u8;
+        carry = sum >> 8;
+    }
+
+    assert(carry == 0, "Addition overflow");
+
+    result
 }
