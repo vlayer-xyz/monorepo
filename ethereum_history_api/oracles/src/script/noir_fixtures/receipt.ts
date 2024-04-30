@@ -3,9 +3,12 @@ import { encodeReceipt, receiptToRlpFields, statusToField, txTypeToField } from 
 import { encodeOptional, indentBlock, joinArray } from '../../noir/noir_js/encode.js';
 import { padArray } from '../../util/array.js';
 import { ZERO_PAD_VALUE } from '../../noir/oracles/common/const.js';
-import { LEGACY_MAX_RECEIPT_ENCODED_LEN, LEGACY_MAX_RECEIPT_RLP_LEN } from '../../noir/oracles/receiptOracle/encode.js';
 import { TransactionReceipt } from '../../types.js';
 import { toRlp } from 'viem';
+import {
+  LEGACY_MAX_RECEIPT_ENCODED_LEN,
+  LEGACY_MAX_RECEIPT_RLP_LEN
+} from '../../noir/oracles/common/proofConfig/receipt.js';
 
 export function createReceiptFixture(receipt: TransactionReceipt): string {
   const receiptRlp = joinArray(

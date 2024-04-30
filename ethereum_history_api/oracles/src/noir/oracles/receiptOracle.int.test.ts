@@ -3,7 +3,7 @@ import { createMockClient } from '../../ethereum/mockClient.js';
 import { OFFSETS, getReceiptOracle } from './receiptOracle.js';
 import { BYTES32_LEN, ZERO_PAD_VALUE } from './common/const.js';
 import { padArray } from '../../util/array.js';
-import { ReceiptProofConfigM } from './receiptOracle/encode.js';
+import { ReceiptProofConfigM } from './common/proofConfig/receipt.js';
 
 describe('getReceiptOracle', () => {
   it('success', async () => {
