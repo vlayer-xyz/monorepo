@@ -48,31 +48,9 @@ impl RlpFragment {
         self.assert_eq_bytes_length(field_name, rlp, value.storage, value.len);
     }
 
-    fn assert_eq_u64<FIELD_NAME_LEN, MAX_RLP_LEN>(
-        self,
-        field_name: str<FIELD_NAME_LEN>,
-        rlp: [u8; MAX_RLP_LEN],
-        value: u64
-    ) {
-        self.assert_eq_bounded_vec(field_name, rlp, byte_value(u64_to_u8(value)));
-    }
-
-    fn assert_eq_bytes32<FIELD_NAME_LEN, MAX_RLP_LEN>(
-        self,
-        field_name: str<FIELD_NAME_LEN>,
-        rlp: [u8; MAX_RLP_LEN],
-        value: Bytes32
-    ) {
-        self.assert_eq_bytes_length(field_name, rlp, value, BYTES32_LENGTH);
-    }
-
-    fn assert_eq_address<FIELD_NAME_LEN, MAX_RLP_LEN>(
-        self,
-        field_name: str<FIELD_NAME_LEN>,
-        rlp: [u8; MAX_RLP_LEN],
-        value: Address
-    ) {
-        self.assert_eq_bytes_length(field_name, rlp, value, ADDRESS_LENGTH);
+    fn assert_eq_null<FIELD_NAME_LEN, MAX_RLP_LEN>(self, field_name: str<FIELD_NAME_LEN>) {
+        assert(self.data_type == STRING, f"{field_name}: Invalid RLP type");
+        assert(self.length == 0, f"{field_name}: Invalid RLP length");
     }
 
     fn assert_eq_u1<FIELD_NAME_LEN, MAX_RLP_LEN>(
@@ -86,20 +64,6 @@ impl RlpFragment {
         assert_eq(value, (rlp[0] % 2) as u1, f"{field_name}: Invalid RLP value");
     }
 
-    fn assert_eq_u32<FIELD_NAME_LEN, MAX_RLP_LEN>(
-        self,
-        field_name: str<FIELD_NAME_LEN>,
-        rlp: [u8; MAX_RLP_LEN],
-        value: u32
-    ) {
-        self.assert_eq_bounded_vec(field_name, rlp, byte_value(u32_to_u8(value)));
-    }
-
-    fn assert_eq_null<FIELD_NAME_LEN, MAX_RLP_LEN>(self, field_name: str<FIELD_NAME_LEN>) {
-        assert(self.data_type == STRING, f"{field_name}: Invalid RLP type");
-        assert(self.length == 0, f"{field_name}: Invalid RLP length");
-    }
-
     fn assert_eq_u8<FIELD_NAME_LEN, MAX_RLP_LEN>(
         self,
         field_name: str<FIELD_NAME_LEN>,
@@ -109,6 +73,24 @@ impl RlpFragment {
         self.assert_eq_bounded_vec(field_name, rlp, byte_value([value]));
     }
 
+    fn assert_eq_u32<FIELD_NAME_LEN, MAX_RLP_LEN>(
+        self,
+        field_name: str<FIELD_NAME_LEN>,
+        rlp: [u8; MAX_RLP_LEN],
+        value: u32
+    ) {
+        self.assert_eq_bounded_vec(field_name, rlp, byte_value(u32_to_u8(value)));
+    }
+
+    fn assert_eq_u64<FIELD_NAME_LEN, MAX_RLP_LEN>(
+        self,
+        field_name: str<FIELD_NAME_LEN>,
+        rlp: [u8; MAX_RLP_LEN],
+        value: u64
+    ) {
+        self.assert_eq_bounded_vec(field_name, rlp, byte_value(u64_to_u8(value)));
+    }
+
     fn assert_eq_u128<FIELD_NAME_LEN, MAX_RLP_LEN>(
         self,
         field_name: str<FIELD_NAME_LEN>,
@@ -116,6 +98,24 @@ impl RlpFragment {
         value: U128
     ) {
         self.assert_eq_bounded_vec(field_name, rlp, byte_value(value.to_be_bytes()));
+    }
+
+    fn assert_eq_address<FIELD_NAME_LEN, MAX_RLP_LEN>(
+        self,
+        field_name: str<FIELD_NAME_LEN>,
+        rlp: [u8; MAX_RLP_LEN],
+        value: Address
+    ) {
+        self.assert_eq_bytes_length(field_name, rlp, value, ADDRESS_LENGTH);
+    }
+
+    fn assert_eq_bytes32<FIELD_NAME_LEN, MAX_RLP_LEN>(
+        self,
+        field_name: str<FIELD_NAME_LEN>,
+        rlp: [u8; MAX_RLP_LEN],
+        value: Bytes32
+    ) {
+        self.assert_eq_bytes_length(field_name, rlp, value, BYTES32_LENGTH);
     }
 }
 
