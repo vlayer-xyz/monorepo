@@ -6,8 +6,6 @@ import { assert } from '../util/assert.js';
 
 dotenv.config();
 
-export const SEPOLIA_CHAIN_ID = 58_008n;
-
 type ClientMap = Partial<Record<Chain, AlchemyClient>>;
 
 export enum Chain {
@@ -45,10 +43,10 @@ export class MultiChainClient {
   }
 
   private static chainIdToChain(chainId: bigint): Chain {
-    switch (chainId) {
-      case 1n:
+    switch (Number(chainId)) {
+      case mainnet.id:
         return Chain.MAINNET;
-      case SEPOLIA_CHAIN_ID:
+      case sepolia.id:
         return Chain.SEPOLIA;
       default:
         throw new Error(`Unknown chain ID: ${chainId}`);
