@@ -50,7 +50,7 @@ export const getTransactionOracle = async (
 };
 
 export function decodeGetTransactionArguments(args: NoirArguments): {
-  chainId: bigint;
+  chainId: number;
   blockNumber: bigint;
   txId: number;
 } {

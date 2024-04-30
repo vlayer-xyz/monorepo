@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { decodeGetHeaderArguments } from './headerOracle.js';
+import { mainnet } from 'viem/chains';
 
 describe('headerOracle', () => {
   it('decodeGetHeaderArguments success', () => {
-    expect(decodeGetHeaderArguments([['0x1'], ['0x0']])).toEqual({ chainId: 1n, blockNumber: 0n });
-    expect(decodeGetHeaderArguments([['0x1'], ['0xff']])).toEqual({ chainId: 1n, blockNumber: 255n });
+    expect(decodeGetHeaderArguments([['0x1'], ['0x0']])).toEqual({ chainId: mainnet.id, blockNumber: 0n });
+    expect(decodeGetHeaderArguments([['0x1'], ['0xff']])).toEqual({ chainId: mainnet.id, blockNumber: 255n });
   });
 
   it('decodeGetHeaderArguments fail', () => {

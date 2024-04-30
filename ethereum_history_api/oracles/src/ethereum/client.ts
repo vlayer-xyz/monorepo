@@ -38,12 +38,12 @@ export class MultiChainClient {
     return client;
   }
 
-  public getClientByChainId(chainId: bigint): AlchemyClient {
+  public getClientByChainId(chainId: number): AlchemyClient {
     return this.getClient(MultiChainClient.chainIdToChain(chainId));
   }
 
-  private static chainIdToChain(chainId: bigint): Chain {
-    switch (Number(chainId)) {
+  private static chainIdToChain(chainId: number): Chain {
+    switch (chainId) {
       case mainnet.id:
         return Chain.MAINNET;
       case sepolia.id:

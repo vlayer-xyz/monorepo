@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { CRYPTO_PUNKS_ADDRESS } from '../../ethereum/recordingClient.test.js';
 import { decodeGetAccountArguments } from './accountOracle.js';
+import { mainnet } from 'viem/chains';
 
 describe('accountOracle', () => {
   it('decodeGetAccountArguments success', () => {
@@ -13,7 +14,7 @@ describe('accountOracle', () => {
         "0x65", "0xde", "0x6e", "0x19", "0x3b", "0xbb"]
       ])
     ).toStrictEqual({
-      chainId: 1n,
+      chainId: mainnet.id,
       blockNumber: 15n,
       address: CRYPTO_PUNKS_ADDRESS
     });

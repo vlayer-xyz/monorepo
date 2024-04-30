@@ -32,7 +32,7 @@ export const getProofOracle = async (
 };
 
 export function decodeGetProofArguments(args: NoirArguments): {
-  chainId: bigint;
+  chainId: number;
   blockNumber: bigint;
   address: Hex;
   storageKey: Hex;
@@ -40,7 +40,7 @@ export function decodeGetProofArguments(args: NoirArguments): {
   assert(args.length === Enum.size(ARGS), `get_proof requires ${Enum.size(ARGS)} arguments`);
 
   assert(args[ARGS.CHAIN_ID].length === 1, 'chainId should be a single value');
-  const chainId = decodeField(args[ARGS.CHAIN_ID][0]);
+  const chainId = Number(decodeField(args[ARGS.CHAIN_ID][0]));
   assert(args[ARGS.BLOCK_NUM].length === 1, 'blockNumber should be a single value');
   const blockNumber = decodeField(args[ARGS.BLOCK_NUM][0]);
   const address = decodeAddress(args[ARGS.ADDRESS]);

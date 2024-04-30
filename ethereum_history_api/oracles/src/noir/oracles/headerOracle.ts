@@ -24,13 +24,13 @@ export async function getHeaderOracle(
 }
 
 export function decodeGetHeaderArguments(args: NoirArguments): {
-  chainId: bigint;
+  chainId: number;
   blockNumber: bigint;
 } {
   assert(args.length === Enum.size(ARGS), `get_header requires ${Enum.size(ARGS)} argument`);
   assert(args[ARGS.CHAIN_ID].length === 1, 'chainId should be a single value');
   assert(args[ARGS.BLOCK_NUM].length === 1, 'blockNumber should be a single value');
-  return { chainId: decodeField(args[ARGS.CHAIN_ID][0]), blockNumber: decodeField(args[ARGS.BLOCK_NUM][0]) };
+  return { chainId: Number(decodeField(args[ARGS.CHAIN_ID][0])), blockNumber: decodeField(args[ARGS.BLOCK_NUM][0]) };
 }
 
 export async function getBlockHeader(client: AlchemyClient, blockNumber: bigint): Promise<BlockHeader> {

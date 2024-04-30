@@ -51,14 +51,14 @@ export const getReceiptOracle = async (
 };
 
 export function decodeGetReceiptArguments(args: NoirArguments): {
-  chainId: bigint;
+  chainId: number;
   blockNumber: bigint;
   txId: number;
 } {
   assert(args.length === Enum.size(ARGS), `get_receipt requires ${Enum.size(ARGS)} arguments`);
 
   assert(args[ARGS.CHAIN_ID].length === 1, 'chainId should be a single value');
-  const chainId = decodeField(args[ARGS.CHAIN_ID][0]);
+  const chainId = Number(decodeField(args[ARGS.CHAIN_ID][0]));
   assert(args[ARGS.BLOCK_NUM].length === 1, 'blockNumber should be a single value');
   const blockNumber = decodeField(args[ARGS.BLOCK_NUM][0]);
   const txId = Number(decodeField(args[ARGS.TX_ID][0]));
