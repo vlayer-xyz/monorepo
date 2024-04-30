@@ -2,7 +2,7 @@ import { ForeignCallOutput } from '@noir-lang/noir_js';
 import { GetProofReturnType, Hex, fromRlp, isHex } from 'viem';
 import { encodeBytes32, encodeField, encodeHex, encodeProof } from '../common/encode.js';
 import { padArray } from '../../../util/array.js';
-import { BYTES32_LEN, ZERO_PAD_VALUE } from '../common/const.js';
+import { BYTES32_LEN, U64_LEN, ZERO_PAD_VALUE } from '../common/const.js';
 import { assert } from '../../../util/assert.js';
 import { getRlpHeaderSize } from '../common/util.js';
 import { getProofConfig } from '../common/proofConfig.js';
@@ -11,10 +11,9 @@ import { getProofConfig } from '../common/proofConfig.js';
 export const MAX_ACCOUNT_STATE_LEN = 134;
 
 export class AccountProofConfig {
-  private static readonly U64_BYTES = 8;
   private static readonly MAX_VALUE_CONTENT_LEN =
-    getRlpHeaderSize(this.U64_BYTES) +
-    this.U64_BYTES /* Nonce */ +
+    getRlpHeaderSize(U64_LEN) +
+    U64_LEN /* Nonce */ +
     getRlpHeaderSize(BYTES32_LEN) +
     BYTES32_LEN /* Balance */ +
     getRlpHeaderSize(BYTES32_LEN) +
