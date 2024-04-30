@@ -1,17 +1,14 @@
 import { Proof } from '../../ethereum/proof.js';
-import {
-  MAX_TX_KEY_NIBBLE_LEN,
-  MAX_TX_PROOF_LEN,
-  MAX_TX_ENCODED_LEN
-} from '../../noir/oracles/transactionOracle/encode.js';
+import { LEGACY_MAX_TX_ENCODED_LEN, txProofConfigM } from '../../noir/oracles/common/proofConfig/tx.js';
+import { BYTE_HEX_LEN } from '../../util/const.js';
 import { createProofFixture } from './proof.js';
 
 export function createTransactionProofFixture(proof: Proof): string {
   return createProofFixture(
     proof,
-    MAX_TX_KEY_NIBBLE_LEN,
-    MAX_TX_ENCODED_LEN,
-    MAX_TX_PROOF_LEN,
+    txProofConfigM.maxKeyLen * BYTE_HEX_LEN,
+    LEGACY_MAX_TX_ENCODED_LEN,
+    txProofConfigM.maxProofLen,
     'dep::proof::trie_proof::TrieProof',
     'TrieProof'
   );

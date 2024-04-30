@@ -2,6 +2,7 @@ export const MODULUS = 218882428718392752222464057452572750886963111572978236626
 export const U1_LEN = 1;
 export const BYTES32_LEN = 32;
 export const ADDRESS_LEN = 20;
+export const U64_LEN = 8;
 export const BITS_IN_BYTE = 8n;
 export const MAX_U8 = 255;
 export const MAX_TRIE_NODE_LEN = 532;
