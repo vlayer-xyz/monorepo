@@ -21,9 +21,6 @@ global proofs = ${joinArrayVertical(storageProofsNoir)};
 function createSingleStorageProofFixture(storageProof: StorageProof): string {
   return createNewProofInputFixture(
     { key: keccak256(storageProof.key), value: toHexString(storageProof.value), proof: storageProof.proof },
-    storageProofConfig.maxPrefixedKeyNibbleLen,
-    storageProofConfig.maxValueLen,
-    storageProofConfig.maxLeafLen,
-    storageProofConfig.maxProofLevels
+    storageProofConfig
   );
 }

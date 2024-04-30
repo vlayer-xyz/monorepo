@@ -4,37 +4,26 @@ import { padArray } from '../../util/array.js';
 import { MAX_TRIE_NODE_LEN, ZERO_PAD_VALUE } from '../../noir/oracles/common/const.js';
 import { Proof } from '../../ethereum/proof.js';
 import { padHex } from 'viem';
+import { ProofConfig } from '../../noir/oracles/common/proofConfig.js';
 
-export function createNewProofInputFixture(
-  proof: Proof,
-  maxPrefixedKeyNibbleLen: number,
-  maxValueLen: number,
-  maxLeafLen: number,
-  maxDepth: number
-): string {
-  const paddedKey = padHex(proof.key, { size: maxPrefixedKeyNibbleLen, dir: 'left' });
+export function createNewProofInputFixture(proof: Proof, config: ProofConfig): string {
+  const paddedKey = padHex(proof.key, { size: config.maxPrefixedKeyNibbleLen, dir: 'left' });
   const key = encodeHex(paddedKey);
-  const paddedValue = padHex(proof.value, { size: maxValueLen, dir: 'left' });
+  const paddedValue = padHex(proof.value, { size: config.maxValueLen, dir: 'left' });
   const value = encodeHex(paddedValue);
 
   return `ProofInput {\n
   key: ${indentBlock(joinArray(key), 1)},
   value: ${indentBlock(joinArray(value), 1)},
 
-  proof: ${indentBlock(createProofFixture(proof, maxDepth, maxLeafLen), 1)}
+  proof: ${indentBlock(createProofFixture(proof, config.maxProofLevels, config.maxLeafLen), 1)}
 }`;
 }
 
-export function createNewTopLevelProofInputFixture(
-  proof: Proof,
-  maxPrefixedKeyNibbleLen: number,
-  maxValueLen: number,
-  maxLeafLen: number,
-  maxDepth: number
-): string {
+export function createNewTopLevelProofInputFixture(proof: Proof, config: ProofConfig): string {
   return `use crate::merkle_patricia_proofs::proof::{Proof, ProofInput};
 
-global proof_input = ${createNewProofInputFixture(proof, maxPrefixedKeyNibbleLen, maxValueLen, maxLeafLen, maxDepth)};
+global proof_input = ${createNewProofInputFixture(proof, config)};
 `;
 }
 

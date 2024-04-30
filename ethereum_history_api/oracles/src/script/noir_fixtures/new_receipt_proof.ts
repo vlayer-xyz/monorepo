@@ -3,11 +3,5 @@ import { receiptProofConfigM } from '../../noir/oracles/common/proofConfig/recei
 import { createNewTopLevelProofInputFixture } from './new_proof.js';
 
 export function createNewReceiptProofFixture(proof: Proof): string {
-  return createNewTopLevelProofInputFixture(
-    proof,
-    receiptProofConfigM.maxPrefixedKeyNibbleLen,
-    receiptProofConfigM.maxValueLen,
-    receiptProofConfigM.maxLeafLen,
-    receiptProofConfigM.maxProofLevels
-  );
+  return createNewTopLevelProofInputFixture(proof, receiptProofConfigM);
 }
