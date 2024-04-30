@@ -4,7 +4,7 @@ import { encodeBytes32, encodeField, encodeHex, encodeProof } from '../common/en
 import { padArray } from '../../../util/array.js';
 import { BYTES32_LEN, U64_LEN, ZERO_PAD_VALUE } from '../common/const.js';
 import { assert } from '../../../util/assert.js';
-import { getRlpEncodedSize } from '../common/util.js';
+import { getMaxRlpEncodedSize } from '../common/util.js';
 import { getProofConfig } from '../common/proofConfig.js';
 
 // TODO: Remove this
@@ -12,11 +12,11 @@ export const MAX_ACCOUNT_STATE_LEN = 134;
 
 export class AccountProofConfig {
   private static readonly MAX_VALUE_CONTENT_LEN =
-    getRlpEncodedSize(U64_LEN) /* Nonce */ +
-    getRlpEncodedSize(BYTES32_LEN) /* Balance */ +
-    getRlpEncodedSize(BYTES32_LEN) /* Storage root */ +
-    getRlpEncodedSize(BYTES32_LEN); /* Code hash */
-  public static readonly MAX_VALUE_LEN = getRlpEncodedSize(this.MAX_VALUE_CONTENT_LEN);
+    getMaxRlpEncodedSize(U64_LEN) /* Nonce */ +
+    getMaxRlpEncodedSize(BYTES32_LEN) /* Balance */ +
+    getMaxRlpEncodedSize(BYTES32_LEN) /* Storage root */ +
+    getMaxRlpEncodedSize(BYTES32_LEN); /* Code hash */
+  public static readonly MAX_VALUE_LEN = getMaxRlpEncodedSize(this.MAX_VALUE_CONTENT_LEN);
   private static readonly KEY_LEN = BYTES32_LEN; // Key is a hash of Ethereum address.
   public static readonly MAX_PROOF_LEVELS = 11;
 
