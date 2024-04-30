@@ -363,7 +363,11 @@ mod verify_merkle_proof {
         receipt_proof_new::proof_input as cancun_receipt_proof_input,
         header::transactions_root as cancun_transactions_root,
         transaction_proof_new::proof_input as cancun_transaction_proof_input
-    }
+    },
+        london::crypto_punks::{state_proof_new::proof_input as london_state_proof_input, header::state_root as london_state_root},
+        paris::bored_ape_yacht_club::{state_proof_new::proof_input as paris_state_proof_input, header::state_root as paris_state_root},
+        paris::usdc_circle::{storage_proof_new::proofs as paris_circle_storage_proof_inputs, account::storage_root as paris_circle_storage_root},
+        paris::usdc_uniswap::{storage_proof_new::proofs as paris_uniswap_storage_proof_inputs, account::storage_root as paris_uniswap_storage_root}
     };
     use crate::fixtures::merkle_proofs::{
         leaf::proof_input as leaf_proof_input, branch_then_leaf::proof_input as branch_proof_input,
@@ -420,6 +424,48 @@ mod verify_merkle_proof {
             extension_odd_proof_input.value,
             root,
             extension_odd_proof_input.proof
+        );
+    }
+
+    #[test]
+    fn success_london_state() {
+        verify_merkle_proof(
+            london_state_proof_input.key,
+            london_state_proof_input.value,
+            london_state_root,
+            london_state_proof_input.proof
+        );
+    }
+
+    #[test]
+    fn success_paris_state() {
+        verify_merkle_proof(
+            paris_state_proof_input.key,
+            paris_state_proof_input.value,
+            paris_state_root,
+            paris_state_proof_input.proof
+        );
+    }
+
+    #[test]
+    fn success_paris_circle_storage() {
+        let proof_input = paris_circle_storage_proof_inputs[0];
+        verify_merkle_proof(
+            proof_input.key,
+            proof_input.value,
+            paris_circle_storage_root,
+            proof_input.proof
+        );
+    }
+
+    #[test]
+    fn success_paris_uniswap_storage() {
+        let proof_input = paris_uniswap_storage_proof_inputs[0];
+        verify_merkle_proof(
+            proof_input.key,
+            proof_input.value,
+            paris_uniswap_storage_root,
+            proof_input.proof
         );
     }
 
