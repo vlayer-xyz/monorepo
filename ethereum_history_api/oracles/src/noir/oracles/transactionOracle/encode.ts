@@ -8,9 +8,9 @@ import { padArray } from '../../../util/array.js';
 import { removeHexPrefix } from '../../../util/hex.js';
 import { getProofConfig } from '../common/proofConfig.js';
 
-// TODO: Remove these constants
-export const MAX_TX_ENCODED_LEN = 525;
-export const MAX_TX_RLP_LEN = MAX_TX_ENCODED_LEN - 1;
+// TODO: Remove this when we remove legacy fixtures
+export const LEGACY_MAX_TX_ENCODED_LEN = 525;
+export const LEGACY_MAX_TX_RLP_LEN = LEGACY_MAX_TX_ENCODED_LEN - 1;
 
 class TxProofConfig {
   public static readonly MAX_KEY_LEN = 3;
@@ -56,7 +56,7 @@ export function encodeTx(transaction: Transaction): ForeignCallOutput[] {
 
 export function encodeTxProof(txProof: Proof): ForeignCallOutput[] {
   const key = encodeBytes(BigInt(txProof.key), TxProofConfig.MAX_KEY_LEN);
-  const value = padArray(encodeHex(txProof.value), MAX_TX_RLP_LEN, ZERO_PAD_VALUE);
+  const value = padArray(encodeHex(txProof.value), LEGACY_MAX_TX_RLP_LEN, ZERO_PAD_VALUE);
   const proof = encodeProof(txProof.proof, TxProofConfigM.MAX_PROOF_LEN);
   const depth = encodeField(txProof.proof.length);
 

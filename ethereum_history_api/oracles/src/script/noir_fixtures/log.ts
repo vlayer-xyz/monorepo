@@ -6,13 +6,13 @@ import { BYTES_32_ZERO } from '../../util/const.js';
 import { logToRlpFields } from '../../ethereum/receipt.js';
 import { encodeHex } from '../../noir/oracles/common/encode.js';
 import { ZERO_PAD_VALUE } from '../../noir/oracles/common/const.js';
-import { MAX_RECEIPT_RLP_LEN } from '../../noir/oracles/receiptOracle/encode.js';
+import { LEGACY_MAX_RECEIPT_RLP_LEN } from '../../noir/oracles/receiptOracle/encode.js';
 
 const MAX_TOPICS = 4;
 
 export function createLogFixture(log: Log<bigint, number, false>, idx: number): string {
   const topics = padArray(log.topics, MAX_TOPICS, BYTES_32_ZERO);
-  const logRlp = joinArray(padArray(encodeHex(toRlp(logToRlpFields(log))), MAX_RECEIPT_RLP_LEN, ZERO_PAD_VALUE));
+  const logRlp = joinArray(padArray(encodeHex(toRlp(logToRlpFields(log))), LEGACY_MAX_RECEIPT_RLP_LEN, ZERO_PAD_VALUE));
 
   return `use crate::log::Log;
 

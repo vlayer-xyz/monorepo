@@ -2,40 +2,10 @@ import { ForeignCallOutput } from '@noir-lang/noir_js';
 import { GetProofReturnType, Hex, fromRlp, isHex } from 'viem';
 import { encodeBytes32, encodeField, encodeHex, encodeProof } from '../common/encode.js';
 import { padArray } from '../../../util/array.js';
-import { BYTES32_LEN, U64_LEN, ZERO_PAD_VALUE } from '../common/const.js';
+import { ZERO_PAD_VALUE } from '../common/const.js';
 import { assert } from '../../../util/assert.js';
-import { getMaxRlpEncodedSize } from '../common/util.js';
-import { getProofConfig } from '../common/proofConfig.js';
-
-// TODO: Remove this
-export const MAX_ACCOUNT_STATE_LEN = 134;
-
-export class AccountProofConfig {
-  private static readonly MAX_VALUE_CONTENT_LEN =
-    getMaxRlpEncodedSize(U64_LEN) /* Nonce */ +
-    getMaxRlpEncodedSize(BYTES32_LEN) /* Balance */ +
-    getMaxRlpEncodedSize(BYTES32_LEN) /* Storage root */ +
-    getMaxRlpEncodedSize(BYTES32_LEN); /* Code hash */
-  public static readonly MAX_VALUE_LEN = getMaxRlpEncodedSize(this.MAX_VALUE_CONTENT_LEN);
-  private static readonly KEY_LEN = BYTES32_LEN; // Key is a hash of Ethereum address.
-  public static readonly MAX_PROOF_LEVELS = 11;
-
-  private static readonly config = getProofConfig(this.KEY_LEN, this.MAX_VALUE_LEN, this.MAX_PROOF_LEVELS);
-  public static readonly MAX_PREFIXED_KEY_NIBBLE_LEN = this.config.maxPrefixedKeyNibbleLen;
-  public static readonly MAX_LEAF_LEN = this.config.maxLeafLen;
-  public static readonly MAX_PROOF_LEN = this.config.maxProofLen;
-}
-
-export class StorageProofConfig {
-  public static readonly VALUE_LEN = BYTES32_LEN;
-  private static readonly KEY_LEN = BYTES32_LEN;
-  public static readonly MAX_PROOF_LEVELS = 7;
-
-  private static readonly config = getProofConfig(this.KEY_LEN, this.VALUE_LEN, this.MAX_PROOF_LEVELS);
-  public static readonly MAX_PREFIXED_KEY_NIBBLE_LEN = this.config.maxPrefixedKeyNibbleLen;
-  public static readonly MAX_LEAF_LEN = this.config.maxLeafLen;
-  public static readonly MAX_PROOF_LEN = this.config.maxProofLen;
-}
+import { AccountProofConfig, LEGACY_MAX_ACCOUNT_STATE_LEN } from '../common/proofConfig/account.js';
+import { StorageProofConfig } from '../common/proofConfig/storage.js';
 
 const RLP_VALUE_INDEX = 1;
 
@@ -63,8 +33,9 @@ export function getValue(proof: Hex[]): Hex {
   assert(isHex(value), 'value should be of type Hex');
   return value;
 }
+
 export function encodeValue(proof: Hex[]): string[] {
-  return padArray(encodeHex(getValue(proof)), MAX_ACCOUNT_STATE_LEN, ZERO_PAD_VALUE, 'left');
+  return padArray(encodeHex(getValue(proof)), LEGACY_MAX_ACCOUNT_STATE_LEN, ZERO_PAD_VALUE, 'left');
 }
 
 type StorageProof = GetProofReturnType['storageProof'][number];
