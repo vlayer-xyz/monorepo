@@ -1,5 +1,5 @@
 import { Proof } from '../../ethereum/proof.js';
-import { LEGACY_MAX_TX_ENCODED_LEN, TxProofConfigM } from '../../noir/oracles/transactionOracle/encode.js';
+import { LEGACY_MAX_TX_ENCODED_LEN, TxProofConfigM } from '../../noir/oracles/common/proofConfig/tx.js';
 import { BYTE_HEX_LEN } from '../../util/const.js';
 import { createProofFixture } from './proof.js';
 

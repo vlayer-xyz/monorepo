@@ -4,9 +4,9 @@ import { encodeAddress, encodeField, encodeHex } from '../../noir/oracles/common
 import { txTypeToField } from '../../ethereum/receipt.js';
 import { padArray } from '../../util/array.js';
 import { TxRlpEncoder, encodeTx } from '../../ethereum/transaction.js';
-import { LEGACY_MAX_TX_RLP_LEN, LEGACY_MAX_TX_ENCODED_LEN } from '../../noir/oracles/transactionOracle/encode.js';
 import { ZERO_PAD_VALUE } from '../../noir/oracles/common/const.js';
 import { createBoundedVecFixture } from './boundedVec.js';
+import { LEGACY_MAX_TX_RLP_LEN, LEGACY_MAX_TX_ENCODED_LEN } from '../../noir/oracles/common/proofConfig/tx.js';
 
 export function createTransactionFixture(tx: GetTransactionReturnType): string {
   const rlpFields = TxRlpEncoder.txToFields(tx);
