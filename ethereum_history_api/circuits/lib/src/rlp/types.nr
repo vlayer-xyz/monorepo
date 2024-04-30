@@ -48,15 +48,6 @@ impl RlpFragment {
         self.assert_eq_bytes_length(field_name, rlp, value.storage, value.len);
     }
 
-    fn assert_eq_string<FIELD_NAME_LEN, MAX_RLP_LEN, MAX_VALUE_LEN>(
-        self,
-        field_name: str<FIELD_NAME_LEN>,
-        rlp: [u8; MAX_RLP_LEN],
-        value: BoundedVec<u8, MAX_VALUE_LEN>
-    ) {
-        self.assert_eq_bytes_length(field_name, rlp, value.storage, value.len);
-    }
-
     fn assert_eq_u64<FIELD_NAME_LEN, MAX_RLP_LEN>(
         self,
         field_name: str<FIELD_NAME_LEN>,
