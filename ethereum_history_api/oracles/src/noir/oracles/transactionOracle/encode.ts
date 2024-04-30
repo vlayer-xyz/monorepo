@@ -6,7 +6,7 @@ import { BYTE_HEX_LEN, U1_ZERO } from '../../../util/const.js';
 import { Proof } from '../../../ethereum/proof.js';
 import { padArray } from '../../../util/array.js';
 import { removeHexPrefix } from '../../../util/hex.js';
-import { LEGACY_MAX_TX_RLP_LEN, TxProofConfigM } from '../common/proofConfig/tx.js';
+import { LEGACY_MAX_TX_RLP_LEN, txProofConfigM } from '../common/proofConfig/tx.js';
 
 export enum TX_OFFSETS {
   NONCE,
@@ -37,9 +37,9 @@ export function encodeTx(transaction: Transaction): ForeignCallOutput[] {
 }
 
 export function encodeTxProof(txProof: Proof): ForeignCallOutput[] {
-  const key = encodeBytes(BigInt(txProof.key), TxProofConfigM.MAX_KEY_LEN);
+  const key = encodeBytes(BigInt(txProof.key), txProofConfigM.maxKeyLen);
   const value = padArray(encodeHex(txProof.value), LEGACY_MAX_TX_RLP_LEN, ZERO_PAD_VALUE);
-  const proof = encodeProof(txProof.proof, TxProofConfigM.MAX_PROOF_LEN);
+  const proof = encodeProof(txProof.proof, txProofConfigM.maxProofLen);
   const depth = encodeField(txProof.proof.length);
 
   return [key, value, proof, depth];

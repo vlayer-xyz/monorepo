@@ -13,12 +13,5 @@ const MAX_VALUE_CONTENT_LEN =
   getMaxRlpEncodedSize(BYTES32_LEN); /* Code hash */
 const MAX_VALUE_LEN = getMaxRlpEncodedSize(MAX_VALUE_CONTENT_LEN);
 const MAX_PROOF_LEVELS = 11;
-const { maxPrefixedKeyNibbleLen, maxLeafLen, maxProofLen } = getProofConfig(KEY_LEN, MAX_VALUE_LEN, MAX_PROOF_LEVELS);
 
-export class AccountProofConfig {
-  public static readonly MAX_PREFIXED_KEY_NIBBLE_LEN = maxPrefixedKeyNibbleLen;
-  public static readonly MAX_VALUE_LEN = MAX_VALUE_LEN;
-  public static readonly MAX_LEAF_LEN = maxLeafLen;
-  public static readonly MAX_PROOF_LEVELS = MAX_PROOF_LEVELS;
-  public static readonly MAX_PROOF_LEN = maxProofLen;
-}
+export const accountProofConfig = getProofConfig(KEY_LEN, MAX_VALUE_LEN, MAX_PROOF_LEVELS);

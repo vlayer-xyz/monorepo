@@ -3,8 +3,11 @@ import { MAX_TRIE_NODE_LEN } from './const.js';
 import { getMaxRlpEncodedSize } from './util.js';
 
 export interface ProofConfig {
+  maxKeyLen: number;
+  maxValueLen: number;
   maxPrefixedKeyNibbleLen: number;
   maxLeafLen: number;
+  maxProofLevels: number;
   maxProofLen: number;
 }
 
@@ -16,8 +19,11 @@ export function getProofConfig(maxKeyLen: number, maxValueLen: number, maxProofL
   const maxProofLen = MAX_TRIE_NODE_LEN * maxProofLevels;
 
   return {
+    maxKeyLen,
+    maxValueLen,
     maxPrefixedKeyNibbleLen,
     maxLeafLen: getMaxRlpEncodedSize(maxLeafContentLen),
+    maxProofLevels,
     maxProofLen
   };
 }

@@ -4,8 +4,8 @@ import { encodeBytes32, encodeField, encodeHex, encodeProof } from '../common/en
 import { padArray } from '../../../util/array.js';
 import { ZERO_PAD_VALUE } from '../common/const.js';
 import { assert } from '../../../util/assert.js';
-import { AccountProofConfig, LEGACY_MAX_ACCOUNT_STATE_LEN } from '../common/proofConfig/account.js';
-import { StorageProofConfig } from '../common/proofConfig/storage.js';
+import { accountProofConfig, LEGACY_MAX_ACCOUNT_STATE_LEN } from '../common/proofConfig/account.js';
+import { storageProofConfig } from '../common/proofConfig/storage.js';
 
 const RLP_VALUE_INDEX = 1;
 
@@ -21,7 +21,7 @@ export function encodeAccount(ethProof: GetProofReturnType): ForeignCallOutput[]
 export function encodeStateProof(ethProof: GetProofReturnType): ForeignCallOutput[] {
   const key = encodeHex(ethProof.address);
   const value = encodeValue(ethProof.accountProof);
-  const proof = encodeProof(ethProof.accountProof, AccountProofConfig.MAX_PROOF_LEN);
+  const proof = encodeProof(ethProof.accountProof, accountProofConfig.maxProofLen);
   const depth = encodeField(ethProof.accountProof.length);
 
   return [key, value, proof, depth];
@@ -43,7 +43,7 @@ type StorageProof = GetProofReturnType['storageProof'][number];
 export function encodeStorageProof(storageKey: Hex, storageProof: StorageProof): ForeignCallOutput[] {
   const key = encodeHex(storageKey);
   const value = encodeBytes32(storageProof.value);
-  const proof = encodeProof(storageProof.proof, StorageProofConfig.MAX_PROOF_LEN);
+  const proof = encodeProof(storageProof.proof, storageProofConfig.maxProofLen);
   const depth = encodeField(storageProof.proof.length);
 
   return [key, value, proof, depth];

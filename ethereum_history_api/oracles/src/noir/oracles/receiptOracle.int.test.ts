@@ -3,7 +3,7 @@ import { createMockClient } from '../../ethereum/mockClient.js';
 import { OFFSETS, getReceiptOracle } from './receiptOracle.js';
 import { BYTES32_LEN, ZERO_PAD_VALUE } from './common/const.js';
 import { padArray } from '../../util/array.js';
-import { ReceiptProofConfigM } from './common/proofConfig/receipt.js';
+import { receiptProofConfigM } from './common/proofConfig/receipt.js';
 
 describe('getReceiptOracle', () => {
   it('success', async () => {
@@ -63,7 +63,7 @@ describe('getReceiptOracle', () => {
       "0x00", "0x00", "0x00", "0x00", "0x02", "0x00", "0x00", "0x00"
     ]);
     expect(receiptWithProof[OFFSETS.PROOF_KEY]).toStrictEqual(
-      padArray(['0x08'], ReceiptProofConfigM.MAX_KEY_LEN, ZERO_PAD_VALUE, 'left')
+      padArray(['0x08'], receiptProofConfigM.maxKeyLen, ZERO_PAD_VALUE, 'left')
     );
     expect(receiptWithProof[OFFSETS.PROOF_DEPTH]).toStrictEqual('0x03');
   });
