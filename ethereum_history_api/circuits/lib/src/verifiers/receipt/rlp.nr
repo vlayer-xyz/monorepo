@@ -39,5 +39,5 @@ pub(crate) fn assert_receipt_rlp_equals(
         receipt.cumulative_gas_used
     );
 
-    receipt_rlp_list.get(LOGS_BLOOM_INDEX).assert_eq_bytes_length("Logs bloom", receipt_rlp, receipt.logs_bloom, BLOOM_FILTER_LEN);
+    receipt_rlp_list.get(LOGS_BLOOM_INDEX).assert_eq_bytes("Logs bloom", receipt_rlp, receipt.logs_bloom, BLOOM_FILTER_LEN);
 }

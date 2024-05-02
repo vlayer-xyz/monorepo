@@ -25,7 +25,7 @@ struct RlpFragment {
 }
 
 impl RlpFragment {
-    fn assert_eq_bytes_length<FIELD_NAME_LEN, MAX_RLP_LEN, MAX_VALUE_LEN>(
+    fn assert_eq_bytes<FIELD_NAME_LEN, MAX_RLP_LEN, MAX_VALUE_LEN>(
         self,
         field_name: str<FIELD_NAME_LEN>,
         rlp: [u8; MAX_RLP_LEN],
@@ -45,7 +45,7 @@ impl RlpFragment {
         rlp: [u8; MAX_RLP_LEN],
         value: BoundedVec<u8, MAX_VALUE_LEN>
     ) {
-        self.assert_eq_bytes_length(field_name, rlp, value.storage, value.len);
+        self.assert_eq_bytes(field_name, rlp, value.storage, value.len);
     }
 
     fn assert_empty_string<FIELD_NAME_LEN, MAX_RLP_LEN>(self, field_name: str<FIELD_NAME_LEN>) {
@@ -59,7 +59,7 @@ impl RlpFragment {
         rlp: [u8; MAX_RLP_LEN],
         value: u1
     ) {
-        self.assert_eq_bytes_length(field_name, rlp, [value as u8], 1);
+        self.assert_eq_bytes(field_name, rlp, [value as u8], 1);
     }
 
     fn assert_eq_u8<FIELD_NAME_LEN, MAX_RLP_LEN>(
@@ -104,7 +104,7 @@ impl RlpFragment {
         rlp: [u8; MAX_RLP_LEN],
         value: Address
     ) {
-        self.assert_eq_bytes_length(field_name, rlp, value, ADDRESS_LENGTH);
+        self.assert_eq_bytes(field_name, rlp, value, ADDRESS_LENGTH);
     }
 
     fn assert_eq_bytes32<FIELD_NAME_LEN, MAX_RLP_LEN>(
@@ -113,7 +113,7 @@ impl RlpFragment {
         rlp: [u8; MAX_RLP_LEN],
         value: Bytes32
     ) {
-        self.assert_eq_bytes_length(field_name, rlp, value, BYTES32_LENGTH);
+        self.assert_eq_bytes(field_name, rlp, value, BYTES32_LENGTH);
     }
 }
 
