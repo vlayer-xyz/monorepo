@@ -36,7 +36,7 @@ pub(crate) fn assert_tx_rlp_equals<MAX_DATA_LEN>(
     if (tx.to.is_some()) {
         rlp_list.get(to_idx).assert_eq_address("To", tx_rlp, tx.to.expect(f"to is missing"));
     } else {
-        rlp_list.get(to_idx).assert_eq_null("To");
+        rlp_list.get(to_idx).assert_empty_string("To");
     }
 
     rlp_list.get(to_idx + 1).assert_eq_u128("Value", tx_rlp, tx.value);

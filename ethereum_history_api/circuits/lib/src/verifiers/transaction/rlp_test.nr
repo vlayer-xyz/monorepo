@@ -43,7 +43,7 @@ fn invalid_gas_limit_value() {
     assert_tx_rlp_equals(eip1559_tx_rlp, eip1559_tx_type, tx);
 }
 
-#[test(should_fail_with="To: Invalid RLP length")]
+#[test(should_fail_with="To: Expected empty string")]
 fn missing_to_value() {
     let mut tx = eip1559_tx;
     tx.to = Option::none();

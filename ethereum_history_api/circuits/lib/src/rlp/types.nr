@@ -48,9 +48,9 @@ impl RlpFragment {
         self.assert_eq_bytes_length(field_name, rlp, value.storage, value.len);
     }
 
-    fn assert_eq_null<FIELD_NAME_LEN, MAX_RLP_LEN>(self, field_name: str<FIELD_NAME_LEN>) {
+    fn assert_empty_string<FIELD_NAME_LEN, MAX_RLP_LEN>(self, field_name: str<FIELD_NAME_LEN>) {
         assert(self.data_type == STRING, f"{field_name}: Invalid RLP type");
-        assert(self.length == 0, f"{field_name}: Invalid RLP length");
+        assert(self.length == 0, f"{field_name}: Expected empty string");
     }
 
     fn assert_eq_u1<FIELD_NAME_LEN, MAX_RLP_LEN>(
