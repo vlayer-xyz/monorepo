@@ -30,9 +30,7 @@ export async function createMockClient(
     return resultModifier(call).result;
   };
   const mockClient = mock<AlchemyClient>(isEthereumApiMethod, mockMethodHandler);
+  mockClient.chain = chain;
 
-  return {
-    ...mockClient,
-    chain
-  };
+  return mockClient;
 }
