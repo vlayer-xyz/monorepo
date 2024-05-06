@@ -687,10 +687,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@noir-lang/acvm_js", [\
-      ["npm:0.42.0", {\
-        "packageLocation": "./.yarn/cache/@noir-lang-acvm_js-npm-0.42.0-3b06fdf624-17cf05dd27.zip/node_modules/@noir-lang/acvm_js/",\
+      ["npm:0.44.0", {\
+        "packageLocation": "./.yarn/cache/@noir-lang-acvm_js-npm-0.44.0-9f64955266-0c58584759.zip/node_modules/@noir-lang/acvm_js/",\
         "packageDependencies": [\
-          ["@noir-lang/acvm_js", "npm:0.42.0"]\
+          ["@noir-lang/acvm_js", "npm:0.44.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -708,26 +708,18 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@noir-lang/noir_js", [\
-      ["npm:0.26.0", {\
-        "packageLocation": "./.yarn/cache/@noir-lang-noir_js-npm-0.26.0-46f781ff98-452ea2370b.zip/node_modules/@noir-lang/noir_js/",\
+      ["npm:0.28.0", {\
+        "packageLocation": "./.yarn/cache/@noir-lang-noir_js-npm-0.28.0-ea63061497-a93d81dda3.zip/node_modules/@noir-lang/noir_js/",\
         "packageDependencies": [\
-          ["@noir-lang/noir_js", "npm:0.26.0"],\
-          ["@noir-lang/acvm_js", "npm:0.42.0"],\
-          ["@noir-lang/noirc_abi", "npm:0.26.0"],\
-          ["@noir-lang/types", "npm:0.26.0"]\
+          ["@noir-lang/noir_js", "npm:0.28.0"],\
+          ["@noir-lang/acvm_js", "npm:0.44.0"],\
+          ["@noir-lang/noirc_abi", "npm:0.28.0"],\
+          ["@noir-lang/types", "npm:0.28.0"]\
         ],\
         "linkType": "HARD"\
       }]\
     ]],\
     ["@noir-lang/noirc_abi", [\
-      ["npm:0.26.0", {\
-        "packageLocation": "./.yarn/cache/@noir-lang-noirc_abi-npm-0.26.0-faf6ade74e-ebbae8c1ba.zip/node_modules/@noir-lang/noirc_abi/",\
-        "packageDependencies": [\
-          ["@noir-lang/noirc_abi", "npm:0.26.0"],\
-          ["@noir-lang/types", "npm:0.26.0"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:0.28.0", {\
         "packageLocation": "./.yarn/cache/@noir-lang-noirc_abi-npm-0.28.0-45e9de588c-8c8efaaafd.zip/node_modules/@noir-lang/noirc_abi/",\
         "packageDependencies": [\
@@ -738,13 +730,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@noir-lang/types", [\
-      ["npm:0.26.0", {\
-        "packageLocation": "./.yarn/cache/@noir-lang-types-npm-0.26.0-d11518f97f-5e68bfda24.zip/node_modules/@noir-lang/types/",\
-        "packageDependencies": [\
-          ["@noir-lang/types", "npm:0.26.0"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:0.28.0", {\
         "packageLocation": "./.yarn/cache/@noir-lang-types-npm-0.28.0-625ba8a1cf-19caf0ba73.zip/node_modules/@noir-lang/types/",\
         "packageDependencies": [\
@@ -4492,7 +4477,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["noir-ethereum-api-oracles", "workspace:ethereum_history_api/oracles"],\
           ["@ethereumjs/trie", "npm:6.1.1"],\
-          ["@noir-lang/noir_js", "npm:0.26.0"],\
+          ["@noir-lang/noir_js", "npm:0.28.0"],\
           ["@types/json-bigint", "npm:1.0.4"],\
           ["@types/lodash.isequal", "npm:4.5.8"],\
           ["@types/node", "npm:20.11.17"],\
