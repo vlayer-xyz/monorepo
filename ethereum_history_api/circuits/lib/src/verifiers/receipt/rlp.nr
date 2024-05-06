@@ -2,12 +2,8 @@ use crate::{
     verifiers::receipt::{MAX_RECEIPT_RLP_LENGTH, is_pre_byzantium},
     receipt::{BLOOM_FILTER_LEN, TxReceiptPartial}
 };
-use dep::proof::const::HASH_LENGTH;
-use crate::misc::arrays::sub_array_equals_up_to_length;
-use crate::misc::bytes::byte_value;
-use crate::rlp::decode::{decode_list, STRING};
+use crate::rlp::decode::decode_list;
 use crate::rlp::types::RlpList;
-use dep::u2b::u32_to_u8;
 
 global RECEIPT_FIELDS_COUNT = 4;
 global STATE_ROOT_INDEX = 0;
@@ -30,23 +26,18 @@ pub(crate) fn assert_receipt_rlp_equals(
             receipt.state_root.expect(f"State root is missing")
         );
     } else {
-        receipt_rlp_list.get(STATUS_INDEX).assert_eq_string(
+        receipt_rlp_list.get(STATUS_INDEX).assert_eq_u1(
             "Status",
             receipt_rlp,
-            BoundedVec { storage: [receipt.status.expect(f"Status is missing") as u8], len: 1 }
+            receipt.status.expect(f"Status is missing")
         );
     }
 
-    let cumulative_gas_used = u32_to_u8(receipt.cumulative_gas_used);
-    receipt_rlp_list.get(CUMULATIVE_GAS_USED_INDEX).assert_eq_string(
+    receipt_rlp_list.get(CUMULATIVE_GAS_USED_INDEX).assert_eq_u32(
         "Cumulative gas used",
         receipt_rlp,
-        byte_value(cumulative_gas_used)
+        receipt.cumulative_gas_used
     );
 
-    receipt_rlp_list.get(LOGS_BLOOM_INDEX).assert_eq_bytes(
-        "Logs bloom",
-        receipt_rlp,
-        BoundedVec { storage: receipt.logs_bloom, len: BLOOM_FILTER_LEN }
-    );
+    receipt_rlp_list.get(LOGS_BLOOM_INDEX).assert_eq_bytes("Logs bloom", receipt_rlp, receipt.logs_bloom, BLOOM_FILTER_LEN);
 }

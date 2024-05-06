@@ -162,7 +162,7 @@ pub fn verify_merkle_proof<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH
     proof: Proof<MAX_DEPTH, MAX_LEAF_LEN>
 ) {
     let key = right_pad(key);
-    let key_nibbles = bytes_to_nibbles(Fragment::new_with_length(key.len, key.storage));
+    let key_nibbles = bytes_to_nibbles(Fragment::from(key));
     let mut key_ptr = 0;
 
     // Verify hashes of all the nodes in the proof path.
