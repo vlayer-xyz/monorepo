@@ -1,8 +1,7 @@
 use dep::std::hash::keccak256;
 
 use crate::header::{BlockHeaderPartial, BlockHeaderRlp, ETHEREUM_MAINNET_ID, ETHEREUM_SEPOLIA_ID};
-use crate::misc::arrays::{sub_array_equals, sub_array_equals_up_to_length};
-use crate::HASH_LEN;
+use crate::misc::arrays::sub_array_equals;
 use crate::rlp::decode::decode_list;
 use crate::rlp::types::RlpList;
 
@@ -49,7 +48,7 @@ pub fn verify_header(
     header_rlp_list.get(BLOCK_NUM_INDEX).assert_eq_u64(
         "Block number",
         block_header_rlp.data,
-        block_header_partial.number as u64
+        block_header_partial.number
     );
     header_rlp_list.get(STATE_ROOT_INDEX).assert_eq_bytes32(
         "State root",
