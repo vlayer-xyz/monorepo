@@ -33,7 +33,7 @@ export async function withMockOracleServer<T>(
   fn: (serverUrl: string) => Promise<T>
 ): Promise<T> {
   const mockClient = await createMockClient(fixtureFilePaths);
-  const client = MultiChainClient.createSingleChainClient(mockClient);
+  const client = MultiChainClient.from(mockClient);
   const app = await startOracleServer(client, MOCK_ORACLE_SERVER_PORT, true);
   const serverUrl = `http://localhost:${MOCK_ORACLE_SERVER_PORT}`;
   try {

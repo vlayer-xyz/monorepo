@@ -12,7 +12,7 @@ describe('getTransactionOracle', () => {
       './fixtures/mainnet/cancun/small_block/eth_getBlockByHash_19432673_includeTransactions.json'
     ];
     const client = await createMockClient(mockFilePaths);
-    const multiChainClient = MultiChainClient.createSingleChainClient(client);
+    const multiChainClient = MultiChainClient.from(client);
 
     const txWithProof = await getTransactionOracle(multiChainClient, [
       [mainnetChainIdInNoirFormat],

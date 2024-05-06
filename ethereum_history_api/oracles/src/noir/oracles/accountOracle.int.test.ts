@@ -17,7 +17,7 @@ describe('accountOracle', () => {
       './fixtures/mainnet/london/crypto_punks/eth_getProof_14194126.json'
     ];
     const client = await createMockClient(mockFilePaths);
-    const multiChainClient = MultiChainClient.createSingleChainClient(client);
+    const multiChainClient = MultiChainClient.from(client);
     const account = await getAccountOracle(multiChainClient, [
       [mainnetChainIdInNoirFormat],
       [londonBlockNumberInNoirFormat],

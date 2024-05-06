@@ -18,7 +18,7 @@ describe('getReceiptOracle', () => {
       './fixtures/mainnet/cancun/small_block/eth_getBlockByHash_19432673.json'
     ];
     const client = await createMockClient(mockFilePaths);
-    const multiChainClient = MultiChainClient.createSingleChainClient(client);
+    const multiChainClient = MultiChainClient.from(client);
 
     const receiptWithProof = await getReceiptOracle(multiChainClient, [
       [mainnetChainIdInNoirFormat],
@@ -77,7 +77,7 @@ describe('getReceiptOracle', () => {
     const nonExistentTxId = '0xffff';
     const mockFilePaths = ['./fixtures/mainnet/cancun/small_block/alchemy_getTransactionReceipts_19432673.json'];
     const client = await createMockClient(mockFilePaths);
-    const multiChainClient = MultiChainClient.createSingleChainClient(client);
+    const multiChainClient = MultiChainClient.from(client);
 
     await expect(
       async () =>

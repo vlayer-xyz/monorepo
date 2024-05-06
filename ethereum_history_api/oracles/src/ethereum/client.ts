@@ -36,7 +36,7 @@ export class MultiChainClient {
     });
   }
 
-  public static createSingleChainClient(client: AlchemyClient): MultiChainClient {
+  public static from(client: AlchemyClient): MultiChainClient {
     assert(client.chain !== undefined, 'Client is not assigned to a specific chain');
     return new MultiChainClient({
       [client.chain.id]: client

@@ -34,7 +34,7 @@ describe(
         './fixtures/mainnet/paris/usdc_circle/eth_getProof_19000000.json'
       ];
       const client = await createMockClient(mockFilePaths);
-      const multiChainClient = MultiChainClient.createSingleChainClient(client);
+      const multiChainClient = MultiChainClient.from(client);
       const stateAndStorageProof = await getProofOracle(multiChainClient, [
         [mainnetChainIdInNoirFormat],
         [parisBlockNumberInNoirFormat],

@@ -8,7 +8,7 @@ import { MultiChainClient } from '../../ethereum/client.js';
 describe('headerOracle', async () => {
   const mockFilePaths = ['./fixtures/mainnet/paris/usdc_circle/eth_getBlockByHash_19000000.json'];
   const client = await createMockClient(mockFilePaths);
-  const multiChainClient = MultiChainClient.createSingleChainClient(client);
+  const multiChainClient = MultiChainClient.from(client);
 
   it('getBlock', async () => {
     const blockNumber = HISTORY_API_FIXTURES.mainnet.paris.usdc_circle.blockNumber;
