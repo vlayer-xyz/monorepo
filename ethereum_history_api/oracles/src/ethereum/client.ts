@@ -32,7 +32,7 @@ export class MultiChainClient {
       clientMap[mainnet.id] = MultiChainClient.createClient(mainnet, process.env.ETHEREUM_JSON_RPC_API_URL);
     }
     if (process.env.ETHEREUM_JSON_RPC_API_URL_SEPOLIA) {
-      clientMap[mainnet.id] = MultiChainClient.createClient(sepolia, process.env.ETHEREUM_JSON_RPC_API_URL_SEPOLIA);
+      clientMap[sepolia.id] = MultiChainClient.createClient(sepolia, process.env.ETHEREUM_JSON_RPC_API_URL_SEPOLIA);
     }
     assert(Object.keys(clientMap).length !== 0, 'Please provide at least one JSON_RPC_API_URL');
 
