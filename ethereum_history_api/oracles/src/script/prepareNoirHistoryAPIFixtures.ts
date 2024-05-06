@@ -2,7 +2,7 @@ import { mkdir, rm, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { Hex } from 'viem';
 import { Block } from '../ethereum/blockHeader.js';
-import { MultiChainClient } from '../ethereum/client.js';
+import { MultiChainClient, getChainByName } from '../ethereum/client.js';
 import { getReceiptProof } from '../ethereum/receiptProof.js';
 import { HISTORY_API_FIXTURES } from '../fixtures/historyAPIConfig.js';
 import { assert } from '../main.js';
@@ -33,7 +33,7 @@ for (const chain in HISTORY_API_FIXTURES) {
   await rm(chainDirectory, { recursive: true, force: true });
   await rm(chainModuleFile, { force: true });
 
-  const client = multiChainClient.getClient(chain);
+  const client = multiChainClient.getClient(getChainByName(chain).id);
 
   let chainModule = ``;
   for (const hardFork in HISTORY_API_FIXTURES[chain]) {

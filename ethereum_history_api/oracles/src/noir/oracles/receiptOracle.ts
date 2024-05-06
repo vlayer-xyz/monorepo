@@ -33,7 +33,7 @@ export const getReceiptOracle = async (
   args: NoirArguments
 ): Promise<ForeignCallOutput[]> => {
   const { blockNumber, txId, chainId } = decodeGetReceiptArguments(args);
-  const client = multiChainClient.getClientByChainId(chainId);
+  const client = multiChainClient.getClient(chainId);
   const blockReceipts = await client.getTransactionReceipts({
     blockNumber
   });

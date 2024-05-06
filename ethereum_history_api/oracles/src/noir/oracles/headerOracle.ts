@@ -18,7 +18,7 @@ export async function getHeaderOracle(
   args: NoirArguments
 ): Promise<ForeignCallOutput[]> {
   const { blockNumber, chainId } = decodeGetHeaderArguments(args);
-  const client = multiChainClient.getClientByChainId(chainId);
+  const client = multiChainClient.getClient(chainId);
   const blockHeader = await getBlockHeader(client, blockNumber);
   return encodeBlockHeader(blockHeader);
 }

@@ -30,7 +30,7 @@ export const getTransactionOracle = async (
   args: NoirArguments
 ): Promise<ForeignCallOutput[]> => {
   const { blockNumber, txId, chainId } = decodeGetTransactionArguments(args);
-  const client = multiChainClient.getClientByChainId(chainId);
+  const client = multiChainClient.getClient(chainId);
   const block = await client.getBlock({ blockNumber, includeTransactions: true });
 
   if (txId >= block.transactions.length) {

@@ -29,7 +29,7 @@ export async function getAccountOracle(
   args: NoirArguments
 ): Promise<ForeignCallOutput[]> {
   const { blockNumber, address, chainId } = decodeGetAccountArguments(args);
-  const client = multiChainClient.getClientByChainId(chainId);
+  const client = multiChainClient.getClient(chainId);
   const accountProof = await client.getProof({
     address,
     storageKeys: [],

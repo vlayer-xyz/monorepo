@@ -2,7 +2,7 @@ import { mkdir, rm } from 'fs/promises';
 import { join } from 'path';
 import { GetProofParameters } from 'viem';
 
-import { MultiChainClient } from '../ethereum/client.js';
+import { MultiChainClient, getChainByName } from '../ethereum/client.js';
 import { HISTORY_API_FIXTURES, JS_FIXTURES_DIRECTORY } from '../fixtures/historyAPIConfig.js';
 import { GetBlockFixture, GetTransactionReceiptsFixture, GetProofFixture } from '../fixtures/types.js';
 import { writeObject } from '../util/file.js';
@@ -40,7 +40,7 @@ async function createReceiptsFixture(
 export async function prepareJSFixtures(): Promise<void> {
   await rm(JS_FIXTURES_DIRECTORY, { recursive: true, force: true });
   for (const chain in HISTORY_API_FIXTURES) {
-    const client = createRecordingClient(multiChainClient.getClient(chain));
+    const client = createRecordingClient(multiChainClient.getClient(getChainByName(chain).id));
     for (const hardFork in HISTORY_API_FIXTURES[chain]) {
       for (const fixtureName in HISTORY_API_FIXTURES[chain][hardFork]) {
         const modulePath = `${JS_FIXTURES_DIRECTORY}/${chain}/${hardFork}/${fixtureName}`;
