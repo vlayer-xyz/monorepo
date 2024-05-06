@@ -81,10 +81,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@aztec/bb.js", [\
-      ["npm:0.30.1", {\
-        "packageLocation": "./.yarn/cache/@aztec-bb.js-npm-0.30.1-6cdeac9d28-12a03eb243.zip/node_modules/@aztec/bb.js/",\
+      ["npm:0.35.1", {\
+        "packageLocation": "./.yarn/cache/@aztec-bb.js-npm-0.35.1-73322c863c-51c28a9861.zip/node_modules/@aztec/bb.js/",\
         "packageDependencies": [\
-          ["@aztec/bb.js", "npm:0.30.1"],\
+          ["@aztec/bb.js", "npm:0.35.1"],\
           ["comlink", "npm:4.4.1"],\
           ["commander", "npm:10.0.1"],\
           ["debug", "virtual:1ff4b5f90832ba0a9c93ba1223af226e44ba70c1126a3740d93562b97bc36544e896a5e95908196f7458713e6a6089a34bfc67362fc6df7fa093bd06c878be47#npm:4.3.4"],\
@@ -696,12 +696,12 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@noir-lang/backend_barretenberg", [\
-      ["npm:0.26.0", {\
-        "packageLocation": "./.yarn/cache/@noir-lang-backend_barretenberg-npm-0.26.0-3a3454f14c-cf5a28acda.zip/node_modules/@noir-lang/backend_barretenberg/",\
+      ["npm:0.28.0", {\
+        "packageLocation": "./.yarn/cache/@noir-lang-backend_barretenberg-npm-0.28.0-6dc0d51bee-26bd30fa6e.zip/node_modules/@noir-lang/backend_barretenberg/",\
         "packageDependencies": [\
-          ["@noir-lang/backend_barretenberg", "npm:0.26.0"],\
-          ["@aztec/bb.js", "npm:0.30.1"],\
-          ["@noir-lang/types", "npm:0.26.0"],\
+          ["@noir-lang/backend_barretenberg", "npm:0.28.0"],\
+          ["@aztec/bb.js", "npm:0.35.1"],\
+          ["@noir-lang/types", "npm:0.28.0"],\
           ["fflate", "npm:0.8.2"]\
         ],\
         "linkType": "HARD"\
@@ -727,6 +727,14 @@ const RAW_RUNTIME_STATE =
           ["@noir-lang/types", "npm:0.26.0"]\
         ],\
         "linkType": "HARD"\
+      }],\
+      ["npm:0.28.0", {\
+        "packageLocation": "./.yarn/cache/@noir-lang-noirc_abi-npm-0.28.0-45e9de588c-8c8efaaafd.zip/node_modules/@noir-lang/noirc_abi/",\
+        "packageDependencies": [\
+          ["@noir-lang/noirc_abi", "npm:0.28.0"],\
+          ["@noir-lang/types", "npm:0.28.0"]\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["@noir-lang/types", [\
@@ -734,6 +742,13 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@noir-lang-types-npm-0.26.0-d11518f97f-5e68bfda24.zip/node_modules/@noir-lang/types/",\
         "packageDependencies": [\
           ["@noir-lang/types", "npm:0.26.0"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:0.28.0", {\
+        "packageLocation": "./.yarn/cache/@noir-lang-types-npm-0.28.0-625ba8a1cf-19caf0ba73.zip/node_modules/@noir-lang/types/",\
+        "packageDependencies": [\
+          ["@noir-lang/types", "npm:0.28.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -4456,8 +4471,8 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./ethereum_history_api/tests/",\
         "packageDependencies": [\
           ["noir-ethereum-api-e2e-tests", "workspace:ethereum_history_api/tests"],\
-          ["@noir-lang/backend_barretenberg", "npm:0.26.0"],\
-          ["@noir-lang/noirc_abi", "npm:0.26.0"],\
+          ["@noir-lang/backend_barretenberg", "npm:0.28.0"],\
+          ["@noir-lang/noirc_abi", "npm:0.28.0"],\
           ["@types/node", "npm:20.11.17"],\
           ["eslint", "npm:8.56.0"],\
           ["noir-ethereum-api-oracles", "workspace:ethereum_history_api/oracles"],\
