@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { createPublicClient, http } from 'viem';
+import { Chain, createPublicClient, http } from 'viem';
 import { mainnet, sepolia } from 'viem/chains';
 import { type AlchemyClient, alchemyActions } from './alchemyClient.js';
 import { assert } from '../util/assert.js';
@@ -27,9 +27,12 @@ export class MultiChainClient {
   }
 
   public static create(): MultiChainClient {
+    assert(process.env.ETHEREUM_JSON_RPC_API_URL !== undefined, 'Missing mainnet RLP URL');
+    assert(process.env.ETHEREUM_JSON_RPC_API_URL_SEPOLIA !== undefined, 'Missing sepolia RLP URL');
+
     return new MultiChainClient({
-      [mainnet.id]: MultiChainClient.createDefaultClient(),
-      [sepolia.id]: MultiChainClient.createSepoliaClient()
+      [mainnet.id]: MultiChainClient.createClient(sepolia, process.env.ETHEREUM_JSON_RPC_API_URL),
+      [sepolia.id]: MultiChainClient.createClient(sepolia, process.env.ETHEREUM_JSON_RPC_API_URL_SEPOLIA)
     });
   }
 
@@ -55,17 +58,10 @@ export class MultiChainClient {
     return chainId;
   }
 
-  private static createDefaultClient(): AlchemyClient {
+  private static createClient(chain: Chain, rpcUrl: string): AlchemyClient {
     return createPublicClient({
-      chain: mainnet,
-      transport: http(process.env.ETHEREUM_JSON_RPC_API_URL)
-    }).extend(alchemyActions());
-  }
-
-  private static createSepoliaClient(): AlchemyClient {
-    return createPublicClient({
-      chain: sepolia,
-      transport: http(process.env.ETHEREUM_JSON_RPC_API_URL_SEPOLIA)
+      chain,
+      transport: http(rpcUrl)
     }).extend(alchemyActions());
   }
 }
