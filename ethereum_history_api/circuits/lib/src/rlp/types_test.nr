@@ -3,7 +3,7 @@ mod rlp_fragment {
         use crate::rlp::{decode::{STRING, LIST}, types::RlpFragment};
         use crate::misc::arrays::alter_array;
 
-        global fragment = RlpFragment { offset: 0, length, data_type: STRING };
+        global fragment = RlpFragment { offset: 0, length: 2, data_type: STRING };
         global encoded_bytes = [0x12, 0x34];
         global bytes = encoded_bytes;
         global length = bytes.len();
@@ -109,8 +109,8 @@ mod rlp_fragment {
         use crate::rlp::{decode::STRING, types::RlpFragment};
 
         global fragment = RlpFragment { offset: 0, length: 1, data_type: STRING };
-        global encoded_value = [0x01];
         global bit_value: u1 = 0x01;
+        global encoded_value = [0x01 as u8];
 
         #[test]
         fn succes() {
@@ -119,11 +119,10 @@ mod rlp_fragment {
 
         #[test(should_fail_with = "Field: Invalid RLP length")]
         fn invalid_length() {
-            let invalid_length_encoded_value = [0x01, 0x01];
             let mut invalid_length_fragment = fragment;
             invalid_length_fragment.length = 2;
 
-            invalid_length_fragment.assert_eq_u1("Field", invalid_length_encoded_value, bit_value)
+            invalid_length_fragment.assert_eq_u1("Field", encoded_value, bit_value)
         }
 
         #[test(should_fail_with = "Field: Invalid RLP value")]
@@ -142,8 +141,8 @@ mod rlp_fragment {
         use crate::rlp::{decode::STRING, types::RlpFragment};
 
         global fragment = RlpFragment { offset: 0, length: 1, data_type: STRING };
-        global encoded_value = [0x10];
         global value = 0x10;
+        global encoded_value = [value];
 
         #[test]
         fn success() {
@@ -152,11 +151,10 @@ mod rlp_fragment {
 
         #[test(should_fail_with = "Field: Invalid RLP length")]
         fn invalid_length() {
-            let invalid_length_encoded_value = [0x10, 0x00];
             let mut invalid_length_fragment = fragment;
             invalid_length_fragment.length = 2;
 
-            invalid_length_fragment.assert_eq_u8("Field", invalid_length_encoded_value, value)
+            invalid_length_fragment.assert_eq_u8("Field", encoded_value, value)
         }
 
         #[test(should_fail_with = "Field: Invalid RLP value")]
@@ -241,11 +239,10 @@ mod rlp_fragment {
         use crate::rlp::{decode::STRING, types::RlpFragment};
         use crate::misc::types::Address;
         use crate::misc::arrays::alter_array;
+        use crate::fixtures::mainnet::frontier::first::state_proof::state_proof as state_proof;
 
         global fragment = RlpFragment { offset: 0, length: 20, data_type: STRING };
-        global address = [
-            0xd8, 0xda, 0x6b, 0xf2, 0x69, 0x64, 0xaf, 0x9d, 0x7e, 0xed, 0x9e, 0x03, 0xe5, 0x34, 0x15, 0xd3, 0x7a, 0xa9, 0x60, 0x45
-        ];
+        global address = state_proof.key;
 
         #[test]
         fn success() {
@@ -270,11 +267,10 @@ mod rlp_fragment {
         use crate::rlp::{decode::STRING, types::RlpFragment};
         use crate::misc::types::Bytes32;
         use crate::misc::arrays::alter_array;
+        use crate::fixtures::mainnet::frontier::first::header::hash;
 
         global fragment = RlpFragment { offset: 0, length: 32, data_type: STRING };
-        global bytes = [
-            0x88, 0xe9, 0x6d, 0x45, 0x37, 0xbe, 0xa4, 0xd9, 0xc0, 0x5d, 0x12, 0x54, 0x99, 0x07, 0xb3, 0x25, 0x61, 0xd3, 0xbf, 0x31, 0xf4, 0x5a, 0xae, 0x73, 0x4c, 0xdc, 0x11, 0x9f, 0x13, 0x40, 0x6c, 0xb6
-        ];
+        global bytes = hash;
 
         #[test]
         fn success() {
