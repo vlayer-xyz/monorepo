@@ -12,6 +12,7 @@ mod transaction;
 mod misc;
 mod chain;
 mod serde;
+mod serde_test;
 
 mod fixtures;
 mod verifiers;
