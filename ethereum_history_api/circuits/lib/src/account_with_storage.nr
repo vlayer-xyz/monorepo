@@ -1,9 +1,10 @@
 use dep::proof::const::MAX_ACCOUNT_STATE_LENGTH;
 
 use crate::header::{get_header, BlockHeaderPartial};
-use crate::misc::types::{Address, Bytes32};
+use crate::misc::{fragment::Fragment, types::{Address, Bytes32}};
 use crate::verifiers::account::verify_account;
 use crate::verifiers::storage::verify_storage_values;
+use crate::serde::Serialize;
 
 global STATE_PROOF_LEN = 5852; // = 11 (MAX_STATE_PROOF_LEVELS) * 532 (MAX_TRIE_NODE_LEN)
 global STORAGE_PROOF_LEN = 3724; // = 7 (MAX_STORAGE_PROOF_LEVELS) * 532 (MAX_TRIE_NODE_LEN)
@@ -13,6 +14,19 @@ struct Account {
     balance: Field,
     storage_root: Bytes32,
     code_hash: Bytes32,
+}
+
+global ACCOUNT_SERIALIZED_LEN = 1 + 1 + 32 + 32;
+
+impl Serialize<ACCOUNT_SERIALIZED_LEN> for Account {
+    fn serialize(self) -> [Field; ACCOUNT_SERIALIZED_LEN] {
+        let mut data: Fragment<ACCOUNT_SERIALIZED_LEN, Field> = Fragment::empty();
+        data.push_back(self.nonce as Field);
+        data.push_back(self.balance);
+        data.extend_back(self.storage_root.serialize());
+        data.extend_back(self.code_hash.serialize());
+        data.to_array()
+    }
 }
 
 struct StateProof {

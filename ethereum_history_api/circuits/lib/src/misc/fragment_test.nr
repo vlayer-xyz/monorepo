@@ -1,3 +1,16 @@
+mod empty {
+
+    use crate::misc::fragment::Fragment;
+
+    #[test]
+    fn success_empty() {
+        let fragment: Fragment<2, Field> = Fragment::empty();
+        assert_eq(fragment.data, [0, 0]);
+        assert_eq(fragment.offset, 0);
+        assert_eq(fragment.length, 0);
+    }
+}
+
 mod new {
 
     use crate::misc::fragment::Fragment;
@@ -193,6 +206,27 @@ mod push_back {
         fragment.push_back(2);
         fragment.push_back(3);
         fragment.push_back(4);
+    }
+}
+
+mod extend_back {
+
+    use crate::misc::fragment::Fragment;
+
+    #[test]
+    fn success() {
+        let mut fragment = Fragment::new(0, 2, [1, 2, 0, 0]);
+        fragment.extend_back([3, 4]);
+
+        assert(fragment.offset == 0);
+        assert(fragment.length == 4);
+        assert(fragment.data == [1, 2, 3, 4]);
+    }
+
+    #[test(should_fail_with="Cannot extend: fragment is full")]
+    fn fail() {
+        let mut fragment = Fragment::new(0, 2, [1, 2, 0, 0]);
+        fragment.extend_back([3, 4, 5]);
     }
 }
 
