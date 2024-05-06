@@ -3,10 +3,10 @@ mod rlp_fragment {
         use crate::rlp::{decode::{STRING, LIST}, types::RlpFragment};
         use crate::misc::arrays::alter_array;
 
-        global fragment = RlpFragment { offset: 0, length: 2, data_type: STRING };
-        global encoded_bytes = [0x12, 0x34];
-        global bytes = encoded_bytes;
+        global bytes = [0x12, 0x34];
         global length = bytes.len();
+        global encoded_bytes = bytes;
+        global fragment = RlpFragment { offset: 0, length, data_type: STRING };
 
         #[test]
         fn success() {
@@ -44,9 +44,11 @@ mod rlp_fragment {
         use crate::rlp::{decode::{STRING, LIST}, types::RlpFragment};
         use crate::misc::arrays::alter_array;
 
-        global fragment = RlpFragment { offset: 0, length: 2, data_type: STRING };
-        global encoded_bytes = [0x12, 0x34];
-        global bounded_vec = BoundedVec { storage: encoded_bytes, len: encoded_bytes.len() };
+        global bytes = [0x12, 0x34];
+        global length = bytes.len();
+        global bounded_vec = BoundedVec { storage: bytes, len: length };
+        global encoded_bytes = bytes;
+        global fragment = RlpFragment { offset: 0, length, data_type: STRING };
 
         #[test]
         fn success_short() {
@@ -108,9 +110,9 @@ mod rlp_fragment {
     mod assert_eq_u1 {
         use crate::rlp::{decode::STRING, types::RlpFragment};
 
-        global fragment = RlpFragment { offset: 0, length: 1, data_type: STRING };
         global bit_value: u1 = 0x01;
         global encoded_value = [0x01 as u8];
+        global fragment = RlpFragment { offset: 0, length: 1, data_type: STRING };
 
         #[test]
         fn succes() {
@@ -140,9 +142,9 @@ mod rlp_fragment {
     mod assert_eq_u8 {
         use crate::rlp::{decode::STRING, types::RlpFragment};
 
-        global fragment = RlpFragment { offset: 0, length: 1, data_type: STRING };
         global value = 0x10;
         global encoded_value = [value];
+        global fragment = RlpFragment { offset: 0, length: 1, data_type: STRING };
 
         #[test]
         fn success() {
@@ -166,9 +168,9 @@ mod rlp_fragment {
     mod assert_eq_u32 {
         use crate::rlp::{decode::STRING, types::RlpFragment};
 
-        global fragment = RlpFragment { offset: 0, length: 4, data_type: STRING };
-        global encoded_value = [0x10, 0x00, 0x00, 0x00];
         global value = 0x10000000;
+        global encoded_value = [0x10, 0x00, 0x00, 0x00];
+        global fragment = RlpFragment { offset: 0, length: 4, data_type: STRING };
 
         #[test]
         fn success() {
@@ -190,9 +192,9 @@ mod rlp_fragment {
     mod assert_eq_u64 {
         use crate::rlp::{decode::STRING, types::RlpFragment};
 
-        global fragment = RlpFragment { offset: 0, length: 8, data_type: STRING };
-        global encoded_value = [0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
         global value = 0x1000000000000000;
+        global encoded_value = [0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
+        global fragment = RlpFragment { offset: 0, length: 8, data_type: STRING };
 
         #[test]
         fn success() {
@@ -214,9 +216,9 @@ mod rlp_fragment {
     mod assert_eq_u128 {
         use crate::rlp::{decode::STRING, types::RlpFragment};
 
-        global fragment = RlpFragment { offset: 0, length: 16, data_type: STRING };
-        global encoded_value = [0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
         global value = U128::from_integer(0x10000000000000000000000000000000);
+        global encoded_value = [0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
+        global fragment = RlpFragment { offset: 0, length: 16, data_type: STRING };
 
         #[test]
         fn success() {
@@ -241,8 +243,8 @@ mod rlp_fragment {
         use crate::misc::arrays::alter_array;
         use crate::fixtures::mainnet::frontier::first::state_proof::state_proof as state_proof;
 
-        global fragment = RlpFragment { offset: 0, length: 20, data_type: STRING };
         global address = state_proof.key;
+        global fragment = RlpFragment { offset: 0, length: 20, data_type: STRING };
 
         #[test]
         fn success() {
@@ -269,8 +271,8 @@ mod rlp_fragment {
         use crate::misc::arrays::alter_array;
         use crate::fixtures::mainnet::frontier::first::header::hash;
 
-        global fragment = RlpFragment { offset: 0, length: 32, data_type: STRING };
         global bytes = hash;
+        global fragment = RlpFragment { offset: 0, length: 32, data_type: STRING };
 
         #[test]
         fn success() {
