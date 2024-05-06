@@ -4,9 +4,10 @@ import { PROOF_FIXTURES } from '../fixtures/merkleProofsConfig.js';
 import { assert, encodeHexStringToArray } from '../main.js';
 import { hasDuplicates } from '../util/array.js';
 import { bytesToHex } from 'viem';
-import { createNewTopLevelProofInputFixture } from './noir_fixtures/new_proof.js';
+import { createNewTopLevelProofFixtureWithRoot } from './noir_fixtures/new_proof.js';
 import { getProofConfig } from '../noir/oracles/common/proofConfig.js';
 import { BYTE_HEX_LEN } from '../util/const.js';
+import { encodeUint8Array } from '../noir/oracles/common/encode.js';
 
 const NOIR_PROOF_FIXTURES_DIRECTORY = '../circuits/lib/src/fixtures/merkle_proofs';
 const MAX_VALUE_LEN = 100;
@@ -39,11 +40,12 @@ for (const fixtureName in PROOF_FIXTURES) {
     value,
     proof: proof.map((node) => bytesToHex(node))
   };
+  const root = encodeUint8Array(trie.root());
   const maxKeyLen = proofFixture.key.length / BYTE_HEX_LEN - 1;
   const config = getProofConfig(maxKeyLen, MAX_VALUE_LEN, MAX_DEPTH);
   await writeFile(
     `${NOIR_PROOF_FIXTURES_DIRECTORY}/${fixtureName}.nr`,
-    createNewTopLevelProofInputFixture(proofFixture, config)
+    createNewTopLevelProofFixtureWithRoot(proofFixture, root, config)
   );
 
   fixtureModule += `mod ${fixtureName};\n`;

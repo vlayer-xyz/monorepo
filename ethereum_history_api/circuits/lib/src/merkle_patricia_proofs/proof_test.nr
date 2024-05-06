@@ -366,59 +366,47 @@ mod verify_merkle_proof {
     }
     };
     use crate::fixtures::merkle_proofs::{
-        leaf::proof_input as leaf_proof_input, branch_then_leaf::proof_input as branch_proof_input,
-        extension_odd::proof_input as extension_odd_proof_input,
-        extension_even::proof_input as extension_even_proof_input
+        leaf::{proof_input as leaf_proof_input, root as leaf_root}, branch_then_leaf::{proof_input as branch_proof_input, root as branch_root},
+        extension_odd::{proof_input as extension_odd_proof_input, root as extension_odd_root},
+        extension_even::{proof_input as extension_even_proof_input, root as extension_even_root}
     };
 
     #[test]
     fn success_leaf() {
-        let root = [
-            81, 64, 6, 95, 58, 92, 237, 155, 139, 131, 45, 198, 90, 66, 3, 207, 177, 231, 171, 165, 236, 102, 206, 54, 237, 231, 120, 78, 121, 136, 99, 93
-        ];
         verify_merkle_proof(
             leaf_proof_input.key,
             leaf_proof_input.value,
-            root,
+            leaf_root,
             leaf_proof_input.proof
         );
     }
 
     #[test]
     fn success_branch() {
-        let root = [
-            80, 122, 73, 223, 43, 25, 57, 75, 105, 161, 221, 85, 59, 71, 76, 101, 225, 209, 230, 84, 54, 162, 33, 233, 198, 82, 219, 132, 63, 243, 237, 18
-        ];
         verify_merkle_proof(
             branch_proof_input.key,
             branch_proof_input.value,
-            root,
+            branch_root,
             branch_proof_input.proof
         );
     }
 
     #[test]
     fn success_extension_even() {
-        let root = [
-            23, 150, 18, 158, 243, 81, 194, 246, 122, 234, 60, 7, 178, 219, 32, 155, 194, 254, 49, 102, 206, 193, 254, 130, 219, 229, 170, 83, 89, 12, 81, 96
-        ];
         verify_merkle_proof(
             extension_even_proof_input.key,
             extension_even_proof_input.value,
-            root,
+            extension_even_root,
             extension_even_proof_input.proof
         );
     }
 
     #[test]
     fn success_extension_odd() {
-        let root = [
-            132, 180, 134, 174, 141, 94, 213, 41, 36, 131, 18, 208, 22, 232, 27, 28, 193, 239, 197, 30, 112, 129, 11, 82, 164, 177, 92, 12, 144, 84, 173, 142
-        ];
         verify_merkle_proof(
             extension_odd_proof_input.key,
             extension_odd_proof_input.value,
-            root,
+            extension_odd_root,
             extension_odd_proof_input.proof
         );
     }
