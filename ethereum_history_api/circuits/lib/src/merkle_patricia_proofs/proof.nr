@@ -156,11 +156,24 @@ pub fn verify_leaf<MAX_LEAF_LEN, MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN>(
 }
 
 pub fn verify_merkle_proof<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH, MAX_LEAF_LEN>(
-    _key: Key<MAX_PREFIXED_KEY_NIBBLE_LEN>,
-    _value: Value<MAX_VALUE_LEN>,
-    _root: Hash,
-    _proof: Proof<MAX_DEPTH, MAX_LEAF_LEN>
+    key: Key<MAX_PREFIXED_KEY_NIBBLE_LEN>,
+    value: Value<MAX_VALUE_LEN>,
+    root: Hash,
+    proof: Proof<MAX_DEPTH, MAX_LEAF_LEN>
 ) {
-    assert(false, "Not implemented");
+    let key = right_pad(key);
+    let key_nibbles = bytes_to_nibbles(Fragment::from(key));
+    let mut key_ptr = 0;
+
+    // Verify hashes of all the nodes in the proof path.
+    let mut curr_hash = Fragment::new_focused(root);
+    for i in 0..MAX_DEPTH {
+        if i < proof.depth - 1 {
+            verify_node_hash(proof.nodes[i], curr_hash.data);
+            curr_hash = extract_hash(proof.nodes[i], key_nibbles, &mut key_ptr);
+        }
+    }
+    verify_node_hash(proof.leaf, curr_hash.data);
+    verify_leaf(proof.leaf, key_nibbles, &mut key_ptr, value);
 }
 

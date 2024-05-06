@@ -347,3 +347,108 @@ mod verify_leaf {
         verify_leaf(some_leaf, some_key_nibbles, &mut key_ptr, wrong_value)
     }
 }
+
+mod verify_merkle_proof {
+
+    use crate::merkle_patricia_proofs::proof::verify_merkle_proof;
+    use crate::fixtures::mainnet::{
+        homestead::fork::{
+        header::receipts_root as homestead_receipts_root,
+        receipt_proof_new::proof_input as homestead_receipt_proof_input,
+        header::transactions_root as homestead_transactions_root,
+        transaction_proof_new::proof_input as homestead_transaction_proof_input
+    },
+        cancun::small_block::{
+        header::receipts_root as cancun_receipts_root,
+        receipt_proof_new::proof_input as cancun_receipt_proof_input,
+        header::transactions_root as cancun_transactions_root,
+        transaction_proof_new::proof_input as cancun_transaction_proof_input
+    }
+    };
+    use crate::fixtures::merkle_proofs::{
+        leaf::{proof_input as leaf_proof_input, root as leaf_root},
+        branch_then_leaf::{proof_input as branch_proof_input, root as branch_root},
+        extension_odd::{proof_input as extension_odd_proof_input, root as extension_odd_root},
+        extension_even::{proof_input as extension_even_proof_input, root as extension_even_root}
+    };
+
+    #[test]
+    fn success_leaf() {
+        verify_merkle_proof(
+            leaf_proof_input.key,
+            leaf_proof_input.value,
+            leaf_root,
+            leaf_proof_input.proof
+        );
+    }
+
+    #[test]
+    fn success_branch() {
+        verify_merkle_proof(
+            branch_proof_input.key,
+            branch_proof_input.value,
+            branch_root,
+            branch_proof_input.proof
+        );
+    }
+
+    #[test]
+    fn success_extension_even() {
+        verify_merkle_proof(
+            extension_even_proof_input.key,
+            extension_even_proof_input.value,
+            extension_even_root,
+            extension_even_proof_input.proof
+        );
+    }
+
+    #[test]
+    fn success_extension_odd() {
+        verify_merkle_proof(
+            extension_odd_proof_input.key,
+            extension_odd_proof_input.value,
+            extension_odd_root,
+            extension_odd_proof_input.proof
+        );
+    }
+
+    #[test]
+    fn success_homestead_receipt() {
+        verify_merkle_proof(
+            homestead_receipt_proof_input.key,
+            homestead_receipt_proof_input.value,
+            homestead_receipts_root,
+            homestead_receipt_proof_input.proof
+        );
+    }
+
+    #[test]
+    fn success_cancun_receipt() {
+        verify_merkle_proof(
+            cancun_receipt_proof_input.key,
+            cancun_receipt_proof_input.value,
+            cancun_receipts_root,
+            cancun_receipt_proof_input.proof
+        );
+    }
+
+    #[test]
+    fn success_homestead_transaction() {
+        verify_merkle_proof(
+            homestead_transaction_proof_input.key,
+            homestead_transaction_proof_input.value,
+            homestead_transactions_root,
+            homestead_transaction_proof_input.proof
+        );
+    }
+
+    #[test]
+    fn success_cancun_transaction() {
+        verify_merkle_proof(
+            cancun_transaction_proof_input.key,
+            cancun_transaction_proof_input.value,
+            cancun_transactions_root,
+            cancun_transaction_proof_input.proof
+        );
+    }
+}

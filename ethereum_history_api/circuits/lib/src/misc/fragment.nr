@@ -99,3 +99,9 @@ impl<MAX_DATA_LEN, T> Eq for Fragment<MAX_DATA_LEN, T> where T: Eq {
         res
     }
 }
+
+impl<MAX_DATA_LEN, T> From<BoundedVec<T, MAX_DATA_LEN>> for Fragment<MAX_DATA_LEN, T> {
+    fn from(vec: BoundedVec<T, MAX_DATA_LEN>) -> Fragment<MAX_DATA_LEN, T> {
+        Fragment::new_with_length(vec.len, vec.storage)
+    }
+}
