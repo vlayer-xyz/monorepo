@@ -366,7 +366,8 @@ mod verify_merkle_proof {
     }
     };
     use crate::fixtures::merkle_proofs::{
-        leaf::{proof_input as leaf_proof_input, root as leaf_root}, branch_then_leaf::{proof_input as branch_proof_input, root as branch_root},
+        leaf::{proof_input as leaf_proof_input, root as leaf_root},
+        branch_then_leaf::{proof_input as branch_proof_input, root as branch_root},
         extension_odd::{proof_input as extension_odd_proof_input, root as extension_odd_root},
         extension_even::{proof_input as extension_even_proof_input, root as extension_even_root}
     };
