@@ -1,10 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { createMockClient } from '../../ethereum/mockClient.js';
+import { createMockMultiChainClient } from '../../ethereum/mockClient.js';
 import { OFFSETS, getReceiptOracle } from './receiptOracle.js';
 import { BYTES32_LEN, ZERO_PAD_VALUE } from './common/const.js';
 import { padArray } from '../../util/array.js';
 import { receiptProofConfigM } from './common/proofConfig/receipt.js';
-import { MultiChainClient } from '../../ethereum/client.js';
 
 describe('getReceiptOracle', () => {
   const mainnetChainIdInNoirFormat = '0x01';
@@ -17,8 +16,7 @@ describe('getReceiptOracle', () => {
       './fixtures/mainnet/cancun/small_block/alchemy_getTransactionReceipts_19432673.json',
       './fixtures/mainnet/cancun/small_block/eth_getBlockByHash_19432673.json'
     ];
-    const client = await createMockClient(mockFilePaths);
-    const multiChainClient = MultiChainClient.from(client);
+    const multiChainClient = await createMockMultiChainClient(mockFilePaths);
 
     const receiptWithProof = await getReceiptOracle(multiChainClient, [
       [mainnetChainIdInNoirFormat],
@@ -76,8 +74,7 @@ describe('getReceiptOracle', () => {
   it('transaction not found', async () => {
     const nonExistentTxId = '0xffff';
     const mockFilePaths = ['./fixtures/mainnet/cancun/small_block/alchemy_getTransactionReceipts_19432673.json'];
-    const client = await createMockClient(mockFilePaths);
-    const multiChainClient = MultiChainClient.from(client);
+    const multiChainClient = await createMockMultiChainClient(mockFilePaths);
 
     await expect(
       async () =>

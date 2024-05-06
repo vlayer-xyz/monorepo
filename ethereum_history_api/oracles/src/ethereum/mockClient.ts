@@ -5,8 +5,17 @@ import { mock } from '../util/mock.js';
 import isEqual from 'lodash.isequal';
 import { identity } from '../util/function.js';
 import { stringify } from '../util/json-bigint.js';
-import { AlchemyClient } from './client.js';
+import { AlchemyClient, MultiChainClient } from './client.js';
 import { mainnet } from 'viem/chains';
+
+export async function createMockMultiChainClient(
+  filePaths: string[],
+  resultModifier: (call: Call) => Call = identity,
+  chain = mainnet
+): Promise<MultiChainClient> {
+  const mockClient = await createMockClient(filePaths, resultModifier, chain);
+  return MultiChainClient.from(mockClient);
+}
 
 export async function createMockClient(
   filePaths: string[],

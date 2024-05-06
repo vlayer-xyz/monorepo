@@ -1,5 +1,5 @@
 import { buildOracleServer } from './server/app.js';
-import { createMockClient } from '../../ethereum/mockClient.js';
+import { createMockMultiChainClient } from '../../ethereum/mockClient.js';
 import { MultiChainClient } from '../../ethereum/client.js';
 
 const PORT = 5555;
@@ -32,8 +32,7 @@ export async function withMockOracleServer<T>(
   fixtureFilePaths: string[],
   fn: (serverUrl: string) => Promise<T>
 ): Promise<T> {
-  const mockClient = await createMockClient(fixtureFilePaths);
-  const client = MultiChainClient.from(mockClient);
+  const client = await createMockMultiChainClient(fixtureFilePaths);
   const app = await startOracleServer(client, MOCK_ORACLE_SERVER_PORT, true);
   const serverUrl = `http://localhost:${MOCK_ORACLE_SERVER_PORT}`;
   try {

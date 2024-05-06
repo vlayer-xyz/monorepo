@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { createMockClient } from '../../ethereum/mockClient.js';
+import { createMockMultiChainClient } from '../../ethereum/mockClient.js';
 import { OFFSETS, getTransactionOracle } from './transactionOracle.js';
-import { MultiChainClient } from '../../ethereum/client.js';
 
 describe('getTransactionOracle', () => {
   it('success', async () => {
@@ -11,8 +10,7 @@ describe('getTransactionOracle', () => {
     const mockFilePaths = [
       './fixtures/mainnet/cancun/small_block/eth_getBlockByHash_19432673_includeTransactions.json'
     ];
-    const client = await createMockClient(mockFilePaths);
-    const multiChainClient = MultiChainClient.from(client);
+    const multiChainClient = await createMockMultiChainClient(mockFilePaths);
 
     const txWithProof = await getTransactionOracle(multiChainClient, [
       [mainnetChainIdInNoirFormat],

@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { OFFSETS, getAccountOracle } from './accountOracle.js';
-import { createMockClient } from '../../ethereum/mockClient.js';
-import { MultiChainClient } from '../../ethereum/client.js';
+import { createMockMultiChainClient } from '../../ethereum/mockClient.js';
 
 describe('accountOracle', () => {
   it('getAccountOracle', async () => {
@@ -16,8 +15,7 @@ describe('accountOracle', () => {
       './fixtures/mainnet/london/crypto_punks/eth_getBlockByHash_14194126.json',
       './fixtures/mainnet/london/crypto_punks/eth_getProof_14194126.json'
     ];
-    const client = await createMockClient(mockFilePaths);
-    const multiChainClient = MultiChainClient.from(client);
+    const multiChainClient = await createMockMultiChainClient(mockFilePaths);
     const account = await getAccountOracle(multiChainClient, [
       [mainnetChainIdInNoirFormat],
       [londonBlockNumberInNoirFormat],
