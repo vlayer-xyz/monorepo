@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { createMockClient } from '../../ethereum/mockClient.js';
 import { getProofOracle } from './proofOracle.js';
-import { Chain, MultiChainClient } from '../../ethereum/client.js';
+import { MultiChainClient } from '../../ethereum/client.js';
+import { mainnet } from 'viem/chains';
 
 describe(
   'proofOracle',
@@ -34,7 +35,7 @@ describe(
         './fixtures/mainnet/paris/usdc_circle/eth_getProof_19000000.json'
       ];
       const client = await createMockClient(mockFilePaths);
-      const multiChainClient = MultiChainClient.createSingleChainClient(Chain.MAINNET, client);
+      const multiChainClient = MultiChainClient.createSingleChainClient(mainnet.id, client);
       const stateAndStorageProof = await getProofOracle(multiChainClient, [
         [mainnetChainIdInNoirFormat],
         [parisBlockNumberInNoirFormat],

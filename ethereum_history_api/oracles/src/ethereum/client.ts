@@ -6,12 +6,19 @@ import { assert } from '../util/assert.js';
 
 dotenv.config();
 
-type ClientMap = Partial<Record<Chain, AlchemyClient>>;
+/**
+ * Chains have three properties:
+ * numericId: a unique numeric identifier - used in arguments
+ * name: a human-readable name
+ * strId: a unique string identifier - used in module names & fixture keys
+ */
 
-export enum Chain {
-  MAINNET = 'mainnet',
-  SEPOLIA = 'sepolia'
-}
+type ClientMap = Partial<Record<number, AlchemyClient>>;
+
+const chainStrIdToChainId = {
+  mainnet: mainnet.id,
+  sepolia: sepolia.id
+} as Record<string, number>;
 
 export class MultiChainClient {
   private clientMap: ClientMap;
@@ -21,36 +28,31 @@ export class MultiChainClient {
 
   public static create(): MultiChainClient {
     return new MultiChainClient({
-      [Chain.MAINNET]: MultiChainClient.createDefaultClient(),
-      [Chain.SEPOLIA]: MultiChainClient.createSepoliaClient()
+      [mainnet.id]: MultiChainClient.createDefaultClient(),
+      [sepolia.id]: MultiChainClient.createSepoliaClient()
     });
   }
 
-  public static createSingleChainClient(chain: Chain, client: AlchemyClient): MultiChainClient {
+  public static createSingleChainClient(chainId: number, client: AlchemyClient): MultiChainClient {
     return new MultiChainClient({
-      [chain]: client
+      [chainId]: client
     });
   }
 
-  public getClient(chain: string): AlchemyClient {
-    const client = this.clientMap[chain as Chain];
-    assert(client !== undefined, `No client for chain ${chain}`);
-    return client;
+  public getClient(chainStrId: string): AlchemyClient {
+    return this.getClientByChainId(MultiChainClient.chainStrIdToChainId(chainStrId));
   }
 
   public getClientByChainId(chainId: number): AlchemyClient {
-    return this.getClient(MultiChainClient.chainIdToChain(chainId));
+    const client = this.clientMap[chainId];
+    assert(client !== undefined, `No client for chain ${chainId}`);
+    return client;
   }
 
-  private static chainIdToChain(chainId: number): Chain {
-    switch (chainId) {
-      case mainnet.id:
-        return Chain.MAINNET;
-      case sepolia.id:
-        return Chain.SEPOLIA;
-      default:
-        throw new Error(`Unknown chain ID: ${chainId}`);
-    }
+  private static chainStrIdToChainId(chainStrId: string): number {
+    const chainId = chainStrIdToChainId[chainStrId];
+    assert(chainId !== undefined, `Unknown chain ID: ${chainStrId}`);
+    return chainId;
   }
 
   private static createDefaultClient(): AlchemyClient {
