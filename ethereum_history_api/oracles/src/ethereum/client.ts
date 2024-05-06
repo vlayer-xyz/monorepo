@@ -7,10 +7,9 @@ import { assert } from '../util/assert.js';
 dotenv.config();
 
 /**
- * Chains have three properties:
- * numericId: a unique numeric identifier - used in arguments
- * name: a human-readable name
- * strId: a unique string identifier - used in module names & fixture keys
+ * Chains have two types of ids:
+ * numericId: a unique numeric identifier - used in arguments. Example: 1, 42
+ * strId: a unique string identifier - used in module names & fixture keys. Example: mainnet, sepolia
  */
 
 type ClientMap = Partial<Record<number, AlchemyClient>>;
