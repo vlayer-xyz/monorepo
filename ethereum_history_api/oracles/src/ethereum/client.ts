@@ -36,9 +36,10 @@ export class MultiChainClient {
     });
   }
 
-  public static createSingleChainClient(chainId: number, client: AlchemyClient): MultiChainClient {
+  public static createSingleChainClient(client: AlchemyClient): MultiChainClient {
+    assert(client.chain !== undefined, 'Client is not assigned to a specific chain');
     return new MultiChainClient({
-      [chainId]: client
+      [client.chain.id]: client
     });
   }
 

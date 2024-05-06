@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import { OFFSETS, getAccountOracle } from './accountOracle.js';
 import { createMockClient } from '../../ethereum/mockClient.js';
 import { MultiChainClient } from '../../ethereum/client.js';
-import { mainnet } from 'viem/chains';
 
 describe('accountOracle', () => {
   it('getAccountOracle', async () => {
@@ -18,7 +17,7 @@ describe('accountOracle', () => {
       './fixtures/mainnet/london/crypto_punks/eth_getProof_14194126.json'
     ];
     const client = await createMockClient(mockFilePaths);
-    const multiChainClient = MultiChainClient.createSingleChainClient(mainnet.id, client);
+    const multiChainClient = MultiChainClient.createSingleChainClient(client);
     const account = await getAccountOracle(multiChainClient, [
       [mainnetChainIdInNoirFormat],
       [londonBlockNumberInNoirFormat],

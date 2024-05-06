@@ -4,12 +4,11 @@ import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { createMockClient } from '../../ethereum/mockClient.js';
 import { HISTORY_API_FIXTURES } from '../../fixtures/historyAPIConfig.js';
 import { MultiChainClient } from '../../ethereum/client.js';
-import { mainnet } from 'viem/chains';
 
 describe('headerOracle', async () => {
   const mockFilePaths = ['./fixtures/mainnet/paris/usdc_circle/eth_getBlockByHash_19000000.json'];
   const client = await createMockClient(mockFilePaths);
-  const multiChainClient = MultiChainClient.createSingleChainClient(mainnet.id, client);
+  const multiChainClient = MultiChainClient.createSingleChainClient(client);
 
   it('getBlock', async () => {
     const blockNumber = HISTORY_API_FIXTURES.mainnet.paris.usdc_circle.blockNumber;

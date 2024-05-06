@@ -5,7 +5,6 @@ import { BYTES32_LEN, ZERO_PAD_VALUE } from './common/const.js';
 import { padArray } from '../../util/array.js';
 import { receiptProofConfigM } from './common/proofConfig/receipt.js';
 import { MultiChainClient } from '../../ethereum/client.js';
-import { mainnet } from 'viem/chains';
 
 describe('getReceiptOracle', () => {
   const mainnetChainIdInNoirFormat = '0x01';
@@ -19,7 +18,7 @@ describe('getReceiptOracle', () => {
       './fixtures/mainnet/cancun/small_block/eth_getBlockByHash_19432673.json'
     ];
     const client = await createMockClient(mockFilePaths);
-    const multiChainClient = MultiChainClient.createSingleChainClient(mainnet.id, client);
+    const multiChainClient = MultiChainClient.createSingleChainClient(client);
 
     const receiptWithProof = await getReceiptOracle(multiChainClient, [
       [mainnetChainIdInNoirFormat],
@@ -78,7 +77,7 @@ describe('getReceiptOracle', () => {
     const nonExistentTxId = '0xffff';
     const mockFilePaths = ['./fixtures/mainnet/cancun/small_block/alchemy_getTransactionReceipts_19432673.json'];
     const client = await createMockClient(mockFilePaths);
-    const multiChainClient = MultiChainClient.createSingleChainClient(mainnet.id, client);
+    const multiChainClient = MultiChainClient.createSingleChainClient(client);
 
     await expect(
       async () =>
