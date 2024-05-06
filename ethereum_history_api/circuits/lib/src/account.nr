@@ -1,11 +1,23 @@
-use crate::account_with_storage::{Account, StateProof};
+use crate::account_with_storage::{Account, StateProof, ACCOUNT_SERIALIZED_LEN};
 use crate::header::get_header;
-use crate::misc::types::{Address, Bytes32};
+use crate::misc::{fragment::Fragment, types::{Address, Bytes32, BYTES32_LENGTH}};
 use crate::verifiers::account::verify_account;
+use crate::serde::Serialize;
 
 struct AccountWithinBlock {
     account: Account,
     block_hash: Bytes32,
+}
+
+global ACCOUNT_WITHIN_BLOCK_SERIALIZED_LEN = ACCOUNT_SERIALIZED_LEN + BYTES32_LENGTH;
+
+impl Serialize<ACCOUNT_WITHIN_BLOCK_SERIALIZED_LEN> for AccountWithinBlock {
+    fn serialize(self) -> [Field; ACCOUNT_WITHIN_BLOCK_SERIALIZED_LEN] {
+        let mut data: Fragment<ACCOUNT_WITHIN_BLOCK_SERIALIZED_LEN, Field> = Fragment::empty();
+        data.extend_back(self.account.serialize());
+        data.extend_back(self.block_hash.serialize());
+        data.to_array()
+    }
 }
 
 type AccountWithStateProof = (Account, StateProof);
