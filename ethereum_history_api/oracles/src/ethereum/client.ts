@@ -26,13 +26,17 @@ export class MultiChainClient {
   }
 
   public static create(): MultiChainClient {
-    assert(process.env.ETHEREUM_JSON_RPC_API_URL !== undefined, 'Missing mainnet RLP URL');
-    assert(process.env.ETHEREUM_JSON_RPC_API_URL_SEPOLIA !== undefined, 'Missing sepolia RLP URL');
+    const clientMap: ClientMap = {};
 
-    return new MultiChainClient({
-      [mainnet.id]: MultiChainClient.createClient(sepolia, process.env.ETHEREUM_JSON_RPC_API_URL),
-      [sepolia.id]: MultiChainClient.createClient(sepolia, process.env.ETHEREUM_JSON_RPC_API_URL_SEPOLIA)
-    });
+    if (process.env.ETHEREUM_JSON_RPC_API_URL) {
+      clientMap[mainnet.id] = MultiChainClient.createClient(mainnet, process.env.ETHEREUM_JSON_RPC_API_URL);
+    }
+    if (process.env.ETHEREUM_JSON_RPC_API_URL_SEPOLIA) {
+      clientMap[mainnet.id] = MultiChainClient.createClient(sepolia, process.env.ETHEREUM_JSON_RPC_API_URL_SEPOLIA);
+    }
+    assert(Object.keys(clientMap).length !== 0, 'Please provide at least one JSON_RPC_API_URL');
+
+    return new MultiChainClient(clientMap);
   }
 
   public static from(client: AlchemyClient): MultiChainClient {
