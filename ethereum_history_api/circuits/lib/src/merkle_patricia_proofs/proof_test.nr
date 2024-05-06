@@ -316,7 +316,7 @@ mod verify_leaf {
         verify_leaf(leaf_with_invalid_prefix, empty_key, &mut 0, empty_value)
     }
 
-    #[test(should_fail_with="Leaf key part does not correspond to left key nibbles")]
+    #[test(should_fail_with="Key mismatch in the leaf")]
     fn fail_wrong_key() {
         let mut wrong_key_nibbles = some_key_nibbles;
         wrong_key_nibbles.set(2, 0xd);
@@ -504,7 +504,7 @@ mod verify_merkle_proof {
         );
     }
 
-    #[test(should_fail_with="Leaf key part does not correspond to left key nibbles")]
+    #[test(should_fail_with="Key mismatch in the leaf")]
     fn fail_invalid_key() {
         let mut invalid_key = london_state_proof_input.key;
         invalid_key[invalid_key.len() - 1] += 1;
