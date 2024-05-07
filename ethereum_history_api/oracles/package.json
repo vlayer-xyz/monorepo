@@ -35,9 +35,9 @@
   "devDependencies": {
     "@types/json-bigint": "^1.0.4",
     "@types/lodash.isequal": "^4.5.8",
-    "@types/node": "^20.12.8",
+    "@types/node": "^20.12.10",
     "@vitest/coverage-v8": "^1.6.0",
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.0",
     "pino-pretty": "^11.0.0",
     "prettier": "^3.2.5",
     "tsx": "^4.9.3",

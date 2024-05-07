@@ -799,12 +799,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^20.12.8":
+"@types/node@npm:*":
   version: 20.12.9
   resolution: "@types/node@npm:20.12.9"
   dependencies:
     undici-types: "npm:~5.26.4"
   checksum: 10c0/410da89226b425fa24fe497fbffb90a79ce63461ff0e0361414de567dc80b8c9b5a0e5803983bb62e2c7757b0769bf49498d3578e61f677590124491cdaf1d7a
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^20.12.10":
+  version: 20.12.10
+  resolution: "@types/node@npm:20.12.10"
+  dependencies:
+    undici-types: "npm:~5.26.4"
+  checksum: 10c0/2cc3b6ea09894ed1a3cf39f6491ec539281580f4ff83216e7d26ce85c83237fe0543c0ca49e25b2515ccdb6c8814b488d17a64a05f536dcaea94f9d32a60c7d7
   languageName: node
   linkType: hard
 
@@ -2138,9 +2147,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-n@npm:^17.4.0":
-  version: 17.4.0
-  resolution: "eslint-plugin-n@npm:17.4.0"
+"eslint-plugin-n@npm:^17.5.0":
+  version: 17.5.0
+  resolution: "eslint-plugin-n@npm:17.5.0"
   dependencies:
     "@eslint-community/eslint-utils": "npm:^4.4.0"
     enhanced-resolve: "npm:^5.15.0"
@@ -2152,7 +2161,7 @@ __metadata:
     semver: "npm:^7.5.3"
   peerDependencies:
     eslint: ">=8.23.0"
-  checksum: 10c0/3ec2c14fb0b97eae0911fc7e07b4bb29d0095d21fabcff490c01a1195a6d1ae511eefac37f8796c9858b0a09bc85a0ebfa2ac5c567593adbc22a454cb1496b39
+  checksum: 10c0/4b0353d6339afefece99441d473767da6ec7b42a72040e4f0d1f5fd859a81c2cc0c7be489465f722cbbbec2e11b7cd2edb82d1c725c101b3efa2d561ac6b2dd9
   languageName: node
   linkType: hard
 
@@ -2202,7 +2211,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.56.0":
+"eslint@npm:^8.57.0":
   version: 8.57.0
   resolution: "eslint@npm:8.57.0"
   dependencies:
@@ -3744,8 +3753,8 @@ __metadata:
   dependencies:
     "@noir-lang/backend_barretenberg": "npm:0.28.0"
     "@noir-lang/noirc_abi": "npm:^0.28.0"
-    "@types/node": "npm:^20.12.8"
-    eslint: "npm:^8.56.0"
+    "@types/node": "npm:^20.12.10"
+    eslint: "npm:^8.57.0"
     noir-ethereum-api-oracles: "npm:^1.0.0"
     prettier: "npm:^3.2.5"
     toml: "npm:^3.0.0"
@@ -3764,10 +3773,10 @@ __metadata:
     "@noir-lang/noir_js": "npm:0.28.0"
     "@types/json-bigint": "npm:^1.0.4"
     "@types/lodash.isequal": "npm:^4.5.8"
-    "@types/node": "npm:^20.12.8"
+    "@types/node": "npm:^20.12.10"
     "@vitest/coverage-v8": "npm:^1.6.0"
     dotenv: "npm:^16.4.5"
-    eslint: "npm:^8.56.0"
+    eslint: "npm:^8.57.0"
     fastify: "npm:^4.26.2"
     json-bigint: "npm:^1.0.0"
     json-rpc-2.0: "npm:^1.7.0"
@@ -3788,11 +3797,11 @@ __metadata:
   dependencies:
     "@typescript-eslint/eslint-plugin": "npm:^7.8.0"
     "@typescript-eslint/parser": "npm:^7.8.0"
-    eslint: "npm:^8.56.0"
+    eslint: "npm:^8.57.0"
     eslint-config-prettier: "npm:^9.1.0"
     eslint-config-standard-with-typescript: "npm:^43.0.1"
     eslint-plugin-import: "npm:^2.29.1"
-    eslint-plugin-n: "npm:^17.4.0"
+    eslint-plugin-n: "npm:^17.5.0"
     eslint-plugin-prettier: "npm:^5.1.3"
     eslint-plugin-promise: "npm:^6.1.1"
     prettier: "npm:^3.2.5"
