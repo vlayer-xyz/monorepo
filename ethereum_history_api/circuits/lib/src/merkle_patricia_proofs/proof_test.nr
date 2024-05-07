@@ -351,6 +351,7 @@ mod verify_leaf {
 mod verify_merkle_proof {
 
     use crate::merkle_patricia_proofs::proof::verify_merkle_proof;
+    use crate::misc::arrays::alter_array;
     use crate::fixtures::mainnet::{
         homestead::fork::{
         header::receipts_root as homestead_receipts_root,
@@ -530,8 +531,7 @@ mod verify_merkle_proof {
 
     #[test(should_fail_with="Invalid node hash")]
     fn fail_invalid_root() {
-        let mut invalid_root = london_state_root;
-        invalid_root[0] += 1;
+        let invalid_root = alter_array(london_state_root);
         verify_merkle_proof(
             london_state_proof_input.key,
             london_state_proof_input.value,

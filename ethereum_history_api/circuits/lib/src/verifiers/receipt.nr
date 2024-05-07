@@ -51,4 +51,3 @@ pub fn verify_receipt<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN>(
     assert_receipt_equals(block_number, tx_type, value, receipt);
     assert_receipt_proof(receipt_proof, receipt_root);
 }
-
