@@ -24,6 +24,18 @@ mod bytes32 {
     }
 }
 
+mod address {
+    use crate::misc::types::{Address, ADDRESS_LENGTH};
+
+    #[test]
+    fn simple() {
+        let address: Address = [1; ADDRESS_LENGTH];
+        let serialized: [Field; ADDRESS_LENGTH] = address.serialize();
+        let expected: [Field; ADDRESS_LENGTH] = [1; ADDRESS_LENGTH];
+        assert_eq(serialized, expected);
+    }
+}
+
 mod account {
     use crate::account_with_storage::Account;
     use crate::serialize::ACCOUNT_SERIALIZED_LEN;

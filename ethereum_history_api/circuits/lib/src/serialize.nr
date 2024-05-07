@@ -1,6 +1,6 @@
 use crate::account::AccountWithinBlock;
 use crate::account_with_storage::{StorageWithinBlock, Account};
-use crate::misc::{fragment::Fragment, types::{BYTES32_LENGTH, Bytes32}};
+use crate::misc::{fragment::Fragment, types::{BYTES32_LENGTH, Bytes32, ADDRESS_LENGTH, Address}};
 use dep::std::unsafe::zeroed;
 
 trait Serialize<LEN> {
@@ -19,6 +19,16 @@ impl Serialize<BYTES32_LENGTH> for Bytes32 {
     fn serialize(self) -> [Field; BYTES32_LENGTH] {
         let mut data: [Field; BYTES32_LENGTH] = zeroed();
         for i in 0..BYTES32_LENGTH {
+            data[i] = self[i] as Field;
+        }
+        data
+    }
+}
+
+impl Serialize<ADDRESS_LENGTH> for Address {
+    fn serialize(self) -> [Field; ADDRESS_LENGTH] {
+        let mut data: [Field; ADDRESS_LENGTH] = zeroed();
+        for i in 0..ADDRESS_LENGTH {
             data[i] = self[i] as Field;
         }
         data
