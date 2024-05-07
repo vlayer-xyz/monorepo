@@ -1,4 +1,4 @@
-mod u128 {
+mod U128_ {
 
     use crate::serde::U128_SERIALIZED_LEN;
 
