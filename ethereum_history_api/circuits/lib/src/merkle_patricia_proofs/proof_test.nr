@@ -252,7 +252,7 @@ mod verify_node_hash {
 
     global node = proof_input.proof.nodes[0];
     global node_hash = [
-            0x50, 0x7A, 0x49, 0xDF, 0x2B, 0x19, 0x39, 0x4B, 0x69, 0xA1, 0xDD, 0x55, 0x3B, 0x47, 0x4C, 0x65, 0xE1, 0xD1, 0xE6, 0x54, 0x36, 0xA2, 0x21, 0xE9, 0xC6, 0x52, 0xDB, 0x84, 0x3F, 0xF3, 0xED, 0x12
+            0x50, 0x7a, 0x49, 0xdf, 0x2b, 0x19, 0x39, 0x4b, 0x69, 0xa1, 0xdd, 0x55, 0x3b, 0x47, 0x4c, 0x65, 0xe1, 0xd1, 0xe6, 0x54, 0x36, 0xa2, 0x21, 0xe9, 0xc6, 0x52, 0xdb, 0x84, 0x3f, 0xf3, 0xed, 0x12
         ];
 
     #[test]
@@ -316,7 +316,7 @@ mod verify_leaf {
         verify_leaf(leaf_with_invalid_prefix, empty_key, &mut 0, empty_value)
     }
 
-    #[test(should_fail_with="Leaf key part does not correspond to left key nibbles")]
+    #[test(should_fail_with="Key mismatch in the leaf")]
     fn fail_wrong_key() {
         let mut wrong_key_nibbles = some_key_nibbles;
         wrong_key_nibbles.set(2, 0xd);
@@ -351,6 +351,7 @@ mod verify_leaf {
 mod verify_merkle_proof {
 
     use crate::merkle_patricia_proofs::proof::verify_merkle_proof;
+    use crate::misc::arrays::alter_array;
     use crate::fixtures::mainnet::{
         homestead::fork::{
         header::receipts_root as homestead_receipts_root,
@@ -363,6 +364,16 @@ mod verify_merkle_proof {
         receipt_proof_new::proof_input as cancun_receipt_proof_input,
         header::transactions_root as cancun_transactions_root,
         transaction_proof_new::proof_input as cancun_transaction_proof_input
+    },
+        london::crypto_punks::{state_proof_new::proof_input as london_state_proof_input, header::state_root as london_state_root},
+        paris::bored_ape_yacht_club::{state_proof_new::proof_input as paris_state_proof_input, header::state_root as paris_state_root},
+        paris::usdc_circle::{
+        storage_proof_new::proofs as paris_circle_storage_proof_inputs,
+        account::storage_root as paris_circle_storage_root
+    },
+        paris::usdc_uniswap::{
+        storage_proof_new::proofs as paris_uniswap_storage_proof_inputs,
+        account::storage_root as paris_uniswap_storage_root
     }
     };
     use crate::fixtures::merkle_proofs::{
@@ -413,6 +424,48 @@ mod verify_merkle_proof {
     }
 
     #[test]
+    fn success_london_state() {
+        verify_merkle_proof(
+            london_state_proof_input.key,
+            london_state_proof_input.value,
+            london_state_root,
+            london_state_proof_input.proof
+        );
+    }
+
+    #[test]
+    fn success_paris_state() {
+        verify_merkle_proof(
+            paris_state_proof_input.key,
+            paris_state_proof_input.value,
+            paris_state_root,
+            paris_state_proof_input.proof
+        );
+    }
+
+    #[test]
+    fn success_paris_circle_storage() {
+        let paris_circle_storage_proof_input = paris_circle_storage_proof_inputs[0];
+        verify_merkle_proof(
+            paris_circle_storage_proof_input.key,
+            paris_circle_storage_proof_input.value,
+            paris_circle_storage_root,
+            paris_circle_storage_proof_input.proof
+        );
+    }
+
+    #[test]
+    fn success_paris_uniswap_storage() {
+        let paris_uniswap_storage_proof_input = paris_uniswap_storage_proof_inputs[0];
+        verify_merkle_proof(
+            paris_uniswap_storage_proof_input.key,
+            paris_uniswap_storage_proof_input.value,
+            paris_uniswap_storage_root,
+            paris_uniswap_storage_proof_input.proof
+        );
+    }
+
+    #[test]
     fn success_homestead_receipt() {
         verify_merkle_proof(
             homestead_receipt_proof_input.key,
@@ -449,6 +502,53 @@ mod verify_merkle_proof {
             cancun_transaction_proof_input.value,
             cancun_transactions_root,
             cancun_transaction_proof_input.proof
+        );
+    }
+
+    #[test(should_fail_with="Key mismatch in the leaf")]
+    fn fail_invalid_key() {
+        let mut invalid_key = london_state_proof_input.key;
+        invalid_key[invalid_key.len() - 1] += 1;
+        verify_merkle_proof(
+            invalid_key,
+            london_state_proof_input.value,
+            london_state_root,
+            london_state_proof_input.proof
+        );
+    }
+
+    #[test(should_fail_with="Value mismatch")]
+    fn fail_invalid_value() {
+        let mut invalid_value = london_state_proof_input.value;
+        invalid_value[invalid_value.len() - 1] += 1;
+        verify_merkle_proof(
+            london_state_proof_input.key,
+            invalid_value,
+            london_state_root,
+            london_state_proof_input.proof
+        );
+    }
+
+    #[test(should_fail_with="Invalid node hash")]
+    fn fail_invalid_root() {
+        let invalid_root = alter_array(london_state_root);
+        verify_merkle_proof(
+            london_state_proof_input.key,
+            london_state_proof_input.value,
+            invalid_root,
+            london_state_proof_input.proof
+        );
+    }
+
+    #[test(should_fail_with="Invalid node hash")]
+    fn fail_invalid_proof() {
+        let mut invalid_proof = london_state_proof_input.proof;
+        invalid_proof.nodes[invalid_proof.depth - 2][0] -= 1;
+        verify_merkle_proof(
+            london_state_proof_input.key,
+            london_state_proof_input.value,
+            london_state_root,
+            invalid_proof
         );
     }
 }
