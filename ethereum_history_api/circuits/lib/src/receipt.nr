@@ -40,7 +40,7 @@ struct TxReceiptWithinBlock {
     block_hash: Bytes32
 }
 
-pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_ENCODED_LEN>(
+pub fn get_receipt<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_ENCODED_LEN>(
     chain_id: Field,
     block_number: u64,
     tx_idx: Field,
@@ -61,13 +61,13 @@ pub fn get_receipt<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT
 }
 
 #[oracle(get_receipt)]
-unconstrained fn get_receipt_oracle<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_ENCODED_LEN>(
+unconstrained fn get_receipt_oracle<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_ENCODED_LEN>(
     _chain_id: Field,
     _block_number: u64,
     _tx_idx: Field
 ) -> (TxType, ForeignCallTxReceiptPartial, ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_ENCODED_RECEIPT_LENGTH>) {}
 
-unconstrained fn get_receipt_unconstrained<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_ENCODED_LEN>(
+unconstrained fn get_receipt_unconstrained<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_ENCODED_LEN>(
     chain_id: Field,
     block_number: u64,
     tx_idx: Field
