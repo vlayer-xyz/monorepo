@@ -118,15 +118,20 @@ describe('encodeAddress', () => {
 
   it('mix case', () => {
     // prettier-ignore
-    expect(encodeAddress('0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbb')).toStrictEqual([
-      '0xb4', '0x7e', '0x3c', '0xd8', '0x37', '0xdD', '0xF8', '0xe4', '0xc5', '0x7f', '0x05', '0xd7', '0x0a', '0xb8',
-      '0x65', '0xde', '0x6e', '0x19', '0x3b', '0xbb'
+    expect(encodeAddress('0xb47e3cd837dDF8e4c57F05d70Ab865de6e193BBB')).toStrictEqual([
+      '0xb4', '0x7e', '0x3c', '0xd8', '0x37', '0xdD', '0xF8', '0xe4', '0xc5', '0x7F', '0x05', '0xd7', '0x0A', '0xb8',
+      '0x65', '0xde', '0x6e', '0x19', '0x3B', '0xBB'
     ]);
   });
 
-  it('invalid address', () => {
+  it('invalid address length', () => {
     // prettier-ignore
     expect(() => encodeAddress('0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbbaa')).toThrow('Invalid address: 0xb47e3cd837dDF8e4c57f05d70ab865de6e193bbbaa');
+  });
+
+  it('invalid address checksum', () => {
+    // prettier-ignore
+    expect(() => encodeAddress('0xb47e3cd837dDF8e4c57F05d70Ab865de6e193BBb')).toThrow('Invalid address: 0xb47e3cd837dDF8e4c57F05d70Ab865de6e193BBb');
   });
 });
 
