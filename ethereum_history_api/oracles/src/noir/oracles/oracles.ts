@@ -34,4 +34,4 @@ export const defaultOraclesMap: OracleMap = {
   get_transaction: getTransactionOracle
 };
 
-export const defaultOracles = createOracles(MultiChainClient.create())(defaultOraclesMap);
+export const defaultOracles = createOracles(MultiChainClient.from_env())(defaultOraclesMap);

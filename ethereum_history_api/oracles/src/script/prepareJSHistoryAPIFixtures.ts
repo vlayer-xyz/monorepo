@@ -27,7 +27,7 @@ async function createProofFixture(client: RecordingClient, parameters: GetProofP
   return last(client.getCalls()) as GetProofFixture;
 }
 
-const multiChainClient = MultiChainClient.create();
+const multiChainClient = MultiChainClient.from_env();
 
 async function createReceiptsFixture(
   client: RecordingClient,

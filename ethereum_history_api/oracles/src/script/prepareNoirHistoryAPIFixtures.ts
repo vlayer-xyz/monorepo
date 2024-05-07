@@ -25,7 +25,7 @@ const INDEX_NOT_FOUND = -1;
 
 const NOIR_FIXTURES_DIRECTORY = '../circuits/lib/src/fixtures';
 
-const multiChainClient = MultiChainClient.create();
+const multiChainClient = MultiChainClient.from_env();
 
 for (const chain in HISTORY_API_FIXTURES) {
   const chainDirectory = `${NOIR_FIXTURES_DIRECTORY}/${chain}`;

@@ -20,7 +20,7 @@ jsonRPCServer.addMethod('get_transaction', getOracleHandler.bind(this, getTransa
 
 export function buildOracleServer(
   opts: Fastify.FastifyHttpOptions<http.Server> = {},
-  multiChainClient: MultiChainClient = MultiChainClient.create()
+  multiChainClient: MultiChainClient = MultiChainClient.from_env()
 ): Fastify.FastifyInstance {
   const app = Fastify(opts);
   const serverParams = { client: multiChainClient };

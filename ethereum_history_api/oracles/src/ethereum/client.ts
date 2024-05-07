@@ -20,7 +20,7 @@ export class MultiChainClient {
     this.clientMap = clientMap;
   }
 
-  public static create(): MultiChainClient {
+  public static from_env(): MultiChainClient {
     const clientMap: ClientMap = {};
 
     if (process.env.ETHEREUM_JSON_RPC_API_URL) {
