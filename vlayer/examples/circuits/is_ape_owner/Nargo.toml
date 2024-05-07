@@ -2,7 +2,7 @@
 name = "is_ape_owner"
 type = "bin"
 authors = [""]
-compiler_version = ">=0.26.0"
+compiler_version = ">=0.28.0"
 
 [dependencies]
 ethereum_history_api = { path = "../../../../ethereum_history_api/circuits/lib" }

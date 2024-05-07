@@ -131,7 +131,8 @@ mod resize {
 
     #[test]
     fn success_empty() {
-        assert_eq(resize([]), []);
+        let expected: [Field; 0] = [];
+        assert_eq(resize([]), expected);
     }
 
     #[test]
@@ -168,7 +169,7 @@ mod subarray_inferred_len {
 
     #[test]
     fn success_empty_src() {
-        let array = [];
+        let array: [Field; 0] = [];
         assert_eq(subarray_inferred_len(array, 0), []);
     }
 
