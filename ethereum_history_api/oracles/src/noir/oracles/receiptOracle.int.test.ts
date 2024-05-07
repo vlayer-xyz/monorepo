@@ -1,22 +1,25 @@
 import { describe, expect, it } from 'vitest';
-import { createMockClient } from '../../ethereum/mockClient.js';
+import { createMockMultiChainClient } from '../../ethereum/mockClient.js';
 import { OFFSETS, getReceiptOracle } from './receiptOracle.js';
 import { BYTES32_LEN, ZERO_PAD_VALUE } from './common/const.js';
 import { padArray } from '../../util/array.js';
 import { receiptProofConfigM } from './common/proofConfig/receipt.js';
 
 describe('getReceiptOracle', () => {
+  const mainnetChainIdInNoirFormat = '0x01';
+  const cancunBlockNumberInNoirFormat = '0x12884e1';
   it('success', async () => {
-    const cancunBlockNumberInNoirFormat = '0x12884e1';
     const chainLinkTransferTxIdInNoirFormat = '0x08';
+
     const stateRootInNoirFormat = new Array(BYTES32_LEN).fill('0x00');
     const mockFilePaths = [
       './fixtures/mainnet/cancun/small_block/alchemy_getTransactionReceipts_19432673.json',
       './fixtures/mainnet/cancun/small_block/eth_getBlockByHash_19432673.json'
     ];
-    const client = await createMockClient(mockFilePaths);
+    const multiChainClient = await createMockMultiChainClient(mockFilePaths);
 
-    const receiptWithProof = await getReceiptOracle(client, [
+    const receiptWithProof = await getReceiptOracle(multiChainClient, [
+      [mainnetChainIdInNoirFormat],
       [cancunBlockNumberInNoirFormat],
       [chainLinkTransferTxIdInNoirFormat]
     ]);
@@ -69,13 +72,17 @@ describe('getReceiptOracle', () => {
   });
 
   it('transaction not found', async () => {
-    const cancunBlockNumberInNoirFormat = '0x12884e1';
     const nonExistentTxId = '0xffff';
     const mockFilePaths = ['./fixtures/mainnet/cancun/small_block/alchemy_getTransactionReceipts_19432673.json'];
-    const client = await createMockClient(mockFilePaths);
+    const multiChainClient = await createMockMultiChainClient(mockFilePaths);
 
     await expect(
-      async () => await getReceiptOracle(client, [[cancunBlockNumberInNoirFormat], [nonExistentTxId]])
+      async () =>
+        await getReceiptOracle(multiChainClient, [
+          [mainnetChainIdInNoirFormat],
+          [cancunBlockNumberInNoirFormat],
+          [nonExistentTxId]
+        ])
     ).rejects.toThrowError(`Transaction receipt not found for txId: ${parseInt(nonExistentTxId, 16)}`);
   });
 });

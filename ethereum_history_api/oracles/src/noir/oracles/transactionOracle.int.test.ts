@@ -1,17 +1,19 @@
 import { describe, expect, it } from 'vitest';
-import { createMockClient } from '../../ethereum/mockClient.js';
+import { createMockMultiChainClient } from '../../ethereum/mockClient.js';
 import { OFFSETS, getTransactionOracle } from './transactionOracle.js';
 
 describe('getTransactionOracle', () => {
   it('success', async () => {
     const cancunBlockNumberInNoirFormat = '0x12884e1';
     const chainLinkTransferTxIdInNoirFormat = '0x08';
+    const mainnetChainIdInNoirFormat = '0x01';
     const mockFilePaths = [
       './fixtures/mainnet/cancun/small_block/eth_getBlockByHash_19432673_includeTransactions.json'
     ];
-    const client = await createMockClient(mockFilePaths);
+    const multiChainClient = await createMockMultiChainClient(mockFilePaths);
 
-    const txWithProof = await getTransactionOracle(client, [
+    const txWithProof = await getTransactionOracle(multiChainClient, [
+      [mainnetChainIdInNoirFormat],
       [cancunBlockNumberInNoirFormat],
       [chainLinkTransferTxIdInNoirFormat]
     ]);

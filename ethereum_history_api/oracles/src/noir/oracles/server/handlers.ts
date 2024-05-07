@@ -1,6 +1,6 @@
 import { ForeignCallResult, ForeignCallParams } from './types.js';
 import { decodeNoirArguments, encodeForeignCallResult } from './encode.js';
-import { AlchemyClient } from '../../../ethereum/client.js';
+import { MultiChainClient } from '../../../ethereum/client.js';
 import { Oracle } from '../oracles.js';
 
 /**
@@ -20,7 +20,7 @@ export type JSONRPCServerMethods = {
 };
 
 export interface ServerParams {
-  client: AlchemyClient;
+  client: MultiChainClient;
 }
 
 export async function getOracleHandler(

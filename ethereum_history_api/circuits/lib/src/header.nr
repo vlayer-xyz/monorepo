@@ -2,8 +2,6 @@ use crate::misc::types::Bytes32;
 use crate::verifiers::header::verify_header;
 
 global MAX_HEADER_RLP_LEN = 708;
-global ETHEREUM_MAINNET_ID = 1;
-global ETHEREUM_SEPOLIA_ID = 58008;
 
 struct BlockHeaderPartial {
     number: u64,
@@ -18,16 +16,16 @@ struct BlockHeaderRlp {
     data: [u8; MAX_HEADER_RLP_LEN]
 }
 
-pub fn get_header(block_number: u64) -> BlockHeaderPartial {
-    let (block_header_partial, block_header_rlp) = get_header_unconstrained(block_number);
-    verify_header(ETHEREUM_MAINNET_ID, block_header_partial, block_header_rlp);
+pub fn get_header(chain_id: Field, block_number: u64) -> BlockHeaderPartial {
+    let (block_header_partial, block_header_rlp) = get_header_unconstrained(chain_id, block_number);
+    verify_header(chain_id, block_header_partial, block_header_rlp);
     assert(block_header_partial.number == block_number, "Block number does not match the argument");
     block_header_partial
 }
 
 #[oracle(get_header)]
-unconstrained fn get_header_oracle(_block_no: u64) -> (BlockHeaderPartial, BlockHeaderRlp) {}
+unconstrained fn get_header_oracle(_chain_id: Field, _block_no: u64) -> (BlockHeaderPartial, BlockHeaderRlp) {}
 
-unconstrained fn get_header_unconstrained(block_no: u64) -> (BlockHeaderPartial, BlockHeaderRlp) {
-    get_header_oracle(block_no)
+unconstrained fn get_header_unconstrained(chain_id: Field, block_no: u64) -> (BlockHeaderPartial, BlockHeaderRlp) {
+    get_header_oracle(chain_id, block_no)
 }

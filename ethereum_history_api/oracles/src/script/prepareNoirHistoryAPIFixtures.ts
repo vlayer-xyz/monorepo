@@ -2,7 +2,7 @@ import { mkdir, rm, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { Hex } from 'viem';
 import { Block } from '../ethereum/blockHeader.js';
-import { createClient } from '../ethereum/client.js';
+import { MultiChainClient, getChainByName } from '../ethereum/client.js';
 import { getReceiptProof } from '../ethereum/receiptProof.js';
 import { HISTORY_API_FIXTURES } from '../fixtures/historyAPIConfig.js';
 import { assert } from '../main.js';
@@ -25,13 +25,15 @@ const INDEX_NOT_FOUND = -1;
 
 const NOIR_FIXTURES_DIRECTORY = '../circuits/lib/src/fixtures';
 
+const multiChainClient = MultiChainClient.from_env();
+
 for (const chain in HISTORY_API_FIXTURES) {
   const chainDirectory = `${NOIR_FIXTURES_DIRECTORY}/${chain}`;
   const chainModuleFile = `${NOIR_FIXTURES_DIRECTORY}/${chain}.nr`;
   await rm(chainDirectory, { recursive: true, force: true });
   await rm(chainModuleFile, { force: true });
 
-  const client = createClient.get(chain)!();
+  const client = multiChainClient.getClient(getChainByName(chain).id);
 
   let chainModule = ``;
   for (const hardFork in HISTORY_API_FIXTURES[chain]) {

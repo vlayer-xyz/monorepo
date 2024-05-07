@@ -3,10 +3,12 @@ import { getBlockHeader, getHeaderOracle } from './headerOracle.js';
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { createMockClient } from '../../ethereum/mockClient.js';
 import { HISTORY_API_FIXTURES } from '../../fixtures/historyAPIConfig.js';
+import { MultiChainClient } from '../../ethereum/client.js';
 
 describe('headerOracle', async () => {
   const mockFilePaths = ['./fixtures/mainnet/paris/usdc_circle/eth_getBlockByHash_19000000.json'];
   const client = await createMockClient(mockFilePaths);
+  const multiChainClient = MultiChainClient.from(client);
 
   it('getBlock', async () => {
     const blockNumber = HISTORY_API_FIXTURES.mainnet.paris.usdc_circle.blockNumber;
@@ -17,7 +19,7 @@ describe('headerOracle', async () => {
   });
 
   it('getHeaderOracle', async () => {
-    const blockHeader: ForeignCallOutput[] = await getHeaderOracle(client, [['0x121eac0']]);
+    const blockHeader: ForeignCallOutput[] = await getHeaderOracle(multiChainClient, [['0x01'], ['0x121eac0']]);
     expect(blockHeader.length === 7);
     // prettier-ignore
     const encodedStateRootOfParisBlock = [

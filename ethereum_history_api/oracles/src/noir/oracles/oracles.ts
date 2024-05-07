@@ -1,5 +1,5 @@
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
-import { AlchemyClient, createDefaultClient } from '../../ethereum/client.js';
+import { MultiChainClient } from '../../ethereum/client.js';
 import { getAccountOracle } from './accountOracle.js';
 import { getHeaderOracle } from './headerOracle.js';
 import { getProofOracle } from './proofOracle.js';
@@ -9,21 +9,21 @@ import { getTransactionOracle } from './transactionOracle.js';
 export type NoirArgument = string[];
 export type NoirArguments = NoirArgument[];
 
-export type Oracle = (client: AlchemyClient, args: NoirArguments) => Promise<ForeignCallOutput[]>;
+export type Oracle = (multiChainClient: MultiChainClient, args: NoirArguments) => Promise<ForeignCallOutput[]>;
 
 export type Oracles = (name: string, args: NoirArguments) => Promise<ForeignCallOutput[]>;
 
 type OracleMap = Record<string, Oracle>;
 
 export const createOracles =
-  (client: AlchemyClient) =>
+  (multiChainClient: MultiChainClient) =>
   (dict: OracleMap): Oracles =>
   async (name: string, args: NoirArguments): Promise<ForeignCallOutput[]> => {
     const fn = dict[name];
     if (fn === undefined) {
       throw new Error(`Unknown oracle ${name}`);
     }
-    return await fn(client, args);
+    return await fn(multiChainClient, args);
   };
 
 export const defaultOraclesMap: OracleMap = {
@@ -34,4 +34,4 @@ export const defaultOraclesMap: OracleMap = {
   get_transaction: getTransactionOracle
 };
 
-export const defaultOracles = createOracles(createDefaultClient())(defaultOraclesMap);
+export const defaultOracles = createOracles(MultiChainClient.from_env())(defaultOraclesMap);

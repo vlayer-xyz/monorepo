@@ -1,6 +1,6 @@
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { NoirArguments } from './oracles.js';
-import { AlchemyClient } from '../../ethereum/client.js';
+import { MultiChainClient } from '../../ethereum/client.js';
 import { txTypeToHex } from '../../ethereum/receipt.js';
 import { getTxProof } from '../../ethereum/txProof.js';
 import { encodeTx, encodeTxProof } from './transactionOracle/encode.js';
@@ -26,10 +26,11 @@ export enum OFFSETS {
 }
 
 export const getTransactionOracle = async (
-  client: AlchemyClient,
+  multiChainClient: MultiChainClient,
   args: NoirArguments
 ): Promise<ForeignCallOutput[]> => {
-  const { blockNumber, txId } = decodeGetTransactionArguments(args);
+  const { blockNumber, txId, chainId } = decodeGetTransactionArguments(args);
+  const client = multiChainClient.getClient(chainId);
   const block = await client.getBlock({ blockNumber, includeTransactions: true });
 
   if (txId >= block.transactions.length) {
@@ -49,6 +50,7 @@ export const getTransactionOracle = async (
 };
 
 export function decodeGetTransactionArguments(args: NoirArguments): {
+  chainId: number;
   blockNumber: bigint;
   txId: number;
 } {

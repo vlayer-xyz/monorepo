@@ -7,6 +7,7 @@ mod test_ERC20Token {
         paris::usdc_circle::account::account, paris::usdc_circle::state_proof::state_proof,
         paris::usdc_circle::storage_proof::proofs
     };
+    use crate::chain_id::MAINNET;
 
     #[test]
     fn success() {
@@ -23,7 +24,7 @@ mod test_ERC20Token {
             allowances_slot: [
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10
             ],
-            chain_id: 0
+            chain_id: MAINNET
         };
 
         let circle_address = [

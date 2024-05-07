@@ -8,6 +8,7 @@ mod receipt;
 mod log;
 mod transaction;
 mod misc;
+mod chain;
 
 mod fixtures;
 mod verifiers;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createMockClient } from '../../ethereum/mockClient.js';
+import { createMockMultiChainClient } from '../../ethereum/mockClient.js';
 import { getProofOracle } from './proofOracle.js';
 
 describe(
@@ -27,12 +27,14 @@ describe(
       ];
       // 19000000
       const parisBlockNumberInNoirFormat = '0x121eac0';
+      const mainnetChainIdInNoirFormat = '0x01';
       const mockFilePaths = [
         './fixtures/mainnet/paris/usdc_circle/eth_getBlockByHash_19000000.json',
         './fixtures/mainnet/paris/usdc_circle/eth_getProof_19000000.json'
       ];
-      const client = await createMockClient(mockFilePaths);
-      const stateAndStorageProof = await getProofOracle(client, [
+      const multiChainClient = await createMockMultiChainClient(mockFilePaths);
+      const stateAndStorageProof = await getProofOracle(multiChainClient, [
+        [mainnetChainIdInNoirFormat],
         [parisBlockNumberInNoirFormat],
         usdcAccountAddressInNoirFormat,
         circleUsdcBalanceStorageKeyInNoirFormat

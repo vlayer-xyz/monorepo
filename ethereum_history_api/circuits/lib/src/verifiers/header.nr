@@ -1,7 +1,9 @@
 use dep::std::hash::keccak256;
 
-use crate::header::{BlockHeaderPartial, BlockHeaderRlp, ETHEREUM_MAINNET_ID, ETHEREUM_SEPOLIA_ID};
+use crate::header::{BlockHeaderPartial, BlockHeaderRlp};
 use crate::misc::arrays::sub_array_equals;
+use crate::chain::{ETHEREUM_MAINNET_ID, ETHEREUM_SEPOLIA_ID};
+use crate::HASH_LEN;
 use crate::rlp::decode::decode_list;
 use crate::rlp::types::RlpList;
 
@@ -29,6 +31,8 @@ pub(crate) fn get_header_fields_count(chain_id: Field, block_number: u64) -> u64
         }
     } else if chain_id == ETHEREUM_SEPOLIA_ID {
         fields_count = 20;
+    } else {
+        assert(false, "Unsupported chain ID");
     }
     fields_count
 }

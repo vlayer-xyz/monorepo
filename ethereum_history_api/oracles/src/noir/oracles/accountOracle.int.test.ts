@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { OFFSETS, getAccountOracle } from './accountOracle.js';
-import { createMockClient } from '../../ethereum/mockClient.js';
+import { createMockMultiChainClient } from '../../ethereum/mockClient.js';
 
 describe('accountOracle', () => {
   it('getAccountOracle', async () => {
+    const mainnetChainIdInNoirFormat = '0x01';
     // prettier-ignore
     const cryptoPunksAccountAddressInNoirFormat = [
         "0xb4", "0x7e", "0x3c", "0xd8", "0x37", "0xdd", "0xf8", "0xe4", "0xc5", "0x7f",
@@ -14,8 +15,9 @@ describe('accountOracle', () => {
       './fixtures/mainnet/london/crypto_punks/eth_getBlockByHash_14194126.json',
       './fixtures/mainnet/london/crypto_punks/eth_getProof_14194126.json'
     ];
-    const client = await createMockClient(mockFilePaths);
-    const account = await getAccountOracle(client, [
+    const multiChainClient = await createMockMultiChainClient(mockFilePaths);
+    const account = await getAccountOracle(multiChainClient, [
+      [mainnetChainIdInNoirFormat],
       [londonBlockNumberInNoirFormat],
       cryptoPunksAccountAddressInNoirFormat
     ]);

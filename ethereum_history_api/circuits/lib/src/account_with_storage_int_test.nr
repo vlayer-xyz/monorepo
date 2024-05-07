@@ -1,4 +1,5 @@
 use crate::misc::types::Bytes32;
+use crate::chain::ETHEREUM_MAINNET_ID;
 use crate::account_with_storage::{StorageProof, get_account_with_storage};
 use crate::fixtures::mainnet::{
     paris::{
@@ -27,7 +28,7 @@ fn test_get_account_with_storage_success() {
 
     let address = state_proof.key;
     let storage_key = proofs[0].key;
-    let account_with_storage = get_account_with_storage(number, address, storage_key);
+    let account_with_storage = get_account_with_storage(ETHEREUM_MAINNET_ID, number, address, storage_key);
 
     assert_eq(block_header_partial.hash, account_with_storage.block_hash);
 
@@ -47,7 +48,7 @@ fn test_get_account_with_storage_invalid_state_root() {
 
     let address = state_proof.key;
     let storage_key = proofs[0].key;
-    let _ = get_account_with_storage(crypto_punks_number, address, storage_key);
+    let _ = get_account_with_storage(ETHEREUM_MAINNET_ID, crypto_punks_number, address, storage_key);
 }
 
 #[test(should_fail_with = "Internal node hash does not match the hash extracted from the preceding node")]
@@ -57,7 +58,7 @@ fn test_get_account_with_storage_invalid_storage_root() {
 
     let address = crypto_punks_state_proof.key;
     let storage_key = proofs[0].key;
-    let _ = get_account_with_storage(crypto_punks_number, address, storage_key);
+    let _ = get_account_with_storage(ETHEREUM_MAINNET_ID, crypto_punks_number, address, storage_key);
 }
 
 #[test(should_fail_with = "Storage key does not match the argument")]
@@ -67,5 +68,5 @@ fn test_get_account_with_storage_storage_key_does_not_match_the_argument() {
 
     let address = state_proof.key;
     let storage_key = usdc_uniswap_proofs[0].key;
-    let _ = get_account_with_storage(number, address, storage_key);
+    let _ = get_account_with_storage(ETHEREUM_MAINNET_ID, number, address, storage_key);
 }

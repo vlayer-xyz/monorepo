@@ -1,6 +1,6 @@
 use dep::ethereum_history_api::account::{get_account, AccountWithinBlock};
 use dep::ethereum_history_api::misc::types::Address;
 
-fn main(block_no: pub u64, address: pub Address) -> pub AccountWithinBlock {
-    get_account(block_no, address)
+fn main(chain_id: pub Field, block_no: pub u64, address: pub Address) -> pub AccountWithinBlock {
+    get_account(chain_id, block_no, address)
 }
