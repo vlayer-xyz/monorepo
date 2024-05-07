@@ -1,5 +1,5 @@
 use crate::account::AccountWithinBlock;
-use crate::account_with_storage::Account;
+use crate::account_with_storage::{StorageWithinBlock, Account};
 use crate::misc::{fragment::Fragment, types::{BYTES32_LENGTH, Bytes32}};
 use dep::std::unsafe::zeroed;
 
@@ -45,6 +45,18 @@ impl Serialize<ACCOUNT_WITHIN_BLOCK_SERIALIZED_LEN> for AccountWithinBlock {
         let mut data: Fragment<ACCOUNT_WITHIN_BLOCK_SERIALIZED_LEN, Field> = Fragment::empty();
         data.extend_back(self.account.serialize());
         data.extend_back(self.block_hash.serialize());
+        data.to_array()
+    }
+}
+
+global STORAGE_WITHIN_BLOCK_1_SERIALIZED_LEN = BYTES32_LENGTH + ACCOUNT_SERIALIZED_LEN + BYTES32_LENGTH;
+
+impl Serialize<STORAGE_WITHIN_BLOCK_1_SERIALIZED_LEN> for StorageWithinBlock<1> {
+    fn serialize(self) -> [Field; STORAGE_WITHIN_BLOCK_1_SERIALIZED_LEN] {
+        let mut data: Fragment<STORAGE_WITHIN_BLOCK_1_SERIALIZED_LEN, Field> = Fragment::empty();
+        data.extend_back(self.block_hash.serialize());
+        data.extend_back(self.account.serialize());
+        data.extend_back(self.values[0].serialize());
         data.to_array()
     }
 }

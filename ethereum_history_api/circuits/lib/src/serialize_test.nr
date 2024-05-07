@@ -62,3 +62,27 @@ mod account_within_block {
         );
     }
 }
+
+mod storage_within_block {
+    use crate::serialize::{STORAGE_WITHIN_BLOCK_1_SERIALIZED_LEN, ACCOUNT_SERIALIZED_LEN};
+    use crate::account_with_storage::StorageWithinBlock;
+    use crate::fixtures::mainnet::paris::usdc_circle::{account::account, header::hash, storage_proof_new::proofs};
+    use crate::misc::{types::BYTES32_LENGTH, arrays::sub_array_equals};
+
+    #[test]
+    fn simple() {
+        let value = proofs[0].value;
+        let storage_within_block = StorageWithinBlock { block_hash: hash, account, values: [value] };
+        let serialized: [Field; STORAGE_WITHIN_BLOCK_1_SERIALIZED_LEN] = storage_within_block.serialize();
+
+        assert(sub_array_equals(storage_within_block.block_hash.serialize(), serialized, 0));
+        assert(
+            sub_array_equals(
+                storage_within_block.account.serialize(),
+                serialized,
+                BYTES32_LENGTH
+            )
+        );
+        assert(sub_array_equals(storage_within_block.values[0].serialize(), serialized, BYTES32_LENGTH + ACCOUNT_SERIALIZED_LEN));
+    }
+}
