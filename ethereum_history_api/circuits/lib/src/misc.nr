@@ -8,7 +8,6 @@ mod fragment;
 mod fragment_test;
 mod fragment_int_test;
 mod types;
-mod types_test;
 mod option;
 mod field;
 mod field_test;

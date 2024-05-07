@@ -1,10 +1,8 @@
 mod account;
-mod account_test;
 mod account_int_test;
 mod header;
 mod header_int_test;
 mod account_with_storage;
-mod account_with_storage_test;
 mod account_with_storage_int_test;
 mod receipt;
 mod log;

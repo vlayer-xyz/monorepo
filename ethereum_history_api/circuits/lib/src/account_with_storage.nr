@@ -16,19 +16,6 @@ struct Account {
     code_hash: Bytes32,
 }
 
-global ACCOUNT_SERIALIZED_LEN = 1 + 1 + 32 + 32;
-
-impl Serialize<ACCOUNT_SERIALIZED_LEN> for Account {
-    fn serialize(self) -> [Field; ACCOUNT_SERIALIZED_LEN] {
-        let mut data: Fragment<ACCOUNT_SERIALIZED_LEN, Field> = Fragment::empty();
-        data.push_back(self.nonce as Field);
-        data.push_back(self.balance);
-        data.extend_back(self.storage_root.serialize());
-        data.extend_back(self.code_hash.serialize());
-        data.to_array()
-    }
-}
-
 struct StateProof {
     key: Address,
     value: [u8; MAX_ACCOUNT_STATE_LENGTH],
