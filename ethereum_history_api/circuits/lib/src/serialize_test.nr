@@ -83,6 +83,12 @@ mod storage_within_block {
                 BYTES32_LENGTH
             )
         );
-        assert(sub_array_equals(storage_within_block.values[0].serialize(), serialized, BYTES32_LENGTH + ACCOUNT_SERIALIZED_LEN));
+        assert(
+            sub_array_equals(
+                storage_within_block.values[0].serialize(),
+                serialized,
+                BYTES32_LENGTH + ACCOUNT_SERIALIZED_LEN
+            )
+        );
     }
 }
