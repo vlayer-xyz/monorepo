@@ -223,7 +223,7 @@ mod extend_back {
         assert(fragment.data == [1, 2, 3, 4]);
     }
 
-    #[test(should_fail_with="Cannot extend: fragment is full")]
+    #[test(should_fail_with="Cannot push: fragment is full")]
     fn fail() {
         let mut fragment = Fragment::new(0, 2, [1, 2, 0, 0]);
         fragment.extend_back([3, 4, 5]);

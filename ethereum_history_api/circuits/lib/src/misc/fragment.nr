@@ -87,11 +87,9 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
     }
 
     pub fn extend_back<LEN>(&mut self, other: [T; LEN]) {
-        assert(self.offset + self.length + LEN <= MAX_DATA_LEN, "Cannot extend: fragment is full");
         for i in 0..LEN {
-            self.data[self.offset + self.length + i] = other[i];
+            self.push_back(other[i]);
         }
-        self.length += LEN;
     }
 }
 
