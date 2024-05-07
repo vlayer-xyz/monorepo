@@ -38,7 +38,7 @@ pub(crate) fn assert_receipt_proof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>(
     assert(proof.verify_receipt_root(root), "TrieProof: Invalid receipt root");
 }
 
-pub fn verify_receipt<LOG_NUM, MAX_LOG_DATA_LEN, MAX_RECEIPT_PROOF_LEN>(
+pub fn verify_receipt<MAX_RECEIPT_PROOF_LEN>(
     block_number: u64,
     tx_idx: Field,
     tx_type: TxType,
