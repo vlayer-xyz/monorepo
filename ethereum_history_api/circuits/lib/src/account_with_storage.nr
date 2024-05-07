@@ -1,10 +1,9 @@
 use dep::proof::const::MAX_ACCOUNT_STATE_LENGTH;
 
 use crate::header::{get_header, BlockHeaderPartial};
-use crate::misc::{fragment::Fragment, types::{Address, Bytes32}};
+use crate::misc::types::{Address, Bytes32};
 use crate::verifiers::account::verify_account;
 use crate::verifiers::storage::verify_storage_values;
-use crate::serde::Serialize;
 
 global STATE_PROOF_LEN = 5852; // = 11 (MAX_STATE_PROOF_LEVELS) * 532 (MAX_TRIE_NODE_LEN)
 global STORAGE_PROOF_LEN = 3724; // = 7 (MAX_STORAGE_PROOF_LEVELS) * 532 (MAX_TRIE_NODE_LEN)

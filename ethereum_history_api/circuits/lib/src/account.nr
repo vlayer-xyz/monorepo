@@ -1,8 +1,7 @@
 use crate::account_with_storage::{Account, StateProof};
 use crate::header::get_header;
-use crate::misc::{fragment::Fragment, types::{Address, Bytes32, BYTES32_LENGTH}};
+use crate::misc::types::{Address, Bytes32, BYTES32_LENGTH};
 use crate::verifiers::account::verify_account;
-use crate::serde::Serialize;
 
 struct AccountWithinBlock {
     account: Account,
