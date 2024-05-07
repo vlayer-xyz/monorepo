@@ -16,7 +16,7 @@
     "@noir-lang/noirc_abi": "^0.28.0",
     "noir-ethereum-api-oracles": "^1.0.0",
     "toml": "^3.0.0",
-    "viem": "^2.9.32"
+    "viem": "^2.10.1"
   },
   "devDependencies": {
     "@types/node": "^20.12.10",

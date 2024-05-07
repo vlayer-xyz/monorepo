@@ -3760,7 +3760,7 @@ __metadata:
     toml: "npm:^3.0.0"
     tsx: "npm:^4.9.3"
     typescript: "npm:^5.4.5"
-    viem: "npm:^2.9.32"
+    viem: "npm:^2.10.1"
     vitest: "npm:^1.6.0"
   languageName: unknown
   linkType: soft
@@ -3786,7 +3786,7 @@ __metadata:
     toml: "npm:^3.0.0"
     tsx: "npm:^4.9.3"
     typescript: "npm:^5.4.5"
-    viem: "npm:^2.9.32"
+    viem: "npm:^2.10.1"
     vitest: "npm:^1.6.0"
   languageName: unknown
   linkType: soft
@@ -5154,9 +5154,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"viem@npm:^2.9.32":
-  version: 2.9.32
-  resolution: "viem@npm:2.9.32"
+"viem@npm:^2.10.1":
+  version: 2.10.1
+  resolution: "viem@npm:2.10.1"
   dependencies:
     "@adraffy/ens-normalize": "npm:1.10.0"
     "@noble/curves": "npm:1.2.0"
@@ -5171,7 +5171,7 @@ __metadata:
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10c0/343c7504b618ed8a41a98f6bef4a5d5e1d723517771406144429edaaf2915ea3fd5beedaf399dc4b4274745980bf7baa06e381a904e27e61315a4d97b442f113
+  checksum: 10c0/e2a101f1b20dbcc1646bab6efa28ed15d07d6a8e899e4a09b7900431f79936e17b7f6f52b2f9a5dd8cd5c8c469c31ef63da0815b25d9e21c09b8b1c71f0e5c7e
   languageName: node
   linkType: hard
 

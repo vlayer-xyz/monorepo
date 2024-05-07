@@ -76,7 +76,7 @@ export class TxRlpEncoder {
       ...this.toValueInputToFields(tx),
       this.accessListToFields(tx.accessList),
       encodeField(tx.maxFeePerBlobGas),
-      tx.blobVersionedHashes,
+      [...tx.blobVersionedHashes],
       ...this.signatureToFields(tx)
     ];
   }

@@ -30,7 +30,7 @@
     "json-rpc-2.0": "^1.7.0",
     "lodash.isequal": "^4.5.0",
     "toml": "^3.0.0",
-    "viem": "^2.9.32"
+    "viem": "^2.10.1"
   },
   "devDependencies": {
     "@types/json-bigint": "^1.0.4",
