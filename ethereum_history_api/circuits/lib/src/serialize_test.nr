@@ -1,6 +1,6 @@
 mod U128_ {
 
-    use crate::serde::U128_SERIALIZED_LEN;
+    use crate::serialize::U128_SERIALIZED_LEN;
 
     #[test]
     fn simple() {
@@ -26,7 +26,7 @@ mod bytes32 {
 
 mod account {
     use crate::account_with_storage::Account;
-    use crate::serde::ACCOUNT_SERIALIZED_LEN;
+    use crate::serialize::ACCOUNT_SERIALIZED_LEN;
     use crate::misc::arrays::sub_array_equals;
     use crate::fixtures::mainnet::london::vitalik_balance::account::account;
 
@@ -42,7 +42,7 @@ mod account {
 }
 
 mod account_within_block {
-    use crate::serde::{ACCOUNT_WITHIN_BLOCK_SERIALIZED_LEN, ACCOUNT_SERIALIZED_LEN};
+    use crate::serialize::{ACCOUNT_WITHIN_BLOCK_SERIALIZED_LEN, ACCOUNT_SERIALIZED_LEN};
     use crate::account::AccountWithinBlock;
     use crate::fixtures::mainnet::london::vitalik_balance::{account::account, header::hash};
     use crate::misc::arrays::sub_array_equals;

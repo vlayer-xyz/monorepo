@@ -9,8 +9,8 @@ mod log;
 mod transaction;
 mod misc;
 mod chain;
-mod serde;
-mod serde_test;
+mod serialize;
+mod serialize_test;
 
 mod fixtures;
 mod verifiers;
