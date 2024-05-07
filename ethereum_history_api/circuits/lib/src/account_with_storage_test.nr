@@ -4,7 +4,7 @@ mod account_serialize {
     use crate::fixtures::mainnet::london::vitalik_balance::account::account;
 
     #[test]
-    fn success() {
+    fn simple() {
         let serialized: [Field; ACCOUNT_SERIALIZED_LEN] = account.serialize();
 
         assert_eq(serialized[0], account.nonce as Field);

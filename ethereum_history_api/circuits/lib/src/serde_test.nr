@@ -3,7 +3,7 @@ mod u128_serialize {
     use crate::serde::U128_SERIALIZED_LEN;
 
     #[test]
-    fn success() {
+    fn simple() {
         let value = U128::from_integer(100);
         let serialized: [Field; U128_SERIALIZED_LEN] = value.serialize();
 

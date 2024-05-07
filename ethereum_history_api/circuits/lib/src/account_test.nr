@@ -5,7 +5,7 @@ mod account_within_block_serialize {
     use crate::misc::arrays::sub_array_equals;
 
     #[test]
-    fn success() {
+    fn simple() {
         let account_within_block = AccountWithinBlock { account, block_hash: hash };
         let serialized: [Field; ACCOUNT_WITHIN_BLOCK_SERIALIZED_LEN] = account_within_block.serialize();
 
