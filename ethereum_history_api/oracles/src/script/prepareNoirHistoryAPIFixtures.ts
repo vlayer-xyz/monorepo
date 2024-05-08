@@ -20,6 +20,7 @@ import { createNewReceiptProofFixture } from './noir_fixtures/new_receipt_proof.
 import { createNewTransactionProofFixture } from './noir_fixtures/new_transaction_proof.js';
 import { createNewStateProofFixture } from './noir_fixtures/new_state_proof.js';
 import { createNewStorageProofFixture } from './noir_fixtures/new_storage_proof.js';
+import { createStorageFixture } from './noir_fixtures/storage.js';
 
 const INDEX_NOT_FOUND = -1;
 
@@ -66,12 +67,13 @@ for (const chain in HISTORY_API_FIXTURES) {
         await writeFile(join(modulePath, 'state_proof_new.nr'), createNewStateProofFixture(stateProof));
         fixtureModules.push('account', 'state_proof', 'state_proof_new');
         if (storageKeys) {
+          await writeFile(join(modulePath, 'storage.nr'), createStorageFixture(stateProof));
           await writeFile(join(modulePath, 'storage_proof.nr'), createStorageProofFixture(stateProof.storageProof));
           await writeFile(
             join(modulePath, 'storage_proof_new.nr'),
             createNewStorageProofFixture(stateProof.storageProof)
           );
-          fixtureModules.push('storage_proof', 'storage_proof_new');
+          fixtureModules.push('storage', 'storage_proof', 'storage_proof_new');
         }
       }
 
