@@ -25,8 +25,9 @@ pub fn extract_payload_len<N>(data: Fragment<N, u8>, lenlen: u64) -> u64 {
     payload_length
 }
 
-pub fn decode_to_rlp_header<N>(arr: [u8; N]) -> RlpHeader {
-    let prefix = arr[0];
+pub fn decode_to_rlp_header<N>(data: Fragment<N, u8>) -> RlpHeader {
+    let mut data = data;
+    let prefix = data.pop_front();
 
     if (prefix < 0x80) { // single byte
         RlpHeader { offset: 0, length: 1, data_type: STRING }
@@ -38,7 +39,7 @@ pub fn decode_to_rlp_header<N>(arr: [u8; N]) -> RlpHeader {
         RlpHeader { offset, length, data_type: STRING }
     } else if (prefix < 0xc0) { // >55-byte string
         let offset = wrapping_sub(1 + prefix, 0xb7) as u64;
-        let length = extract_payload_len(Fragment::new_focused(arr), wrapping_sub(prefix, 0xb7) as u64);
+        let length = extract_payload_len(data, wrapping_sub(prefix, 0xb7) as u64);
         assert(offset + length <= N, "Decoded length of long string exceeds input length");
 
         RlpHeader { offset, length, data_type: STRING }
@@ -50,7 +51,7 @@ pub fn decode_to_rlp_header<N>(arr: [u8; N]) -> RlpHeader {
         RlpHeader { offset, length, data_type: LIST }
     } else { // >55-byte list
         let offset = wrapping_sub(1 + prefix, 0xf7) as u64;
-        let length = extract_payload_len(Fragment::new_focused(arr), wrapping_sub(prefix, 0xf7) as u64);
+        let length = extract_payload_len(data, wrapping_sub(prefix, 0xf7) as u64);
         assert(offset + length <= N, "Decoded length of long list exceeds input length");
 
         RlpHeader { offset, length, data_type: LIST }
@@ -58,7 +59,7 @@ pub fn decode_to_rlp_header<N>(arr: [u8; N]) -> RlpHeader {
 }
 
 pub fn decode_string<N>(input: [u8; N]) -> (u64, u64) {
-    let mut RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
+    let mut RlpHeader {offset, length, data_type} = decode_to_rlp_header(Fragment::new_focused(input));
     assert(data_type == STRING, "Wrong data type");
 
     let total_len = length + offset;
@@ -73,7 +74,7 @@ pub fn decode_string<N>(input: [u8; N]) -> (u64, u64) {
 pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
     let mut rlp_list: RlpList<NUM_FIELDS> = BoundedVec::new();
 
-    let RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
+    let RlpHeader {offset, length, data_type} = decode_to_rlp_header(Fragment::new_focused(input));
     assert(data_type == LIST, "Expected a list");
 
     let total_len = length + offset;
@@ -84,7 +85,7 @@ pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
         if (current_offset < total_len) {
             let header: [u8; N] = copy_subarray(input, current_offset);
 
-            let RlpHeader {offset: field_off, length: field_len, data_type: field_type} = decode_to_rlp_header(header);
+            let RlpHeader {offset: field_off, length: field_len, data_type: field_type} = decode_to_rlp_header(Fragment::new_focused(header));
 
             let fragment = RlpFragment {
                 offset: current_offset + (1 - field_type) * field_off, // If the ith slot contains a list, include its RLP header.
@@ -106,7 +107,7 @@ pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
 pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
     let mut rlp_list: RlpList<NUM_FIELDS> = BoundedVec::new();
 
-    let RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
+    let RlpHeader {offset, length, data_type} = decode_to_rlp_header(Fragment::new_focused(input));
     assert(data_type == LIST, "Expected a list");
 
     let total_len = length + offset;
