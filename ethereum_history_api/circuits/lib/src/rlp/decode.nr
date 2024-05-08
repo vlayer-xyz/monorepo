@@ -58,12 +58,12 @@ pub fn decode_to_rlp_header<N>(data: Fragment<N, u8>) -> RlpHeader {
     }
 }
 
-pub fn decode_string<N>(input: [u8; N]) -> (u64, u64) {
-    let mut RlpHeader {offset, length, data_type} = decode_to_rlp_header(Fragment::new_focused(input));
+pub fn decode_string<N>(input: Fragment<N, u8>) -> (u64, u64) {
+    let mut RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
     assert(data_type == STRING, "Wrong data type");
 
     let total_len = length + offset;
-    assert(total_len <= input.len(), "Total length exceeds input length");
+    assert(total_len <= input.length, "Total length exceeds input length");
 
     (offset, length)
 }
@@ -71,21 +71,21 @@ pub fn decode_string<N>(input: [u8; N]) -> (u64, u64) {
 /// Returns an RLP list look-up table.
 /// For string elements, the offset points to the payload, whereas the offset
 ///   of a list element points to the RLP header of that element.
-pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
+pub fn decode_list<N, NUM_FIELDS>(input: Fragment<N, u8>) -> RlpList<NUM_FIELDS> {
     let mut rlp_list: RlpList<NUM_FIELDS> = BoundedVec::new();
 
-    let RlpHeader {offset, length, data_type} = decode_to_rlp_header(Fragment::new_focused(input));
+    let RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
     assert(data_type == LIST, "Expected a list");
 
     let total_len = length + offset;
-    assert(total_len <= input.len(), "Total length exceeds input length");
+    assert(total_len <= input.length, "Total length exceeds input length");
 
     let mut current_offset = offset;
     for _ in 0..NUM_FIELDS {
         if (current_offset < total_len) {
-            let header: [u8; N] = copy_subarray(input, current_offset);
+            let header: Fragment<N, u8> = copy_subfragment(input, current_offset);
 
-            let RlpHeader {offset: field_off, length: field_len, data_type: field_type} = decode_to_rlp_header(Fragment::new_focused(header));
+            let RlpHeader {offset: field_off, length: field_len, data_type: field_type} = decode_to_rlp_header(header);
 
             let fragment = RlpFragment {
                 offset: current_offset + (1 - field_type) * field_off, // If the ith slot contains a list, include its RLP header.
@@ -104,19 +104,19 @@ pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
 
 /// RLP list decoder for lists of strings of length < 56 bytes.
 /// Returns an RLP list look-up table.
-pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
+pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: Fragment<N, u8>) -> RlpList<NUM_FIELDS> {
     let mut rlp_list: RlpList<NUM_FIELDS> = BoundedVec::new();
 
-    let RlpHeader {offset, length, data_type} = decode_to_rlp_header(Fragment::new_focused(input));
+    let RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
     assert(data_type == LIST, "Expected a list");
 
     let total_len = length + offset;
-    assert(total_len <= input.len(), "Total length exceeds input length");
+    assert(total_len <= input.length, "Total length exceeds input length");
 
     let mut current_offset = offset;
     for _ in 0..NUM_FIELDS {
         if (current_offset < total_len) {
-            let first_byte = input[current_offset];
+            let first_byte = input.at(current_offset);
 
             let (field_off, field_len) = get_small_string_offset_and_length(first_byte);
 
@@ -141,12 +141,13 @@ pub fn get_small_string_offset_and_length(first_byte: u8) -> (u64, u64) {
     }
 }
 
-pub fn copy_subarray<T, N, M>(arr: [T; N], offset: u64) -> [T; M] {
-    let mut out = [dep::std::unsafe::zeroed(); M];
+pub fn copy_subfragment<T, N, M>(data: Fragment<N, T>, offset: u64) -> Fragment<M, T> {
+    let mut out: Fragment<M, T> = Fragment::empty();
 
     for i in 0..M {
-        let j = (((offset + i) as u64) < N) as u64 * (offset + i); // Restrict to proper range and fill with arr[0] otherwise.
-        out[i] = arr[j];
+        if offset + i < data.length {
+            out.push_back(data.at(offset + i));
+        }
     }
 
     out
