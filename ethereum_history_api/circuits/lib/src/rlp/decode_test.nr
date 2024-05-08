@@ -11,43 +11,43 @@ fn test_copy_subarray() {
 
 mod extract_payload_len {
     use crate::rlp::decode::extract_payload_len;
-    use crate::misc::arrays::resize;
+    use crate::misc::{arrays::resize, fragment::Fragment};
 
     #[test] 
     fn unpadded() {
-        let rlp_header = [0xf9, 1, 1];
-        let lenlen = (rlp_header[0] - 0xf7) as u64;
+        let mut rlp_header = Fragment::new_focused([0xf9, 1, 1]);
+        let lenlen = (rlp_header.pop_front() - 0xf7) as u64;
         assert(extract_payload_len(rlp_header, lenlen) == 0x0101);
     }
 
     #[test]
     fn padded() {
         let rlp_header = [249, 1, 1];
-        let rlp_header_padded : [u8; 200] = resize(rlp_header);
-        let lenlen = (rlp_header_padded[0] - 0xf7) as u64;
+        let mut rlp_header_padded : Fragment<200, u8> = Fragment::new_focused(resize(rlp_header));
+        let lenlen = (rlp_header_padded.pop_front() - 0xf7) as u64;
         assert(extract_payload_len(rlp_header_padded, lenlen) == 0x0101);
     }
 
     #[test(should_fail_with = "Length of length exceeds maximum")]
     fn fail_lenlen_exceeding() {
-        let _ = extract_payload_len([9], 3);
+        let _ = extract_payload_len(Fragment::new_focused([9, 5, 4, 5, 3, 5, 3]), 3);
     }
 
     #[test(should_fail_with = "Length of length is zero")]
     fn fail_lenlen_zero() {
-        let _ = extract_payload_len([0, 0, 0], 0);
+        let _ = extract_payload_len(Fragment::new_focused([0, 0, 0]), 0);
     }
 
     #[test(should_fail_with ="Length of length exceeds input length")]
     fn lenlen_exceeds_input_length() {
-        let rlp_header = [3];
+        let rlp_header = Fragment::new_focused([3]);
         let lenlen = 2;
         let _ = extract_payload_len(rlp_header, lenlen);
     }
 
     #[test(should_fail)] // It doesn't compile because the loop bound is negative
     fn empty_array() {
-        let rlp_header = [];
+        let rlp_header = Fragment::empty();
         let lenlen = 0;
         let _ = extract_payload_len(rlp_header, lenlen);
     }
