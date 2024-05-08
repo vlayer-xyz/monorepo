@@ -5,8 +5,7 @@ export function createStorageFixture(stateProof: GetProofReturnType): string {
   const keys = stateProof.storageProof.map((storageProof) => {
     return joinArray(encodeHexString(storageProof.key));
   });
-  const storageFixture = `
-global keys = ${joinArrayVertical(keys)};
+  const storageFixture = `global keys = ${joinArrayVertical(keys)};
 `;
   return storageFixture;
 }
