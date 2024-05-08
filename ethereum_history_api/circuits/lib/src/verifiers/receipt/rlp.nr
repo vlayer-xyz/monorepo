@@ -1,8 +1,4 @@
-use crate::{
-    verifiers::receipt::{MAX_RECEIPT_RLP_LENGTH, is_pre_byzantium},
-    receipt::{BLOOM_FILTER_LEN, TxReceiptPartial}
-};
-use crate::misc::fragment::Fragment;
+use crate::{verifiers::receipt::is_pre_byzantium, receipt::{BLOOM_FILTER_LEN, TxReceiptPartial}};
 use crate::rlp::decode::decode_list;
 use crate::rlp::types::RlpList;
 
@@ -12,9 +8,9 @@ global STATUS_INDEX = 0;
 global CUMULATIVE_GAS_USED_INDEX = 1;
 global LOGS_BLOOM_INDEX = 2;
 
-pub(crate) fn assert_receipt_rlp_equals(
+pub(crate) fn assert_receipt_rlp_equals<MAX_RLP_LEN>(
     is_pre_byzantium: bool,
-    receipt_rlp: [u8; MAX_RECEIPT_RLP_LENGTH],
+    receipt_rlp: [u8; MAX_RLP_LEN],
     receipt: TxReceiptPartial
 ) {
     let receipt_rlp_list: RlpList<RECEIPT_FIELDS_COUNT> = decode_list(Fragment::new_focused(receipt_rlp));
