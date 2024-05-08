@@ -8,6 +8,10 @@ struct Fragment<MAX_DATA_LEN, T> {
 }
 
 impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
+    pub fn empty() -> Fragment<MAX_DATA_LEN, T> {
+        Fragment { offset: 0, length: 0, data: zeroed() }
+    }
+
     pub fn new(offset: u64, length: u64, data: [T; MAX_DATA_LEN]) -> Fragment<MAX_DATA_LEN, T> {
         assert(offset + length <= data.len() as u64, "Fragment length exceeds data length");
 
@@ -80,6 +84,12 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
         assert(self.offset + self.length + 1 <= MAX_DATA_LEN, "Cannot push: fragment is full");
         self.data[self.offset + self.length] = value;
         self.length += 1;
+    }
+
+    pub fn extend_back<LEN>(&mut self, other: [T; LEN]) {
+        for i in 0..LEN {
+            self.push_back(other[i]);
+        }
     }
 }
 

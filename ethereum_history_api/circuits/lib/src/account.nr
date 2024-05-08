@@ -1,6 +1,6 @@
 use crate::account_with_storage::{Account, StateProof};
 use crate::header::get_header;
-use crate::misc::types::{Address, Bytes32};
+use crate::misc::types::{Address, Bytes32, BYTES32_LENGTH};
 use crate::verifiers::account::verify_account;
 
 struct AccountWithinBlock {
