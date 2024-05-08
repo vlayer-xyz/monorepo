@@ -1,5 +1,6 @@
 use dep::std::wrapping_sub;
 use crate::rlp::types::{RlpList, RlpFragment, RlpHeader};
+use crate::misc::fragment::Fragment;
 
 /// Max number of bytes required to represent length of a string or list
 global MAX_LEN_IN_BYTES: u64 = 2;
@@ -8,23 +9,16 @@ global MAX_LEN_IN_BYTES: u64 = 2;
 global STRING: u64 = 0;
 global LIST: u64 = 1;
 
-pub fn extract_payload_len<N>(arr: [u8; N], lenlen: u64) -> u64 {
+pub fn extract_payload_len<N>(data: Fragment<N, u8>, lenlen: u64) -> u64 {
     assert(lenlen <= MAX_LEN_IN_BYTES, "Length of length exceeds maximum");
-    assert(lenlen < N, "Length of length exceeds input length");
+    assert(lenlen <= data.length, "Length of length exceeds input length");
     assert(lenlen != 0, "Length of length is zero");
 
     let mut payload_length = 0;
 
-    let mut loop_len: u64 = 0;
-    if (MAX_LEN_IN_BYTES < N - 1) {
-        loop_len = MAX_LEN_IN_BYTES;
-    } else {
-        loop_len = N - 1;
-    }
-
-    for i in 0..loop_len {
-        if (i < lenlen) {
-            payload_length = (arr[i + 1] as u64) + payload_length * 256;
+    for i in 0..MAX_LEN_IN_BYTES {
+        if (i < lenlen & i < data.length) {
+            payload_length = data.at(i) as u64 + payload_length * 256;
         }
     }
 
@@ -44,7 +38,7 @@ pub fn decode_to_rlp_header<N>(arr: [u8; N]) -> RlpHeader {
         RlpHeader { offset, length, data_type: STRING }
     } else if (prefix < 0xc0) { // >55-byte string
         let offset = wrapping_sub(1 + prefix, 0xb7) as u64;
-        let length = extract_payload_len(arr, wrapping_sub(prefix, 0xb7) as u64);
+        let length = extract_payload_len(Fragment::new_focused(arr), wrapping_sub(prefix, 0xb7) as u64);
         assert(offset + length <= N, "Decoded length of long string exceeds input length");
 
         RlpHeader { offset, length, data_type: STRING }
@@ -56,7 +50,7 @@ pub fn decode_to_rlp_header<N>(arr: [u8; N]) -> RlpHeader {
         RlpHeader { offset, length, data_type: LIST }
     } else { // >55-byte list
         let offset = wrapping_sub(1 + prefix, 0xf7) as u64;
-        let length = extract_payload_len(arr, wrapping_sub(prefix, 0xf7) as u64);
+        let length = extract_payload_len(Fragment::new_focused(arr), wrapping_sub(prefix, 0xf7) as u64);
         assert(offset + length <= N, "Decoded length of long list exceeds input length");
 
         RlpHeader { offset, length, data_type: LIST }
