@@ -16,3 +16,10 @@ export function createVerticalBoundedVecFixture(values: string[]): string {
   len: ${values.length}
 }`;
 }
+
+export function createBoundedVecFixtureFromArray(values: string[]): string {
+  return `BoundedVec {
+  storage: ${indentBlock(joinArray(values), 1)},
+  len: ${values.length}
+}`;
+}
