@@ -1,15 +1,17 @@
 use crate::transaction::{get_transaction, TransactionWithinBlock, PhantomTransactionProofLen, PhantomTransactionRlpLen};
 use crate::fixtures::mainnet::{
     cancun::small_block::{
-        header::{number, block_header_partial, block_header_rlp},
-        transaction::{tx_idx, tx_type, transaction, transaction_foreign},
-        transaction_proof::proof
-    },
+    header::{number, block_header_partial, block_header_rlp},
+    transaction::{tx_idx, tx_type, transaction, transaction_foreign}, transaction_proof::proof
+},
     homestead::fork::{
-        header::{number as fork_number, block_header_partial as fork_block_header_partial, block_header_rlp as fork_block_header_rlp},
-        transaction::{tx_idx as fork_tx_idx, tx_type as fork_tx_type, transaction_foreign as fork_transaction_foreign},
-        transaction_proof::proof as fork_proof
-    }
+    header::{
+    number as fork_number, block_header_partial as fork_block_header_partial,
+    block_header_rlp as fork_block_header_rlp
+},
+    transaction::{tx_idx as fork_tx_idx, tx_type as fork_tx_type, transaction_foreign as fork_transaction_foreign},
+    transaction_proof::proof as fork_proof
+}
 };
 use dep::std::test::OracleMock;
 
