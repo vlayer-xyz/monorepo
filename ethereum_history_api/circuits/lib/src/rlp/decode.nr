@@ -58,12 +58,12 @@ pub fn decode_to_rlp_header<N>(data: Fragment<N, u8>) -> RlpHeader {
     }
 }
 
-pub fn decode_string<N>(input: [u8; N]) -> (u64, u64) {
-    let mut RlpHeader {offset, length, data_type} = decode_to_rlp_header(Fragment::new_focused(input));
+pub fn decode_string<N>(input: Fragment<N, u8>) -> (u64, u64) {
+    let mut RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
     assert(data_type == STRING, "Wrong data type");
 
     let total_len = length + offset;
-    assert(total_len <= input.len(), "Total length exceeds input length");
+    assert(total_len <= input.length, "Total length exceeds input length");
 
     (offset, length)
 }
