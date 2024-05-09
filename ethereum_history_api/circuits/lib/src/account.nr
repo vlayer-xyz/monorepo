@@ -8,6 +8,12 @@ struct AccountWithinBlock {
     block_hash: Bytes32,
 }
 
+impl Eq for AccountWithinBlock {
+    fn eq(self, other: Self) -> bool {
+        (self.account == other.account) & (self.block_hash == other.block_hash)
+    }
+}
+
 type AccountWithStateProof = (Account, StateProof);
 
 pub fn get_account(chain_id: Field, block_no: u64, address: Address) -> AccountWithinBlock {
