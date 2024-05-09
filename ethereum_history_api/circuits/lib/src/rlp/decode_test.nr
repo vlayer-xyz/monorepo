@@ -149,11 +149,11 @@ mod decode_list {
 
 mod decode_list_of_small_strings {
     use crate::rlp::decode::{decode_list_of_small_strings, RlpList, RlpFragment, STRING};
-    use crate::misc::bounded_vecs::bounded_vec_from_array;
+    use crate::misc::{bounded_vecs::bounded_vec_from_array, fragment::Fragment};
 
     #[test]
     fn success_empty_list() {
-        let rlp = [0xc0];
+        let rlp = Fragment::new_focused([0xc0]);
         let expected: RlpList<10> = bounded_vec_from_array([]);
 
         let decoded = decode_list_of_small_strings(rlp);
@@ -163,7 +163,7 @@ mod decode_list_of_small_strings {
 
     #[test]
     fn success() {
-        let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13]; //["0x636174","0x646f68","0x13"]
+        let rlp = Fragment::new_focused([0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13]); //["0x636174","0x646f68","0x13"]
         let expected: RlpList<10> = bounded_vec_from_array(
             [
             RlpFragment { offset: 2, length: 3, data_type: STRING },
@@ -179,25 +179,25 @@ mod decode_list_of_small_strings {
 
     #[test(should_fail_with="Inconsistent rlp length")]
     fn fail_inconsistent_length() {
-        let rlp = [0xc7, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13];
+        let rlp = Fragment::new_focused([0xc7, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13]);
         let _ : RlpList<3> = decode_list_of_small_strings(rlp);
     }
 
     #[test(should_fail_with = "Expected a list")]
     fn fail_wrong_data_type() {
-        let rlp_of_single_byte = [0x00];
+        let rlp_of_single_byte = Fragment::new_focused([0x00]);
         let _ : RlpList<1> = decode_list_of_small_strings(rlp_of_single_byte);
     }
 
     #[test(should_fail_with = "Decoded length of short list exceeds input length")]
     fn fail_length_exceeds_input_length() {
-        let rlp = [0xc9, 0x13];
+        let rlp = Fragment::new_focused([0xc9, 0x13]);
         let _ : RlpList<1> = decode_list_of_small_strings(rlp);
     }
 
     #[test(should_fail_with = "Element is not a string of length < 56 bytes")]
     fn fail_list_with_lists() {
-        let rlp = [0xc1, 0xc0];
+        let rlp = Fragment::new_focused([0xc1, 0xc0]);
         let _ : RlpList<1> = decode_list_of_small_strings(rlp);
     }
 }
