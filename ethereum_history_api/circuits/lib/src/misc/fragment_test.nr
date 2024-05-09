@@ -185,6 +185,26 @@ mod pop_front {
     }
 }
 
+mod pop_front_array {
+
+    use crate::misc::fragment::Fragment;
+
+    #[test]
+    fn success() {
+        let mut fragment = Fragment::new(1, 2, [1, 2, 3]);
+        assert(fragment.pop_front_array() == [2, 3]);
+        assert(fragment.length == 0);
+    }
+
+    #[test(should_fail_with="Cannot pop from an empty fragment")]
+    fn fail() {
+        let mut fragment = Fragment::new(1, 1, [1, 2, 3]);
+        assert(fragment.pop_front_array() == [2]);
+        assert(fragment.pop_front_array() == [3]);
+    }
+}
+
+
 mod push_back {
 
     use crate::misc::fragment::Fragment;
