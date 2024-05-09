@@ -79,7 +79,7 @@ impl Serde<ACCOUNT_WITHIN_BLOCK_SERIALIZED_LEN> for AccountWithinBlock {
 
     fn deserialize(data: [Field; ACCOUNT_WITHIN_BLOCK_SERIALIZED_LEN]) -> Self {
         let mut fragment = Fragment::new_focused(data);
-        let account: Account = Account::deserialize(fragment.pop_front_array());
+        let account = Account::deserialize(fragment.pop_front_array());
         let block_hash = fragment.pop_front_array().deserialize();
         AccountWithinBlock {
             account,
