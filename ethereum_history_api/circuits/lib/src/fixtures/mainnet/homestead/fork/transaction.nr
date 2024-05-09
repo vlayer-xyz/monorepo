@@ -32,4 +32,4 @@ global transaction = TxPartial {
   ]
 };
 
-global transaction_foreign: ForeignCallTransaction <1000> = transaction.into();
+global transaction_foreign: ForeignCallTransaction<1000> = transaction.into();
