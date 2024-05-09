@@ -17,21 +17,13 @@ impl Serialize<U128_SERIALIZED_LEN> for U128 {
 
 impl Serialize<BYTES32_LENGTH> for Bytes32 {
     fn serialize(self) -> [Field; BYTES32_LENGTH] {
-        let mut data: [Field; BYTES32_LENGTH] = zeroed();
-        for i in 0..BYTES32_LENGTH {
-            data[i] = self[i] as Field;
-        }
-        data
+        self.map(|x: u8| x as Field)
     }
 }
 
 impl Serialize<ADDRESS_LENGTH> for Address {
     fn serialize(self) -> [Field; ADDRESS_LENGTH] {
-        let mut data: [Field; ADDRESS_LENGTH] = zeroed();
-        for i in 0..ADDRESS_LENGTH {
-            data[i] = self[i] as Field;
-        }
-        data
+        self.map(|x: u8| x as Field)
     }
 }
 
