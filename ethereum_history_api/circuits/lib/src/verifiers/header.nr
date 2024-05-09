@@ -1,10 +1,10 @@
 use dep::std::hash::keccak256;
 
 use crate::header::{BlockHeaderPartial, BlockHeaderRlp};
-use crate::misc::arrays::sub_array_equals;
+use crate::misc::{arrays::sub_array_equals, fragment::Fragment};
 use crate::chain::{ETHEREUM_MAINNET_ID, ETHEREUM_SEPOLIA_ID};
 use crate::HASH_LEN;
-use crate::rlp::decode::decode_list;
+use crate::rlp::decode::{decode_list_fragments, decode_list};
 use crate::rlp::types::RlpList;
 
 global MAX_HEADER_FIELDS_COUNT = 20;
