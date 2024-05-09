@@ -1,4 +1,5 @@
 use crate::{verifiers::transaction::MAX_TX_RLP_LENGTH, transaction::{TxType, TxPartial}};
+use crate::misc::fragment::Fragment;
 use crate::rlp::decode::decode_list;
 use crate::rlp::types::RlpList;
 
