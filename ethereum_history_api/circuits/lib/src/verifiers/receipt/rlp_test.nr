@@ -16,8 +16,7 @@ fn test_post_byzantium() {
     assert_receipt_rlp_equals(false, receipt_rlp, receipt);
 }
 
-// TODO: Add correct assertion message when noir-trie-proofs is updated
-#[test(should_fail)]
+#[test(should_fail_with="Expected a list")]
 fn test_assert_receipt_rlp_equals_invalid_rlp_type() {
     let empty_string_rlp = [0x80]; // ""
     assert_receipt_rlp_equals(false, resize(empty_string_rlp), receipt);

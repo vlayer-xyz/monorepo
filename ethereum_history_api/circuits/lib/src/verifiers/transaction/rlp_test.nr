@@ -16,8 +16,7 @@ fn eip1559() {
     assert_tx_rlp_equals(eip1559_tx_rlp, eip1559_tx_type, eip1559_tx);
 }
 
-// TODO: Add correct assertion message when noir-trie-proofs is updated
-#[test(should_fail)]
+#[test(should_fail_with="Expected a list")]
 fn invalid_rlp_type() {
     let empty_string_rlp = [0x80]; // ""
     assert_tx_rlp_equals(resize(empty_string_rlp), eip1559_tx_type, eip1559_tx);
