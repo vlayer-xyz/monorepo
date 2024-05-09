@@ -2,6 +2,7 @@ use crate::misc::{types::{Bytes32, Address}, option::make_option};
 use dep::std::unsafe::zeroed;
 use dep::proof::transaction_proof::TransactionProof;
 use crate::header::get_header;
+use crate::verifiers::transaction::verify_tx;
 
 global MAX_TREE_DEPTH = 7;
 global MAX_KEY_LEN = 3;
@@ -86,8 +87,9 @@ pub fn get_transaction<MAX_DATA_LEN, MAX_PROOF_LEN, MAX_RLP_LEN>(
     _max_transaction_proof_len: PhantomTransactionProofLen<MAX_PROOF_LEN>,
     _max_transaction_rlp_len: PhantomTransactionRlpLen<MAX_RLP_LEN>
 ) -> TransactionWithinBlock<MAX_DATA_LEN> {
-    let (_tx_type, transaction, _proof):  (TxType, TxPartial<MAX_DATA_LEN>, TransactionProof<MAX_PROOF_LEN, MAX_RLP_LEN>)= get_transaction_unconstrained(chain_id, block_number, tx_idx);
+    let (tx_type, transaction, proof):  (TxType, TxPartial<MAX_DATA_LEN>, TransactionProof<MAX_PROOF_LEN, MAX_RLP_LEN>) = get_transaction_unconstrained(chain_id, block_number, tx_idx);
     let header = get_header(chain_id, block_number);
+    verify_tx(tx_idx, tx_type, transaction, proof, header.transactions_root);
 
     TransactionWithinBlock { transaction, block_hash: header.hash }
 }
