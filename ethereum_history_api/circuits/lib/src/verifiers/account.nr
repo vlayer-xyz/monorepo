@@ -1,7 +1,7 @@
 use dep::proof::{const::{MAX_ACCOUNT_STATE_LENGTH, HASH_LENGTH}, trie_proof::TrieProof};
 
 use crate::account::{Account, StateProof};
-use crate::misc::{types::Address, bytes::byte_value};
+use crate::misc::{types::Address, bytes::right_pad, fragment::Fragment};
 use crate::rlp::decode::decode_list_of_small_strings;
 use crate::rlp::types::RlpList;
 
@@ -14,8 +14,8 @@ global STORAGE_ROOT_INDEX = 2;
 global CODE_HASH_INDEX = 3;
 
 pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_STATE_LENGTH], account: Account) {
-    let account_rlp_right_padded = byte_value(account_rlp_left_padded).storage;
-    let account_rlp_list: RlpList<ACCOUNT_FIELDS_COUNT> = decode_list_of_small_strings(account_rlp_right_padded);
+    let account_rlp_right_padded = right_pad(account_rlp_left_padded).storage;
+    let account_rlp_list: RlpList<ACCOUNT_FIELDS_COUNT> = decode_list_of_small_strings(Fragment::new_focused(account_rlp_right_padded));
     assert(account_rlp_list.len == ACCOUNT_FIELDS_COUNT, "Invalid number of fields in account RLP");
 
     account_rlp_list.get(NONCE_INDEX).assert_eq_u64("Nonce", account_rlp_right_padded, account.nonce as u64);

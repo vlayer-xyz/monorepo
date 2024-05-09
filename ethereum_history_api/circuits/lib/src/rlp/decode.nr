@@ -104,19 +104,19 @@ pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
 
 /// RLP list decoder for lists of strings of length < 56 bytes.
 /// Returns an RLP list look-up table.
-pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
+pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: Fragment<N, u8>) -> RlpList<NUM_FIELDS> {
     let mut rlp_list: RlpList<NUM_FIELDS> = BoundedVec::new();
 
-    let RlpHeader {offset, length, data_type} = decode_to_rlp_header(Fragment::new_focused(input));
+    let RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
     assert(data_type == LIST, "Expected a list");
 
     let total_len = length + offset;
-    assert(total_len <= input.len(), "Total length exceeds input length");
+    assert(total_len <= input.length, "Total length exceeds input length");
 
     let mut current_offset = offset;
     for _ in 0..NUM_FIELDS {
         if (current_offset < total_len) {
-            let first_byte = input[current_offset];
+            let first_byte = input.at(current_offset);
 
             let (field_off, field_len) = get_small_string_offset_and_length(first_byte);
 
