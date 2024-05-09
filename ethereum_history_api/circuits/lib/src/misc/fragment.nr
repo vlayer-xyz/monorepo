@@ -81,6 +81,7 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
     }
 
     pub fn pop_front_array<LEN>(&mut self) -> [T; LEN] {
+        assert(self.length >= LEN as u64, "Cannot pop array: fragment is too short");
         let mut res: [T; LEN] = zeroed();
         res.map(|_| self.pop_front())
     }

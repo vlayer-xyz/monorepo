@@ -196,11 +196,17 @@ mod pop_front_array {
         assert(fragment.length == 0);
     }
 
-    #[test(should_fail_with="Cannot pop from an empty fragment")]
+    #[test(should_fail_with="Cannot pop array: fragment is too short")]
     fn fail() {
         let mut fragment = Fragment::new(1, 1, [1, 2, 3]);
         assert(fragment.pop_front_array() == [2]);
         assert(fragment.pop_front_array() == [3]);
+    }
+
+    #[test(should_fail_with="Cannot pop array: fragment is too short")]
+    fn partial_fail() {
+        let mut fragment = Fragment::new(1, 1, [1, 2, 3]);
+        assert(fragment.pop_front_array() == [2, 3]);
     }
 }
 
