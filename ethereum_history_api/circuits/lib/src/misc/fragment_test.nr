@@ -204,7 +204,6 @@ mod pop_front_array {
     }
 }
 
-
 mod push_back {
 
     use crate::misc::fragment::Fragment;
