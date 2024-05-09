@@ -55,11 +55,11 @@ mod extract_payload_len {
 
 mod decode_string {
     use crate::rlp::decode::decode_string;
-    use crate::misc::arrays::resize;
+    use crate::misc::{arrays::resize, fragment::Fragment};
 
     #[test]
     fn one_byte_zero() {
-        let rlp = [0x00];
+        let rlp = Fragment::new_focused([0x00]);
         let expected_offset = 0;
         let expected_length = 1;
         assert(decode_string(rlp) == (expected_offset, expected_length));
@@ -67,7 +67,7 @@ mod decode_string {
 
     #[test]
     fn one_byte_one() {
-        let rlp = [0x01];
+        let rlp = Fragment::new_focused([0x01]);
         let expected_offset = 0;
         let expected_length = 1;
         assert(decode_string(rlp) == (expected_offset, expected_length));
@@ -75,7 +75,7 @@ mod decode_string {
 
     #[test]
     fn three_bytes() {
-        let rlp = [0x83, 0x63, 0x61, 0x74]; // "0x636174"
+        let rlp = Fragment::new_focused([0x83, 0x63, 0x61, 0x74]); // "0x636174"
         let expected_offset = 1;
         let expected_length = 3;
         assert(decode_string(rlp) == (expected_offset, expected_length));
@@ -84,7 +84,7 @@ mod decode_string {
     #[test]
     fn using_lenlen() {
         let rlp_header = [0xb8, 60]; //string of length 60
-        let rlp : [u8; 62]= resize(rlp_header);
+        let rlp : Fragment<62, u8> = Fragment::new_focused(resize(rlp_header));
         let expected_offset = 2;
         let expected_length = 60;
         assert(decode_string(rlp) == (expected_offset, expected_length));
@@ -92,13 +92,13 @@ mod decode_string {
 
     #[test(should_fail_with = "Wrong data type")]
     fn fail_list_type() {
-        let rlp_of_list_type = [0xc0]; // []
+        let rlp_of_list_type = Fragment::new_focused([0xc0]); // []
         let _ = decode_string(rlp_of_list_type);
     }
 
     #[test(should_fail_with = "Decoded length of short string exceeds input length")]
     fn fail_length_exceeds_input_length() {
-        let rlp_with_wrong_length = [0x89]; // length is 9, but 0 bytes of payload is provided
+        let rlp_with_wrong_length = Fragment::new_focused([0x89]); // length is 9, but 0 bytes of payload is provided
         let _ = decode_string(rlp_with_wrong_length);
     }
 }
