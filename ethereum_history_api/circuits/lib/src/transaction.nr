@@ -20,6 +20,19 @@ struct TxPartial<MAX_DATA_LEN> {
     s: Bytes32,  // ECDSA signature part
 }
 
+impl<MAX_DATA_LEN> Eq for TxPartial<MAX_DATA_LEN> {
+    fn eq(self, other: Self) -> bool {
+        (self.nonce == other.nonce) &
+        (self.gas_limit == other.gas_limit) &
+        (self.to == other.to) &
+        (self.value == other.value) &
+        (self.data == other.data) &
+        (self.v == other.v) &
+        (self.r == other.r) &
+        (self.s == other.s)
+    }
+}
+
 struct ForeignCallTransaction<MAX_DATA_LEN> {
     nonce: u64,
     gas_limit: u64,
@@ -43,7 +56,7 @@ impl<MAX_DATA_LEN> From<TxPartial> for ForeignCallTransaction<MAX_DATA_LEN> {
         ForeignCallTransaction {
             nonce: tx.nonce,
             gas_limit: tx.gas_limit,
-            to: tx.to.unwrap_or([0; 20]),
+            to: tx.to.unwrap_or(zeroed()),
             to_is_some: tx.to.is_some(),
             value_hi: tx.value.hi as u64,
             value_lo: tx.value.lo as u64,
@@ -58,7 +71,7 @@ impl<MAX_DATA_LEN> From<TxPartial> for ForeignCallTransaction<MAX_DATA_LEN> {
 
 impl<MAX_DATA_LEN> From<ForeignCallTransaction> for TxPartial<MAX_DATA_LEN> {
     fn from(tx: ForeignCallTransaction<MAX_DATA_LEN>) -> Self {
-        let mut data = BoundedVec { storage: tx.data, len: tx.data_len };
+        let data = BoundedVec { storage: tx.data, len: tx.data_len };
         TxPartial {
             nonce: tx.nonce,
             gas_limit: tx.gas_limit,
