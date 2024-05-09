@@ -9,6 +9,7 @@ mod U128_ {
 
         assert_eq(serialized[0], value.lo);
         assert_eq(serialized[1], value.hi);
+        assert_eq(U128::deserialize(serialized), value);
     }
 }
 
@@ -21,6 +22,7 @@ mod bytes32 {
         let serialized: [Field; BYTES32_LENGTH] = bytes.serialize();
         let expected: [Field; BYTES32_LENGTH] = [1; BYTES32_LENGTH];
         assert_eq(serialized, expected);
+        assert_eq(serialized.deserialize(), bytes);
     }
 }
 
@@ -33,6 +35,7 @@ mod address {
         let serialized: [Field; ADDRESS_LENGTH] = address.serialize();
         let expected: [Field; ADDRESS_LENGTH] = [1; ADDRESS_LENGTH];
         assert_eq(serialized, expected);
+        assert_eq(serialized.deserialize(), address);
     }
 }
 
@@ -50,6 +53,7 @@ mod account {
         assert_eq(serialized[1], account.balance);
         assert(sub_array_equals(account.storage_root.serialize(), serialized, 2));
         assert(sub_array_equals(account.code_hash.serialize(), serialized, 34));
+        assert_eq(Account::deserialize(serialized), account);
     }
 }
 
@@ -72,6 +76,7 @@ mod account_within_block {
                 ACCOUNT_SERIALIZED_LEN
             )
         );
+        assert_eq(AccountWithinBlock::deserialize(serialized), account_within_block);
     }
 }
 
@@ -101,5 +106,6 @@ mod storage_within_block {
                 BYTES32_LENGTH + ACCOUNT_SERIALIZED_LEN
             )
         );
+        assert_eq(StorageWithinBlock::deserialize(serialized), storage_within_block);
     }
 }
