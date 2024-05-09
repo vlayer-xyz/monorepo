@@ -105,7 +105,7 @@ pub fn extract_hash<MAX_PREFIXED_KEY_NIBBLE_LEN>(
     key_ptr: &mut u64
 ) -> Fragment<HASH_LEN, u8> {
     let mut hash = Fragment::from_array([0; HASH_LEN]);
-    let node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list_of_small_strings(node);
+    let node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list_of_small_strings(Fragment::from_array(node));
 
     if (node_rlp_list.len == BRANCH_NODE_NUM_FIELDS) {
         hash = extract_hash_from_branch_node(node, node_rlp_list, key_nibbles, key_ptr);
