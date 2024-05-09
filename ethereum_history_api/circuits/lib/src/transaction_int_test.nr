@@ -16,7 +16,7 @@ use crate::fixtures::mainnet::{
 use dep::std::test::OracleMock;
 
 global MAX_DATA_LEN = 1000;
-global phantom_transaction_proof_len: PhantomTransactionProofLen<3724> = PhantomTransactionProofLen {}; // 7 *
+global phantom_transaction_proof_len: PhantomTransactionProofLen<3724> = PhantomTransactionProofLen {}; //= 7 (MAX_TREE_DEPTH) * 532 (MAX_TRIE_NODE_LEN)
 global phantom_transaction_rlp_len: PhantomTransactionRlpLen<525> = PhantomTransactionRlpLen {};
 global chain_id: Field = 1;
 
