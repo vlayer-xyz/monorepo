@@ -4,8 +4,9 @@ import { encodeHex } from '../../noir/oracles/common/encode.js';
 import { ZERO_PAD_VALUE } from '../../noir/oracles/common/const.js';
 import { padArray } from '../../util/array.js';
 import { BYTE_HEX_LEN } from '../../util/const.js';
+import { PREFIX } from '../../util/hex.js';
 
-export function createBoundedVecFixture(value: Hex): string {
+export function createFocusedBoundedVecFixture(value: Hex): string {
   const valueAsFields = encodeHex(value);
   return `BoundedVec {
   storage: ${indentBlock(joinArray(valueAsFields), 1)},
@@ -20,10 +21,10 @@ export function createVerticalBoundedVecFixture(values: string[]): string {
 }`;
 }
 
-export function createBoundedVecFixtureWithLen(value: Hex, max_len: number): string {
-  const prefixLen = 2; // 0x
+export function createBoundedVecFixture(value: Hex, maxLen: number): string {
+  const prefixLen = PREFIX.length;
   const dataLen = (value.length - prefixLen) / BYTE_HEX_LEN;
-  const input = joinArray(padArray(encodeHex(value), max_len, ZERO_PAD_VALUE));
+  const input = joinArray(padArray(encodeHex(value), maxLen, ZERO_PAD_VALUE));
 
   return `BoundedVec {
   storage: ${indentBlock(input, 1)},
