@@ -1,6 +1,6 @@
 mod U128_ {
 
-    use crate::serialize::U128_SERIALIZED_LEN;
+    use crate::serde::serialize::U128_SERIALIZED_LEN;
 
     #[test]
     fn simple() {
@@ -38,7 +38,7 @@ mod address {
 
 mod account {
     use crate::account_with_storage::Account;
-    use crate::serialize::ACCOUNT_SERIALIZED_LEN;
+    use crate::serde::serialize::ACCOUNT_SERIALIZED_LEN;
     use crate::misc::arrays::sub_array_equals;
     use crate::fixtures::mainnet::london::vitalik_balance::account::account;
 
@@ -54,7 +54,7 @@ mod account {
 }
 
 mod account_within_block {
-    use crate::serialize::{ACCOUNT_WITHIN_BLOCK_SERIALIZED_LEN, ACCOUNT_SERIALIZED_LEN};
+    use crate::serde::serialize::{ACCOUNT_WITHIN_BLOCK_SERIALIZED_LEN, ACCOUNT_SERIALIZED_LEN};
     use crate::account::AccountWithinBlock;
     use crate::fixtures::mainnet::london::vitalik_balance::{account::account, header::hash};
     use crate::misc::arrays::sub_array_equals;
@@ -76,7 +76,7 @@ mod account_within_block {
 }
 
 mod storage_within_block {
-    use crate::serialize::{STORAGE_WITHIN_BLOCK_1_SERIALIZED_LEN, ACCOUNT_SERIALIZED_LEN};
+    use crate::serde::serialize::{STORAGE_WITHIN_BLOCK_1_SERIALIZED_LEN, ACCOUNT_SERIALIZED_LEN};
     use crate::account_with_storage::StorageWithinBlock;
     use crate::fixtures::mainnet::paris::usdc_circle::{account::account, header::hash, storage_proof_new::proofs, storage::values};
     use crate::misc::{types::BYTES32_LENGTH, arrays::sub_array_equals};
