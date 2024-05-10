@@ -40,11 +40,11 @@ impl Serde<ADDRESS_LENGTH> for Address {
     }
 }
 
-global ACCOUNT_SERIALIZED_LEN = 1 + 1 + BYTES32_LENGTH + BYTES32_LENGTH;
+global ACCOUNT_LEN = 1 + 1 + BYTES32_LENGTH + BYTES32_LENGTH;
 
-impl Serde<ACCOUNT_SERIALIZED_LEN> for Account {
-    fn serialize(self) -> [Field; ACCOUNT_SERIALIZED_LEN] {
-        let mut data: Fragment<ACCOUNT_SERIALIZED_LEN, Field> = Fragment::empty();
+impl Serde<ACCOUNT_LEN> for Account {
+    fn serialize(self) -> [Field; ACCOUNT_LEN] {
+        let mut data: Fragment<ACCOUNT_LEN, Field> = Fragment::empty();
         data.push_back(self.nonce as Field);
         data.push_back(self.balance);
         data.extend_back(self.storage_root.serialize());
@@ -52,7 +52,7 @@ impl Serde<ACCOUNT_SERIALIZED_LEN> for Account {
         data.to_array()
     }
 
-    fn deserialize(data: [Field; ACCOUNT_SERIALIZED_LEN]) -> Self {
+    fn deserialize(data: [Field; ACCOUNT_LEN]) -> Self {
         let mut fragment = Fragment::new_focused(data);
         let nonce = fragment.pop_front() as u64;
         let balance = fragment.pop_front();
@@ -67,17 +67,17 @@ impl Serde<ACCOUNT_SERIALIZED_LEN> for Account {
     }
 }
 
-global ACCOUNT_WITHIN_BLOCK_SERIALIZED_LEN = ACCOUNT_SERIALIZED_LEN + BYTES32_LENGTH;
+global ACCOUNT_BLOCK_LEN = ACCOUNT_LEN + BYTES32_LENGTH;
 
-impl Serde<ACCOUNT_WITHIN_BLOCK_SERIALIZED_LEN> for AccountWithinBlock {
-    fn serialize(self) -> [Field; ACCOUNT_WITHIN_BLOCK_SERIALIZED_LEN] {
-        let mut data: Fragment<ACCOUNT_WITHIN_BLOCK_SERIALIZED_LEN, Field> = Fragment::empty();
+impl Serde<ACCOUNT_BLOCK_LEN> for AccountWithinBlock {
+    fn serialize(self) -> [Field; ACCOUNT_BLOCK_LEN] {
+        let mut data: Fragment<ACCOUNT_BLOCK_LEN, Field> = Fragment::empty();
         data.extend_back(self.account.serialize());
         data.extend_back(self.block_hash.serialize());
         data.to_array()
     }
 
-    fn deserialize(data: [Field; ACCOUNT_WITHIN_BLOCK_SERIALIZED_LEN]) -> Self {
+    fn deserialize(data: [Field; ACCOUNT_BLOCK_LEN]) -> Self {
         let mut fragment = Fragment::new_focused(data);
         let account = Account::deserialize(fragment.pop_front_array());
         let block_hash = fragment.pop_front_array().deserialize();
@@ -88,18 +88,18 @@ impl Serde<ACCOUNT_WITHIN_BLOCK_SERIALIZED_LEN> for AccountWithinBlock {
     }
 }
 
-global STORAGE_WITHIN_BLOCK_1_SERIALIZED_LEN = BYTES32_LENGTH + ACCOUNT_SERIALIZED_LEN + BYTES32_LENGTH;
+global STORAGE_BLOCK_LEN = BYTES32_LENGTH + ACCOUNT_LEN + BYTES32_LENGTH;
 
-impl Serde<STORAGE_WITHIN_BLOCK_1_SERIALIZED_LEN> for StorageWithinBlock<1> {
-    fn serialize(self) -> [Field; STORAGE_WITHIN_BLOCK_1_SERIALIZED_LEN] {
-        let mut data: Fragment<STORAGE_WITHIN_BLOCK_1_SERIALIZED_LEN, Field> = Fragment::empty();
+impl Serde<STORAGE_BLOCK_LEN> for StorageWithinBlock<1> {
+    fn serialize(self) -> [Field; STORAGE_BLOCK_LEN] {
+        let mut data: Fragment<STORAGE_BLOCK_LEN, Field> = Fragment::empty();
         data.extend_back(self.block_hash.serialize());
         data.extend_back(self.account.serialize());
         data.extend_back(self.values[0].serialize());
         data.to_array()
     }
 
-    fn deserialize(data: [Field; STORAGE_WITHIN_BLOCK_1_SERIALIZED_LEN]) -> Self {
+    fn deserialize(data: [Field; STORAGE_BLOCK_LEN]) -> Self {
         let mut fragment = Fragment::new_focused(data);
         let block_hash = fragment.pop_front_array().deserialize();
         let account = Account::deserialize(fragment.pop_front_array());

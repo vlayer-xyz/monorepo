@@ -41,13 +41,13 @@ mod address {
 
 mod account {
     use crate::account_with_storage::Account;
-    use crate::serde::ACCOUNT_SERIALIZED_LEN;
+    use crate::serde::ACCOUNT_LEN;
     use crate::misc::arrays::sub_array_equals;
     use crate::fixtures::mainnet::london::vitalik_balance::account::account;
 
     #[test]
     fn simple() {
-        let serialized: [Field; ACCOUNT_SERIALIZED_LEN] = account.serialize();
+        let serialized: [Field; ACCOUNT_LEN] = account.serialize();
 
         assert_eq(serialized[0], account.nonce as Field);
         assert_eq(serialized[1], account.balance);
@@ -58,7 +58,7 @@ mod account {
 }
 
 mod account_within_block {
-    use crate::serde::{ACCOUNT_WITHIN_BLOCK_SERIALIZED_LEN, ACCOUNT_SERIALIZED_LEN};
+    use crate::serde::{ACCOUNT_BLOCK_LEN, ACCOUNT_LEN};
     use crate::account::AccountWithinBlock;
     use crate::fixtures::mainnet::london::vitalik_balance::{account::account, header::hash};
     use crate::misc::arrays::sub_array_equals;
@@ -66,14 +66,14 @@ mod account_within_block {
     #[test]
     fn simple() {
         let account_within_block = AccountWithinBlock { account, block_hash: hash };
-        let serialized: [Field; ACCOUNT_WITHIN_BLOCK_SERIALIZED_LEN] = account_within_block.serialize();
+        let serialized: [Field; ACCOUNT_BLOCK_LEN] = account_within_block.serialize();
 
         assert(sub_array_equals(account_within_block.account.serialize(), serialized, 0));
         assert(
             sub_array_equals(
                 account_within_block.block_hash.serialize(),
                 serialized,
-                ACCOUNT_SERIALIZED_LEN
+                ACCOUNT_LEN
             )
         );
         assert_eq(AccountWithinBlock::deserialize(serialized), account_within_block);
@@ -81,7 +81,7 @@ mod account_within_block {
 }
 
 mod storage_within_block {
-    use crate::serde::{STORAGE_WITHIN_BLOCK_1_SERIALIZED_LEN, ACCOUNT_SERIALIZED_LEN};
+    use crate::serde::{STORAGE_BLOCK_LEN, ACCOUNT_LEN};
     use crate::account_with_storage::StorageWithinBlock;
     use crate::fixtures::mainnet::paris::usdc_circle::{account::account, header::hash, storage_proof_new::proofs, storage::values};
     use crate::misc::{types::BYTES32_LENGTH, arrays::sub_array_equals};
@@ -89,7 +89,7 @@ mod storage_within_block {
     #[test]
     fn simple() {
         let storage_within_block = StorageWithinBlock { block_hash: hash, account, values };
-        let serialized: [Field; STORAGE_WITHIN_BLOCK_1_SERIALIZED_LEN] = storage_within_block.serialize();
+        let serialized: [Field; STORAGE_BLOCK_LEN] = storage_within_block.serialize();
 
         assert(sub_array_equals(storage_within_block.block_hash.serialize(), serialized, 0));
         assert(
@@ -103,7 +103,7 @@ mod storage_within_block {
             sub_array_equals(
                 storage_within_block.values[0].serialize(),
                 serialized,
-                BYTES32_LENGTH + ACCOUNT_SERIALIZED_LEN
+                BYTES32_LENGTH + ACCOUNT_LEN
             )
         );
         assert_eq(StorageWithinBlock::deserialize(serialized), storage_within_block);
