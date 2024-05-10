@@ -2,11 +2,11 @@ import { describe, expect, it } from 'vitest';
 import { Call, createRecordingClient } from './recordingClient.js';
 import { withTempFile, writeObject } from '../util/file.js';
 import { createMockClient } from './mockClient.js';
-import { GetBlockParameters, GetProofParameters, Hex } from 'viem';
+import { GetBlockParameters, GetProofParameters, Hex, Address } from 'viem';
 import { AlchemyClient } from './client.js';
 
 export const LONDON_BLOCK_NUM = 14194126n;
-export const CRYPTO_PUNKS_ADDRESS: Hex = '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb';
+export const CRYPTO_PUNKS_ADDRESS: Address = '0xb47e3cd837dDF8e4c57F05d70Ab865de6e193BBB';
 export const CRYPTO_PUNK_9TH_OWNER_OF_STORAGE_KEY: Hex =
   '0x825eb4cda6b8b44578c55770496c59e6dc3cf2235f690bcdaf51a61898ceb284';
 const BLOCK_HASH: Hex = '0xbe8aa5945d3377e65ed06757555d0d4babe269097574c210133e59cf6bc17d18';
