@@ -44,12 +44,12 @@ global ACCOUNT_LEN = 1 + 1 + BYTES32_LENGTH + BYTES32_LENGTH;
 
 impl Serde<ACCOUNT_LEN> for Account {
     fn serialize(self) -> [Field; ACCOUNT_LEN] {
-        let mut data: Fragment<ACCOUNT_LEN, Field> = Fragment::empty();
-        data.push_back(self.nonce as Field);
-        data.push_back(self.balance);
-        data.extend_back(self.storage_root.serialize());
-        data.extend_back(self.code_hash.serialize());
-        data.to_array()
+        let mut data: BoundedVec<Field, ACCOUNT_LEN> = BoundedVec::new();
+        data.push(self.nonce as Field);
+        data.push(self.balance);
+        data.extend_from_array(self.storage_root.serialize());
+        data.extend_from_array(self.code_hash.serialize());
+        data.storage
     }
 
     fn deserialize(data: [Field; ACCOUNT_LEN]) -> Self {
@@ -71,10 +71,10 @@ global ACCOUNT_BLOCK_LEN = ACCOUNT_LEN + BYTES32_LENGTH;
 
 impl Serde<ACCOUNT_BLOCK_LEN> for AccountWithinBlock {
     fn serialize(self) -> [Field; ACCOUNT_BLOCK_LEN] {
-        let mut data: Fragment<ACCOUNT_BLOCK_LEN, Field> = Fragment::empty();
-        data.extend_back(self.account.serialize());
-        data.extend_back(self.block_hash.serialize());
-        data.to_array()
+        let mut data: BoundedVec<Field, ACCOUNT_BLOCK_LEN> = BoundedVec::new();
+        data.extend_from_array(self.account.serialize());
+        data.extend_from_array(self.block_hash.serialize());
+        data.storage
     }
 
     fn deserialize(data: [Field; ACCOUNT_BLOCK_LEN]) -> Self {
@@ -92,11 +92,11 @@ global STORAGE_BLOCK_LEN = BYTES32_LENGTH + ACCOUNT_LEN + BYTES32_LENGTH;
 
 impl Serde<STORAGE_BLOCK_LEN> for StorageWithinBlock<1> {
     fn serialize(self) -> [Field; STORAGE_BLOCK_LEN] {
-        let mut data: Fragment<STORAGE_BLOCK_LEN, Field> = Fragment::empty();
-        data.extend_back(self.block_hash.serialize());
-        data.extend_back(self.account.serialize());
-        data.extend_back(self.values[0].serialize());
-        data.to_array()
+        let mut data: BoundedVec<Field, STORAGE_BLOCK_LEN> = BoundedVec::new();
+        data.extend_from_array(self.block_hash.serialize());
+        data.extend_from_array(self.account.serialize());
+        data.extend_from_array(self.values[0].serialize());
+        data.storage
     }
 
     fn deserialize(data: [Field; STORAGE_BLOCK_LEN]) -> Self {
