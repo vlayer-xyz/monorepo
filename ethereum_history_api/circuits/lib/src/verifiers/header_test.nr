@@ -155,8 +155,7 @@ fn test_verify_header_invalid_receipt_root() {
 
 global RLP_SHORT_STRING_TYPE = 0x80;
 
-// TODO: Add correct assertion message when noir-trie-proofs is updated
-#[test(should_fail)]
+#[test(should_fail_with="Expected a list")]
 fn test_verify_header_invalid_rlp() {
     let mut rlp_empty_string_encoding = [0; MAX_HEADER_RLP_LEN];
     rlp_empty_string_encoding[0] = RLP_SHORT_STRING_TYPE;
