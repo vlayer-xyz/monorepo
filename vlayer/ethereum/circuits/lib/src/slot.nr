@@ -13,6 +13,13 @@ pub(crate) fn mapping(slot: Bytes32, address: Address) -> Bytes32 {
     keccak256(vector.storage(), STORAGE_KEY_HASH_INPUT_LENGTH)
 }
 
+pub(crate) fn mapping_by_uint(slot: Bytes32, uint: Field) -> Bytes32 {
+    let mut vector: BoundedVec<u8, STORAGE_KEY_HASH_INPUT_LENGTH> = BoundedVec::new();
+    vector.extend_from_array(field_to_bytes32(uint));
+    vector.extend_from_array(slot);
+    keccak256(vector.storage(), STORAGE_KEY_HASH_INPUT_LENGTH)
+}
+
 pub(crate) fn dynamic_array(slot: Bytes32, size: Field, index: Field) -> Bytes32 {
     let start = keccak256(slot, 32);
     dynamic_array_with_precalculated_slot(start, size, index)
