@@ -1,7 +1,6 @@
 [package]
 name = "is_crypto_punk_owner"
 type = "bin"
-authors = [""]
 compiler_version = ">=0.28.0"
 
 [dependencies]
