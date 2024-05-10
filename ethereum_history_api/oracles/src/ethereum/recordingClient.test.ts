@@ -7,12 +7,14 @@ import { AlchemyClient } from './client.js';
 
 export const LONDON_BLOCK_NUM = 14194126n;
 export const CRYPTO_PUNKS_ADDRESS: Hex = '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb';
+export const CRYPTO_PUNK_9TH_OWNER_OF_STORAGE_KEY: Hex =
+  '0x825eb4cda6b8b44578c55770496c59e6dc3cf2235f690bcdaf51a61898ceb284';
 const BLOCK_HASH: Hex = '0xbe8aa5945d3377e65ed06757555d0d4babe269097574c210133e59cf6bc17d18';
 const STORAGE_ROOT: Hex = '0xae2792244417bc1749b9cd9a0bdc1c4a6cf32f147b37202c8cb3590777659aec';
 
 export const LONDON_CRYPTO_PUNKS_GET_PROOF_PARAMETERS = {
   blockNumber: LONDON_BLOCK_NUM,
-  storageKeys: [],
+  storageKeys: [CRYPTO_PUNK_9TH_OWNER_OF_STORAGE_KEY],
   address: CRYPTO_PUNKS_ADDRESS
 } as GetProofParameters;
 export const LONDON_CRYPTO_PUNKS_GET_BLOCK_PARAMETERS = { blockNumber: LONDON_BLOCK_NUM } as GetBlockParameters;
@@ -30,7 +32,7 @@ const EXPECTED_CALLS = [
     arguments: [
       {
         blockNumber: LONDON_BLOCK_NUM,
-        storageKeys: [],
+        storageKeys: [CRYPTO_PUNK_9TH_OWNER_OF_STORAGE_KEY],
         address: CRYPTO_PUNKS_ADDRESS
       }
     ],
