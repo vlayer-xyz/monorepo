@@ -26,6 +26,16 @@ struct TxReceiptPartial {
     logs_bloom: [u8; BLOOM_FILTER_LEN]
 }
 
+impl Eq for TxReceiptPartial {
+    fn eq(self, other: Self) -> bool {
+        (self.status == other.status) &
+        (self.state_root == other.state_root) &
+        (self.cumulative_gas_used == other.cumulative_gas_used) &
+        (self.logs_bloom == other.logs_bloom)
+    }
+
+}
+
 struct ForeignCallTxReceiptPartial {
     status: u1,
     status_is_some: bool,
