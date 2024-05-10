@@ -84,7 +84,6 @@ export const HISTORY_API_FIXTURES: HistoryAPIFixtures = {
         transactionHash: ETH_TRANSFER_TX_HASH
       },
       approve: {
-        skipHeader: true,
         blockNumber: 19_667_377n,
         transactionHash: TETHER_APPROVE_TX_HASH,
         logIdx: 0

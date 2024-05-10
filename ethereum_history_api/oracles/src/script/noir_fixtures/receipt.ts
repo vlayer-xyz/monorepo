@@ -22,7 +22,7 @@ export function createReceiptFixture(receipt: TransactionReceipt): string {
   const stateRoot = encodeOptional(receipt.root ? joinArray(encodeHex(receipt.root)) : receipt.root);
   const logsBloom = joinArray(encodeHex(receipt.logsBloom));
 
-  return `use crate::receipt::TxReceiptPartial;
+  return `use crate::receipt::{TxReceiptPartial, ForeignCallTxReceiptPartial};
 
 global tx_type = ${txTypeToField(receipt.type)};
 global receipt_rlp = ${receiptRlp};
@@ -34,5 +34,7 @@ global receipt = TxReceiptPartial {
   cumulative_gas_used: ${receipt.cumulativeGasUsed},
   logs_bloom: ${indentBlock(logsBloom, 1)}
 };
+
+global foreign_call_receipt: ForeignCallTxReceiptPartial = receipt.into();
 `;
 }
