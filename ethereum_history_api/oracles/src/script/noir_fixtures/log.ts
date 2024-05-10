@@ -1,6 +1,6 @@
 import { Log, toRlp } from 'viem';
 import { encodeHexString, indentBlock, joinArray } from '../../noir/noir_js/encode.js';
-import { createBoundedVecFixture, createVerticalBoundedVecFixture } from './boundedVec.js';
+import { createFocusedBoundedVecFixture, createVerticalBoundedVecFixture } from './boundedVec.js';
 import { padArray } from '../../util/array.js';
 import { BYTES_32_ZERO } from '../../util/const.js';
 import { logToRlpFields } from '../../ethereum/receipt.js';
@@ -22,7 +22,7 @@ global log_rlp = ${logRlp};
 global log = Log {
   address: ${indentBlock(joinArray(encodeHexString(log.address)), 1)},
   topics: ${indentBlock(createVerticalBoundedVecFixture(topics.map((topic) => joinArray(encodeHexString(topic)))), 1)},
-  data: ${indentBlock(createBoundedVecFixture(log.data), 1)},
+  data: ${indentBlock(createFocusedBoundedVecFixture(log.data), 1)},
 };
 `;
 }

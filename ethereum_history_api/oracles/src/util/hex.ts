@@ -1,7 +1,7 @@
 import { assert } from './assert.js';
 import { BYTE_HEX_LEN } from './const.js';
 
-const PREFIX = '0x';
+export const PREFIX = '0x';
 
 export function hasHexPrefix(hex: string): boolean {
   return hex.startsWith(PREFIX);
