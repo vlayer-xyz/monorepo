@@ -5,6 +5,8 @@ export const CIRCLE_USDC_BALANCE_STORAGE_KEY = '0x57d18af793d7300c4ba46d192ec7aa
 export const UNISWAP_V3_USDC_BALANCE_STORAGE_KEY = '0x1f21a62c4538bacf2aabeca410f0fe63151869f172e03c0e00357ba26a341eff';
 export const BORED_APE_7TH_OWNER_OF_STORAGE_KEY = '0x405787fa12a823e0f2b7631cc41b3ba8828b3321ca811111fa75cd3aa3bb5add';
 export const OWNER_OF_9TH_NOUN_STORAGE_KEY = '0x8a8dc4e5242ea8b1ab1d60606dae757e6c2cca9f92a2cced9f72c19960bcb458';
+export const OWNER_OF_9TH_CRYPTO_PUNK_OF_STORAGE_KEY =
+  '0x825eb4cda6b8b44578c55770496c59e6dc3cf2235f690bcdaf51a61898ceb284';
 export const CHAIN_LINK_TRANSFER_TX_HASH = '0x98e19df80eb8feae436896cc7cc6d4a97818e6010b56a249352b9ac2caf0d573';
 export const ETH_TRANSFER_TX_HASH = '0xfade98d8c3b7438655139080c33ccd0b1fc5d08b93dab0c3792d6c1001d56ddb';
 export const ORACLIZE_TRANSFER_TX_HASH = '0x38f299591902bfada359527fa6b9b597a959c41c6f72a3b484807fbf52dc8abe';
@@ -42,7 +44,8 @@ export const HISTORY_API_FIXTURES: HistoryAPIFixtures = {
     london: {
       crypto_punks: {
         blockNumber: 14_194_126n,
-        address: '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb'
+        address: '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb',
+        storageKeys: [OWNER_OF_9TH_CRYPTO_PUNK_OF_STORAGE_KEY]
       },
       vitalik_balance: {
         blockNumber: 12_965_000n,
