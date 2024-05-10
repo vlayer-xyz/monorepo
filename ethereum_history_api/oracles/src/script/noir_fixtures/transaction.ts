@@ -39,6 +39,6 @@ global transaction = TxPartial {
   s: ${indentBlock(joinArray(s), 1)}
 };
 
-global transaction_foreign: ForeignCallTransaction<${MAX_DATA_LEN}> = transaction.into();
+global foreign_call_transaction: ForeignCallTransaction<${MAX_DATA_LEN}> = transaction.into();
 `;
 }
