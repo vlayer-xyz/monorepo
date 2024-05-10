@@ -80,6 +80,12 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
         self.data[self.offset - 1]
     }
 
+    pub fn pop_front_array<LEN>(&mut self) -> [T; LEN] {
+        assert(self.length >= LEN as u64, "Cannot pop array: fragment is too short");
+        let mut res: [T; LEN] = zeroed();
+        res.map(|_| self.pop_front())
+    }
+
     pub fn push_back(&mut self, value: T) {
         assert(self.offset + self.length + 1 <= MAX_DATA_LEN, "Cannot push: fragment is full");
         self.data[self.offset + self.length] = value;

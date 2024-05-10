@@ -15,6 +15,12 @@ struct Account {
     code_hash: Bytes32,
 }
 
+impl Eq for Account {
+    fn eq(self, other: Self) -> bool {
+        (self.nonce == other.nonce) & (self.balance == other.balance) & (self.storage_root == other.storage_root) & (self.code_hash == other.code_hash)
+    }
+}
+
 struct StateProof {
     key: Address,
     value: [u8; MAX_ACCOUNT_STATE_LENGTH],
@@ -41,6 +47,12 @@ struct StorageWithinBlock<N> {
     block_hash: Bytes32,
     account: Account,
     values: [Bytes32; N],
+}
+
+impl Eq for StorageWithinBlock<1> {
+    fn eq(self, other: Self) -> bool {
+        (self.block_hash == other.block_hash) & (self.account == other.account) & (self.values[0] == other.values[0])
+    }
 }
 
 pub fn get_account_with_storage(

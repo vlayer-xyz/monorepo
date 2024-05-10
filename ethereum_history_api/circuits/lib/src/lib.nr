@@ -11,8 +11,8 @@ mod transaction_test;
 mod transaction_int_test;
 mod misc;
 mod chain;
-mod serialize;
-mod serialize_test;
+mod serde;
+mod serde_test;
 
 mod fixtures;
 mod verifiers;
