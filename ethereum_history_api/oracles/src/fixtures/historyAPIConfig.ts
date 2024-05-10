@@ -44,7 +44,7 @@ export const HISTORY_API_FIXTURES: HistoryAPIFixtures = {
     london: {
       crypto_punks: {
         blockNumber: 14_194_126n,
-        address: '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb',
+        address: '0xb47e3cd837dDF8e4c57F05d70Ab865de6e193BBB',
         storageKeys: [OWNER_OF_9TH_CRYPTO_PUNK_OF_STORAGE_KEY]
       },
       vitalik_balance: {
@@ -55,18 +55,18 @@ export const HISTORY_API_FIXTURES: HistoryAPIFixtures = {
     paris: {
       usdc_circle: {
         blockNumber: 19_000_000n,
-        address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+        address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
         storageKeys: [CIRCLE_USDC_BALANCE_STORAGE_KEY]
       },
       usdc_uniswap: {
         skipHeader: true,
         blockNumber: 19_000_000n,
-        address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+        address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
         storageKeys: [UNISWAP_V3_USDC_BALANCE_STORAGE_KEY]
       },
       bored_ape_yacht_club: {
         blockNumber: 19_000_000n,
-        address: '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d',
+        address: '0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D',
         storageKeys: [BORED_APE_7TH_OWNER_OF_STORAGE_KEY]
       },
       nouns: {
