@@ -50,8 +50,12 @@ struct ForeignCallTransaction<MAX_DATA_LEN> {
 impl<MAX_DATA_LEN> From<TxPartial> for ForeignCallTransaction<MAX_DATA_LEN> {
     fn from(tx: TxPartial<MAX_DATA_LEN>) -> Self {
         let mut data = [0; MAX_DATA_LEN];
-        for i in 0..tx.data.len {
-            data[i] = tx.data.storage[i];
+
+        // There might work a dynamic loop, but we don't understand it yet: https://github.com/noir-lang/noir/issues/5011
+        for i in 0..MAX_DATA_LEN {
+            if(i < tx.data.len){
+                data[i] = tx.data.storage[i];
+            }
         }
         ForeignCallTransaction {
             nonce: tx.nonce,
