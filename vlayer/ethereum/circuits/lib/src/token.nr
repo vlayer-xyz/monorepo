@@ -1,4 +1,7 @@
-use dep::ethereum_history_api::{account_with_storage::get_account_with_storage, misc::types::{Address, Bytes32}};
+use dep::ethereum_history_api::{
+    account_with_storage::get_account_with_storage, misc::types::{Address, Bytes32},
+    misc::bytes32::address_to_bytes32
+};
 use dep::std::field::bytes32_to_field;
 use crate::slot::mapping;
 
@@ -13,7 +16,7 @@ struct ERC20Token {
 
 impl ERC20Token {
     fn calculate_balance_storage_key(self, wallet_address: Address) -> Bytes32 {
-        mapping(self.balances_slot, wallet_address)
+        mapping(self.balances_slot, address_to_bytes32(wallet_address))
     }
 }
 

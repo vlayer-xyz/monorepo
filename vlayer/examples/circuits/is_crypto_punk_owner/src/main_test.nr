@@ -18,10 +18,7 @@ mod is_crypto_punk_owner_main {
     fn success() {
         let _ = OracleMock::mock("get_header").returns((london_block_header_partial, london_block_header_rlp));
         let _ = OracleMock::mock("get_proof").returns((account, state_proof, proofs[0]));
-
-        let token_id = [
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9
-        ];
+        let token_id = 9;
         main(CRYPTO_PUNK_OWNER_WALLER_ADDRESS, token_id, BLOCK_NUMBER);
     }
 
@@ -30,9 +27,7 @@ mod is_crypto_punk_owner_main {
         let _ = OracleMock::mock("get_header").returns((london_block_header_partial, london_block_header_rlp));
         let _ = OracleMock::mock("get_proof").returns((account, state_proof, proofs[0]));
 
-        let token_id = [
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9
-        ];
+        let token_id = 9;
         main(
             alter_array(CRYPTO_PUNK_OWNER_WALLER_ADDRESS),
             token_id,
@@ -42,9 +37,7 @@ mod is_crypto_punk_owner_main {
 
     #[test(should_fail_with = "Token ID is too high")]
     fn to_big_token_id() {
-        let token_id = [
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x27, 0x10
-        ];
+        let token_id = 10001;
         main(CRYPTO_PUNK_OWNER_WALLER_ADDRESS, token_id, BLOCK_NUMBER);
     }
 }

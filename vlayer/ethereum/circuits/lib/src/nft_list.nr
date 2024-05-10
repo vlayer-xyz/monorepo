@@ -1,7 +1,7 @@
 mod mainnet {
     use crate::nft::ERC721Token;
     use crate::chain_id;
-    use crate::slot::{struct_slot, dynamic_array_with_precalculated_slot, mapping_by_uint};
+    use crate::slot::{struct_slot, dynamic_array_with_precalculated_slot, mapping};
     use dep::std::field::bytes32_to_field;
     use dep::ethereum_history_api::misc::{types::Bytes32, field::field_to_bytes32};
 
@@ -33,12 +33,10 @@ mod mainnet {
         address: [0xb4, 0x7e, 0x3c, 0xd8, 0x37, 0xdd, 0xf8, 0xe4, 0xc5, 0x7f, 0x05, 0xd7, 0x0a, 0xb8, 0x65, 0xde, 0x6e, 0x19, 0x3b, 0xbb],
         token_id_to_slot: |token_id| {
             let CRYPTO_PUNK_MAX_TOKEN_ID: u64 = 9999;
-            let CRYPTO_PUNK_TOKEN_OWNERS_INNER_ENTRIES_SLOT = [
-                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0a
-            ];
+            let CRYPTO_PUNK_TOKEN_OWNERS_INNER_ENTRIES_SLOT = field_to_bytes32(10);
 
             assert(bytes32_to_field(token_id) as u64 <= CRYPTO_PUNK_MAX_TOKEN_ID, "Token ID is too high");
-            mapping_by_uint(CRYPTO_PUNK_TOKEN_OWNERS_INNER_ENTRIES_SLOT, bytes32_to_field(token_id))
+            mapping(CRYPTO_PUNK_TOKEN_OWNERS_INNER_ENTRIES_SLOT, token_id)
         },
         chain_id: chain_id::MAINNET
     };

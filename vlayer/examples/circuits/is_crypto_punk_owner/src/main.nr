@@ -5,7 +5,7 @@ use dep::ethereum_history_api::misc::field::field_to_bytes32;
 
 mod main_test;
 
-fn main(wallet_address: Address, token_id: [u8; 32], block_number: pub u64) {
-    let owner = CRYPTO_PUNK.get_owner(token_id, block_number);
+fn main(wallet_address: Address, token_id: Field, block_number: pub u64) {
+    let owner = CRYPTO_PUNK.get_owner(field_to_bytes32(token_id), block_number);
     assert_eq(owner, wallet_address, "Owner is not the same as the wallet address");
 }
