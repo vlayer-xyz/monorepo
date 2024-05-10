@@ -35,6 +35,30 @@ struct ForeignCallTxReceiptPartial {
     logs_bloom: [u8; BLOOM_FILTER_LEN]
 }
 
+impl From<ForeignCallTxReceiptPartial> for TxReceiptPartial {
+    fn from(receipt: ForeignCallTxReceiptPartial) -> Self {
+        TxReceiptPartial {
+            status: make_option(receipt.status, receipt.status_is_some),
+            state_root: make_option(receipt.state_root, receipt.state_root_is_some),
+            cumulative_gas_used: receipt.cumulative_gas_used,
+            logs_bloom: receipt.logs_bloom
+        }
+    }
+}
+
+impl From<TxReceiptPartial> for ForeignCallTxReceiptPartial {
+    fn from(receipt: TxReceiptPartial) -> Self {
+        ForeignCallTxReceiptPartial {
+            status: receipt.status.unwrap_or(zeroed()),
+            status_is_some: receipt.status.is_some(),
+            state_root: receipt.state_root.unwrap_or(zeroed()),
+            state_root_is_some: receipt.state_root.is_some(),
+            cumulative_gas_used: receipt.cumulative_gas_used,
+            logs_bloom: receipt.logs_bloom
+        }
+    }
+}
+
 struct TxReceiptWithinBlock {
     receipt: TxReceiptPartial,
     block_hash: Bytes32
