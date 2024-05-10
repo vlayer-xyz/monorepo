@@ -22,8 +22,7 @@ export function createVerticalBoundedVecFixture(values: string[]): string {
 }
 
 export function createBoundedVecFixture(value: Hex, maxLen: number): string {
-  const prefixLen = PREFIX.length;
-  const dataLen = (value.length - prefixLen) / BYTE_HEX_LEN;
+  const dataLen = (value.length - PREFIX.length) / BYTE_HEX_LEN;
   const input = joinArray(padArray(encodeHex(value), maxLen, ZERO_PAD_VALUE));
 
   return `BoundedVec {
