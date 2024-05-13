@@ -128,7 +128,7 @@ pub fn verify_leaf<MAX_LEAF_LEN, MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN>(
     key_ptr: &mut u64,
     value: Value<MAX_VALUE_LEN>
 ) {
-    let leaf_rlp_list: RlpList<2> = decode_list(leaf);
+    let leaf_rlp_list: RlpList<2> = decode_list(Fragment::new_focused(leaf));
     assert(leaf_rlp_list.len == 2, "Leaf expected to have 2 fields");
 
     let prefixed_leaf_key_part: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8> = Fragment::new(leaf_rlp_list.get(0).offset, leaf_rlp_list.get(0).length, leaf).focus();
