@@ -200,3 +200,7 @@ struct TransactionWithinBlock<MAX_DATA_LEN> {
     block_hash: Bytes32
 }
 ```
+
+## RLP decoding
+
+[rlp folder](./src/rlp/README.md) contains tools to work with RLP encoded data
