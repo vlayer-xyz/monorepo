@@ -2,7 +2,7 @@
 
 This is a [Noir](https://noir-lang.org) library to decode [RLP](#rlp-encoding).
 
-We introduce two main decoding functions:
+We introduce two main decoding [functions](#functions):
 
 - ```rust
   pub fn decode_string<N>(data: Fragment) -> (u64, u64);
@@ -10,6 +10,26 @@ We introduce two main decoding functions:
 - ```rust
   pub fn decode_list<N, NUM_FIELDS>(data: Fragment) -> RlpList<NUM_FIELDS>;
   ```
+
+### Use case
+
+This is an example of usage for this library. This is a part of decoding header of block.  
+In this example we use `decode_list` function and two methods on [RlpFragment](#rlpfragment): `assert_eq_u64`, `assert_eq_bytes32`
+
+```rust
+let header_rlp_list: RlpList<MAX_HEADER_FIELDS_COUNT> = decode_list(encoded_data);
+
+header_rlp_list.get(BLOCK_NUM_INDEX).assert_eq_u64(
+    "Block number",
+    block_header_rlp.data,
+    block_header_partial.number
+);
+header_rlp_list.get(STATE_ROOT_INDEX).assert_eq_bytes32(
+    "State root",
+    block_header_rlp.data,
+    block_header_partial.state_root
+);
+```
 
 # Functions
 
