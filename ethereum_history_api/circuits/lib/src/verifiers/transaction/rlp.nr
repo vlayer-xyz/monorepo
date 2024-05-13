@@ -25,7 +25,7 @@ pub(crate) fn assert_tx_rlp_equals<MAX_DATA_LEN>(
     tx_type: TxType,
     tx: TxPartial<MAX_DATA_LEN>
 ) {
-    let rlp_list: RlpList<MAX_TX_FIELDS_COUNT> = decode_list(tx_rlp);
+    let rlp_list: RlpList<MAX_TX_FIELDS_COUNT> = decode_list(Fragment::new_focused(tx_rlp));
 
     let FieldLayout {field_count, nonce_idx, gas_limit_idx, to_idx, signature_idx} = TX_TYPE_TO_FIELD_LAYOUT[tx_type];
     assert(rlp_list.len == field_count, "Invalid number of fields in tx RLP");

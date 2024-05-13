@@ -4,7 +4,7 @@ use crate::header::{BlockHeaderPartial, BlockHeaderRlp};
 use crate::misc::{arrays::sub_array_equals, fragment::Fragment};
 use crate::chain::{ETHEREUM_MAINNET_ID, ETHEREUM_SEPOLIA_ID};
 use crate::HASH_LEN;
-use crate::rlp::decode::{decode_list_fragments, decode_list};
+use crate::rlp::decode::decode_list;
 use crate::rlp::types::RlpList;
 
 global MAX_HEADER_FIELDS_COUNT = 20;
@@ -42,7 +42,7 @@ pub fn verify_header(
     block_header_partial: BlockHeaderPartial,
     block_header_rlp: BlockHeaderRlp
 ) {
-    let header_rlp_list: RlpList<MAX_HEADER_FIELDS_COUNT> = decode_list(block_header_rlp.data);
+    let header_rlp_list: RlpList<MAX_HEADER_FIELDS_COUNT> = decode_list(Fragment::new_focused(block_header_rlp.data));
     let expected_header_fields_count = get_header_fields_count(chain_id, block_header_partial.number);
 
     assert(
