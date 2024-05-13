@@ -2,7 +2,7 @@
 
 Ethereum documentation about RLP encoding: https://ethereum.org/en/developers/docs/data-structures-and-encoding/rlp/
 
-### Disinguishable types of data
+### Distinguishable types of data
 
 There are five different cases of encoding for data. Each of them is differentiated based on its header in RLP encoding.  
 [decode_to_rlp_header](#decode_to_rlp_header) function is responsible for recognizing them.
