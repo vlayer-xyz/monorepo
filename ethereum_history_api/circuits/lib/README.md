@@ -4,6 +4,10 @@ Noir library for proving and verifying historical data on the Ethereum blockchai
 
 **Disclaimer:** This page is supposed to give you an idea about the usage and structure of the library, but it's still a good idea to consult the code for exact definitions of functions & types.
 
+**Note:** This library also contains two sublibraries: _rlp_ for RLP-decoding and _merkle_patricia_proofs_ for verifying merkle patricia proofs. To learn more about them follow the links below:
+- [rlp](./src/rlp/README.md)
+- [merkle_patricia_proofs](./src/merkle_patricia_proofs/README.md)
+
 ## Usage
 
 There are two main ways to use this library. **With Oracles** or **Without Oracles**.
@@ -16,7 +20,7 @@ You will need to run an oracle server to use any of those functions. Consult [or
 
 If you decide to use our Oracles - you don't need to provide all the data by hand and you can use functions that operate on a **high level of abstraction**. Those functions will then **fetch** required data such as raw header or state proofs from oracles, **verify** that the data is correct and return you the values that you've asked for.
 
-Here is a list of public functions that you should use it you decide to go the **oracles route**:
+Here is a list of public functions that you should use if you decide to go the **oracles route**:
 
 ```rust
 pub fn get_header(chain_id: Field, block_number: Field) -> BlockHeaderPartial;
@@ -81,11 +85,13 @@ All the function in this library prove that the objects are contained within som
     ├── receipt.nr
     ├── account.nr
     ├── account_with_storage.nr
-    └── verifiers
+    ├── verifiers
         ├── header.nr
         ├── receipt.nr
         ├── account.nr
         └── storage.nr
+    ├── merkle_patricia_proofs
+    └── rlp
 ```
 
 ## Generic parameters
