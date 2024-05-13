@@ -24,7 +24,11 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
         Fragment { offset: 0, length, data }
     }
 
-    pub fn from_array<DATA_LEN>(data: [T; DATA_LEN]) -> Fragment<MAX_DATA_LEN, T> {
+    pub fn from_array<DATA_LEN>(data: [T; DATA_LEN]) -> Fragment<DATA_LEN, T> {
+        Fragment { offset: 0, length: data.len() as u64, data }
+    }
+
+    pub fn from_array_resize<DATA_LEN>(data: [T; DATA_LEN]) -> Fragment<MAX_DATA_LEN, T> {
         Fragment { offset: 0, length: data.len() as u64, data: resize(data) }
     }
 
@@ -32,8 +36,8 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
         self.focus().data
     }
 
-    pub fn new_focused(data: [T; MAX_DATA_LEN]) -> Fragment<MAX_DATA_LEN, T> {
-        Fragment { offset: 0, length: data.len() as u64, data }
+    pub fn from_vec(vec: BoundedVec<T, MAX_DATA_LEN>) -> Fragment<MAX_DATA_LEN, T> {
+        Fragment::new_with_length(vec.len, vec.storage)
     }
 
     pub fn focus<NEW_MAX_LEN>(self) -> Fragment<NEW_MAX_LEN, T> {
@@ -113,11 +117,5 @@ impl<MAX_DATA_LEN, T> Eq for Fragment<MAX_DATA_LEN, T> where T: Eq {
         }
 
         res
-    }
-}
-
-impl<MAX_DATA_LEN, T> From<BoundedVec<T, MAX_DATA_LEN>> for Fragment<MAX_DATA_LEN, T> {
-    fn from(vec: BoundedVec<T, MAX_DATA_LEN>) -> Fragment<MAX_DATA_LEN, T> {
-        Fragment::new_with_length(vec.len, vec.storage)
     }
 }
