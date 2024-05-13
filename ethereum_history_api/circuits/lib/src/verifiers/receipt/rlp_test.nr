@@ -1,71 +1,117 @@
-use crate::fixtures::mainnet::{
-    cancun::small_block::{receipt::{receipt_rlp, receipt}},
-    homestead::fork::{receipt::{receipt as pre_byzantium_receipt, receipt_rlp as pre_byzantium_receipt_rlp}}
-};
-use crate::verifiers::receipt::rlp::assert_receipt_rlp_equals;
-use crate::misc::arrays::{alter_array, resize};
-use dep::std::wrapping_add;
+mod receipt_rlp_equals {
+    use crate::fixtures::mainnet::{
+        cancun::small_block::{receipt::{receipt_rlp, receipt}},
+        homestead::fork::{receipt::{receipt as pre_byzantium_receipt, receipt_rlp as pre_byzantium_receipt_rlp}}
+    };
+    use crate::verifiers::receipt::rlp::assert_receipt_rlp_equals;
+    use crate::misc::arrays::{alter_array, resize};
+    use dep::std::wrapping_add;
 
-#[test]
-fn test_pre_byzantium() {
-    assert_receipt_rlp_equals(true, pre_byzantium_receipt_rlp, pre_byzantium_receipt);
+    #[test]
+    fn test_pre_byzantium() {
+        assert_receipt_rlp_equals(true, pre_byzantium_receipt_rlp, pre_byzantium_receipt);
+    }
+
+    #[test]
+    fn test_post_byzantium() {
+        assert_receipt_rlp_equals(false, receipt_rlp, receipt);
+    }
+
+    #[test(should_fail_with="Expected a list")]
+    fn test_assert_receipt_rlp_equals_invalid_rlp_type() {
+        let empty_string_rlp = [0x80]; // ""
+        assert_receipt_rlp_equals(false, resize(empty_string_rlp), receipt);
+    }
+
+    #[test(should_fail_with="Invalid number of fields in receipt RLP")]
+    fn test_assert_receipt_rlp_equals_invalid_rlp_field_count() {
+        let list_with_single_string = [0xc1, 0x80]; // [""]
+        assert_receipt_rlp_equals(false, resize(list_with_single_string), receipt);
+    }
+
+    #[test(should_fail_with="State root is missing")]
+    fn test_assert_receipt_rlp_equals_missing_state_root() {
+        let mut receipt = pre_byzantium_receipt;
+        receipt.state_root = Option::none();
+        assert_receipt_rlp_equals(true, pre_byzantium_receipt_rlp, receipt);
+    }
+
+    #[test(should_fail_with="State root: Invalid RLP value")]
+    fn test_assert_receipt_rlp_equals_invalid_state_root_value() {
+        let mut receipt = pre_byzantium_receipt;
+        receipt.state_root = receipt.state_root.map(alter_array);
+        assert_receipt_rlp_equals(true, pre_byzantium_receipt_rlp, receipt);
+    }
+
+    #[test(should_fail_with="Status is missing")]
+    fn test_assert_receipt_rlp_equals_missing_status() {
+        let mut receipt = receipt;
+        receipt.status = Option::none();
+        assert_receipt_rlp_equals(false, receipt_rlp, receipt);
+    }
+
+    #[test(should_fail_with="Status: Invalid RLP value")]
+    fn test_assert_receipt_rlp_equals_invalid_status_value() {
+        let mut receipt = receipt;
+        receipt.status = receipt.status.map(|status| 1 - status);
+        assert_receipt_rlp_equals(false, receipt_rlp, receipt);
+    }
+
+    #[test(should_fail_with="Cumulative gas used: Invalid RLP value)]
+    fn test_assert_receipt_rlp_equals_invalid_cumulative_gas_used_value() {
+        let mut receipt = receipt;
+        receipt.cumulative_gas_used = wrapping_add(receipt.cumulative_gas_used, 1);
+        assert_receipt_rlp_equals(false, receipt_rlp, receipt);
+    }
+
+    #[test(should_fail_with="Logs bloom: Invalid RLP value")]
+    fn test_assert_receipt_rlp_equals_invalid_logs_bloom_value() {
+        let mut receipt = receipt;
+        receipt.logs_bloom = alter_array(receipt.logs_bloom);
+        assert_receipt_rlp_equals(false, receipt_rlp, receipt);
+    }
 }
 
-#[test]
-fn test_post_byzantium() {
-    assert_receipt_rlp_equals(false, receipt_rlp, receipt);
-}
+mod log_rlp_equals {
+    use crate::fixtures::mainnet::{cancun::small_block::{receipt::receipt_rlp, log::log}};
+    use crate::verifiers::receipt::rlp::assert_log_rlp_equals;
+    use crate::misc::arrays::{alter_array, resize};
 
-#[test(should_fail_with="Expected a list")]
-fn test_assert_receipt_rlp_equals_invalid_rlp_type() {
-    let empty_string_rlp = [0x80]; // ""
-    assert_receipt_rlp_equals(false, resize(empty_string_rlp), receipt);
-}
+    #[test]
+    fn success() {
+        assert_log_rlp_equals(receipt_rlp, 0, log);
+    }
 
-#[test(should_fail_with="Invalid number of fields in receipt RLP")]
-fn test_assert_receipt_rlp_equals_invalid_rlp_field_count() {
-    let list_with_single_string = [0xc1, 0x80]; // [""]
-    assert_receipt_rlp_equals(false, resize(list_with_single_string), receipt);
-}
+    #[test(should_fail_with="Log index out of bounds")]
+    fn invalid_index() {
+        assert_log_rlp_equals(receipt_rlp, 1, log);
+    }
 
-#[test(should_fail_with="State root is missing")]
-fn test_assert_receipt_rlp_equals_missing_state_root() {
-    let mut receipt = pre_byzantium_receipt;
-    receipt.state_root = Option::none();
-    assert_receipt_rlp_equals(true, pre_byzantium_receipt_rlp, receipt);
-}
+    #[test(should_fail_with="Address: Invalid RLP value")]
+    fn invalid_address() {
+        let mut log = log;
+        log.address = alter_array(log.address);
+        assert_log_rlp_equals(receipt_rlp, 0, log);
+    }
 
-#[test(should_fail_with="State root: Invalid RLP value")]
-fn test_assert_receipt_rlp_equals_invalid_state_root_value() {
-    let mut receipt = pre_byzantium_receipt;
-    receipt.state_root = receipt.state_root.map(alter_array);
-    assert_receipt_rlp_equals(true, pre_byzantium_receipt_rlp, receipt);
-}
+    #[test(should_fail_with="Invalid number of topics in log RLP)]
+    fn invalid_number_of_topics() {
+        let mut log = log;
+        log.topics.len = 2;
+        assert_log_rlp_equals(receipt_rlp, 0, log);
+    }
 
-#[test(should_fail_with="Status is missing")]
-fn test_assert_receipt_rlp_equals_missing_status() {
-    let mut receipt = receipt;
-    receipt.status = Option::none();
-    assert_receipt_rlp_equals(false, receipt_rlp, receipt);
-}
+    #[test(should_fail_with="Topic: Invalid RLP value")]
+    fn invalid_topic() {
+        let mut log = log;
+        log.topics.storage[0] = alter_array(log.topics.storage[0]);
+        assert_log_rlp_equals(receipt_rlp, 0, log);
+    }
 
-#[test(should_fail_with="Status: Invalid RLP value")]
-fn test_assert_receipt_rlp_equals_invalid_status_value() {
-    let mut receipt = receipt;
-    receipt.status = receipt.status.map(|status| 1 - status);
-    assert_receipt_rlp_equals(false, receipt_rlp, receipt);
-}
-
-#[test(should_fail_with="Cumulative gas used: Invalid RLP value)]
-fn test_assert_receipt_rlp_equals_invalid_cumulative_gas_used_value() {
-    let mut receipt = receipt;
-    receipt.cumulative_gas_used = wrapping_add(receipt.cumulative_gas_used, 1);
-    assert_receipt_rlp_equals(false, receipt_rlp, receipt);
-}
-
-#[test(should_fail_with="Logs bloom: Invalid RLP value")]
-fn test_assert_receipt_rlp_equals_invalid_logs_bloom_value() {
-    let mut receipt = receipt;
-    receipt.logs_bloom = alter_array(receipt.logs_bloom);
-    assert_receipt_rlp_equals(false, receipt_rlp, receipt);
+    #[test(should_fail_with="Data: Invalid RLP value")]
+    fn invalid_data() {
+        let mut log = log;
+        log.data.storage = alter_array(log.data.storage);
+        assert_log_rlp_equals(receipt_rlp, 0, log);
+    }
 }

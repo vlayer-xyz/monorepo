@@ -14,10 +14,10 @@ export function createFocusedBoundedVecFixture(value: Hex): string {
 }`;
 }
 
-export function createVerticalBoundedVecFixture(values: string[]): string {
+export function createVerticalBoundedVecFixture(values: string[], len: number = values.length): string {
   return `BoundedVec {
   storage: ${indentBlock(joinArrayVertical(values), 1)},
-  len: ${values.length}
+  len: ${len}
 }`;
 }
 
