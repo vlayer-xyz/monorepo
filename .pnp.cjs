@@ -4605,7 +4605,9 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["noir-ethereum-api-oracles", "workspace:ethereum_history_api/oracles"],\
           ["@ethereumjs/trie", "npm:6.2.0"],\
+          ["@noir-lang/backend_barretenberg", "npm:0.29.0"],\
           ["@noir-lang/noir_js", "npm:0.29.0"],\
+          ["@noir-lang/noirc_abi", "npm:0.29.0"],\
           ["@types/json-bigint", "npm:1.0.4"],\
           ["@types/lodash.isequal", "npm:4.5.8"],\
           ["@types/node", "npm:20.12.10"],\
