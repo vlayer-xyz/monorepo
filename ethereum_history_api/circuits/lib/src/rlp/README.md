@@ -13,7 +13,7 @@ We introduce two main decoding [functions](#functions):
 
 ### Use case
 
-This is an example of usage for this library. This is a part of decoding header of block.  
+This is an example of usage for this library. This is a part of decoding block header.  
 In this example we use `decode_list` function and two methods on [RlpFragment](#rlpfragment): `assert_eq_u64`, `assert_eq_bytes32`
 
 ```rust
