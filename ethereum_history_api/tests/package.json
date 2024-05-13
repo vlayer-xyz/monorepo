@@ -12,8 +12,8 @@
     "format:ci": "prettier --check src"
   },
   "dependencies": {
-    "@noir-lang/backend_barretenberg": "0.28.0",
-    "@noir-lang/noirc_abi": "^0.28.0",
+    "@noir-lang/backend_barretenberg": "0.29.0",
+    "@noir-lang/noirc_abi": "^0.29.0",
     "noir-ethereum-api-oracles": "^1.0.0",
     "toml": "^3.0.0",
     "viem": "^2.10.1"

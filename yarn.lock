@@ -506,48 +506,48 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@noir-lang/acvm_js@npm:0.44.0":
-  version: 0.44.0
-  resolution: "@noir-lang/acvm_js@npm:0.44.0"
-  checksum: 10c0/0c58584759dd4e6dfb9d87ae96135de60585c841a1b15c6687905b75f154976ceae54e8a68134bc2cdf7a94d9ab18e190e3cb9f54cb71e7f40068fc220e9b09d
+"@noir-lang/acvm_js@npm:0.45.0":
+  version: 0.45.0
+  resolution: "@noir-lang/acvm_js@npm:0.45.0"
+  checksum: 10c0/f39f947920ce97524d05f99c049c2053a5b40f6c2969e40b2296d5fa0bb96513dcc14bcb5a9e069f69db8402ba9afca6fdcfe76b33462334a82424c3415944b7
   languageName: node
   linkType: hard
 
-"@noir-lang/backend_barretenberg@npm:0.28.0":
-  version: 0.28.0
-  resolution: "@noir-lang/backend_barretenberg@npm:0.28.0"
+"@noir-lang/backend_barretenberg@npm:0.29.0":
+  version: 0.29.0
+  resolution: "@noir-lang/backend_barretenberg@npm:0.29.0"
   dependencies:
     "@aztec/bb.js": "npm:0.35.1"
-    "@noir-lang/types": "npm:0.28.0"
+    "@noir-lang/types": "npm:0.29.0"
     fflate: "npm:^0.8.0"
-  checksum: 10c0/26bd30fa6ecc6a7a315f4f83fe130569d70634b91175255356864504df593c4457c61abe873d65a2646136b3785018b5ca5a3b446c56022871e8165f1a9419f2
+  checksum: 10c0/1440c55cceb582f1f60e9f3b69309daf5ece6680d85273deb59971bc05972ee4140d4119f1825e25f94498c78d52848077cbf8e28a3db23d012ac1afe288e25d
   languageName: node
   linkType: hard
 
-"@noir-lang/noir_js@npm:0.28.0":
-  version: 0.28.0
-  resolution: "@noir-lang/noir_js@npm:0.28.0"
+"@noir-lang/noir_js@npm:0.29.0":
+  version: 0.29.0
+  resolution: "@noir-lang/noir_js@npm:0.29.0"
   dependencies:
-    "@noir-lang/acvm_js": "npm:0.44.0"
-    "@noir-lang/noirc_abi": "npm:0.28.0"
-    "@noir-lang/types": "npm:0.28.0"
-  checksum: 10c0/a93d81dda39dcff4098ab381dcdf3c446c37993afc2d595ef4df2dc9dfde02e8ee152831b11d8d01e83936b2cf719ccbf6963d8dfc29300339bf880b3750be36
+    "@noir-lang/acvm_js": "npm:0.45.0"
+    "@noir-lang/noirc_abi": "npm:0.29.0"
+    "@noir-lang/types": "npm:0.29.0"
+  checksum: 10c0/811942db8c82d3aab6727ca74f13c09b62f79c10d31b3dd87e8a1a663a8a32b80e3bdfe67cfa1b0367614c311d31b66a71063f1088f24fd3c5f435ef45ce087d
   languageName: node
   linkType: hard
 
-"@noir-lang/noirc_abi@npm:0.28.0, @noir-lang/noirc_abi@npm:^0.28.0":
-  version: 0.28.0
-  resolution: "@noir-lang/noirc_abi@npm:0.28.0"
+"@noir-lang/noirc_abi@npm:0.29.0, @noir-lang/noirc_abi@npm:^0.29.0":
+  version: 0.29.0
+  resolution: "@noir-lang/noirc_abi@npm:0.29.0"
   dependencies:
-    "@noir-lang/types": "npm:0.28.0"
-  checksum: 10c0/8c8efaaafdf6119206d5f14a801d355a26449d8df8ecf5f209718302dadea61e48ad4a84895a6103bbf24a189b179fbd36f605602aa0debe6623ff3d246aef7e
+    "@noir-lang/types": "npm:0.29.0"
+  checksum: 10c0/64e29a49790b6965f555ea7c1e4d401cd2b839223cf2d12b783f6d12db739abedd1633b3bb7bab5fc13202c5ddf4fd1020e69c1c41059a373c9af15efe2e8239
   languageName: node
   linkType: hard
 
-"@noir-lang/types@npm:0.28.0":
-  version: 0.28.0
-  resolution: "@noir-lang/types@npm:0.28.0"
-  checksum: 10c0/19caf0ba7396a3c1a8a79a5d0b24499e6681028a9264b368b79207cbbb122c018d2281ccd82bca4e2a2519629092df25227ecb310423120f15bafcccb37cbc27
+"@noir-lang/types@npm:0.29.0":
+  version: 0.29.0
+  resolution: "@noir-lang/types@npm:0.29.0"
+  checksum: 10c0/b689099072b1510d72cdd017acc409f476c5a5ae39c4456c1e9d5fa2100dd24fe2e212c9c9c533959d7f228d104c3d6f22b3f95a0f40258f0d2cbed2ec87357a
   languageName: node
   linkType: hard
 
@@ -3751,8 +3751,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "noir-ethereum-api-e2e-tests@workspace:ethereum_history_api/tests"
   dependencies:
-    "@noir-lang/backend_barretenberg": "npm:0.28.0"
-    "@noir-lang/noirc_abi": "npm:^0.28.0"
+    "@noir-lang/backend_barretenberg": "npm:0.29.0"
+    "@noir-lang/noirc_abi": "npm:^0.29.0"
     "@types/node": "npm:^20.12.10"
     eslint: "npm:^8.57.0"
     noir-ethereum-api-oracles: "npm:^1.0.0"
@@ -3770,7 +3770,7 @@ __metadata:
   resolution: "noir-ethereum-api-oracles@workspace:ethereum_history_api/oracles"
   dependencies:
     "@ethereumjs/trie": "npm:^6.2.0"
-    "@noir-lang/noir_js": "npm:0.28.0"
+    "@noir-lang/noir_js": "npm:0.29.0"
     "@types/json-bigint": "npm:^1.0.4"
     "@types/lodash.isequal": "npm:^4.5.8"
     "@types/node": "npm:^20.12.10"
