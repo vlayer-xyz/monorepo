@@ -2,7 +2,7 @@
 
 **merkle_patricia_proofs** is a [Noir](https://noir-lang.org) library for verifying proofs in a [Merkle Patricia Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/).
 
-It exports function **verify_merkle_proof** that takes a key, value, root and a proof, and 
+It exports function **verify_merkle_proof** that takes a `key`, `value`, `root` and a `proof`, and 
 verifies whether:
 - the value is stored under the given key in the proof,
 - the nodes given by the proof hash to the hashes given by the proof and to the given root.
@@ -58,5 +58,5 @@ struct Proof<MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN> {
 `Proof` consists of: the nodes except for the leaf node, the leaf node and the depth. A `Node` is an array of bytes of maximum length `MAX_NODE_LEN = 532`. The leaf however can have arbitrary length as it contains a value of arbitrary length. That's why it is separated from the rest of the nodes. A `Leaf` is an array of bytes of maximum length `MAX_LEAF_LEN`.
 
 **Why is the maximum length of a node equal to 532?**
-A node is an RLP-encoded branch or extension node which means that apart from the data it holds, it additionally consists of RLP headers. If a node is a branch node, in a maximum case, it consists of 16 32-bit hashes and an empty string. When RLP headers are taken into account, the maximum length of a branch node is 3 + (16 * (1 + 32) + 1) = 532.
-If the node is an extension node, in a maximum case, it consists of a prefixed key part and a hash. As the maximum length of the key this library supports is 495, when accounting for RLP headers, the maximum length of an extension node is 1 + (2 + (1 + 495)) + (1 + 32) = 532.
+A node is an RLP-encoded branch or extension node which means that apart from the data it holds, it additionally consists of RLP headers. If a node is a branch node, in a maximum case, it consists of 16 32-bit hashes and an empty string. When RLP headers are taken into account, the maximum length of a branch node is `3 + (16 * (1 + 32) + 1) = 532`.
+If the node is an extension node, in a maximum case, it consists of a prefixed key part and a hash. As the maximum length of the key this library supports is 495, when accounting for RLP headers, the maximum length of an extension node is `1 + (2 + (1 + 495)) + (1 + 32) = 532`.
