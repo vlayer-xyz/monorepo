@@ -15,11 +15,11 @@ global ODD = 1;
 
 type Node = [u8; MAX_NODE_LEN];
 type Leaf<MAX_LEAF_LEN> = [u8; MAX_LEAF_LEN];
-type Key<MAX_KEY_LEN> = [u8; MAX_KEY_LEN];
+type Key<MAX_PREFIXED_KEY_NIBBLE_LEN> = [u8; MAX_PREFIXED_KEY_NIBBLE_LEN];
 type Value<MAX_VALUE_LEN> = [u8; MAX_VALUE_LEN];
 
-struct Proof<MAX_DEPTH, MAX_LEAF_LEN> {
-	nodes: [Node; MAX_DEPTH],
+struct Proof<MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN> {
+	nodes: [Node; MAX_DEPTH_NO_LEAF],
     // Leaf has a different max length than internal node as it contains the value of arbitrary length.
 	leaf: Leaf<MAX_LEAF_LEN>, 
 	depth: u64
