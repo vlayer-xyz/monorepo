@@ -1,15 +1,3 @@
-use crate::rlp::decode::copy_subfragment;
-use crate::misc::fragment::Fragment;
-
-#[test]
-fn test_copy_subfragment() {
-    let input = Fragment::new_focused([1, 2, 3, 4, 5]);
-    assert(copy_subfragment(input, 0) == Fragment::new_focused([1, 2, 3, 4, 5]));
-    assert(copy_subfragment(input, 2) == Fragment::new_focused([3, 4, 5]));
-    assert(copy_subfragment(input, 5) == Fragment::new_focused([]));
-    assert(copy_subfragment(input, 6) == Fragment::new_focused([]));
-}
-
 mod extract_payload_len {
     use crate::rlp::decode::extract_payload_len;
     use crate::misc::{arrays::resize, fragment::Fragment};
@@ -105,24 +93,18 @@ mod decode_string {
 }
 
 mod decode_list {
-    use crate::rlp::{decode::{decode_list, decode_list_fragments, RlpList, STRING}, types::RlpFragment};
+    use crate::rlp::{decode::{decode_list, RlpList, STRING}, types::RlpFragment};
     use crate::misc::{bounded_vecs::bounded_vec_from_array, fragment::Fragment};
 
     #[test]
     fn empty() {
-        let empty_list: RlpList<1> = decode_list([0xc0]);
-        assert(empty_list.len == 0);
-    }
-
-    #[test]
-    fn empty_fragments() {
-        let empty_list: RlpList<1> = decode_list_fragments(Fragment::new_focused([0xc0]));
+        let empty_list: RlpList<1> = decode_list(Fragment::new_focused([0xc0]));
         assert(empty_list.len == 0);
     }
 
     #[test]
     fn three_elements() {
-        let rlp = [0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0]; // ["0x636174","0x646f68","0x00"]
+        let rlp = Fragment::new_focused([0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0]); // ["0x636174","0x646f68","0x00"]
         let expected: RlpList<10> = bounded_vec_from_array(
             [
             RlpFragment { offset: 2, length: 3, data_type: STRING },
@@ -135,55 +117,22 @@ mod decode_list {
         assert_eq(decoded.storage(), expected.storage());
     }
 
-    #[test]
-    fn three_elements_fragments() {
-        let rlp = Fragment::new_focused([0xc9, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0]); // ["0x636174","0x646f68","0x00"]
-        let expected: RlpList<10> = bounded_vec_from_array(
-            [
-            RlpFragment { offset: 2, length: 3, data_type: STRING },
-            RlpFragment { offset: 6, length: 3, data_type: STRING },
-            RlpFragment { offset: 9, length: 1, data_type: STRING }
-        ]
-        );
-        let decoded = decode_list_fragments(rlp);
-        assert_eq(decoded.len, expected.len);
-        assert_eq(decoded.storage(), expected.storage());
-    }
-
     #[test(should_fail_with = "Expected a list")]
     fn fail_wrong_data_type() {
-        let rlp_of_single_byte = [0x00];
-        let _ : RlpList<1> = decode_list(rlp_of_single_byte);
-    }
-
-    #[test(should_fail_with = "Expected a list")]
-    fn fail_wrong_data_type_fragments() {
         let rlp_of_single_byte = Fragment::new_focused([0x00]);
-        let _ : RlpList<1> = decode_list_fragments(rlp_of_single_byte);
+        let _ : RlpList<1> = decode_list(rlp_of_single_byte);
     }
 
     #[test(should_fail_with = "Decoded length of short list exceeds input length")]
     fn fail_length_exceeds_input_length() {
-        let rlp = [0xc9, 0x13];
-        let _ : RlpList<1> = decode_list(rlp);
-    }
-
-    #[test(should_fail_with = "Decoded length of short list exceeds input length")]
-    fn fail_length_exceeds_input_length_fragments() {
         let rlp = Fragment::new_focused([0xc9, 0x13]);
-        let _ : RlpList<1> = decode_list_fragments(rlp);
+        let _ : RlpList<1> = decode_list(rlp);
     }
 
     #[test(should_fail_with="Inconsistent rlp length")]
     fn fail_inconsistent_length() {
-        let rlp = [0xc7, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13];
-        let _ : RlpList<3> = decode_list(rlp);
-    }
-
-    #[test(should_fail_with="Inconsistent rlp length")]
-    fn fail_inconsistent_length_fragments() {
         let rlp = Fragment::new_focused([0xc7, 0x83, 0x63, 0x61, 0x74, 0x83, 0x64, 0x6f, 0x68, 0x13]);
-        let _ : RlpList<3> = decode_list_fragments(rlp);
+        let _ : RlpList<3> = decode_list(rlp);
     }
 }
 
