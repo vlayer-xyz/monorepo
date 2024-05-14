@@ -32,6 +32,10 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
         self.focus().data
     }
 
+    pub fn from_vec(vec: BoundedVec<T, MAX_DATA_LEN>) -> Fragment<MAX_DATA_LEN, T> {
+        Fragment::new_with_length(vec.len, vec.storage)
+    }
+
     pub fn focus<NEW_MAX_LEN>(self) -> Fragment<NEW_MAX_LEN, T> {
         assert(NEW_MAX_LEN >= self.length, "New max length is smaller than fragment length");
 
@@ -111,13 +115,6 @@ impl<MAX_DATA_LEN, T> Eq for Fragment<MAX_DATA_LEN, T> where T: Eq {
         res
     }
 }
-
-impl<T, MAX_DATA_LEN> From<BoundedVec<T, MAX_DATA_LEN>> for Fragment<MAX_DATA_LEN, T> {
-    fn from(vec: BoundedVec<T, MAX_DATA_LEN>) -> Self {
-        Fragment::new_with_length(vec.len, vec.storage)
-    }
-}
-
 impl<T, DATA_LEN> From<[T; DATA_LEN]> for Fragment<DATA_LEN, T> {
     fn from(data: [T; DATA_LEN]) -> Self {
         Fragment::new_with_length(data.len(), data)
