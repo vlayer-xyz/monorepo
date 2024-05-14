@@ -24,7 +24,7 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
         Fragment { offset: 0, length, data }
     }
 
-    pub fn from_array<DATA_LEN>(data: [T; DATA_LEN]) -> Fragment<DATA_LEN, T> {
+    pub fn from_array(data: [T; MAX_DATA_LEN]) -> Fragment<MAX_DATA_LEN, T> {
         Fragment { offset: 0, length: data.len() as u64, data }
     }
 
