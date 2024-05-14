@@ -104,7 +104,7 @@ pub fn extract_hash<MAX_PREFIXED_KEY_NIBBLE_LEN>(
     key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8>,
     key_ptr: &mut u64
 ) -> Fragment<HASH_LEN, u8> {
-    let mut hash = Fragment::from_array([0; HASH_LEN]);
+    let mut hash: Fragment<HASH_LEN, u8> = From::from([0 as u8; HASH_LEN]);
     let node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list_of_small_strings(node);
 
     if (node_rlp_list.len == BRANCH_NODE_NUM_FIELDS) {
@@ -166,7 +166,7 @@ pub fn verify_merkle_proof<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH
     let mut key_ptr = 0;
 
     // Verify hashes of all the nodes in the proof path.
-    let mut curr_hash = Fragment::from_array(root);
+    let mut curr_hash: Fragment<HASH_LEN, u8> = From::from(root);
     for i in 0..MAX_DEPTH {
         if i < proof.depth - 1 {
             verify_node_hash(proof.nodes[i], curr_hash.data);
