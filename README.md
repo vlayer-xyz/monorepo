@@ -1,8 +1,9 @@
 # vLayer monorepo
 
 This monorepo contains two sub-projects:
-* **noir-ethereum-history-api** - [Noir](https://noir-lang.org) library for proving and verifying historical data on the Ethereum blockchain and other EVM compatible blockchains. It supports proving accounts, storage, logs, receipts & transactions. Checkout it's **[docs](./ethereum_history_api/README.md)** for more details.
-* **vLayer** - Contains real life examples of what can be achieved using **noir-ethereum-history-api**. It's a work in progress and lacks documentation.
+
+- **noir-ethereum-history-api** - [Noir](https://noir-lang.org) library for proving and verifying historical data on the Ethereum blockchain and other EVM compatible blockchains. It supports proving accounts, storage, logs, receipts & transactions. Checkout it's **[docs](./ethereum_history_api/README.md)** for more details.
+- **vLayer** - Contains real life examples of what can be built using **noir-ethereum-history-api**. It's a work in progress and lacks documentation.
 
 ## Prerequisites
 
@@ -28,11 +29,11 @@ yarn check
 
 To run checks individually use:
 
-* `yarn lint:all` - to run `eslint` on the whole repo
+- `yarn lint:all` - to run `eslint` on the whole repo
 
-* `yarn format:all` - to run `prettier` on the whole repo
+- `yarn format:all` - to run `prettier` on the whole repo
 
-* `yarn typecheck:all` - to run `typescript` checks on the whole repo
+- `yarn typecheck:all` - to run `typescript` checks on the whole repo
 
 ### CI workflows
 
