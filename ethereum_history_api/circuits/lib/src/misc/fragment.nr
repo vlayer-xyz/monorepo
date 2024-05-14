@@ -101,6 +101,19 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
             self.push_back(other[i]);
         }
     }
+
+    pub fn eq<MAX_DATA_LEN_2>(self, other: Fragment<MAX_DATA_LEN_2, T>) -> bool where T: Eq {
+        let mut res = true;
+        if (self.length != other.length) {
+            res = false;
+        }
+        for i in 0..MAX_DATA_LEN {
+            if i < self.length & i < other.length {
+                res &= self.at(i) == other.at(i);
+            }
+        }
+        res
+    }
 }
 
 impl<MAX_DATA_LEN, T> Eq for Fragment<MAX_DATA_LEN, T> where T: Eq {
