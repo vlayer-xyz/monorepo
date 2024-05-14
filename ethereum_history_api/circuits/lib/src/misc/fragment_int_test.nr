@@ -4,7 +4,7 @@ mod u8_fragment {
     #[test]
     fn success() {
         let data: [u8; 5] = [1, 2, 3, 4, 5];
-        let mut fragment: Fragment<5, u8> = From::from(data);
+        let mut fragment = Fragment::from_array(data);
         assert_eq(fragment.is_empty(), false);
         assert_eq(fragment.length, 5);
         assert_eq(fragment.at(0), 1);
@@ -26,7 +26,7 @@ mod Field_fragment {
     #[test]
     fn success() {
         let data: [Field; 5] = [1_000_000, 2, 3, 4, 5];
-        let mut fragment: Fragment<5, Field> = From::from(data);
+        let mut fragment = Fragment::from_array(data);
         assert_eq(fragment.is_empty(), false);
         assert_eq(fragment.length, 5);
         assert_eq(fragment.at(0), 1_000_000);

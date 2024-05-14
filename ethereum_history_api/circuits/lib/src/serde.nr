@@ -53,7 +53,7 @@ impl Serde<ACCOUNT_LEN> for Account {
     }
 
     fn deserialize(data: [Field; ACCOUNT_LEN]) -> Self {
-        let mut fragment: Fragment<ACCOUNT_LEN, Field> = From::from(data);
+        let mut fragment = Fragment::from_array(data);
         let nonce = fragment.pop_front() as u64;
         let balance = fragment.pop_front();
         let storage_root = fragment.pop_front_array().deserialize();
@@ -78,7 +78,7 @@ impl Serde<ACCOUNT_BLOCK_LEN> for AccountWithinBlock {
     }
 
     fn deserialize(data: [Field; ACCOUNT_BLOCK_LEN]) -> Self {
-        let mut fragment: Fragment<ACCOUNT_BLOCK_LEN, Field> = From::from(data);
+        let mut fragment = Fragment::from_array(data);
         let account = Account::deserialize(fragment.pop_front_array());
         let block_hash = fragment.pop_front_array().deserialize();
         AccountWithinBlock {
@@ -100,7 +100,7 @@ impl Serde<STORAGE_BLOCK_LEN> for StorageWithinBlock<1> {
     }
 
     fn deserialize(data: [Field; STORAGE_BLOCK_LEN]) -> Self {
-        let mut fragment: Fragment<STORAGE_BLOCK_LEN, Field> = From::from(data);
+        let mut fragment = Fragment::from_array(data);
         let block_hash = fragment.pop_front_array().deserialize();
         let account = Account::deserialize(fragment.pop_front_array());
         let values = [fragment.pop_front_array().deserialize()];

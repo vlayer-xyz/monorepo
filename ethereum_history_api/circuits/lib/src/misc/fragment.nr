@@ -24,6 +24,10 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
         Fragment { offset: 0, length, data }
     }
 
+    pub fn from_array<DATA_LEN>(data: [T; DATA_LEN]) -> Fragment<DATA_LEN, T> {
+        Fragment { offset: 0, length: data.len() as u64, data }
+    }
+
     pub fn from_array_resize<DATA_LEN>(data: [T; DATA_LEN]) -> Fragment<MAX_DATA_LEN, T> {
         Fragment { offset: 0, length: data.len() as u64, data: resize(data) }
     }
@@ -113,10 +117,5 @@ impl<MAX_DATA_LEN, T> Eq for Fragment<MAX_DATA_LEN, T> where T: Eq {
         }
 
         res
-    }
-}
-impl<T, DATA_LEN> From<[T; DATA_LEN]> for Fragment<DATA_LEN, T> {
-    fn from(data: [T; DATA_LEN]) -> Self {
-        Fragment::new_with_length(data.len(), data)
     }
 }
