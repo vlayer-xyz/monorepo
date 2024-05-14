@@ -58,12 +58,12 @@ pub fn decode_to_rlp_header<N>(data: Fragment<N, u8>) -> RlpHeader {
     }
 }
 
-pub fn decode_string<N>(input: Fragment<N, u8>) -> (u64, u64) {
-    let mut RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
+pub fn decode_string<N>(data: Fragment<N, u8>) -> (u64, u64) {
+    let mut RlpHeader {offset, length, data_type} = decode_to_rlp_header(data);
     assert(data_type == STRING, "Wrong data type");
 
     let total_len = length + offset;
-    assert(total_len <= input.length, "Total length exceeds input length");
+    assert(total_len <= data.length, "Total length exceeds input length");
 
     (offset, length)
 }
@@ -71,19 +71,19 @@ pub fn decode_string<N>(input: Fragment<N, u8>) -> (u64, u64) {
 /// Returns an RLP list look-up table.
 /// For string elements, the offset points to the payload, whereas the offset
 ///   of a list element points to the RLP header of that element.
-pub fn decode_list<N, MAX_FIELDS>(input: Fragment<N, u8>) -> RlpList<MAX_FIELDS> {
+pub fn decode_list<N, MAX_FIELDS>(data: Fragment<N, u8>) -> RlpList<MAX_FIELDS> {
     let mut rlp_list: RlpList<MAX_FIELDS> = BoundedVec::new();
 
-    let RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
+    let RlpHeader {offset, length, data_type} = decode_to_rlp_header(data);
     assert(data_type == LIST, "Expected a list");
 
     let total_len = length + offset;
-    assert(total_len <= input.length, "Total length exceeds input length");
+    assert(total_len <= data.length, "Total length exceeds input length");
 
     let mut current_offset = offset;
     for _ in 0..MAX_FIELDS {
         if (current_offset < total_len) {
-            let header: Fragment<N, u8> = input.subfragment(current_offset, input.length - current_offset);
+            let header: Fragment<N, u8> = data.subfragment(current_offset, data.length - current_offset);
 
             let RlpHeader {offset: field_off, length: field_len, data_type: field_type} = decode_to_rlp_header(header);
 
@@ -104,19 +104,19 @@ pub fn decode_list<N, MAX_FIELDS>(input: Fragment<N, u8>) -> RlpList<MAX_FIELDS>
 
 /// RLP list decoder for lists of strings of length < 56 bytes.
 /// Returns an RLP list look-up table.
-pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: Fragment<N, u8>) -> RlpList<NUM_FIELDS> {
+pub fn decode_list_of_small_strings<N, NUM_FIELDS>(data: Fragment<N, u8>) -> RlpList<NUM_FIELDS> {
     let mut rlp_list: RlpList<NUM_FIELDS> = BoundedVec::new();
 
-    let RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
+    let RlpHeader {offset, length, data_type} = decode_to_rlp_header(data);
     assert(data_type == LIST, "Expected a list");
 
     let total_len = length + offset;
-    assert(total_len <= input.length, "Total length exceeds input length");
+    assert(total_len <= data.length, "Total length exceeds input length");
 
     let mut current_offset = offset;
     for _ in 0..NUM_FIELDS {
         if (current_offset < total_len) {
-            let first_byte = input.at(current_offset);
+            let first_byte = data.at(current_offset);
 
             let (field_off, field_len) = get_small_string_offset_and_length(first_byte);
 
