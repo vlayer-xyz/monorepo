@@ -110,6 +110,45 @@ mod subfragment {
     }
 }
 
+mod eq {
+
+    use crate::misc::fragment::Fragment;
+
+    #[test]
+    fn empty() {
+        let empty1: Fragment<0, Field> = Fragment::empty();
+        let empty2: Fragment<0, Field> = Fragment::empty();
+        assert(empty1.eq(empty2));
+    }
+
+    #[test]
+    fn same_size() {
+        let f1 = Fragment::from_array([1, 2, 3]);
+        let f2 = Fragment::from_array([1, 2, 3]);
+        let f3 = Fragment::from_array([1, 2, 4]);
+        assert(f1.eq(f2));
+        assert(f2.eq(f1));
+        assert(!f1.eq(f3));
+        assert(!f3.eq(f1));
+    }
+
+    #[test]
+    fn different_length() {
+        let f1 = Fragment::new_with_length(2, [1, 2, 3]);
+        let f2 = Fragment::new_with_length(3, [1, 2, 3]);
+        assert(!f1.eq(f2));
+        assert(!f2.eq(f1));
+    }
+
+    #[test]
+    fn different_size() {
+        let f1 = Fragment::new_with_length(2, [1, 2, 3]);
+        let f2 = Fragment::new_with_length(2, [1, 2, 3, 4]);
+        assert(f1.eq(f2));
+        assert(f2.eq(f1));
+    }
+}
+
 mod is_empty {
 
     use crate::misc::fragment::Fragment;
@@ -255,7 +294,7 @@ mod extend_back {
     }
 }
 
-mod eq {
+mod eq_trait {
 
     use crate::misc::fragment::Fragment;
 

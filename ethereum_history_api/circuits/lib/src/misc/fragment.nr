@@ -8,6 +8,9 @@ struct Fragment<MAX_DATA_LEN, T> {
 }
 
 impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
+    /**
+     * Creates a new empty fragment.
+     */
     pub fn empty() -> Fragment<MAX_DATA_LEN, T> {
         Fragment { offset: 0, length: 0, data: zeroed() }
     }
@@ -40,6 +43,12 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
         Fragment::new_with_length(vec.len, vec.storage)
     }
 
+    pub fn subfragment(self, offset: u64, length: u64) -> Fragment<MAX_DATA_LEN, T> {
+        assert(offset + length <= self.length, "Subfragment overflows fragment");
+
+        Fragment { offset: self.offset + offset, length, data: self.data }
+    }
+
     pub fn focus<NEW_MAX_LEN>(self) -> Fragment<NEW_MAX_LEN, T> {
         assert(NEW_MAX_LEN >= self.length, "New max length is smaller than fragment length");
 
@@ -47,12 +56,6 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
         memcpy_up_to_length(&mut new_data, self.data, self.offset, self.length);
 
         Fragment { offset: 0, length: self.length, data: new_data }
-    }
-
-    pub fn subfragment(self, offset: u64, length: u64) -> Fragment<MAX_DATA_LEN, T> {
-        assert(offset + length <= self.length, "Subfragment overflows fragment");
-
-        Fragment { offset: self.offset + offset, length, data: self.data }
     }
 
     pub fn is_empty(self) -> bool {
@@ -101,6 +104,19 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
             self.push_back(other[i]);
         }
     }
+
+    pub fn eq<MAX_DATA_LEN_2>(self, other: Fragment<MAX_DATA_LEN_2, T>) -> bool where T: Eq {
+        let mut res = true;
+        if (self.length != other.length) {
+            false
+        }
+        for i in 0..MAX_DATA_LEN {
+            if i < self.length {
+                res &= self.at(i) == other.at(i);
+            }
+        }
+        res
+    }
 }
 
 impl<MAX_DATA_LEN, T> Eq for Fragment<MAX_DATA_LEN, T> where T: Eq {
@@ -117,5 +133,11 @@ impl<MAX_DATA_LEN, T> Eq for Fragment<MAX_DATA_LEN, T> where T: Eq {
         }
 
         res
+    }
+}
+
+impl<MAX_DATA_LEN, T> From<BoundedVec<T, MAX_DATA_LEN>> for Fragment<MAX_DATA_LEN, T> {
+    fn from(vec: BoundedVec<T, MAX_DATA_LEN>) -> Fragment<MAX_DATA_LEN, T> {
+        Fragment::new_with_length(vec.len, vec.storage)
     }
 }

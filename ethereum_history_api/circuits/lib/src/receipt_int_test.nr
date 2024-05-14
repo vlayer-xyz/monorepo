@@ -1,4 +1,4 @@
-use crate::receipt::{get_receipt, TxReceiptWithinBlock, PhantomReceiptProofLen, PhantomReceiptRlpLen};
+use crate::receipt::{get_receipt, TxReceiptWithinBlock};
 use crate::fixtures::mainnet::{
     cancun::small_block::{
     header::{number, block_header_partial, block_header_rlp},

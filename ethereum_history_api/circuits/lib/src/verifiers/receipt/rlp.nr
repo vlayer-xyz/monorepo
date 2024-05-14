@@ -1,4 +1,5 @@
 use crate::{verifiers::receipt::is_pre_byzantium, receipt::{BLOOM_FILTER_LEN, TxReceiptPartial}};
+use crate::misc::fragment::Fragment;
 use crate::rlp::decode::decode_list;
 use crate::rlp::types::RlpList;
 
@@ -8,12 +9,12 @@ global STATUS_INDEX = 0;
 global CUMULATIVE_GAS_USED_INDEX = 1;
 global LOGS_BLOOM_INDEX = 2;
 
-pub(crate) fn assert_receipt_rlp_equals<MAX_RLP_LEN>(
+pub(crate) fn assert_receipt_rlp_equals<MAX_ENCODED_LEN>(
     is_pre_byzantium: bool,
-    receipt_rlp: [u8; MAX_RLP_LEN],
+    receipt_rlp: Fragment<MAX_ENCODED_LEN, u8>,
     receipt: TxReceiptPartial
 ) {
-    let receipt_rlp_list: RlpList<RECEIPT_FIELDS_COUNT> = decode_list(Fragment::new_focused(receipt_rlp));
+    let receipt_rlp_list: RlpList<RECEIPT_FIELDS_COUNT> = decode_list(receipt_rlp);
     assert(receipt_rlp_list.len == RECEIPT_FIELDS_COUNT, "Invalid number of fields in receipt RLP");
 
     if (is_pre_byzantium) {
