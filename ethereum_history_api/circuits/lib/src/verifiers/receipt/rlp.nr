@@ -17,7 +17,7 @@ pub(crate) fn assert_receipt_rlp_equals(
     receipt_rlp: [u8; MAX_RECEIPT_RLP_LENGTH],
     receipt: TxReceiptPartial
 ) {
-    let receipt_rlp_list: RlpList<RECEIPT_FIELDS_COUNT> = decode_list(Fragment::new_focused(receipt_rlp));
+    let receipt_rlp_list: RlpList<RECEIPT_FIELDS_COUNT> = decode_list(Fragment::from_array(receipt_rlp));
     assert(receipt_rlp_list.len == RECEIPT_FIELDS_COUNT, "Invalid number of fields in receipt RLP");
 
     if (is_pre_byzantium) {
