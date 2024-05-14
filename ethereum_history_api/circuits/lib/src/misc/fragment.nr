@@ -119,3 +119,9 @@ impl<MAX_DATA_LEN, T> Eq for Fragment<MAX_DATA_LEN, T> where T: Eq {
         res
     }
 }
+
+impl<T, DATA_LEN> From<[T; DATA_LEN]> for Fragment<DATA_LEN, T> {
+    fn from(data: [T; DATA_LEN]) -> Self {
+        Fragment::new_with_length(data.len(), data)
+    }
+}
