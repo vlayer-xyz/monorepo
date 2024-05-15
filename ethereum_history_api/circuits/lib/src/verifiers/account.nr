@@ -15,7 +15,7 @@ global CODE_HASH_INDEX = 3;
 
 pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_STATE_LENGTH], account: Account) {
     let account_rlp_right_padded = right_pad(account_rlp_left_padded).storage;
-    let account_rlp_list: RlpList<ACCOUNT_FIELDS_COUNT> = decode_list_of_small_strings(Fragment::new_focused(account_rlp_right_padded));
+    let account_rlp_list: RlpList<ACCOUNT_FIELDS_COUNT> = decode_list_of_small_strings(Fragment::from_array(account_rlp_right_padded));
     assert(account_rlp_list.len == ACCOUNT_FIELDS_COUNT, "Invalid number of fields in account RLP");
 
     account_rlp_list.get(NONCE_INDEX).assert_eq_u64("Nonce", account_rlp_right_padded, account.nonce as u64);

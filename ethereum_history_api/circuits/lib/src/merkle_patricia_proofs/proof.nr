@@ -32,7 +32,7 @@ struct ProofInput<MAX_KEY_LEN, MAX_VALUE_LEN, MAX_DEPTH, MAX_LEAF_LEN> {
 }
 
 pub fn get_node_len<MAX_LEN>(node: [u8; MAX_LEN]) -> u64 {
-    let node_rlp_header = decode_to_rlp_header(Fragment::new_focused(node));
+    let node_rlp_header = decode_to_rlp_header(Fragment::from_array(node));
     let node_unpadded_len = node_rlp_header.offset + node_rlp_header.length;
     assert(node_unpadded_len <= MAX_LEN, "Node RLP length exceeds MAX_LEN");
 
@@ -128,7 +128,7 @@ pub fn verify_leaf<MAX_LEAF_LEN, MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN>(
     key_ptr: &mut u64,
     value: Value<MAX_VALUE_LEN>
 ) {
-    let leaf_rlp_list: RlpList<2> = decode_list(Fragment::new_focused(leaf));
+    let leaf_rlp_list: RlpList<2> = decode_list(Fragment::from_array(leaf));
     assert(leaf_rlp_list.len == 2, "Leaf expected to have 2 fields");
 
     let prefixed_leaf_key_part: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8> = Fragment::new(leaf_rlp_list.get(0).offset, leaf_rlp_list.get(0).length, leaf).focus();
