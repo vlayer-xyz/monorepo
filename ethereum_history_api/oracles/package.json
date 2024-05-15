@@ -27,6 +27,7 @@
     "@noir-lang/noir_js": "0.29.0",
     "@noir-lang/noirc_abi": "0.29.0",
     "dotenv": "^16.4.5",
+    "execa": "^9.0.2",
     "fastify": "^4.26.2",
     "json-bigint": "^1.0.0",
     "json-rpc-2.0": "^1.7.0",
