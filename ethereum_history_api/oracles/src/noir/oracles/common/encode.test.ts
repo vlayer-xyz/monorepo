@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { encodeAddress, encodeByte, encodeBytes32, encodeField, encodeHex, encodeProofNode } from './encode.js';
+import {
+  encodeAddress,
+  encodeByte,
+  encodeBytes32,
+  encodeField,
+  encodeHex,
+  encodeProofNode,
+  encodeU128
+} from './encode.js';
 import { MODULUS } from './const.js';
 
 describe('encodeByte', () => {
@@ -47,6 +55,21 @@ describe('encodeField', () => {
 
   it('should handle large values correctly', () => {
     expect(encodeField(100500)).toBe('0x018894');
+  });
+});
+
+describe('encodeU128', () => {
+  it('should encode 1 correctly', () => {
+    expect(encodeU128(1n)).toStrictEqual(['0x', '0x01']);
+  });
+  it('should encode 255 correctly', () => {
+    expect(encodeU128(255n)).toStrictEqual(['0x', '0xff']);
+  });
+  it('should encode large values correctly', () => {
+    expect(encodeU128(100500n)).toStrictEqual(['0x', '0x018894']);
+  });
+  it('should encode values over 64 bits correctly', () => {
+    expect(encodeU128(2n ** 64n)).toStrictEqual(['0x01', '0x01']);
   });
 });
 
