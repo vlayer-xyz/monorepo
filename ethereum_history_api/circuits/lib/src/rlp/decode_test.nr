@@ -43,40 +43,37 @@ mod extract_payload_len {
 }
 
 mod decode_string {
-    use crate::rlp::decode::decode_string;
+    use crate::rlp::decode::{decode_string, STRING};
     use crate::misc::{arrays::resize, fragment::Fragment};
+    use crate::rlp::types::RlpFragment;
 
     #[test]
     fn one_byte_zero() {
         let rlp = Fragment::from_array([0x00]);
-        let expected_offset = 0;
-        let expected_length = 1;
-        assert(decode_string(rlp) == (expected_offset, expected_length));
+        let expected = RlpFragment { offset: 0, length: 1, data_type: STRING };
+        assert(decode_string(rlp) == expected);
     }
 
     #[test]
     fn one_byte_one() {
         let rlp = Fragment::from_array([0x01]);
-        let expected_offset = 0;
-        let expected_length = 1;
-        assert(decode_string(rlp) == (expected_offset, expected_length));
+        let expected = RlpFragment { offset: 0, length: 1, data_type: STRING };
+        assert(decode_string(rlp) == expected);
     }
 
     #[test]
     fn three_bytes() {
         let rlp = Fragment::from_array([0x83, 0x63, 0x61, 0x74]); // "0x636174"
-        let expected_offset = 1;
-        let expected_length = 3;
-        assert(decode_string(rlp) == (expected_offset, expected_length));
+        let expected = RlpFragment { offset: 1, length: 3, data_type: STRING };
+        assert(decode_string(rlp) == expected);
     }
 
     #[test]
     fn using_lenlen() {
         let rlp_header = [0xb8, 60]; //string of length 60
         let rlp : Fragment<62, u8> = Fragment::from_array(resize(rlp_header));
-        let expected_offset = 2;
-        let expected_length = 60;
-        assert(decode_string(rlp) == (expected_offset, expected_length));
+        let expected = RlpFragment { offset: 2, length: 60, data_type: STRING };
+        assert(decode_string(rlp) == expected);
     }
 
     #[test(should_fail_with = "Wrong data type")]
