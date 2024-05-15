@@ -27,7 +27,7 @@ describe('getTransactionOracle', () => {
         '0x40','0xdf','0xf8','0x3e','0x82','0x64','0xec','0xf9','0x86','0xca'
     ]);
     expect(txWithProof[OFFSETS.TO_IS_SOME]).toStrictEqual('0x01');
-    expect(txWithProof[OFFSETS.VALUE]).toStrictEqual('0x');
+    expect(txWithProof[OFFSETS.VALUE_LO]).toStrictEqual('0x');
     // prettier-ignore
     expect(txWithProof[OFFSETS.DATA]).toStrictEqual([
         '0xa9','0x05','0x9c','0xbb','0x00','0x00','0x00','0x00','0x00','0x00',
