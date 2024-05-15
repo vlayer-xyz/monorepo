@@ -1,7 +1,7 @@
 use dep::std::hash::keccak256;
 
 use crate::header::{BlockHeaderPartial, BlockHeaderRlp};
-use crate::misc::arrays::sub_array_equals;
+use crate::misc::{arrays::sub_array_equals, fragment::Fragment};
 use crate::chain::{ETHEREUM_MAINNET_ID, ETHEREUM_SEPOLIA_ID};
 use crate::HASH_LEN;
 use crate::rlp::decode::decode_list;
@@ -42,7 +42,7 @@ pub fn verify_header(
     block_header_partial: BlockHeaderPartial,
     block_header_rlp: BlockHeaderRlp
 ) {
-    let header_rlp_list: RlpList<MAX_HEADER_FIELDS_COUNT> = decode_list(block_header_rlp.data);
+    let header_rlp_list: RlpList<MAX_HEADER_FIELDS_COUNT> = decode_list(Fragment::from_array(block_header_rlp.data));
     let expected_header_fields_count = get_header_fields_count(chain_id, block_header_partial.number);
 
     assert(
