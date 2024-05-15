@@ -17,5 +17,5 @@
   "typescript.tsdk": ".yarn/sdks/typescript/lib",
   "prettier.prettierPath": ".yarn/sdks/prettier/index.cjs",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "cSpell.words": ["acir", "Barretenberg", "Nargo"]
+  "cSpell.words": ["acir", "Barretenberg", "keccaks", "Nargo"]
 }
