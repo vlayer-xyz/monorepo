@@ -3,7 +3,7 @@ import { Address, Hex } from 'viem';
 export const JS_FIXTURES_DIRECTORY = 'fixtures';
 export const CIRCLE_USDC_BALANCE_STORAGE_KEY = '0x57d18af793d7300c4ba46d192ec7aa095070dde6c52c687c6d0d92fb8532b305';
 export const UNISWAP_V3_USDC_BALANCE_STORAGE_KEY = '0x1f21a62c4538bacf2aabeca410f0fe63151869f172e03c0e00357ba26a341eff';
-export const BORED_APE_7TH_OWNER_OF_STORAGE_KEY = '0x405787fa12a823e0f2b7631cc41b3ba8828b3321ca811111fa75cd3aa3bb5add';
+export const OWNER_OF_7TH_BORED_APE_STORAGE_KEY = '0x405787fa12a823e0f2b7631cc41b3ba8828b3321ca811111fa75cd3aa3bb5add';
 export const OWNER_OF_9TH_NOUN_STORAGE_KEY = '0x8a8dc4e5242ea8b1ab1d60606dae757e6c2cca9f92a2cced9f72c19960bcb458';
 export const OWNER_OF_9TH_CRYPTO_PUNK_OF_STORAGE_KEY =
   '0x825eb4cda6b8b44578c55770496c59e6dc3cf2235f690bcdaf51a61898ceb284';
@@ -67,7 +67,7 @@ export const HISTORY_API_FIXTURES: HistoryAPIFixtures = {
       bored_ape_yacht_club: {
         blockNumber: 19_000_000n,
         address: '0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D',
-        storageKeys: [BORED_APE_7TH_OWNER_OF_STORAGE_KEY]
+        storageKeys: [OWNER_OF_7TH_BORED_APE_STORAGE_KEY]
       },
       nouns: {
         blockNumber: 19_000_000n,
