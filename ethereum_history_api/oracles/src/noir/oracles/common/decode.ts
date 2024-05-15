@@ -1,4 +1,4 @@
-import { type Address, isAddress, isHex, Hex } from 'viem';
+import { type Address, isAddress, isHex, Hex, getAddress } from 'viem';
 import { assert } from '../../../util/assert.js';
 import { BYTE_HEX_LEN } from '../../../util/const.js';
 import { ADDRESS_LEN, BYTES32_LEN, MAX_U8 } from './const.js';
@@ -23,7 +23,7 @@ export function decodeAddress(arg: string[]): Address {
     assert(0 <= d && d <= MAX_U8 && isHex(e), `Invalid address, with byte: ${e}`);
   }
 
-  const result = decodeHexValue(arg);
+  const result = getAddress(decodeHexValue(arg));
 
   assert(isAddress(result), `Invalid address: ${result}`);
   return result;

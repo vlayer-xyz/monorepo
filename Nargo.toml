@@ -8,5 +8,6 @@ members = [
     "vlayer/ethereum/circuits/lib",
     "vlayer/examples/circuits/is_dao_worthy",
     "vlayer/examples/circuits/is_ape_owner",
+    "vlayer/examples/circuits/is_crypto_punk_owner",
 ]
 default-member = "ethereum_history_api/circuits/lib"
