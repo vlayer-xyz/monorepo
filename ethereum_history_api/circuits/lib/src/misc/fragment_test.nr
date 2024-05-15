@@ -42,8 +42,8 @@ mod new {
     }
 
     #[test]
-    fn success_new_focused() {
-        let fragment = Fragment::new_focused([1, 2, 3, 4]);
+    fn success_from_array() {
+        let fragment = Fragment::from_array([1, 2, 3, 4]);
         assert_eq(fragment.data, [1, 2, 3, 4]);
         assert_eq(fragment.offset, 0);
         assert_eq(fragment.length, 4);
@@ -85,7 +85,7 @@ mod subfragment {
 
     #[test]
     fn simple() {
-        let fragment = Fragment::new_focused([1, 2, 3, 4]);
+        let fragment = Fragment::from_array([1, 2, 3, 4]);
         let subfragment = fragment.subfragment(1, 2);
         assert(subfragment.at(0) == 2);
         assert(subfragment.at(1) == 3);
