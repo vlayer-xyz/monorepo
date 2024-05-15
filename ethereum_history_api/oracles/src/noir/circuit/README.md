@@ -20,11 +20,14 @@ Unfortunately `nargo` does not generate any of the recursion artifacts. Noir tea
   - generated from code using `nargo compile --package ${name}`
   - It's a JSON that contains [`base64`](https://en.wikipedia.org/wiki/Base64) encoded bytecode under the `.bytecode` key
 - Acir bytecode
-  - generated from **compiled artifact** by taking the bytecode and decoding it as `base64` as **bb** expects it in plain binary form. We use a temp file for it as it's fast to generate and we only use it during **VK** generation
+  - generated from **compiled artifact** by taking the bytecode and decoding it as `base64`, as **bb** expects it in plain binary form. We use a temp file for it as it's fast to generate and we only use it during **VK** generation
 - VK - `target/${name}.vk.bin`
-  - verification key is generated from `acir bytecode` by running `bb write_vk`. We cache it in a file as it's slow to generate
+  - verification key is generated from **acir bytecode** by running:
+    - `./bb write_vk -b ${acirPath} -o ${vkPath}`
+  - We cache it in a file as it's slow to generate
 - VK.json - `target/${name}.vk.json`
-  - generated from VK by running `bb vk_as_fields`
+  - generated from VK by running:
+    - `./bb vk_as_fields  -k ${vkPath} -o ${vkJsonPath}`
   - JSON array that contains `vkHash` as the first element and `vkAsFields` after it
 
 ## Usage
@@ -34,6 +37,6 @@ Unfortunately `nargo` does not generate any of the recursion artifacts. Noir tea
 const circuit = await MonorepoCircuit.create('../../', 'get_header');
 // Generate VK - slow.
 await generateVk(circuit);
-// Read generated VK into memory
+// Read generated VK
 const vk = await VerificationKey.create(circuit);
 ```
