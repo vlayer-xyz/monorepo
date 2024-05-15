@@ -1,40 +1,42 @@
 # RLP decoding
 
-This is a [Noir](https://noir-lang.org) library to decode [RLP](https://ethereum.org/en/developers/docs/data-structures-and-encoding/rlp/)
+This is a [Noir](https://noir-lang.org) library for [RLP](https://ethereum.org/en/developers/docs/data-structures-and-encoding/rlp/) decoding
 
-RLP encoding works with two types of items. A string & a list. Therefore this lib contains two main functions:
+RLP encoding works with two types of items. A string & a list. Therefore this lib exports two functions:
 
-- ```rust
-  pub fn decode_string<N>(data: Fragment) -> RlpFragment;
-  ```
-- ```rust
-  pub fn decode_list<N, NUM_FIELDS>(data: Fragment) -> RlpList<NUM_FIELDS>;
-  ```
-- There is also a more performant special case version of `decode_list`, that can be used when we know that our input consists exclusively of strings of length <= 55 bytes.
-  ```rust
-  pub fn decode_list_of_small_strings<N, NUM_FIELDS>(data: Fragment) -> RlpList<NUM_FIELDS>;
-  ```
+```rust
+pub fn decode_string<N>(data: Fragment) -> RlpFragment;
+```
+
+```rust
+pub fn decode_list<N, NUM_FIELDS>(data: Fragment) -> RlpList<NUM_FIELDS>;
+```
+
+The library also exports a more performant special case version of `decode_list`, that can be used when the input consists exclusively of strings of length <= 55 bytes:
+
+```rust
+pub fn decode_list_of_small_strings<N, NUM_FIELDS>(data: Fragment) -> RlpList<NUM_FIELDS>;
+```
 
 ## Example
 
 ```rust
 let rlp = [0x82, 0x10, 0x00]; // "0x1000"
-decode_string(rlp.into());
+decode_string(Fragment::from_array(rlp));
 // {offset: 1, length: 2, data_type: STRING}
 
 let rlp = [0xc2, 0x80, 0x10]; // ["", "0x10"]
-let decoded = decode_list(rlp.into());
+let decoded = decode_list(Fragment::from_array(rlp));
 // [{offset: 2, length: 0, data_type: STRING}, {offset: 2, length: 1, data_type: STRING}]
 
-// Or using our helper assert methods:
+// Or using helper assert methods:
 decoded.get(0).assert_eq_empty_string("Field 0");
 decoded.get(1).assert_eq_u64("Field 1", rlp, 0x10);
 ```
 
-## What is Fragment
+### What is Fragment
 
-[Fragment](../misc/README.md) is a dynamically-sized view into a comptime-sized sequence of elements.  
-In the example above, Into trait converts array into Fragment.
+[Fragment](../misc/README.md) is a dynamically-sized view into a comptime-sized sequence of elements.
 
 # RLP types
 
@@ -48,9 +50,9 @@ struct RlpFragment {
 }
 ```
 
-It exists only in connection with the particular array of RLP encoding as it doesn't provide data itself. Ideally we would want to use only `Fragment` which includes data. Current Noir state makes using data, in each case when we use RlpFragment, much too inefficient so we use RlpFragment for performance reasons.
+RlpFragment exists only in connection with a particular array of RLP encoding as it doesn't store data itself. Ideally we would want to use `Fragment` instead of `RlpFragment`, but current Noir state makes using data, in each case when we use RlpFragment, much too inefficient. We use RlpFragment for performance reasons.
 
-There are several comparison methods in RlpFragment implementation. They check if in given RLP encoding array, at position set by this fragment, there is given data. Each of these function is made to receive data as different type to simplify its usage:
+There are several comparison methods in RlpFragment implementation. They check if in given RLP encoding array, at position set by the fragment, lays given data. Each of these functions receives data as different type to simplify usage:
 
 - `assert_eq_bytes`
 - `assert_eq_bounded_vec`
