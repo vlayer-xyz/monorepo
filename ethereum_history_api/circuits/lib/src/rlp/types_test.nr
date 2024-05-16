@@ -300,4 +300,15 @@ mod rlp_fragment {
             fragment.assert_eq_bytes32("Field", bytes_fragment, alter_array(bytes))
         }
     }
+
+    mod shift {
+        use crate::rlp::{decode::STRING, types::RlpFragment};
+
+        global fragment = RlpFragment { offset: 0, length: 32, data_type: STRING };
+
+        #[test]
+        fn success() {
+            assert_eq(fragment.shift(1).offset, 1);
+        }
+    }
 }
