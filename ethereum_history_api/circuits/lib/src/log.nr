@@ -9,15 +9,15 @@ use crate::{
 use dep::std::unsafe::zeroed;
 
 global MAX_TOPICS_COUNT = 4;
-global MAX_LOGS_COUNT = 8;
 global LOG_FIELDS_COUNT = 3;
 global LOGS_INDEX = 3;
 
-global LOGS_ADDRESS_INDEX = 0;
-global LOGS_TOPICS_INDEX = 1;
-global LOGS_DATA_INDEX = 2;
+global LOG_ADDRESS_INDEX = 0;
+global LOG_TOPICS_INDEX = 1;
+global LOG_DATA_INDEX = 2;
 
 struct PhantomMaxLogDataLen<MAX_LOG_DATA_LEN> {}
+struct PhantomMaxLogsCount<MAX_LOGS_COUNT> {}
 
 struct Log<MAX_LOG_DATA_LEN> {
     address: Address,
@@ -49,12 +49,13 @@ pub fn get_log<MAX_LOG_DATA_LEN>(_block_number: Field, _tx_idx: Field, _log_idx:
     zeroed()
 }
 
-pub(crate) fn extract_log<MAX_LOG_DATA_LEN>(
+pub(crate) fn extract_log<MAX_LOG_DATA_LEN, MAX_LOGS_COUNT>(
     receipt_rlp: [u8; MAX_RECEIPT_RLP_LENGTH],
     log_idx: u64,
-    phantom_max_log_data_len: PhantomMaxLogDataLen<MAX_LOG_DATA_LEN>
+    phantom_max_log_data_len: PhantomMaxLogDataLen<MAX_LOG_DATA_LEN>,
+    phantom_max_logs_count: PhantomMaxLogsCount<MAX_LOGS_COUNT>
 ) -> Log<MAX_LOG_DATA_LEN> {
-    let log_fragment = extract_log_fragment(receipt_rlp, log_idx);
+    let log_fragment = extract_log_fragment(receipt_rlp, log_idx, phantom_max_logs_count);
     let log_fields_rlp_fragments = extract_log_fields_fragments(log_fragment);
     convert_to_log(
         receipt_rlp,
@@ -63,9 +64,10 @@ pub(crate) fn extract_log<MAX_LOG_DATA_LEN>(
     )
 }
 
-fn extract_log_fragment(
+fn extract_log_fragment<MAX_LOGS_COUNT>(
     receipt_rlp: [u8; MAX_RECEIPT_RLP_LENGTH],
-    log_idx: u64
+    log_idx: u64,
+    _phantom_max_logs_count: PhantomMaxLogsCount<MAX_LOGS_COUNT>
 ) -> Fragment<MAX_RECEIPT_RLP_LENGTH, u8> {
     let receipt_rlp_fragment = Fragment::from_array(receipt_rlp);
 
@@ -82,9 +84,9 @@ fn extract_log_fragment(
 fn extract_log_fields_fragments(log_fragment: Fragment<MAX_RECEIPT_RLP_LENGTH, u8>) -> LogFieldsRlpFragments {
     let log_values_rlp_list: RlpList<LOG_FIELDS_COUNT> = decode_list(log_fragment);
 
-    let address = log_values_rlp_list.get(LOGS_ADDRESS_INDEX).shift(log_fragment.offset);
+    let address = log_values_rlp_list.get(LOG_ADDRESS_INDEX).shift(log_fragment.offset);
 
-    let topics_rlp_fragment = log_values_rlp_list.get(LOGS_TOPICS_INDEX);
+    let topics_rlp_fragment = log_values_rlp_list.get(LOG_TOPICS_INDEX);
     let topics_fragment = log_fragment.subfragment(topics_rlp_fragment.offset, topics_rlp_fragment.length);
 
     let topics_rlp_list: RlpList<MAX_TOPICS_COUNT> = decode_list(topics_fragment);
@@ -96,7 +98,7 @@ fn extract_log_fields_fragments(log_fragment: Fragment<MAX_RECEIPT_RLP_LENGTH, u
         }
     }
 
-    let data = log_values_rlp_list.get(LOGS_DATA_INDEX).shift(log_fragment.offset);
+    let data = log_values_rlp_list.get(LOG_DATA_INDEX).shift(log_fragment.offset);
 
     LogFieldsRlpFragments { address, topics, data }
 }
