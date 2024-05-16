@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { createMockMultiChainClient } from '../../ethereum/mockClient.js';
 import { OFFSETS, getTransactionOracle } from './transactionOracle.js';
+import { MAX_DATA_LEN } from './common/txConfig.js';
+import { ZERO_PAD_VALUE } from './common/const.js';
+import { padArray } from '../../util/array.js';
 
 describe('getTransactionOracle', () => {
   it('success', async () => {
@@ -29,7 +32,7 @@ describe('getTransactionOracle', () => {
     expect(txWithProof[OFFSETS.TO_IS_SOME]).toStrictEqual('0x01');
     expect(txWithProof[OFFSETS.VALUE_LO]).toStrictEqual('0x');
     // prettier-ignore
-    expect(txWithProof[OFFSETS.DATA]).toStrictEqual([
+    expect(txWithProof[OFFSETS.DATA]).toStrictEqual(padArray([
         '0xa9','0x05','0x9c','0xbb','0x00','0x00','0x00','0x00','0x00','0x00',
         '0x00','0x00','0x00','0x00','0x00','0x00','0x12','0x5f','0x66','0x02',
         '0x39','0x70','0x7c','0x9d','0xe3','0x46','0x2d','0x3f','0xa6','0x33',
@@ -37,7 +40,7 @@ describe('getTransactionOracle', () => {
         '0x00','0x00','0x00','0x00','0x00','0x00','0x00','0x00','0x00','0x00',
         '0x00','0x00','0x00','0x00','0x00','0x00','0x00','0x00','0x00','0x3f',
         '0x44','0x12','0x7f','0xb4','0x3f','0xa1','0x00','0x00'
-    ]);
+    ], MAX_DATA_LEN, ZERO_PAD_VALUE));
     expect(txWithProof[OFFSETS.DATA_LEN]).toStrictEqual('0x44');
     expect(txWithProof[OFFSETS.V]).toStrictEqual('0x01');
     // prettier-ignore
@@ -55,8 +58,8 @@ describe('getTransactionOracle', () => {
         '0x66','0xf7'
     ]);
     expect(txWithProof[OFFSETS.PROOF_KEY]).toStrictEqual(['0x00', '0x00', '0x08']);
-    expect(txWithProof[OFFSETS.PROOF_VALUE]).toMatchSnapshot();
     expect(txWithProof[OFFSETS.PROOF]).toMatchSnapshot();
     expect(txWithProof[OFFSETS.PROOF_DEPTH]).toStrictEqual('0x03');
+    expect(txWithProof[OFFSETS.PROOF_VALUE]).toMatchSnapshot();
   });
 });

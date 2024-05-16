@@ -39,9 +39,9 @@ export function encodeTx(transaction: Transaction): ForeignCallOutput[] {
 
 export function encodeTxProof(txProof: Proof): ForeignCallOutput[] {
   const key = encodeBytes(BigInt(txProof.key), txProofConfigM.maxKeyLen);
-  const value = padArray(encodeHex(txProof.value), LEGACY_MAX_TX_ENCODED_LEN, ZERO_PAD_VALUE, 'left');
   const proof = encodeProof(txProof.proof, txProofConfigM.maxProofLen);
   const depth = encodeField(txProof.proof.length);
+  const value = padArray(encodeHex(txProof.value), LEGACY_MAX_TX_ENCODED_LEN, ZERO_PAD_VALUE, 'left');
 
   return [key, proof, depth, value];
 }

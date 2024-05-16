@@ -21,9 +21,9 @@ export enum OFFSETS {
   R,
   S,
   PROOF_KEY,
-  PROOF_VALUE,
   PROOF,
-  PROOF_DEPTH
+  PROOF_DEPTH,
+  PROOF_VALUE
 }
 
 export const getTransactionOracle = async (
