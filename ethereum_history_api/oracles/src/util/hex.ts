@@ -1,3 +1,4 @@
+import { Hex } from 'viem';
 import { assert } from './assert.js';
 import { BYTE_HEX_LEN } from './const.js';
 
@@ -12,7 +13,7 @@ export function removeHexPrefix(hex: string): string {
   return hex.slice(PREFIX.length);
 }
 
-export function addHexPrefix(hex: string): string {
+export function addHexPrefix(hex: string): Hex {
   assert(!hasHexPrefix(hex), `Attempting to add 0x prefix to ${hex} which already has it`);
   return `${PREFIX}${hex}`;
 }
