@@ -1,6 +1,6 @@
 import { Call, isEthereumApiMethod } from './recordingClient.js';
 import { assert } from '../util/assert.js';
-import { readObject } from '../util/file.js';
+import { readFixture } from '../util/file.js';
 import { mock } from '../util/mock.js';
 import isEqual from 'lodash.isequal';
 import { identity } from '../util/function.js';
@@ -22,7 +22,7 @@ export async function createMockClient(
   resultModifier: (call: Call) => Call = identity,
   chain = mainnet
 ): Promise<AlchemyClient> {
-  const savedCalls = (await Promise.all(filePaths.map(readObject<Call>))).flat();
+  const savedCalls = (await Promise.all(filePaths.map(readFixture<Call>))).flat();
 
   const mockMethodHandler = (method: string, args: unknown): unknown => {
     const call: Call | undefined = savedCalls.find((it) => it.method === method && isEqual(it.arguments, args));

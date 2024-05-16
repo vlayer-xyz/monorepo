@@ -2,7 +2,7 @@ use dep::u2b::u64_to_u8;
 use crate::misc::arrays::{memcpy, sub_array_equals_up_to_length};
 use crate::misc::bytes::{nibbles_to_bytes, left_to_right_padding, right_pad};
 use crate::misc::fragment::Fragment;
-use crate::rlp::decode::decode_string;
+use crate::rlp::{types::RlpFragment, decode::decode_string};
 
 global KEY_NIBBLE_LEN = 6;
 global MAX_TX_IDX_BYTES_LEN = 2;
@@ -10,10 +10,11 @@ global MAX_TX_IDX_BYTES_LEN = 2;
 pub fn assert_tx_idx_equals(key_as_rlp: [u8; KEY_NIBBLE_LEN], tx_idx: Field) {
     let (key_right_padded, shifted_by) = left_to_right_padding(key_as_rlp);
     let key_bytes: [u8; KEY_NIBBLE_LEN / 2] = nibbles_to_bytes(key_right_padded);
-    let (rlp_offset, rlp_len) = decode_string(Fragment::from_array(key_bytes));
-    assert(shifted_by + 2 * (rlp_len + rlp_offset) == KEY_NIBBLE_LEN, "Key is not an rlp-encoded string");
+    let key_bytes_fragment = Fragment::from_array(key_bytes);
+    let RlpFragment { length, offset, data_type: _ } = decode_string(key_bytes_fragment);
+    assert(shifted_by + 2 * (length + offset) == KEY_NIBBLE_LEN, "Key is not an rlp-encoded string");
 
-    if (rlp_len == 0) {
+    if (length == 0) {
         assert(tx_idx == 0, "Key does not match rlp-encoded transaction index");
     } else {
         let mut tx_idx_bytes = [0; MAX_TX_IDX_BYTES_LEN];
@@ -21,7 +22,7 @@ pub fn assert_tx_idx_equals(key_as_rlp: [u8; KEY_NIBBLE_LEN], tx_idx: Field) {
         memcpy(&mut tx_idx_bytes, tx_idx_right_padded, 0);
 
         assert(
-            sub_array_equals_up_to_length(tx_idx_bytes, key_bytes, rlp_offset, rlp_len), "Key does not match rlp-encoded transaction index"
+            sub_array_equals_up_to_length(tx_idx_bytes, key_bytes, offset, length), "Key does not match rlp-encoded transaction index"
         );
     }
 }

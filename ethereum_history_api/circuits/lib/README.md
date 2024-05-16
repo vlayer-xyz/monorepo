@@ -5,6 +5,7 @@ Noir library for proving and verifying historical data on the Ethereum blockchai
 **Disclaimer:** This page is supposed to give you an idea about the usage and structure of the library, but it's still a good idea to consult the code for exact definitions of functions & types.
 
 **Note:** This library also contains two sublibraries: _rlp_ for RLP-decoding and _merkle_patricia_proofs_ for verifying merkle patricia proofs. To learn more about them follow the links below:
+
 - [rlp](./src/rlp/README.md)
 - [merkle_patricia_proofs](./src/merkle_patricia_proofs/README.md)
 
@@ -23,19 +24,28 @@ If you decide to use our Oracles - you don't need to provide all the data by han
 Here is a list of public functions that you should use if you decide to go the **oracles route**:
 
 ```rust
-pub fn get_header(chain_id: Field, block_number: Field) -> BlockHeaderPartial;
+pub fn get_header(chain_id: Field, block_number: u64) -> BlockHeaderPartial;
 ```
 
 ```rust
-pub fn get_account(chain_id: Field, block_no: Field, address: Address) -> AccountWithinBlock;
+pub fn get_account(chain_id: Field, block_no: u64, address: Address) -> AccountWithinBlock;
 ```
 
 ```rust
-pub fn get_account_with_storage(chain_id: Field, block_number: Field, address: Address, storage_key: Bytes32) -> StorageWithinBlock<1>;
+pub fn get_account_with_storage(chain_id: Field, block_number: u64, address: Address, storage_key: Bytes32) -> StorageWithinBlock<1>;
 ```
 
 ```rust
-pub fn get_receipt<...>(chain_id: Field, block_number: Field, tx_idx: Field, ...) -> TxReceiptWithinBlock<...>;
+pub fn get_receipt<...>(chain_id: Field, block_number: u64, tx_idx: Field, ...) -> TxReceiptWithinBlock;
+```
+
+```rust
+pub fn get_transaction<MAX_DATA_LEN, ...>(
+    chain_id: Field,
+    block_number: u64,
+    tx_idx: Field,
+    ...
+) -> TransactionWithinBlock<MAX_DATA_LEN>;
 ```
 
 ### Without oracles
@@ -61,12 +71,23 @@ pub fn verify_storage_values<N>(storage_root: Bytes32, proofs: [StorageProof; N]
 ```
 
 ```rust
-pub fn verify_receipt<...>(
+pub fn verify_receipt<MAX_RECEIPT_PROOF_LEN>(
     block_number: Field,
     tx_idx: Field,
+    tx_type: TxType,
     receipt: TxReceiptPartial,
-    receipt_proof: TxReceiptProof,
+    receipt_proof: ReceiptProof<MAX_RECEIPT_PROOF_LEN>,
     receipt_root: [u8; KEY_LENGTH]
+)
+```
+
+```rust
+pub fn verify_tx<MAX_DATA_LEN, MAX_PROOF_LEN>(
+    tx_idx: Field,
+    tx_type: TxType,
+    tx: TxPartial<MAX_DATA_LEN>,
+    tx_proof: TransactionProof<MAX_PROOF_LEN>,
+    tx_root: [u8; HASH_LENGTH]
 )
 ```
 
@@ -75,7 +96,7 @@ pub fn verify_receipt<...>(
 All the function in this library prove that the objects are contained within some block hash. We can't prove that this block hash is in fact a member of a canonical chain. This is user's responsibility. We provide Solidity [contract](../../contracts/src/EthereumHistoryVerifier.sol) that can prove block hash inclusion for the last 256 block on EVM and plan to maintain the Merkle Mountain Range on-chain in the future to allow for historical block hash inclusion proofs.
 
 > [!CAUTION]
->  Remember that it's your responsibility to prove block hash belongs to the chain. Otherwise - an attacker can generate valid proofs for non-existent blocks.
+> Remember that it's your responsibility to prove block hash belongs to the chain. Otherwise - an attacker can generate valid proofs for non-existent blocks.
 
 ## Package structure
 
@@ -85,10 +106,12 @@ All the function in this library prove that the objects are contained within som
     ├── receipt.nr
     ├── account.nr
     ├── account_with_storage.nr
-    ├── verifiers
+    ├── transaction.nr
+    └── verifiers
         ├── header.nr
         ├── receipt.nr
         ├── account.nr
+        ├── transaction.nr
         └── storage.nr
     ├── merkle_patricia_proofs
     └── rlp
@@ -119,7 +142,7 @@ type Bytes32 = [u8; 32];
 
 ```rust
 struct BlockHeaderPartial {
-    number: Field,
+    number: u64,
     hash: Bytes32,
     state_root: Bytes32,
     transactions_root: Bytes32,
@@ -129,7 +152,7 @@ struct BlockHeaderPartial {
 
 ```rust
 struct Account {
-    nonce: Field,
+    nonce: u64,
     balance: Field,
     storage_root: Bytes32,
     code_hash: Bytes32,
@@ -157,3 +180,27 @@ struct TxReceiptWithinBlock {
     block_hash: Bytes32
 }
 ```
+
+```rust
+struct TxPartial<MAX_DATA_LEN> {
+    nonce: u64,
+    gas_limit: u64,
+    to: Option<Address>,
+    value: U128,
+    data: BoundedVec<u8, MAX_DATA_LEN>,
+    v: u8,
+    r: Bytes32,
+    s: Bytes32,
+}
+```
+
+```rust
+struct TransactionWithinBlock<MAX_DATA_LEN> {
+    transaction: TxPartial<MAX_DATA_LEN>,
+    block_hash: Bytes32
+}
+```
+
+## RLP decoding
+
+[rlp folder](./src/rlp/README.md) contains tools to work with RLP encoded data

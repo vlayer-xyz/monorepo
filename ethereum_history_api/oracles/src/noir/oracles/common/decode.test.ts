@@ -143,7 +143,7 @@ describe('decodeHexAddress', () => {
       '0x000000000000000000000000000000000000000000000000000000000000003b',
       '0x00000000000000000000000000000000000000000000000000000000000000bb'
     ];
-    expect(decodeAddress(arg)).toBe('0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb');
+    expect(decodeAddress(arg)).toBe('0xb47e3cd837dDF8e4c57F05d70Ab865de6e193BBB');
   });
 
   it('various length', () => {
@@ -169,7 +169,7 @@ describe('decodeHexAddress', () => {
       '0x000000000000000000000000000000000000000000000000000000000000003b',
       '0x00000000000000000000000000000000000000000000000000000000000000bb'
     ];
-    expect(decodeAddress(arg)).toBe('0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb');
+    expect(decodeAddress(arg)).toBe('0xb47e3cd837dDF8e4c57F05d70Ab865de6e193BBB');
   });
 
   it('zero', () => {
