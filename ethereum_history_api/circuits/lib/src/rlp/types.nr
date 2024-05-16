@@ -1,4 +1,4 @@
-use crate::misc::{arrays::sub_array_equals_up_to_length};
+use crate::misc::{arrays::sub_array_equals_up_to_length, fragment::Fragment};
 use crate::rlp::decode::STRING;
 use crate::misc::bytes::byte_value;
 use dep::u2b::{u64_to_u8, u32_to_u8};
@@ -28,24 +28,24 @@ impl RlpFragment {
     fn assert_eq_bytes<FIELD_NAME_LEN, MAX_RLP_LEN, MAX_VALUE_LEN>(
         self,
         field_name: str<FIELD_NAME_LEN>,
-        rlp: [u8; MAX_RLP_LEN],
-        value: [u8; MAX_VALUE_LEN],
-        length: u64
+        rlp: Fragment<MAX_RLP_LEN, u8>,
+        value: Fragment<MAX_VALUE_LEN, u8>
     ) {
         assert(self.data_type == STRING, f"{field_name}: Invalid RLP type");
-        assert(self.length == length, f"{field_name}: Invalid RLP length");
+        assert(self.length == value.length, f"{field_name}: Invalid RLP length");
+        let subfragment = rlp.subfragment(self.offset, self.length);
         assert(
-            sub_array_equals_up_to_length(value, rlp, self.offset, self.length), f"{field_name}: Invalid RLP value"
+            subfragment.eq(value), f"{field_name}: Invalid RLP value"
         );
     }
 
     fn assert_eq_bounded_vec<FIELD_NAME_LEN, MAX_RLP_LEN, MAX_VALUE_LEN>(
         self,
         field_name: str<FIELD_NAME_LEN>,
-        rlp: [u8; MAX_RLP_LEN],
+        rlp: Fragment<MAX_RLP_LEN, u8>,
         value: BoundedVec<u8, MAX_VALUE_LEN>
     ) {
-        self.assert_eq_bytes(field_name, rlp, value.storage, value.len);
+        self.assert_eq_bytes(field_name, rlp, Fragment::new_with_length(value.len, value.storage));
     }
 
     fn assert_empty_string<FIELD_NAME_LEN, MAX_RLP_LEN>(self, field_name: str<FIELD_NAME_LEN>) {
@@ -56,16 +56,16 @@ impl RlpFragment {
     fn assert_eq_u1<FIELD_NAME_LEN, MAX_RLP_LEN>(
         self,
         field_name: str<FIELD_NAME_LEN>,
-        rlp: [u8; MAX_RLP_LEN],
+        rlp: Fragment<MAX_RLP_LEN, u8>,
         value: u1
     ) {
-        self.assert_eq_bytes(field_name, rlp, [value as u8], 1);
+        self.assert_eq_bytes(field_name, rlp, Fragment::from_array([value as u8]));
     }
 
     fn assert_eq_u8<FIELD_NAME_LEN, MAX_RLP_LEN>(
         self,
         field_name: str<FIELD_NAME_LEN>,
-        rlp: [u8; MAX_RLP_LEN],
+        rlp: Fragment<MAX_RLP_LEN, u8>,
         value: u8
     ) {
         self.assert_eq_bounded_vec(field_name, rlp, byte_value([value]));
@@ -74,7 +74,7 @@ impl RlpFragment {
     fn assert_eq_u32<FIELD_NAME_LEN, MAX_RLP_LEN>(
         self,
         field_name: str<FIELD_NAME_LEN>,
-        rlp: [u8; MAX_RLP_LEN],
+        rlp: Fragment<MAX_RLP_LEN, u8>,
         value: u32
     ) {
         self.assert_eq_bounded_vec(field_name, rlp, byte_value(u32_to_u8(value)));
@@ -83,7 +83,7 @@ impl RlpFragment {
     fn assert_eq_u64<FIELD_NAME_LEN, MAX_RLP_LEN>(
         self,
         field_name: str<FIELD_NAME_LEN>,
-        rlp: [u8; MAX_RLP_LEN],
+        rlp: Fragment<MAX_RLP_LEN, u8>,
         value: u64
     ) {
         self.assert_eq_bounded_vec(field_name, rlp, byte_value(u64_to_u8(value)));
@@ -92,7 +92,7 @@ impl RlpFragment {
     fn assert_eq_u128<FIELD_NAME_LEN, MAX_RLP_LEN>(
         self,
         field_name: str<FIELD_NAME_LEN>,
-        rlp: [u8; MAX_RLP_LEN],
+        rlp: Fragment<MAX_RLP_LEN, u8>,
         value: U128
     ) {
         self.assert_eq_bounded_vec(field_name, rlp, byte_value(value.to_be_bytes()));
@@ -101,19 +101,19 @@ impl RlpFragment {
     fn assert_eq_address<FIELD_NAME_LEN, MAX_RLP_LEN>(
         self,
         field_name: str<FIELD_NAME_LEN>,
-        rlp: [u8; MAX_RLP_LEN],
+        rlp: Fragment<MAX_RLP_LEN, u8>,
         value: Address
     ) {
-        self.assert_eq_bytes(field_name, rlp, value, ADDRESS_LENGTH);
+        self.assert_eq_bytes(field_name, rlp, Fragment::from_array(value));
     }
 
     fn assert_eq_bytes32<FIELD_NAME_LEN, MAX_RLP_LEN>(
         self,
         field_name: str<FIELD_NAME_LEN>,
-        rlp: [u8; MAX_RLP_LEN],
+        rlp: Fragment<MAX_RLP_LEN, u8>,
         value: Bytes32
     ) {
-        self.assert_eq_bytes(field_name, rlp, value, BYTES32_LENGTH);
+        self.assert_eq_bytes(field_name, rlp, Fragment::from_array(value));
     }
 }
 

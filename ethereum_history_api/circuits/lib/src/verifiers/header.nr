@@ -43,30 +43,32 @@ pub fn verify_header(
     block_header_rlp: BlockHeaderRlp
 ) {
     let header_rlp_list: RlpList<MAX_HEADER_FIELDS_COUNT> = decode_list(Fragment::from_array(block_header_rlp.data));
+    println(header_rlp_list);
     let expected_header_fields_count = get_header_fields_count(chain_id, block_header_partial.number);
 
     assert(
         expected_header_fields_count == header_rlp_list.len, "number of header RLP fields does not match"
     );
 
+    let block_header_rlp = Fragment::new_with_length(block_header_rlp.length as u64, block_header_rlp.data);
     header_rlp_list.get(BLOCK_NUM_INDEX).assert_eq_u64(
         "Block number",
-        block_header_rlp.data,
+        block_header_rlp,
         block_header_partial.number
     );
     header_rlp_list.get(STATE_ROOT_INDEX).assert_eq_bytes32(
         "State root",
-        block_header_rlp.data,
+        block_header_rlp,
         block_header_partial.state_root
     );
     header_rlp_list.get(TRANSACTIONS_ROOT_INDEX).assert_eq_bytes32(
         "Transactions root",
-        block_header_rlp.data,
+        block_header_rlp,
         block_header_partial.transactions_root
     );
     header_rlp_list.get(RECEIPTS_ROOT_INDEX).assert_eq_bytes32(
         "Receipts root",
-        block_header_rlp.data,
+        block_header_rlp,
         block_header_partial.receipts_root
     );
 

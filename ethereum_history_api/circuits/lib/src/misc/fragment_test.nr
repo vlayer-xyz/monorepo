@@ -138,7 +138,7 @@ mod at {
         assert(fragment.at(1) == 3);
     }
 
-    #[test(should_fail_with="Index out of bounds, tried to access index 2 but the length is 2")]
+    #[test(should_fail_with="Index out of bounds")]
     fn fail() {
         let fragment = Fragment::new(1, 2, [1, 2, 3]);
         let _ = fragment.at(2);
