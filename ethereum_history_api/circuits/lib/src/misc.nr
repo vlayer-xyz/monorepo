@@ -11,3 +11,4 @@ mod types;
 mod option;
 mod field;
 mod field_test;
+mod bytes32;

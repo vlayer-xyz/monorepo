@@ -4,7 +4,7 @@ import {
   LONDON_CRYPTO_PUNKS_GET_BLOCK_PARAMETERS,
   LONDON_CRYPTO_PUNKS_GET_PROOF_PARAMETERS
 } from './recordingClient.test.js';
-import { readObject } from '../util/file.js';
+import { readFixture } from '../util/file.js';
 import { GetBlockFixture, GetProofFixture } from '../fixtures/types.js';
 import { AlchemyClient } from './client.js';
 
@@ -18,8 +18,8 @@ describe('mockingClient', () => {
 
     const actualBlock = await mockingClient.getBlock(LONDON_CRYPTO_PUNKS_GET_BLOCK_PARAMETERS);
     const actualProof = await mockingClient.getProof(LONDON_CRYPTO_PUNKS_GET_PROOF_PARAMETERS);
-    const expectedBlock = (await readObject<GetBlockFixture<false>>(filePaths[0])).result;
-    const expectedProof = (await readObject<GetProofFixture>(filePaths[1])).result;
+    const expectedBlock = (await readFixture<GetBlockFixture<false>>(filePaths[0])).result;
+    const expectedProof = (await readFixture<GetProofFixture>(filePaths[1])).result;
 
     expect(actualBlock).toStrictEqual(expectedBlock);
     expect(actualProof).toStrictEqual(expectedProof);

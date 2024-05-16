@@ -1,5 +1,5 @@
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
-import { type Hex } from 'viem';
+import { type Address } from 'viem';
 import { assert } from '../../util/assert.js';
 import { encodeAccount, encodeStateProof } from './accountOracle/encode.js';
 import { decodeAddress, decodeField } from './common/decode.js';
@@ -43,7 +43,7 @@ export async function getAccountOracle(
 export function decodeGetAccountArguments(args: NoirArguments): {
   chainId: number;
   blockNumber: bigint;
-  address: Hex;
+  address: Address;
 } {
   assert(args.length === Enum.size(ARGS), `get_account requires ${Enum.size(ARGS)} arguments`);
 

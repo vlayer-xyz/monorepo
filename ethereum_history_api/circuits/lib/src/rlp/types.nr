@@ -33,10 +33,7 @@ impl RlpFragment {
     ) {
         assert(self.data_type == STRING, f"{field_name}: Invalid RLP type");
         assert(self.length == value.length, f"{field_name}: Invalid RLP length");
-        let subfragment = rlp.subfragment(self.offset, self.length);
-        assert(
-            subfragment.eq(value), f"{field_name}: Invalid RLP value"
-        );
+        assert(rlp.subfragment(self.offset, self.length).eq(value), f"{field_name}: Invalid RLP value");
     }
 
     fn assert_eq_bounded_vec<FIELD_NAME_LEN, MAX_RLP_LEN, MAX_VALUE_LEN>(
@@ -45,7 +42,11 @@ impl RlpFragment {
         rlp: Fragment<MAX_RLP_LEN, u8>,
         value: BoundedVec<u8, MAX_VALUE_LEN>
     ) {
-        self.assert_eq_bytes(field_name, rlp, Fragment::new_with_length(value.len, value.storage));
+        self.assert_eq_bytes(
+            field_name,
+            rlp,
+            Fragment::new_with_length(value.len, value.storage)
+        );
     }
 
     fn assert_empty_string<FIELD_NAME_LEN, MAX_RLP_LEN>(self, field_name: str<FIELD_NAME_LEN>) {
