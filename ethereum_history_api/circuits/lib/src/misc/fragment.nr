@@ -61,6 +61,8 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
 
     pub fn at(self, index: u64) -> T {
         // Previously, the assert message was f"Index out of bounds, tried to access index {index} but the length is {length}".
+        // However, this contributed to a compiler panic with message: Resolving an assert message should happen only once as the VM should have failed.
+        // An issue was posted about this to Noir: https://github.com/noir-lang/noir/issues/5036
         // As of nargo 0.29.0 replacing the f-string with normal string prevents compiler panic e.g. on header_int_test. 
         assert(index < self.length, "Index out of bounds");
 
@@ -101,7 +103,7 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
         }
     }
 
-    pub fn eq<MAX_DATA_LEN_2>(self, other: Fragment<MAX_DATA_LEN_2, T>) -> bool where T: Eq {
+    pub fn eq<OTHER_MAX_DATA_LEN>(self, other: Fragment<OTHER_MAX_DATA_LEN, T>) -> bool where T: Eq {
         let mut res = true;
         if (self.length != other.length) {
             res = false;
