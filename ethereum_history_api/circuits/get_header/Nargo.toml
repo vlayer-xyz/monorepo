@@ -2,7 +2,7 @@
 name = "get_header"
 type = "bin"
 authors = [""]
-compiler_version = ">=0.29.0"
+compiler_version = ">=nightly-2024-05-16"
 
 [dependencies]
 ethereum_history_api = { path = "../lib" }
