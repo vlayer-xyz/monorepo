@@ -40,17 +40,6 @@ export class MultiChainClient {
     return new MultiChainClient(clientMap);
   }
 
-  public static from_params(chainName: string, rpcUrl: string): MultiChainClient {
-    const urlRegex = /^(http|https):\/\/[^ "]+$/;
-    assert(urlRegex.test(rpcUrl), 'rpcUrl should be a valid URL');
-
-    const chain = getChainByName(chainName);
-
-    return new MultiChainClient({
-      [chain.id]: MultiChainClient.createClient(chain, rpcUrl)
-    });
-  }
-
   public static from(client: AlchemyClient): MultiChainClient {
     assert(client.chain !== undefined, 'Client is not assigned to a specific chain');
     return new MultiChainClient({

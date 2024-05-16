@@ -33,9 +33,3 @@ export const defaultOraclesMap: OracleMap = {
   get_receipt: getReceiptOracle,
   get_transaction: getTransactionOracle
 };
-
-export const defaultOracles = createOracles(MultiChainClient.from_env())(defaultOraclesMap);
-
-export const clientOracles = (chainName: string, rpcUrl: string): Oracles => {
-  return createOracles(MultiChainClient.from_params(chainName, rpcUrl))(defaultOraclesMap);
-};
