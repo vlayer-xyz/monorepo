@@ -641,6 +641,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@iarna/toml@npm:^2.2.5":
+  version: 2.2.5
+  resolution: "@iarna/toml@npm:2.2.5"
+  checksum: 10c0/d095381ad4554aca233b7cf5a91f243ef619e5e15efd3157bc640feac320545450d14b394aebbf6f02a2047437ced778ae598d5879a995441ab7b6c0b2c2f201
+  languageName: node
+  linkType: hard
+
 "@isaacs/cliui@npm:^8.0.2":
   version: 8.0.2
   resolution: "@isaacs/cliui@npm:8.0.2"
@@ -1081,6 +1088,15 @@ __metadata:
   version: 1.0.5
   resolution: "@types/estree@npm:1.0.5"
   checksum: 10c0/b3b0e334288ddb407c7b3357ca67dbee75ee22db242ca7c56fe27db4e1a31989cb8af48a84dd401deb787fe10cc6b2ab1ee82dc4783be87ededbe3d53c79c70d
+  languageName: node
+  linkType: hard
+
+"@types/iarna__toml@npm:^2.0.5":
+  version: 2.0.5
+  resolution: "@types/iarna__toml@npm:2.0.5"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 10c0/36885ca6aa69ab60d0c21b3ea2b5a22ac21d510b2f4dc07e93b59ca785edfad17a4b0f69af07eb26350797a41328b5a3dc7a198f75c459755f4bc1d0bea9cd36
   languageName: node
   linkType: hard
 
@@ -4734,9 +4750,11 @@ __metadata:
   resolution: "noir-ethereum-api-oracles@workspace:ethereum_history_api/oracles"
   dependencies:
     "@ethereumjs/trie": "npm:^6.2.0"
+    "@iarna/toml": "npm:^2.2.5"
     "@noir-lang/backend_barretenberg": "npm:0.29.0-a5b7df1.nightly"
     "@noir-lang/noir_js": "npm:0.29.0-a5b7df1.nightly"
     "@noir-lang/noirc_abi": "npm:0.29.0-a5b7df1.nightly"
+    "@types/iarna__toml": "npm:^2.0.5"
     "@types/json-bigint": "npm:^1.0.4"
     "@types/lodash.isequal": "npm:^4.5.8"
     "@types/node": "npm:^20.12.10"
@@ -4750,7 +4768,6 @@ __metadata:
     lodash.isequal: "npm:^4.5.0"
     pino-pretty: "npm:^11.0.0"
     prettier: "npm:^3.2.5"
-    toml: "npm:^3.0.0"
     tsx: "npm:^4.9.3"
     typescript: "npm:^5.4.5"
     viem: "npm:^2.10.1"
