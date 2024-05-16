@@ -7,7 +7,7 @@ use crate::verifiers::{
     receipt::rlp::assert_receipt_rlp_equals,
     tx_helpers::{split::split_into_tx_type_and_rlp, idx::assert_tx_idx_equals}
 };
-use crate::misc::bytes::byte_value;
+use crate::misc::{bytes::byte_value, fragment::Fragment};
 
 global BYZANTIUM_BLOCK_NUM = 4_370_000;
 global MAX_ENCODED_RECEIPT_LENGTH: u64 = 525;
@@ -17,10 +17,10 @@ pub(crate) fn is_pre_byzantium(block_number: u64) -> bool {
     block_number < BYZANTIUM_BLOCK_NUM as u64
 }
 
-pub(crate) fn assert_receipt_equals(
+pub(crate) fn assert_receipt_equals<MAX_ENCODED_LEN>(
     block_number: u64,
     tx_type: TxType,
-    encoded_receipt: [u8; MAX_ENCODED_RECEIPT_LENGTH],
+    encoded_receipt: Fragment<MAX_ENCODED_LEN, u8>,
     receipt: TxReceiptPartial
 ) {
     let is_legacy = tx_type == 0;
@@ -48,6 +48,6 @@ pub fn verify_receipt<MAX_RECEIPT_PROOF_LEN>(
 ) {
     assert_tx_idx_equals(key_as_nibbles(receipt_proof.key), tx_idx);
     let value = byte_value(receipt_proof.value).storage;
-    assert_receipt_equals(block_number, tx_type, value, receipt);
+    assert_receipt_equals(block_number, tx_type, Fragment::from_array(value), receipt);
     assert_receipt_proof(receipt_proof, receipt_root);
 }

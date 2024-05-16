@@ -89,6 +89,12 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
         res.map(|_| self.pop_front())
     }
 
+    pub fn pop_back(&mut self) -> T {
+        assert(!self.is_empty(), "Cannot pop from an empty fragment");
+        self.length -= 1;
+        self.data[self.offset + self.length]
+    }
+
     pub fn push_back(&mut self, value: T) {
         assert(self.offset + self.length + 1 <= MAX_DATA_LEN, "Cannot push: fragment is full");
         self.data[self.offset + self.length] = value;

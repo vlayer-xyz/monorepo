@@ -62,6 +62,7 @@ mod assert_tx_proof {
 }
 
 mod assert_tx_equals {
+    use crate::misc::fragment::Fragment;
     use crate::verifiers::transaction::assert_tx_equals;
     use crate::fixtures::mainnet::{
         cancun::small_block::transaction::{transaction, encoded_tx, tx_type},
@@ -70,18 +71,22 @@ mod assert_tx_equals {
 
     #[test]
     fn success() {
-        assert_tx_equals(tx_type, encoded_tx, transaction);
+        assert_tx_equals(tx_type, Fragment::from_array(encoded_tx), transaction);
     }
 
     #[test]
     fn legacy_tx() {
-        assert_tx_equals(legacy_tx_type, legacy_encoded_tx, legacy_transaction);
+        assert_tx_equals(
+            legacy_tx_type,
+            Fragment::from_array(legacy_encoded_tx),
+            legacy_transaction
+        );
     }
 
     #[test(should_fail_with="Invalid tx type")]
     fn wrong_tx_type() {
         let wrong_tx_type = tx_type + 1;
-        assert_tx_equals(wrong_tx_type, encoded_tx, transaction);
+        assert_tx_equals(wrong_tx_type, Fragment::from_array(encoded_tx), transaction);
     }
 }
 
