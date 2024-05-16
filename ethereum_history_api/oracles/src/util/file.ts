@@ -4,6 +4,7 @@ import os from 'os';
 import prettier from 'prettier';
 import { randomUUID } from 'crypto';
 import path from 'path';
+import toml from '@iarna/toml';
 import { BaseFixture } from '../fixtures/types.js';
 import { TransactionReceipt } from '../types.js';
 
@@ -19,7 +20,7 @@ export async function writeObject<T>(object: T, filePath: string): Promise<void>
 export async function readFixture<TFixture extends BaseFixture<TResult>, TResult = unknown>(
   filePath: string
 ): Promise<TFixture> {
-  const parsed = await readObject<TFixture>(filePath);
+  const parsed = await readObjectAndParseAllNumericValuesAsBigNum<TFixture>(filePath);
   const fileName = path.parse(filePath).name;
   if (fileName.startsWith('alchemy_getTransactionReceipts_')) {
     restoreNumberFieldsThatWereWrongfullyParsedAsBigNumbersInReceipts(parsed.result as TransactionReceipt[]);
@@ -27,8 +28,16 @@ export async function readFixture<TFixture extends BaseFixture<TResult>, TResult
   return parsed;
 }
 
-export async function readObject<T>(filePath: string): Promise<T> {
+export async function readObjectAndParseAllNumericValuesAsBigNum<T>(filePath: string): Promise<T> {
   return parse(await fs.readFile(filePath, 'utf8')) as T;
+}
+
+export async function readObject<T>(filePath: string): Promise<T> {
+  return JSON.parse(await fs.readFile(filePath, 'utf8')) as T;
+}
+
+export async function readTomlObject<T>(filePath: string): Promise<T> {
+  return toml.parse(await fs.readFile(filePath, 'utf8')) as T;
 }
 
 export async function withTempFile<T>(callback: (path: string) => Promise<T>): Promise<T> {
