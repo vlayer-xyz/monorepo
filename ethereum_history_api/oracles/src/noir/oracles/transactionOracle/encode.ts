@@ -7,7 +7,7 @@ import { Proof } from '../../../ethereum/proof.js';
 import { padArray } from '../../../util/array.js';
 import { removeHexPrefix } from '../../../util/hex.js';
 import { LEGACY_MAX_TX_ENCODED_LEN, txProofConfigM } from '../common/proofConfig/tx.js';
-import { MAX_DATA_LEN } from '../common/txConfig.js';
+import { MAX_DATA_LEN_M } from '../common/txConfig.js';
 
 export enum TX_OFFSETS {
   NONCE,
@@ -26,7 +26,7 @@ export function encodeTx(transaction: Transaction): ForeignCallOutput[] {
   const to = encodeAddress(transaction.to ?? U1_ZERO);
   const toIsSome = transaction.to === null ? '0x00' : '0x01';
   const value = encodeU128(transaction.value);
-  const data = padArray(encodeHex(transaction.input), MAX_DATA_LEN, ZERO_PAD_VALUE);
+  const data = padArray(encodeHex(transaction.input), MAX_DATA_LEN_M, ZERO_PAD_VALUE);
   const data_len_field = removeHexPrefix(transaction.input).length / BYTE_HEX_LEN;
   const data_len = encodeField(data_len_field);
 

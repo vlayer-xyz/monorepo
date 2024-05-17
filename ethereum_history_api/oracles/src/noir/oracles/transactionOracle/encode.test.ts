@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { TX_OFFSETS, encodeTx } from './encode.js';
 import { loadTxFixture } from '../../../historyAPIFixtures.js';
 import { ETH_TRANSFER_TX_HASH, CHAIN_LINK_TRANSFER_TX_HASH } from '../../../fixtures/historyAPIConfig.js';
-import { MAX_DATA_LEN } from '../common/txConfig.js';
+import { MAX_DATA_LEN_M } from '../common/txConfig.js';
 import { ZERO_PAD_VALUE } from '../common/const.js';
 import { padArray } from '../../../util/array.js';
 
@@ -13,7 +13,7 @@ describe('TransactionOracle encode', () => {
       const contractCreationTransaction = await loadTxFixture('mainnet', 'cancun', 'transfer', ETH_TRANSFER_TX_HASH);
       const noirTransaction = encodeTx(contractCreationTransaction);
 
-      expect(noirTransaction[TX_OFFSETS.DATA]).toStrictEqual(padArray([], MAX_DATA_LEN, ZERO_PAD_VALUE));
+      expect(noirTransaction[TX_OFFSETS.DATA]).toStrictEqual(padArray([], MAX_DATA_LEN_M, ZERO_PAD_VALUE));
 
       expect(noirTransaction[TX_OFFSETS.NONCE]).toStrictEqual('0x');
       expect(noirTransaction[TX_OFFSETS.GAS_LIMIT]).toStrictEqual('0x5a3c');
@@ -46,7 +46,7 @@ describe('TransactionOracle encode', () => {
         '0x00','0x00','0x00','0x00','0x00','0x00','0x00','0x00','0x00','0x00',
         '0x00','0x00','0x00','0x00','0x00','0x00','0x00','0x00','0x00','0x3f',
         '0x44','0x12','0x7f','0xb4','0x3f','0xa1','0x00','0x00'
-      ], MAX_DATA_LEN, ZERO_PAD_VALUE));
+      ], MAX_DATA_LEN_M, ZERO_PAD_VALUE));
       expect(noirTransaction[TX_OFFSETS.DATA_LEN]).toStrictEqual('0x44');
     });
   });

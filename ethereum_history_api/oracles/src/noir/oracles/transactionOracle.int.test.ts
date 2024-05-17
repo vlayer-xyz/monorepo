@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { createMockMultiChainClient } from '../../ethereum/mockClient.js';
 import { OFFSETS, getTransactionOracle } from './transactionOracle.js';
-import { MAX_DATA_LEN } from './common/txConfig.js';
+import { MAX_DATA_LEN_M } from './common/txConfig.js';
 import { ZERO_PAD_VALUE } from './common/const.js';
 import { padArray } from '../../util/array.js';
 
@@ -41,7 +41,7 @@ describe('getTransactionOracle', () => {
         '0x00','0x00','0x00','0x00','0x00','0x00','0x00','0x00','0x00','0x00',
         '0x00','0x00','0x00','0x00','0x00','0x00','0x00','0x00','0x00','0x3f',
         '0x44','0x12','0x7f','0xb4','0x3f','0xa1','0x00','0x00'
-    ], MAX_DATA_LEN, ZERO_PAD_VALUE));
+    ], MAX_DATA_LEN_M, ZERO_PAD_VALUE));
     expect(txWithProof[OFFSETS.DATA_LEN]).toStrictEqual('0x44');
     expect(txWithProof[OFFSETS.V]).toStrictEqual('0x01');
     // prettier-ignore
