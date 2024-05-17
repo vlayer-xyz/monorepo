@@ -14,6 +14,9 @@ export class Barretenberg {
   public async vkAsFields(vkPath: string, vkAsFieldsPath: string) {
     await $`${this.binaryPath} vk_as_fields -k ${vkPath} -o ${vkAsFieldsPath}`;
   }
+  public async proofAsFields(vkPath: string, proofWithInputsPath: string, proofAsFieldsPath: string) {
+    await $`${this.binaryPath} proof_as_fields -k ${vkPath} -p ${proofWithInputsPath} -o ${proofAsFieldsPath}`;
+  }
 
   private constructor(private binaryPath: string) {}
 }

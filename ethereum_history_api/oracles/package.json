@@ -14,6 +14,7 @@
     "format": "prettier --write src",
     "format:ci": "prettier --check src",
     "generate-vk": "tsx src/script/generateVK",
+    "generate-proof": "tsx src/script/generateProof",
     "oracle-server": "tsx src/script/startOracleServer",
     "oracle-server:watch": "tsx watch src/script/startOracleServer",
     "prepare-fixtures": "yarn prepare-js-fixtures && yarn prepare-noir-fixtures",

@@ -21,6 +21,10 @@ export class MonorepoCircuit {
     return path.join(this.root, 'target', `${this.name}.vk.json`);
   }
 
+  public packagePath(): string {
+    return path.join(this.root, 'ethereum_history_api', 'circuits', this.name);
+  }
+
   private constructor(
     public root: string,
     public name: string,
