@@ -20,6 +20,7 @@ pub(crate) fn assert_receipt_rlp_equals(
     let receipt_rlp_list: RlpList<RECEIPT_FIELDS_COUNT> = decode_list(Fragment::from_array(receipt_rlp));
     assert(receipt_rlp_list.len == RECEIPT_FIELDS_COUNT, "Invalid number of fields in receipt RLP");
 
+    let receipt_rlp = Fragment::from_array(receipt_rlp);
     if (is_pre_byzantium) {
         receipt_rlp_list.get(STATE_ROOT_INDEX).assert_eq_bytes32(
             "State root",
@@ -40,5 +41,9 @@ pub(crate) fn assert_receipt_rlp_equals(
         receipt.cumulative_gas_used
     );
 
-    receipt_rlp_list.get(LOGS_BLOOM_INDEX).assert_eq_bytes("Logs bloom", receipt_rlp, receipt.logs_bloom, BLOOM_FILTER_LEN);
+    receipt_rlp_list.get(LOGS_BLOOM_INDEX).assert_eq_bytes(
+        "Logs bloom",
+        receipt_rlp,
+        Fragment::new_with_length(BLOOM_FILTER_LEN, receipt.logs_bloom)
+    );
 }

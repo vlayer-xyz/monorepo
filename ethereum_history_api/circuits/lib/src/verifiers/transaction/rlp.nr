@@ -30,6 +30,7 @@ pub(crate) fn assert_tx_rlp_equals<MAX_DATA_LEN>(
     let FieldLayout {field_count, nonce_idx, gas_limit_idx, to_idx, signature_idx} = TX_TYPE_TO_FIELD_LAYOUT[tx_type];
     assert(rlp_list.len == field_count, "Invalid number of fields in tx RLP");
 
+    let tx_rlp = Fragment::from_array(tx_rlp);
     rlp_list.get(nonce_idx).assert_eq_u64("Nonce", tx_rlp, tx.nonce);
 
     rlp_list.get(gas_limit_idx).assert_eq_u64("Gas limit", tx_rlp, tx.gas_limit);
