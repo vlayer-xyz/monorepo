@@ -14,7 +14,7 @@ Because forge can not compile files outside of it's `src` directory - we symlink
 
 Run `ls -la src/generated-verifier` to see the symlinks.
 
-Use `ln -s source_file target_file` command to create a new one
+Use `ln -s source_file target_file` command to create a new one. `source_file` is a path from `generated-verifier` folder to existing file.
 
 ## Usage
 
