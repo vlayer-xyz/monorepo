@@ -16,12 +16,11 @@ export async function generateVk(circuit: MonorepoCircuit): Promise<void> {
 export class VerificationKey {
   public static async create(circuit: MonorepoCircuit): Promise<VerificationKey> {
     const [hash, ...asFields] = await readObject<string[]>(circuit.vkAsFieldsPath());
-    return new VerificationKey(hash, asFields, circuit.vkPath());
+    return new VerificationKey(hash, asFields);
   }
 
   private constructor(
     public hash: string,
-    public asFields: string[],
-    public path: string
+    public asFields: string[]
   ) {}
 }
