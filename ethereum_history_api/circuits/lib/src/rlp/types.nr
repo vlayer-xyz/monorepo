@@ -42,11 +42,7 @@ impl RlpFragment {
         rlp: Fragment<MAX_RLP_LEN, u8>,
         value: BoundedVec<u8, MAX_VALUE_LEN>
     ) {
-        self.assert_eq_bytes(
-            field_name,
-            rlp,
-            Fragment::new_with_length(value.len, value.storage)
-        );
+        self.assert_eq_bytes(field_name, rlp, Fragment::from_vec(value));
     }
 
     fn assert_empty_string<FIELD_NAME_LEN, MAX_RLP_LEN>(self, field_name: str<FIELD_NAME_LEN>) {
