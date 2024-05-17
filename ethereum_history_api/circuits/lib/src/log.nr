@@ -19,7 +19,7 @@ global LOG_DATA_INDEX = 2;
 struct PhantomMaxLogDataLen<MAX_LOG_DATA_LEN> {}
 struct PhantomMaxLogsCount<MAX_LOGS_COUNT> {}
 
-type ReceiptFragment = Fragment<524, u8>;
+type ReceiptFragment = Fragment<MAX_RECEIPT_RLP_LENGTH, u8>;
 
 struct Log<MAX_LOG_DATA_LEN> {
     address: Address,
@@ -61,7 +61,7 @@ pub(crate) fn extract_log<MAX_LOG_DATA_LEN, MAX_LOGS_COUNT>(
     }
 }
 
-fn extract_logs_fragment(receipt_rlp: [u8; MAX_RECEIPT_RLP_LENGTH]) -> Fragment<MAX_RECEIPT_RLP_LENGTH, u8> {
+fn extract_logs_fragment(receipt_rlp: [u8; MAX_RECEIPT_RLP_LENGTH]) -> ReceiptFragment {
     let receipt_rlp_fragment = Fragment::from_array(receipt_rlp);
     let receipt_rlp_list: RlpList<RECEIPT_FIELDS_COUNT> = decode_list(receipt_rlp_fragment);
     assert(receipt_rlp_list.len == RECEIPT_FIELDS_COUNT, "Invalid receipt fields count");
@@ -69,15 +69,15 @@ fn extract_logs_fragment(receipt_rlp: [u8; MAX_RECEIPT_RLP_LENGTH]) -> Fragment<
 }
 
 fn extract_log_fragment<MAX_LOGS_COUNT>(
-    logs_fragment: Fragment<MAX_RECEIPT_RLP_LENGTH, u8>,
+    logs_fragment: ReceiptFragment,
     log_idx: u64,
     _phantom_max_logs_count: PhantomMaxLogsCount<MAX_LOGS_COUNT>
-) -> Fragment<MAX_RECEIPT_RLP_LENGTH, u8> {
+) -> ReceiptFragment {
     let logs_rlp_list: RlpList<MAX_LOGS_COUNT> = decode_list(logs_fragment);
     rlp_list_subfragment(logs_fragment, logs_rlp_list, log_idx)
 }
 
-fn extract_log_fields_fragments(log_fragment: Fragment<MAX_RECEIPT_RLP_LENGTH, u8>) -> (ReceiptFragment, BoundedVec<ReceiptFragment, MAX_TOPICS_COUNT>, ReceiptFragment) {
+fn extract_log_fields_fragments(log_fragment: ReceiptFragment) -> (ReceiptFragment, BoundedVec<ReceiptFragment, MAX_TOPICS_COUNT>, ReceiptFragment) {
     let log_values_rlp_list: RlpList<LOG_FIELDS_COUNT> = decode_list(log_fragment);
     assert(log_values_rlp_list.len == LOG_FIELDS_COUNT, "Invalid log fields count");
 
