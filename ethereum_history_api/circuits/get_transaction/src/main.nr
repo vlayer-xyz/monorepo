@@ -6,6 +6,7 @@ use dep::ethereum_history_api::verifiers::transaction::MAX_ENCODED_TX_LENGTH;
 use dep::proof::const::MAX_TRIE_NODE_LENGTH;
 
 global MAX_DATA_LEN_M = 1000;
+
 fn main(
     chain_id: pub Field,
     block_number: pub u64,
