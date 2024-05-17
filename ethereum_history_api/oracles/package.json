@@ -1,6 +1,6 @@
 {
   "name": "noir-ethereum-api-oracles",
-  "version": "1.0.0",
+  "version": "0.5.0",
   "main": "dist/src/main.js",
   "types": "dist/src/main.d.ts",
   "type": "module",

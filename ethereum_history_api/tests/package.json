@@ -14,7 +14,7 @@
   "dependencies": {
     "@noir-lang/backend_barretenberg": "0.29.0-a5b7df1.nightly",
     "@noir-lang/noirc_abi": "^0.29.0-a5b7df1.nightly",
-    "noir-ethereum-api-oracles": "^1.0.0",
+    "noir-ethereum-api-oracles": "^0.5.0",
     "toml": "^3.0.0",
     "viem": "^2.10.1"
   },
