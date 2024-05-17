@@ -2,7 +2,7 @@ import { type Address, isAddress, isHex, Hex } from 'viem';
 import { assert } from '../../../util/assert.js';
 import { BYTE_HEX_LEN } from '../../../util/const.js';
 import { padArray } from '../../../util/array.js';
-import { BITS_IN_BYTE, BYTES32_LEN, MODULUS, MAX_TRIE_NODE_LEN, ZERO_PAD_VALUE } from './const.js';
+import { BITS_IN_BYTE, BYTES32_LEN, MODULUS, MAX_TRIE_NODE_LEN, ZERO_PAD_VALUE, U128_MAX, U64_MAX } from './const.js';
 
 export function encodeByte(byte: number): Hex {
   assert(byte < 256, 'Byte overflow');
@@ -21,6 +21,13 @@ export function encodeField(arg: number | bigint): Hex {
     hex = `0${hex}`;
   }
   return `0x${hex}`;
+}
+
+export function encodeU128(arg: bigint): Hex[] {
+  assert(arg < U128_MAX, 'U128 overflow');
+  assert(arg >= 0, 'U128 underflow');
+
+  return [encodeField(arg / (U64_MAX + 1n)), encodeField(arg % (U64_MAX + 1n))];
 }
 
 export function encodeBytes32(value: bigint): Hex[] {
