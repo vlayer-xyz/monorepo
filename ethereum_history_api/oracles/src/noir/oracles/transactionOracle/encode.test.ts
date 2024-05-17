@@ -18,6 +18,7 @@ describe('TransactionOracle encode', () => {
       expect(noirTransaction[TX_OFFSETS.NONCE]).toStrictEqual('0x');
       expect(noirTransaction[TX_OFFSETS.GAS_LIMIT]).toStrictEqual('0x5a3c');
       expect(noirTransaction[TX_OFFSETS.TO_IS_SOME]).toStrictEqual('0x01');
+      expect(noirTransaction[TX_OFFSETS.VALUE_HI]).toStrictEqual('0x');
       expect(noirTransaction[TX_OFFSETS.VALUE_LO]).toStrictEqual('0x038d7ea4c68000');
       expect(noirTransaction[TX_OFFSETS.DATA_LEN]).toStrictEqual('0x');
     });
@@ -34,6 +35,7 @@ describe('TransactionOracle encode', () => {
       expect(noirTransaction[TX_OFFSETS.NONCE]).toStrictEqual('0x485a');
       expect(noirTransaction[TX_OFFSETS.GAS_LIMIT]).toStrictEqual('0x0493e0');
       expect(noirTransaction[TX_OFFSETS.TO_IS_SOME]).toStrictEqual('0x01');
+      expect(noirTransaction[TX_OFFSETS.VALUE_HI]).toStrictEqual('0x');
       expect(noirTransaction[TX_OFFSETS.VALUE_LO]).toStrictEqual('0x');
       // prettier-ignore
       expect(noirTransaction[TX_OFFSETS.DATA]).toStrictEqual(padArray([
