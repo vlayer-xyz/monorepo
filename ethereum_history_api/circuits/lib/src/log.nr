@@ -1,8 +1,5 @@
 use crate::{
-    misc::{
-    types::{Address, Bytes32}, fragment::Fragment, arrays::subarray_inferred_len,
-    bounded_vecs::bounded_vec_map
-},
+    misc::{types::{Address, Bytes32}, fragment::Fragment, arrays::subarray_inferred_len},
     rlp::{decode::decode_list, types::{RlpList, RlpFragment}},
     verifiers::receipt::{MAX_RECEIPT_RLP_LENGTH, rlp::RECEIPT_FIELDS_COUNT}
 };
@@ -40,7 +37,11 @@ struct LogWithinBlock<MAX_LOG_DATA_LEN> {
     block_hash: Bytes32
 }
 
-pub fn get_log<MAX_LOG_DATA_LEN>(_block_number: Field, _tx_idx: Field, _log_idx: Field) -> LogWithinBlock<MAX_LOG_DATA_LEN> {
+pub fn get_log<MAX_LOG_DATA_LEN>(
+    _block_number: Field,
+    _tx_idx: Field,
+    _log_idx: Field
+) -> LogWithinBlock<MAX_LOG_DATA_LEN> {
     assert(false, "Not implemented");
     zeroed()
 }
@@ -50,22 +51,18 @@ pub(crate) fn extract_log<MAX_LOG_DATA_LEN, MAX_LOGS_COUNT>(
     log_idx: u64,
     phantom_max_logs_count: PhantomMaxLogsCount<MAX_LOGS_COUNT>
 ) -> Log<MAX_LOG_DATA_LEN> {
-    let logs_fragment = extract_logs_fragment(receipt_rlp);
+    let receipt_rlp_fragment = Fragment::from_array(receipt_rlp);
+    let logs_fragment = extract_logs_fragment(receipt_rlp_fragment);
     let log_fragment = extract_log_fragment(logs_fragment, log_idx, phantom_max_logs_count);
     let (address, topics, data) = extract_log_fields_fragments(log_fragment);
 
-    Log {
-        address: address.to_array(),
-        topics: bounded_vec_map(topics, Fragment::to_array),
-        data: data.to_bounded_vec()
-    }
+    Log { address: address.to_array(), topics: topics.fmap(Fragment::to_array), data: data.to_bounded_vec() }
 }
 
-fn extract_logs_fragment(receipt_rlp: [u8; MAX_RECEIPT_RLP_LENGTH]) -> ReceiptFragment {
-    let receipt_rlp_fragment = Fragment::from_array(receipt_rlp);
+fn extract_logs_fragment(receipt_rlp_fragment: ReceiptFragment) -> ReceiptFragment {
     let receipt_rlp_list: RlpList<RECEIPT_FIELDS_COUNT> = decode_list(receipt_rlp_fragment);
     assert(receipt_rlp_list.len == RECEIPT_FIELDS_COUNT, "Invalid receipt fields count");
-    rlp_list_subfragment(receipt_rlp_fragment, receipt_rlp_list, LOGS_INDEX)
+    rlp_subfragment(receipt_rlp_fragment, receipt_rlp_list.get(LOGS_INDEX))
 }
 
 fn extract_log_fragment<MAX_LOGS_COUNT>(
@@ -74,28 +71,25 @@ fn extract_log_fragment<MAX_LOGS_COUNT>(
     _phantom_max_logs_count: PhantomMaxLogsCount<MAX_LOGS_COUNT>
 ) -> ReceiptFragment {
     let logs_rlp_list: RlpList<MAX_LOGS_COUNT> = decode_list(logs_fragment);
-    rlp_list_subfragment(logs_fragment, logs_rlp_list, log_idx)
+    rlp_subfragment(logs_fragment, logs_rlp_list.get(log_idx))
 }
 
 fn extract_log_fields_fragments(log_fragment: ReceiptFragment) -> (ReceiptFragment, BoundedVec<ReceiptFragment, MAX_TOPICS_COUNT>, ReceiptFragment) {
     let log_values_rlp_list: RlpList<LOG_FIELDS_COUNT> = decode_list(log_fragment);
     assert(log_values_rlp_list.len == LOG_FIELDS_COUNT, "Invalid log fields count");
 
-    let address = rlp_list_subfragment(log_fragment, log_values_rlp_list, LOG_ADDRESS_INDEX);
+    let address = rlp_subfragment(log_fragment, log_values_rlp_list.get(LOG_ADDRESS_INDEX));
 
-    let topics_fragment = rlp_list_subfragment(log_fragment, log_values_rlp_list, LOG_TOPICS_INDEX);
+    let topics_fragment = rlp_subfragment(log_fragment, log_values_rlp_list.get(LOG_TOPICS_INDEX));
     let topics_rlp_list: RlpList<MAX_TOPICS_COUNT> = decode_list(topics_fragment);
-    let topics = bounded_vec_map(
-        topics_rlp_list,
-        |topic_rlp_fragment: RlpFragment| topics_fragment.subfragment(topic_rlp_fragment.offset, topic_rlp_fragment.length)
-    );
+    let topics = topics_rlp_list.fmap(|topic_rlp_fragment| rlp_subfragment(topics_fragment, topic_rlp_fragment));
 
-    let data = rlp_list_subfragment(log_fragment, log_values_rlp_list, LOG_DATA_INDEX);
+    let data = rlp_subfragment(log_fragment, log_values_rlp_list.get(LOG_DATA_INDEX));
 
     (address, topics, data)
 }
 
-fn rlp_list_subfragment<MAX_FIELDS, N>(fragment: Fragment<N, u8>, rlp_list: RlpList<MAX_FIELDS>, idx: u64) -> Fragment<N, u8> {
-    let RlpFragment { offset, length, data_type: _ } = rlp_list.get(idx);
+fn rlp_subfragment<MAX_FIELDS, N>(fragment: Fragment<N, u8>, rlp_fragment: RlpFragment) -> Fragment<N, u8> {
+    let RlpFragment { offset, length, data_type: _ } = rlp_fragment;
     fragment.subfragment(offset, length)
 }
