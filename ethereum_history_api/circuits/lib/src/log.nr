@@ -72,6 +72,8 @@ fn extract_log_fragment<MAX_LOGS_COUNT>(
     let receipt_rlp_fragment = Fragment::from_array(receipt_rlp);
 
     let receipt_rlp_list: RlpList<RECEIPT_FIELDS_COUNT> = decode_list(receipt_rlp_fragment);
+    assert(receipt_rlp_list.len == RECEIPT_FIELDS_COUNT, "Invalid receipt fields count");
+
     let logs_rlp_fragment = receipt_rlp_list.get(LOGS_INDEX);
     let logs_fragment = receipt_rlp_fragment.subfragment(logs_rlp_fragment.offset, logs_rlp_fragment.length);
 
@@ -83,6 +85,7 @@ fn extract_log_fragment<MAX_LOGS_COUNT>(
 
 fn extract_log_fields_fragments(log_fragment: Fragment<MAX_RECEIPT_RLP_LENGTH, u8>) -> LogFieldsRlpFragments {
     let log_values_rlp_list: RlpList<LOG_FIELDS_COUNT> = decode_list(log_fragment);
+    assert(log_values_rlp_list.len == LOG_FIELDS_COUNT, "Invalid log fields count");
 
     let address = log_values_rlp_list.get(LOG_ADDRESS_INDEX).shift(log_fragment.offset);
 
