@@ -69,7 +69,7 @@ describe('encodeU128', () => {
     expect(encodeU128(100500n)).toStrictEqual(['0x', '0x018894']);
   });
   it('should encode values over 64 bits correctly', () => {
-    expect(encodeU128(2n ** 64n)).toStrictEqual(['0x01', '0x01']);
+    expect(encodeU128(2n ** 64n)).toStrictEqual(['0x01', '0x']);
   });
 });
 
