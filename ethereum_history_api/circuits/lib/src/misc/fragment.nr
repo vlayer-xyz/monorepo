@@ -36,6 +36,17 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
         self.focus().data
     }
 
+    pub fn to_bounded_vec<N>(self) -> BoundedVec<T, N> {
+        assert(self.length <= N, "Fragment length exceeds BoundedVec max length");
+        let mut bounded_vec: BoundedVec<T, N> = BoundedVec::new();
+        for i in 0..N {
+            if (i < self.length) {
+                bounded_vec.push(self.at(i));
+            }
+        }
+        bounded_vec
+    }
+
     pub fn from_vec(vec: BoundedVec<T, MAX_DATA_LEN>) -> Fragment<MAX_DATA_LEN, T> {
         Fragment::new_with_length(vec.len, vec.storage)
     }

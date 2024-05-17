@@ -25,11 +25,6 @@ struct RlpFragment {
 }
 
 impl RlpFragment {
-
-    fn shift(self, shift: u64) -> RlpFragment {
-        RlpFragment { offset: self.offset + shift, length: self.length, data_type: self.data_type }
-    }
-
     fn assert_eq_bytes<FIELD_NAME_LEN, MAX_RLP_LEN, MAX_VALUE_LEN>(
         self,
         field_name: str<FIELD_NAME_LEN>,
