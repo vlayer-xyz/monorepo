@@ -55,7 +55,7 @@ mod extract_log {
         );
     }
 
-    #[test(should_fail_with="Log index out of bounds")]
+    #[test(should_fail)] // Log index out of bounds"
     fn index_out_of_bound() {
         let _ = extract_log(
             small_block_receipt_rlp,

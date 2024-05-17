@@ -1,6 +1,6 @@
 use crate::{
     misc::{
-    types::{Address, Bytes32, ADDRESS_LENGTH, BYTES32_LENGTH}, fragment::Fragment,
+    types::{Address, Bytes32}, fragment::Fragment,
     arrays::subarray_inferred_len
 },
     rlp::{decode::decode_list, types::{RlpList, RlpFragment}},
@@ -74,12 +74,11 @@ fn extract_log_fragment<MAX_LOGS_COUNT>(
     let receipt_rlp_list: RlpList<RECEIPT_FIELDS_COUNT> = decode_list(receipt_rlp_fragment);
     assert(receipt_rlp_list.len == RECEIPT_FIELDS_COUNT, "Invalid receipt fields count");
 
-    let logs_rlp_fragment = receipt_rlp_list.get(LOGS_INDEX);
-    let logs_fragment = receipt_rlp_fragment.subfragment(logs_rlp_fragment.offset, logs_rlp_fragment.length);
+    let RlpFragment { offset, length, data_type: _ } = receipt_rlp_list.get(LOGS_INDEX);
+    let logs_fragment = receipt_rlp_fragment.subfragment(offset, length);
 
     let logs_rlp_list: RlpList<MAX_LOGS_COUNT> = decode_list(logs_fragment);
-    assert(logs_rlp_list.len > log_idx, "Log index out of bounds");
-    let log_rlp_fragment = logs_rlp_list.storage[log_idx];
+    let log_rlp_fragment = logs_rlp_list.get(log_idx);
     logs_fragment.subfragment(log_rlp_fragment.offset, log_rlp_fragment.length)
 }
 
