@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { updateNestedField, incHexStr } from 'noir-ethereum-api-oracles';
 import { Abi, InputMap, abiEncode } from '@noir-lang/noirc_abi';
 
-import getTransactionVerifier from '../../contracts/out/GetTransactionUltraPLONKVerifier.sol/UltraVerifier.json';
+import getTransactionVerifier from '../../contracts/out/GetTransactionUltraPlonkVerifier.sol/UltraVerifier.json';
 import getTransaction from '../../../target/get_transaction.json';
 
 import { readProofData } from './proofDataReader.js';
