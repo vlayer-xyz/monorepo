@@ -1,1 +1,0 @@
-../../../../contract/get_transaction/plonk_vk.sol
