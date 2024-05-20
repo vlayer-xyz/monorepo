@@ -7,7 +7,6 @@ mod bytes_test;
 mod fragment;
 mod fragment_test;
 mod fragment_int_test;
-mod functor;
 mod types;
 mod option;
 mod field;

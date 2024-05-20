@@ -1,5 +1,8 @@
 use crate::{
-    misc::{types::{Address, Bytes32}, fragment::Fragment, arrays::subarray_inferred_len},
+    misc::{
+    types::{Address, Bytes32}, fragment::Fragment, arrays::subarray_inferred_len,
+    bounded_vecs::bounded_vec_map
+},
     rlp::{decode::decode_list, types::{RlpList, RlpFragment}},
     verifiers::receipt::{MAX_RECEIPT_RLP_LENGTH, rlp::RECEIPT_FIELDS_COUNT}
 };
@@ -54,9 +57,18 @@ pub(crate) fn extract_log<MAX_LOG_DATA_LEN, MAX_LOGS_COUNT>(
     let receipt_rlp_fragment = Fragment::from_array(receipt_rlp);
     let logs_fragment = extract_logs_fragment(receipt_rlp_fragment);
     let log_fragment = extract_log_fragment(logs_fragment, log_idx, phantom_max_logs_count);
-    let (address, topics, data) = extract_log_fields_fragments(log_fragment);
 
-    Log { address: address.to_array(), topics: topics.fmap(Fragment::to_array), data: data.to_bounded_vec() }
+    let log_values_rlp_list: RlpList<LOG_FIELDS_COUNT> = decode_list(log_fragment);
+    assert(log_values_rlp_list.len == LOG_FIELDS_COUNT, "Invalid log fields count");
+
+    let address = extract_address(log_fragment, log_values_rlp_list).to_array();
+    let topics = bounded_vec_map(
+        extract_topics(log_fragment, log_values_rlp_list),
+        Fragment::to_array
+    );
+    let data = extract_data(log_fragment, log_values_rlp_list).to_bounded_vec();
+
+    Log { address, topics, data }
 }
 
 fn extract_logs_fragment(receipt_rlp_fragment: ReceiptFragment) -> ReceiptFragment {
@@ -74,19 +86,27 @@ fn extract_log_fragment<MAX_LOGS_COUNT>(
     rlp_subfragment(logs_fragment, logs_rlp_list.get(log_idx))
 }
 
-fn extract_log_fields_fragments(log_fragment: ReceiptFragment) -> (ReceiptFragment, BoundedVec<ReceiptFragment, MAX_TOPICS_COUNT>, ReceiptFragment) {
-    let log_values_rlp_list: RlpList<LOG_FIELDS_COUNT> = decode_list(log_fragment);
-    assert(log_values_rlp_list.len == LOG_FIELDS_COUNT, "Invalid log fields count");
+fn extract_address(
+    log_fragment: ReceiptFragment,
+    log_values_rlp_list: RlpList<LOG_FIELDS_COUNT>
+) -> ReceiptFragment {
+    rlp_subfragment(log_fragment, log_values_rlp_list.get(LOG_ADDRESS_INDEX))
+}
 
-    let address = rlp_subfragment(log_fragment, log_values_rlp_list.get(LOG_ADDRESS_INDEX));
-
+fn extract_topics(
+    log_fragment: ReceiptFragment,
+    log_values_rlp_list: RlpList<LOG_FIELDS_COUNT>
+) -> BoundedVec<ReceiptFragment, MAX_TOPICS_COUNT> {
     let topics_fragment = rlp_subfragment(log_fragment, log_values_rlp_list.get(LOG_TOPICS_INDEX));
     let topics_rlp_list: RlpList<MAX_TOPICS_COUNT> = decode_list(topics_fragment);
-    let topics = topics_rlp_list.fmap(|topic_rlp_fragment| rlp_subfragment(topics_fragment, topic_rlp_fragment));
+    bounded_vec_map(
+        topics_rlp_list,
+        |topic_rlp_fragment| rlp_subfragment(topics_fragment, topic_rlp_fragment)
+    )
+}
 
-    let data = rlp_subfragment(log_fragment, log_values_rlp_list.get(LOG_DATA_INDEX));
-
-    (address, topics, data)
+fn extract_data(log_fragment: ReceiptFragment, log_values_rlp_list: RlpList<LOG_FIELDS_COUNT>) -> ReceiptFragment {
+    rlp_subfragment(log_fragment, log_values_rlp_list.get(LOG_DATA_INDEX))
 }
 
 fn rlp_subfragment<MAX_FIELDS, N>(fragment: Fragment<N, u8>, rlp_fragment: RlpFragment) -> Fragment<N, u8> {
