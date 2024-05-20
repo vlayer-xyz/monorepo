@@ -49,7 +49,7 @@ jobs:
           echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum_history_api/contracts/out/GetHeaderUltraPLONKVerifier.sol/UltraVerifier.json
           mkdir -p ethereum_history_api/contracts/out/GetReceiptUltraPLONKVerifier.sol
           echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum_history_api/contracts/out/GetReceiptUltraPLONKVerifier.sol/UltraVerifier.json
-          mkdir -p ethereum_history_api/contracts/out/GetTransactionUltraPLONKVerifier.sol
+          mkdir -p ethereum_history_api/contracts/out/GetTransactionUltraPlonkVerifier.sol
           echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum_history_api/contracts/out/GetTransactionUltraPLONKVerifier.sol/UltraVerifier.json
 
       - name: Run TypeScript Build
