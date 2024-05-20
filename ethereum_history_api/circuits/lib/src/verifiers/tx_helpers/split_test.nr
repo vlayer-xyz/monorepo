@@ -9,8 +9,6 @@ mod receipt {
     use crate::verifiers::receipt::{MAX_ENCODED_RECEIPT_LENGTH, MAX_RECEIPT_RLP_LENGTH};
     use crate::receipt::TxType;
 
-    global MAX_ENCODED_LEN = 525;
-
     #[test]
     fn eip1559() {
         let encoded_receipt = Fragment::from_array(encoded_receipt);
@@ -36,7 +34,7 @@ mod receipt {
 
     #[test(should_fail_with="RLP receipt exceeds MAX_RLP_LENGTH")]
     fn legacy_wrong_rlp() {
-        let mut wrong_legacy_rlp: Fragment<MAX_ENCODED_LEN, u8> = Fragment::from_array_resize(pre_byzantium_encoded_receipt);
+        let mut wrong_legacy_rlp: Fragment<MAX_ENCODED_RECEIPT_LENGTH, u8> = Fragment::from_array_resize(pre_byzantium_encoded_receipt);
         let not_zero_byte = 0x01;
         wrong_legacy_rlp.set(wrong_legacy_rlp.length - 1, not_zero_byte);
 
@@ -54,8 +52,6 @@ mod transaction {
     };
     use crate::verifiers::transaction::{MAX_ENCODED_TX_LENGTH, MAX_TX_RLP_LENGTH};
     use crate::transaction::TxType;
-
-    global MAX_ENCODED_LEN = 525;
 
     #[test]
     fn eip1559() {
@@ -79,7 +75,7 @@ mod transaction {
 
     #[test(should_fail_with="RLP receipt exceeds MAX_RLP_LENGTH")]
     fn legacy_wrong_rlp() {
-        let mut wrong_legacy_rlp: Fragment<MAX_ENCODED_LEN, u8> = Fragment::from_array_resize(pre_byzantium_encoded_tx);
+        let mut wrong_legacy_rlp: Fragment<MAX_ENCODED_TX_LENGTH, u8> = Fragment::from_array_resize(pre_byzantium_encoded_tx);
         let not_zero_byte = 0x01;
         wrong_legacy_rlp.set(wrong_legacy_rlp.length - 1, not_zero_byte);
 
