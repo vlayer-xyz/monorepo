@@ -1,5 +1,5 @@
 mod receipt {
-    use crate::misc::arrays::{sub_array_equals, memcpy};
+    use crate::misc::{arrays::{sub_array_equals, memcpy}, fragment::Fragment};
     use crate::verifiers::tx_helpers::split::split_into_tx_type_and_rlp;
 
     use crate::fixtures::mainnet::{
@@ -11,36 +11,38 @@ mod receipt {
 
     #[test]
     fn eip1559() {
-        let (tx_type, receipt_rlp): (TxType, [u8; MAX_RECEIPT_RLP_LENGTH]) = split_into_tx_type_and_rlp(false, encoded_receipt);
-        assert(tx_type == encoded_receipt[0], "Incorrect tx type returned");
-        assert(receipt_rlp.len() == encoded_receipt.len() - 1, "Incorrect receipt RLP length returned");
-        assert(sub_array_equals(receipt_rlp, encoded_receipt, 1), "Incorrect receipt RLP returned");
+        let encoded_receipt = Fragment::from_array(encoded_receipt);
+        let (tx_type, receipt_rlp) = split_into_tx_type_and_rlp(false, encoded_receipt);
+        assert_eq(tx_type, encoded_receipt.at(0), "Incorrect tx type returned");
+        assert_eq(receipt_rlp.length, encoded_receipt.length - 1, "Incorrect receipt RLP length returned");
+        assert_eq(
+            encoded_receipt.subfragment(1, encoded_receipt.length - 1), receipt_rlp, "Incorrect receipt RLP returned"
+        );
     }
 
     #[test]
     fn legacy() {
-        let (tx_type, receipt_rlp): (TxType, [u8; MAX_RECEIPT_RLP_LENGTH]) = split_into_tx_type_and_rlp(true, pre_byzantium_encoded_receipt);
-        assert(tx_type == legacy_tx_type, "Incorrect tx type returned");
-        assert(receipt_rlp.len() == encoded_receipt.len() - 1, "Incorrect receipt RLP length returned");
-        assert(
-            sub_array_equals(receipt_rlp, pre_byzantium_encoded_receipt, 0), "Incorrect receipt RLP returned"
+        let pre_byzantium_encoded_receipt = Fragment::from_array(pre_byzantium_encoded_receipt);
+        let (tx_type, receipt_rlp) = split_into_tx_type_and_rlp(true, pre_byzantium_encoded_receipt);
+        assert_eq(tx_type, legacy_tx_type, "Incorrect tx type returned");
+        assert_eq(receipt_rlp.length, encoded_receipt.len() - 1, "Incorrect receipt RLP length returned");
+        assert_eq(
+            pre_byzantium_encoded_receipt.subfragment(0, pre_byzantium_encoded_receipt.length - 1), receipt_rlp, "Incorrect receipt RLP returned"
         );
     }
 
     #[test(should_fail_with="RLP receipt exceeds MAX_RLP_LENGTH")]
     fn legacy_wrong_rlp() {
-        let mut wrong_legacy_rlp = [0; MAX_ENCODED_RECEIPT_LENGTH];
-        memcpy(&mut wrong_legacy_rlp, pre_byzantium_encoded_receipt, 0);
-
+        let mut wrong_legacy_rlp: Fragment<MAX_ENCODED_RECEIPT_LENGTH, u8> = Fragment::from_array_resize(pre_byzantium_encoded_receipt);
         let not_zero_byte = 0x01;
-        wrong_legacy_rlp[MAX_ENCODED_RECEIPT_LENGTH - 1] = not_zero_byte;
+        wrong_legacy_rlp.set(wrong_legacy_rlp.length - 1, not_zero_byte);
 
-        let (_, _): (TxType, [u8; MAX_RECEIPT_RLP_LENGTH]) = split_into_tx_type_and_rlp(true, wrong_legacy_rlp);
+        let (_, _) = split_into_tx_type_and_rlp(true, wrong_legacy_rlp);
     }
 }
 
 mod transaction {
-    use crate::misc::arrays::{sub_array_equals, memcpy};
+    use crate::misc::{arrays::{sub_array_equals, memcpy}, fragment::Fragment};
     use crate::verifiers::tx_helpers::split::split_into_tx_type_and_rlp;
 
     use crate::fixtures::mainnet::{
@@ -52,28 +54,30 @@ mod transaction {
 
     #[test]
     fn eip1559() {
-        let (tx_type, tx_rlp): (TxType, [u8; MAX_TX_RLP_LENGTH]) = split_into_tx_type_and_rlp(false, encoded_tx);
-        assert(tx_type == encoded_tx[0], "Incorrect tx type returned");
-        assert(tx_rlp.len() == encoded_tx.len() - 1, "Incorrect tx RLP length returned");
-        assert(sub_array_equals(tx_rlp, encoded_tx, 1), "Incorrect tx RLP returned");
+        let encoded_tx = Fragment::from_array(encoded_tx);
+        let (tx_type, tx_rlp) = split_into_tx_type_and_rlp(false, encoded_tx);
+        assert_eq(tx_type, encoded_tx.at(0), "Incorrect tx type returned");
+        assert_eq(tx_rlp.length, encoded_tx.length - 1, "Incorrect tx RLP length returned");
+        assert_eq(encoded_tx.subfragment(1, encoded_tx.length - 1), tx_rlp, "Incorrect tx RLP returned");
     }
 
     #[test]
     fn legacy() {
-        let (tx_type, tx_rlp): (TxType, [u8; MAX_TX_RLP_LENGTH]) = split_into_tx_type_and_rlp(true, pre_byzantium_encoded_tx);
-        assert(tx_type == legacy_tx_type, "Incorrect tx type returned");
-        assert(tx_rlp.len() == encoded_tx.len() - 1, "Incorrect receipt RLP length returned");
-        assert(sub_array_equals(tx_rlp, pre_byzantium_encoded_tx, 0), "Incorrect receipt RLP returned");
+        let pre_byzantium_encoded_tx = Fragment::from_array(pre_byzantium_encoded_tx);
+        let (tx_type, tx_rlp) = split_into_tx_type_and_rlp(true, pre_byzantium_encoded_tx);
+        assert_eq(tx_type, legacy_tx_type, "Incorrect tx type returned");
+        assert_eq(tx_rlp.length, encoded_tx.len() - 1, "Incorrect receipt RLP length returned");
+        assert_eq(
+            pre_byzantium_encoded_tx.subfragment(0, pre_byzantium_encoded_tx.length - 1), tx_rlp, "Incorrect receipt RLP returned"
+        );
     }
 
     #[test(should_fail_with="RLP receipt exceeds MAX_RLP_LENGTH")]
     fn legacy_wrong_rlp() {
-        let mut wrong_legacy_rlp = [0; MAX_ENCODED_TX_LENGTH];
-        memcpy(&mut wrong_legacy_rlp, pre_byzantium_encoded_tx, 0);
-
+        let mut wrong_legacy_rlp: Fragment<MAX_ENCODED_TX_LENGTH, u8> = Fragment::from_array_resize(pre_byzantium_encoded_tx);
         let not_zero_byte = 0x01;
-        wrong_legacy_rlp[MAX_ENCODED_TX_LENGTH - 1] = not_zero_byte;
+        wrong_legacy_rlp.set(wrong_legacy_rlp.length - 1, not_zero_byte);
 
-        let (_, _): (TxType, [u8; MAX_TX_RLP_LENGTH]) = split_into_tx_type_and_rlp(true, wrong_legacy_rlp);
+        let (_, _) = split_into_tx_type_and_rlp(true, wrong_legacy_rlp);
     }
 }

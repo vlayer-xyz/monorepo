@@ -19,11 +19,17 @@ use crate::verifiers::receipt::{
     BYZANTIUM_BLOCK_NUM, MAX_RECEIPT_RLP_LENGTH, assert_receipt_equals, assert_receipt_rlp_equals,
     assert_receipt_proof, verify_receipt
 };
+use crate::misc::fragment::Fragment;
 
 #[test(should_fail_with="Invalid tx type")]
 fn test_assert_receipt_equals_wrong_tx_type() {
     let wrong_tx_type = tx_type + 1;
-    assert_receipt_equals(BYZANTIUM_BLOCK_NUM, wrong_tx_type, encoded_receipt, receipt);
+    assert_receipt_equals(
+        BYZANTIUM_BLOCK_NUM,
+        wrong_tx_type,
+        Fragment::from_array(encoded_receipt),
+        receipt
+    );
 }
 
 #[test]
