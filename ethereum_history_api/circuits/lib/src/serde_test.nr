@@ -108,15 +108,16 @@ mod storage_within_block {
 
 mod nodes {
     use crate::fixtures::mainnet::cancun::small_block::receipt_proof_new::proof_input;
-    use crate::merkle_patricia_proofs::proof::MAX_NODE_LEN;
+    use crate::merkle_patricia_proofs::proof::{Nodes, MAX_NODE_LEN};
     use crate::misc::arrays::sub_array_equals;
 
     #[test]
     fn simple() {
         let nodes = proof_input.proof.nodes;
-        let serialized = nodes.serialize();
+        let serialized = (Nodes { data: nodes }).serialize();
 
         assert(sub_array_equals(nodes[0].serialize(), serialized, 0));
         assert(sub_array_equals(nodes[nodes.len() - 1].serialize(), serialized, MAX_NODE_LEN * (nodes.len() - 1) - 1));
+        assert_eq(Nodes::deserialize(serialized), Nodes { data: nodes });
     }
 }
