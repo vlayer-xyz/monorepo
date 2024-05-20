@@ -1,4 +1,4 @@
-use crate::misc::u256_struct::U256;
+use crate::misc::uint256::U256;
 
 global high = U128::from_integer(0x10000000000000000000000000000000);
 global low = U128::from_integer(0x00000000000000000000000000000000);

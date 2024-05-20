@@ -12,5 +12,5 @@ mod option;
 mod field;
 mod field_test;
 mod bytes32;
-mod u256_struct;
-mod u256_test;
+mod uint256;
+mod uint256_test;
