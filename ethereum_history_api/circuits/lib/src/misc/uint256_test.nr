@@ -25,3 +25,22 @@ fn from_u64s() {
     assert_eq(big_number.low, U128 { lo: u64s[2] as Field, hi: u64s[3] as Field });
 }
 
+#[test]
+fn eq() {
+    let big_number = U256 { high, low };
+    assert_eq(big_number, big_number);
+
+    let big_number2 = U256::new(high, low);
+    assert_eq(big_number, big_number2);
+}
+
+#[test]
+fn not_eq() {
+    let big_number = U256 { high, low };
+    let big_number2 = U256 { high, low: high };
+    assert(big_number != big_number2);
+
+    let big_number3 = U256 { high: low, low };
+    assert(big_number != big_number3);
+}
+

@@ -12,3 +12,9 @@ impl U256 {
         Self { high: U128::from_u64s_le(u64s[0], u64s[1]), low: U128::from_u64s_le(u64s[2], u64s[3]) }
     }
 }
+
+impl Eq for U256 {
+    fn eq(self, other: Self) -> bool {
+        (self.high == other.high) & (self.low == other.low)
+    }
+}
