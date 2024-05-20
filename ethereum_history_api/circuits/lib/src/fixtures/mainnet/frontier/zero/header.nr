@@ -20,4 +20,4 @@ global encoded_data: [u8; 708] = [
 ];
 
 global block_header_partial = BlockHeaderPartial { number, hash, state_root, transactions_root, receipts_root };
-global block_header_rlp = BoundedVec { len: encoded_length, storage: encoded_data};
+global block_header_rlp = BoundedVec { storage: encoded_data, len: encoded_length };

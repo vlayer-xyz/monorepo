@@ -28,7 +28,7 @@ global encoded_length: u64 = ${headerHexArray.length};
 global encoded_data: [u8; ${MAX_HEADER_RLP_LEN}] = ${joinArray(headerData)};
 
 global block_header_partial = BlockHeaderPartial { number, hash, state_root, transactions_root, receipts_root };
-global block_header_rlp = BoundedVec { len: encoded_length, storage: encoded_data};
+global block_header_rlp = BoundedVec { storage: encoded_data, len: encoded_length };
 `;
 
   return headerFixture;
