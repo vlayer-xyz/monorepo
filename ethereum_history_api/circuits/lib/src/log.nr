@@ -40,11 +40,7 @@ struct LogWithinBlock<MAX_LOG_DATA_LEN> {
     block_hash: Bytes32
 }
 
-pub fn get_log<MAX_LOG_DATA_LEN>(
-    _block_number: Field,
-    _tx_idx: Field,
-    _log_idx: Field
-) -> LogWithinBlock<MAX_LOG_DATA_LEN> {
+pub fn get_log<MAX_LOG_DATA_LEN>(_block_number: Field, _tx_idx: Field, _log_idx: Field) -> LogWithinBlock<MAX_LOG_DATA_LEN> {
     assert(false, "Not implemented");
     zeroed()
 }
