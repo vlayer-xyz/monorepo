@@ -12,7 +12,8 @@ describe('abi', () => {
       parameters: [publicParam, privateParam],
       param_witnesses: {},
       return_type: null,
-      return_witnesses: []
+      return_witnesses: [],
+      error_types: {}
     };
 
     expect(filterPublic(abi).parameters).toEqual([publicParam]);
