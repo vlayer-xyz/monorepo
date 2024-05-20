@@ -1,6 +1,7 @@
 use crate::account::AccountWithinBlock;
 use crate::account_with_storage::{StorageWithinBlock, Account};
 use crate::misc::{fragment::Fragment, types::{BYTES32_LENGTH, Bytes32, ADDRESS_LENGTH, Address}};
+use crate::merkle_patricia_proofs::proof::{Proof, Node, MAX_NODE_LEN};
 use dep::std::unsafe::zeroed;
 
 trait Serde<LEN> {
@@ -20,22 +21,12 @@ impl Serde<U128_SERIALIZED_LEN> for U128 {
     }
 }
 
-impl Serde<BYTES32_LENGTH> for Bytes32 {
-    fn serialize(self) -> [Field; BYTES32_LENGTH] {
+impl<LEN> Serde<LEN> for [u8; LEN] {
+    fn serialize(self) -> [Field; LEN] {
         self.map(|x: u8| x as Field)
     }
 
-    fn deserialize(data: [Field; BYTES32_LENGTH]) -> Self {
-        data.map(|x: Field| x as u8)
-    }
-}
-
-impl Serde<ADDRESS_LENGTH> for Address {
-    fn serialize(self) -> [Field; ADDRESS_LENGTH] {
-        self.map(|x: u8| x as Field)
-    }
-
-    fn deserialize(data: [Field; ADDRESS_LENGTH]) -> Self {
+    fn deserialize(data: [Field; LEN]) -> Self {
         data.map(|x: Field| x as u8)
     }
 }
@@ -111,3 +102,50 @@ impl Serde<STORAGE_BLOCK_LEN> for StorageWithinBlock<1> {
         }
     }
 }
+
+global RECEIPT_MAX_DEPTH_NO_LEAF = 6;
+global RECEIPT_NODES_LEN = 3192; // MAX_NODE_LEN * MAX_DEPTH_NO_LEAF;
+global RECEIPT_MAX_LEAF_LEN_M = 1011;
+global RECEIPT_PROOF_LEN_M = 4204; // RECEIPT_MAX_DEPTH_NO_LEAF * MAX_NODE_LEN + RECEIPT_MAX_LEAF_LEN_M + 1
+
+impl Serde<RECEIPT_NODES_LEN> for [Node; RECEIPT_MAX_DEPTH_NO_LEAF] {
+    fn serialize(self) -> [Field; RECEIPT_NODES_LEN] {
+        let mut data: BoundedVec<Field, RECEIPT_NODES_LEN> = BoundedVec::new();
+        for i in 0..RECEIPT_MAX_DEPTH_NO_LEAF {
+            data.extend_from_array(self[i].serialize());
+        }
+        data.storage
+    }
+
+    fn deserialize(data: [Field; RECEIPT_NODES_LEN]) -> Self {
+        let mut result: Fragment<RECEIPT_MAX_DEPTH_NO_LEAF, Node> = Fragment::empty();
+        let mut fragment = Fragment::from_array(data);
+        for _ in 0..RECEIPT_MAX_DEPTH_NO_LEAF {
+            let node: Node = fragment.pop_front_array().deserialize();
+            result.push_back(node);
+        }
+        result.data
+    }
+}
+
+
+// impl Serde<RECEIPT_PROOF_LEN_M> for Proof<RECEIPT_MAX_DEPTH_NO_LEAF, RECEIPT_MAX_LEAF_LEN_M> {
+//     fn serialize(self) -> [Field; RECEIPT_PROOF_LEN_M] {
+//         let mut data: BoundedVec<Field, RECEIPT_PROOF_LEN_M> = BoundedVec::new();
+//         data.extend_from_array(self.nodes.serialize());
+//         data.extend_from_array(self.leaf);
+//         data.push(self.depth);
+//     }
+
+//     fn deserialize(data: [Field; RECEIPT_PROOF_LEN_M]) -> Self {
+//         let mut fragment = Fragment::from_array(data);
+//         let nodes = fragment.pop_front_array();
+//         let leaf = fragment.pop_front_array();
+//         let depth = fragment.pop_front();
+//         Proof {
+//             nodes,
+//             leaf,
+//             depth,
+//         }
+//     }
+// }
