@@ -4719,7 +4719,7 @@ __metadata:
     "@noir-lang/noirc_abi": "npm:^0.29.0-a5b7df1.nightly"
     "@types/node": "npm:^20.12.10"
     eslint: "npm:^8.57.0"
-    noir-ethereum-api-oracles: "npm:^0.5.0"
+    noir-ethereum-api-oracles: "npm:^0.1.0"
     prettier: "npm:^3.2.5"
     toml: "npm:^3.0.0"
     tsx: "npm:^4.9.3"
@@ -4729,7 +4729,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"noir-ethereum-api-oracles@npm:^0.5.0, noir-ethereum-api-oracles@workspace:ethereum_history_api/oracles":
+"noir-ethereum-api-oracles@npm:^0.1.0, noir-ethereum-api-oracles@workspace:ethereum_history_api/oracles":
   version: 0.0.0-use.local
   resolution: "noir-ethereum-api-oracles@workspace:ethereum_history_api/oracles"
   dependencies:
