@@ -5,7 +5,7 @@ import { WitnessMap } from '@noir-lang/noirc_abi';
 import { assert } from 'noir-ethereum-api-oracles';
 import { createAnvilClient } from './ethereum/anvilClient.js';
 
-export const VERIFICATION_GAS_LIMIT = 550_000n;
+export const VERIFICATION_GAS_LIMIT = 850_000n;
 
 const PAIRING_FAILED_SELECTOR = 'd71fd263';
 
