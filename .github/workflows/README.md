@@ -16,3 +16,6 @@
   - Runs `yarn prepare-js-fixtures`
   - Runs `yarn prepare-noir-fixtures`
   - Runs `nargo fmt --check`
+- [Release](./release.yaml)
+  - Applies version changes
+  - Publishes NPM packages

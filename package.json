@@ -25,5 +25,8 @@
     "eslint-plugin-promise": "^6.1.1",
     "prettier": "^3.2.5",
     "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@changesets/cli": "^2.27.2"
   }
 }
