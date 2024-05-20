@@ -6264,9 +6264,6 @@ exports[`Oracle Server > should handle get_header request 1`] = `
         ],
       },
       {
-        "Single": "0x021c",
-      },
-      {
         "Array": [
           "0xf9",
           "0x02",
@@ -6977,6 +6974,9 @@ exports[`Oracle Server > should handle get_header request 1`] = `
           "0x",
           "0x",
         ],
+      },
+      {
+        "Single": "0x021c",
       },
     ],
   },

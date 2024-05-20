@@ -16,7 +16,7 @@ export function createHeaderFixture(block: GetBlockReturnType): string {
   const headerHexArray = encodeHexString(headerHex);
   const headerData = padArray(Array.from(headerHexArray), MAX_HEADER_RLP_LEN, ZERO_PAD_VALUE);
 
-  const headerFixture = `use crate::header::{BlockHeaderPartial, BlockHeaderRlp};
+  const headerFixture = `use crate::header::BlockHeaderPartial;
 
 global number = ${block.number};
 global hash = ${joinArray(blockHash)};
@@ -24,11 +24,11 @@ global state_root = ${joinArray(stateRoot)};
 global transactions_root = ${joinArray(transactionsRoot)};
 global receipts_root = ${joinArray(receiptsRoot)};
 
-global encoded_length: Field = ${headerHexArray.length};
-global encoded_data = ${joinArray(headerData)};
+global encoded_length: u64 = ${headerHexArray.length};
+global encoded_data: [u8; ${MAX_HEADER_RLP_LEN}] = ${joinArray(headerData)};
 
 global block_header_partial = BlockHeaderPartial { number, hash, state_root, transactions_root, receipts_root };
-global block_header_rlp = BlockHeaderRlp { length: encoded_length, data: encoded_data};
+global block_header_rlp = BoundedVec { storage: encoded_data, len: encoded_length };
 `;
 
   return headerFixture;

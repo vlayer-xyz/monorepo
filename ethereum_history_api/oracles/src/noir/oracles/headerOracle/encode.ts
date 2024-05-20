@@ -27,5 +27,5 @@ function encodeBlockHeaderRlp(header: BlockHeader): ForeignCallOutput[] {
 
   const encodedRlpLen = encodeField(rlpBytes.length);
   const encodedRlp = padArray(rlpBytes, MAX_HEADER_RLP_LEN, '0x');
-  return [encodedRlpLen, encodedRlp];
+  return [encodedRlp, encodedRlpLen];
 }

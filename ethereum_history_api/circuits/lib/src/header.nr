@@ -11,10 +11,7 @@ struct BlockHeaderPartial {
     receipts_root: Bytes32,
 }
 
-struct BlockHeaderRlp {
-    length: Field,
-    data: [u8; MAX_HEADER_RLP_LEN]
-}
+type BlockHeaderRlp = BoundedVec<u8, MAX_HEADER_RLP_LEN>;
 
 pub fn get_header(chain_id: Field, block_number: u64) -> BlockHeaderPartial {
     let (block_header_partial, block_header_rlp) = get_header_unconstrained(chain_id, block_number);
