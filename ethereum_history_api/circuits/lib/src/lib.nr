@@ -7,6 +7,7 @@ mod account_with_storage_int_test;
 mod receipt;
 mod receipt_int_test;
 mod log;
+mod log_test;
 mod transaction;
 mod transaction_test;
 mod transaction_int_test;

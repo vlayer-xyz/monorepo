@@ -8,12 +8,6 @@ global BLOOM_FILTER_LEN: u64 = 256;
 global MAX_RECEIPT_KEY_LEN = 3;
 global MAX_RECEIPT_TREE_DEPTH = 7;
 
-struct Log<MAX_LOG_DATA_LEN> {
-    address: Address,
-    topics: [Bytes32; 4],
-    data: [u8; MAX_LOG_DATA_LEN]
-}
-
 type TxType = u8;
 
 struct PhantomReceiptProofLen<MAX_RECEIPT_PROOF_LEN> {}

@@ -11,7 +11,7 @@ use crate::misc::bytes::byte_value;
 
 global BYZANTIUM_BLOCK_NUM = 4_370_000;
 global MAX_ENCODED_RECEIPT_LENGTH: u64 = 525;
-global MAX_RECEIPT_RLP_LENGTH: u64 = MAX_ENCODED_RECEIPT_LENGTH - 1;
+global MAX_RECEIPT_RLP_LENGTH: u64 = 524; // MAX_ENCODED_RECEIPT_LENGTH - 1;
 
 pub(crate) fn is_pre_byzantium(block_number: u64) -> bool {
     block_number < BYZANTIUM_BLOCK_NUM as u64

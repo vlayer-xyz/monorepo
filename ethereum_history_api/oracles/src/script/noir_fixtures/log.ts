@@ -21,7 +21,13 @@ global log_rlp = ${logRlp};
 
 global log = Log {
   address: ${indentBlock(joinArray(encodeHexString(log.address)), 1)},
-  topics: ${indentBlock(createVerticalBoundedVecFixture(topics.map((topic) => joinArray(encodeHexString(topic)))), 1)},
+  topics: ${indentBlock(
+    createVerticalBoundedVecFixture(
+      topics.map((topic) => joinArray(encodeHexString(topic))),
+      log.topics.length
+    ),
+    1
+  )},
   data: ${indentBlock(createFocusedBoundedVecFixture(log.data), 1)},
 };
 `;

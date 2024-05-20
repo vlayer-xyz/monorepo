@@ -346,3 +346,29 @@ mod to_array {
         assert(array == [1, 2, 3, 4]);
     }
 }
+
+mod to_bounded_vec {
+    use crate::misc::fragment::Fragment;
+
+    #[test]
+    fn simple() {
+        let fragment = Fragment::new(1, 2, [1, 2, 3]);
+        let bounded_vec: BoundedVec<Field, 2> = fragment.to_bounded_vec();
+        let expected = BoundedVec::from_array([2, 3]);
+        assert_eq(bounded_vec, expected);
+    }
+
+    #[test]
+    fn full() {
+        let fragment = Fragment::new(0, 4, [1, 2, 3, 4]);
+        let bounded_vec: BoundedVec<Field, 4> = fragment.to_bounded_vec();
+        let expected = BoundedVec::from_array([1, 2, 3, 4]);
+        assert_eq(bounded_vec, expected);
+    }
+
+    #[test(should_fail_with="Fragment length exceeds BoundedVec max length")]
+    fn bounded_vec_too_small() {
+        let fragment = Fragment::new(0, 4, [1, 2, 3, 4]);
+        let _: BoundedVec<Field, 3> = fragment.to_bounded_vec();
+    }
+}
