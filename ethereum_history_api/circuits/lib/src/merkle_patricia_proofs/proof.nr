@@ -31,6 +31,12 @@ struct ProofInput<MAX_KEY_LEN, MAX_VALUE_LEN, MAX_DEPTH, MAX_LEAF_LEN> {
     proof: Proof<MAX_DEPTH, MAX_LEAF_LEN>
 }
 
+impl<MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN> Eq for Proof<MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN> {
+    fn eq(self, other: Self) -> bool {
+        (self.nodes == other.nodes) & (self.leaf == other.leaf) & (self.depth == other.depth)
+    }
+}
+
 pub fn get_node_len<MAX_LEN>(node: [u8; MAX_LEN]) -> u64 {
     let node_rlp_header = decode_to_rlp_header(Fragment::from_array(node));
     let node_unpadded_len = node_rlp_header.offset + node_rlp_header.length;

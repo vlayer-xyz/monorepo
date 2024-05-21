@@ -118,7 +118,31 @@ mod nodes {
         let serialized = serialize_nodes(nodes);
 
         assert(sub_array_equals(nodes[0].serialize(), serialized, 0));
-        assert(sub_array_equals(nodes[nodes.len() - 1].serialize(), serialized, MAX_NODE_LEN * (nodes.len() - 1) - 1));
+        assert(
+            sub_array_equals(
+                nodes[nodes.len() - 1].serialize(),
+                serialized,
+                MAX_NODE_LEN * (nodes.len() - 1) - 1
+            )
+        );
         assert_eq(deserialize_nodes(serialized), nodes);
+    }
+}
+
+mod proof {
+    use crate::fixtures::mainnet::cancun::small_block::receipt_proof_new::proof_input;
+    use crate::serde::{serialize_nodes, RECEIPT_NODES_LEN, RECEIPT_MAX_LEAF_LEN_M};
+    use crate::merkle_patricia_proofs::proof::Proof;
+    use crate::misc::arrays::sub_array_equals;
+
+    #[test]
+    fn simple() {
+        let proof = proof_input.proof;
+        let serialized = proof.serialize();
+        
+        assert(sub_array_equals(serialize_nodes(proof.nodes), serialized, 0));
+        assert(sub_array_equals(proof.leaf.serialize(), serialized, RECEIPT_NODES_LEN));
+        assert_eq(serialized[RECEIPT_NODES_LEN + RECEIPT_MAX_LEAF_LEN_M], proof.depth as Field);
+        assert_eq(Proof::deserialize(serialized), proof);
     }
 }
