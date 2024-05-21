@@ -4,6 +4,7 @@ import { NargoProver } from './nargoProver.js';
 import { encodeProofAsFields, encodePublicInputs } from './utils.js';
 import { InputMap } from '@noir-lang/noirc_abi';
 import { Hex } from 'viem';
+import path from 'path';
 
 export class BaseProver {
   constructor(public circuit: MonorepoCircuit) {}
@@ -13,11 +14,12 @@ export class BaseProver {
 
     const { proof, verifierData } = await prover.prove(inputs);
 
+    const proofAsFieldsPath = path.join(this.circuit.root, 'proofs', `${this.circuit.name}.proof.json`);
     return await encodeProofAsFields(
       proof,
       encodePublicInputs(this.circuit.artefact.abi, verifierData),
       this.circuit.vkPath(),
-      prover.proofAsFieldsPath()
+      proofAsFieldsPath
     );
   }
 }
