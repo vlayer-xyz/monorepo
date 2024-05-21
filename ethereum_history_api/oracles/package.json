@@ -13,7 +13,8 @@
     "lint:fix": "eslint src --ext .ts --fix",
     "format": "prettier --write src",
     "format:ci": "prettier --check src",
-    "generate-vk": "tsx src/script/generateVK",
+    "generate-get-storage-vk": "tsx src/script/generateGetStorageVK",
+    "generate-get-storage-proof": "tsx src/script/generateGetStorageProof",
     "oracle-server": "tsx src/script/startOracleServer",
     "oracle-server:watch": "tsx watch src/script/startOracleServer",
     "prepare-fixtures": "yarn prepare-js-fixtures && yarn prepare-noir-fixtures",
@@ -24,6 +25,7 @@
   "license": "ISC",
   "dependencies": {
     "@ethereumjs/trie": "^6.2.0",
+    "@iarna/toml": "^2.2.5",
     "@noir-lang/backend_barretenberg": "0.29.0-a5b7df1.nightly",
     "@noir-lang/noir_js": "0.29.0-a5b7df1.nightly",
     "@noir-lang/noirc_abi": "0.29.0-a5b7df1.nightly",
@@ -33,10 +35,10 @@
     "json-bigint": "^1.0.0",
     "json-rpc-2.0": "^1.7.0",
     "lodash.isequal": "^4.5.0",
-    "toml": "^3.0.0",
     "viem": "^2.10.1"
   },
   "devDependencies": {
+    "@types/iarna__toml": "^2.0.5",
     "@types/json-bigint": "^1.0.4",
     "@types/lodash.isequal": "^4.5.8",
     "@types/node": "^20.12.10",

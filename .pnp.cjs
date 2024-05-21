@@ -793,6 +793,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@iarna/toml", [\
+      ["npm:2.2.5", {\
+        "packageLocation": "./.yarn/cache/@iarna-toml-npm-2.2.5-6da1399e8e-d095381ad4.zip/node_modules/@iarna/toml/",\
+        "packageDependencies": [\
+          ["@iarna/toml", "npm:2.2.5"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["@isaacs/cliui", [\
       ["npm:8.0.2", {\
         "packageLocation": "./.yarn/cache/@isaacs-cliui-npm-8.0.2-f4364666d5-b1bf42535d.zip/node_modules/@isaacs/cliui/",\
@@ -1315,6 +1324,16 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@types-estree-npm-1.0.5-5b7faed3b4-b3b0e33428.zip/node_modules/@types/estree/",\
         "packageDependencies": [\
           ["@types/estree", "npm:1.0.5"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/iarna__toml", [\
+      ["npm:2.0.5", {\
+        "packageLocation": "./.yarn/cache/@types-iarna__toml-npm-2.0.5-84ee18a720-36885ca6aa.zip/node_modules/@types/iarna__toml/",\
+        "packageDependencies": [\
+          ["@types/iarna__toml", "npm:2.0.5"],\
+          ["@types/node", "npm:20.12.9"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -5656,9 +5675,11 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["noir-ethereum-api-oracles", "workspace:ethereum_history_api/oracles"],\
           ["@ethereumjs/trie", "npm:6.2.0"],\
+          ["@iarna/toml", "npm:2.2.5"],\
           ["@noir-lang/backend_barretenberg", "npm:0.29.0-a5b7df1.nightly"],\
           ["@noir-lang/noir_js", "npm:0.29.0-a5b7df1.nightly"],\
           ["@noir-lang/noirc_abi", "npm:0.29.0-a5b7df1.nightly"],\
+          ["@types/iarna__toml", "npm:2.0.5"],\
           ["@types/json-bigint", "npm:1.0.4"],\
           ["@types/lodash.isequal", "npm:4.5.8"],\
           ["@types/node", "npm:20.12.10"],\
@@ -5672,7 +5693,6 @@ const RAW_RUNTIME_STATE =
           ["lodash.isequal", "npm:4.5.0"],\
           ["pino-pretty", "npm:11.0.0"],\
           ["prettier", "npm:3.2.5"],\
-          ["toml", "npm:3.0.0"],\
           ["tsx", "npm:4.9.3"],\
           ["typescript", "patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>::version=5.4.5&hash=5adc0c"],\
           ["viem", "virtual:4dfa03fb0b30fdc4fb9aae08e1bd9d81fcd73d077e764830b9dcdb4b6c8e438d8535f9df2f9e8e5e690a2d21f83e75fbacb6c79fd6ae26d524e90827f526a2da#npm:2.10.1"],\
