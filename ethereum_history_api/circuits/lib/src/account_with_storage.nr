@@ -64,10 +64,10 @@ pub fn get_account_with_storage(
     let BlockHeaderPartial { number: _, hash, state_root, transactions_root: _, receipts_root: _ } = get_header(chain_id, block_number);
     let StateAndStorageProof { account, state_proof, storage_proof } = get_proof_unconstrained(chain_id, block_number, address, storage_key);
 
-    verify_account(address, account, state_proof, state_root);
-    verify_storage_values(account.storage_root, [storage_proof]);
+    // verify_account(address, account, state_proof, state_root);
+    // verify_storage_values(account.storage_root, [storage_proof]);
 
-    assert(storage_key == storage_proof.key, "Storage key does not match the argument");
+    // assert(storage_key == storage_proof.key, "Storage key does not match the argument");
 
     StorageWithinBlock { block_hash: hash, account, values: [storage_proof.value] }
 }

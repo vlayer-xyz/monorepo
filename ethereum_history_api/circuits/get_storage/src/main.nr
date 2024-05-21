@@ -1,5 +1,6 @@
 use dep::ethereum_history_api::{account_with_storage::{get_account_with_storage, StorageWithinBlock}, misc::types::{Address, Bytes32}};
 
+#[recursive]
 fn main(
     chain_id: pub Field,
     block_number: pub u64,

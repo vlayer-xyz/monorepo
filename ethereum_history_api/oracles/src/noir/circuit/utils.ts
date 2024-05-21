@@ -26,8 +26,4 @@ export async function encodeProofAsFields(
   return proofAsFields;
 }
 
-export function encodePublicInputs(abi: Abi, verifierData: InputMap): Hex[] {
-  const publicInputsAbi = filterPublic(abi);
-  const publicInputsEncodedMap = abiEncode(publicInputsAbi, verifierData, verifierData.return);
-  return Array.from(publicInputsEncodedMap.values()) as Hex[];
-}
+

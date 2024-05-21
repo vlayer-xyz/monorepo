@@ -17,6 +17,7 @@ export type JSONRPCServerMethods = {
   get_proof(params: ForeignCallParams): ForeignCallResult;
   get_receipt(params: ForeignCallParams): ForeignCallResult;
   get_transaction(params: ForeignCallParams): ForeignCallResult;
+  get_account_with_storage_recursive(params: ForeignCallParams): ForeignCallResult;
 };
 
 export interface ServerParams {

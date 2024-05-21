@@ -8,6 +8,7 @@ import { getAccountOracle } from '../accountOracle.js';
 import { getProofOracle } from '../proofOracle.js';
 import { getReceiptOracle } from '../receiptOracle.js';
 import { getTransactionOracle } from '../transactionOracle.js';
+import { getAccountWithStorageRecursiveOracle } from '../getAccountWithStorageRecursiveOracle.js';
 
 const HTTP_STATUS_NO_CONTENT = 204;
 
@@ -17,6 +18,10 @@ jsonRPCServer.addMethod('get_account', getOracleHandler.bind(this, getAccountOra
 jsonRPCServer.addMethod('get_proof', getOracleHandler.bind(this, getProofOracle));
 jsonRPCServer.addMethod('get_receipt', getOracleHandler.bind(this, getReceiptOracle));
 jsonRPCServer.addMethod('get_transaction', getOracleHandler.bind(this, getTransactionOracle));
+jsonRPCServer.addMethod(
+  'get_account_with_storage_recursive',
+  getOracleHandler.bind(this, getAccountWithStorageRecursiveOracle)
+);
 
 export function buildOracleServer(
   opts: Fastify.FastifyHttpOptions<http.Server> = {},
