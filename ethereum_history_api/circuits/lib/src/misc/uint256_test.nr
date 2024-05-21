@@ -28,6 +28,17 @@ fn from_u64s() {
 }
 
 #[test]
+fn zero_and_one() {
+    let zero = U256::zero();
+    assert_eq(zero.high, U128::zero());
+    assert_eq(zero.low, U128::zero());
+
+    let one = U256::one();
+    assert_eq(one.high, U128::zero());
+    assert_eq(one.low, U128::one());
+}
+
+#[test]
 fn eq() {
     assert_eq(big_number, big_number);
 
