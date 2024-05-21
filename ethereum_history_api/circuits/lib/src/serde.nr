@@ -5,7 +5,7 @@ use crate::receipt::{
     MAX_PREFIXED_KEY_NIBBLE_LEN as RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN,
     MAX_LEAF_LEN_M as RECEIPT_MAX_LEAF_LEN_M, MAX_VALUE_LEN_M as RECEIPT_MAX_VALUE_LEN_M
 };
-use crate::misc::{fragment::Fragment, types::{BYTES32_LENGTH, Bytes32, ADDRESS_LENGTH, Address}};
+use crate::misc::{fragment::Fragment, types::{BYTES32_LENGTH, Bytes32, ADDRESS_LENGTH, Address}, uint256::U256};
 use crate::merkle_patricia_proofs::proof::{ProofInput, Proof, Node, MAX_NODE_LEN};
 use dep::std::unsafe::zeroed;
 
@@ -23,6 +23,18 @@ impl Serde<U128_SERIALIZED_LEN> for U128 {
 
     fn deserialize(data: [Field; U128_SERIALIZED_LEN]) -> Self {
         U128 { lo: data[0], hi: data[1] }
+    }
+}
+
+global U256_SERIALIZED_LEN = 4;
+
+impl Serde<U256_SERIALIZED_LEN> for U256 {
+    fn serialize(self) -> [Field; U256_SERIALIZED_LEN] {
+        [self.low.lo, self.low.hi, self.high.lo, self.high.hi]
+    }
+
+    fn deserialize(data: [Field; U256_SERIALIZED_LEN]) -> Self {
+        U256 { low: U128 { lo: data[0], hi: data[1] }, high: U128 { lo: data[2], hi: data[3] } }
     }
 }
 

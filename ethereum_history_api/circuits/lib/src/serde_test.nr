@@ -13,6 +13,29 @@ mod U128_ {
     }
 }
 
+mod U256 {
+    use crate::misc::uint256::U256;
+    use crate::serde::U256_SERIALIZED_LEN;
+
+    global u128_number = 0x10000000000000000000000000000000;
+    global u64_value = 0x1000000000000000;
+
+    #[test]
+    fn simple() {
+        let value = U256::new(
+            U128::from_integer(u128_number),
+            U128::from_integer(u128_number)
+        );
+        let serialized: [Field; U256_SERIALIZED_LEN] = value.serialize();
+
+        assert_eq(serialized[0], 0);
+        assert_eq(serialized[1], u64_value);
+        assert_eq(serialized[2], 0);
+        assert_eq(serialized[3], u64_value);
+        assert_eq(U256::deserialize(serialized), value);
+    }
+}
+
 mod u8_array {
     use crate::misc::types::{Bytes32, BYTES32_LENGTH, Address, ADDRESS_LENGTH};
 
