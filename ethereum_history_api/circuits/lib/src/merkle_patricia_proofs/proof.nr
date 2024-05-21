@@ -37,6 +37,12 @@ impl<MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN> Eq for Proof<MAX_DEPTH_NO_LEAF, MAX_LEAF_L
     }
 }
 
+impl<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN> Eq for ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN> {
+    fn eq(self, other: Self) -> bool {
+        (self.key == other.key) & (self.value == other.value) & (self.proof == other.proof)
+    }
+}
+
 pub fn get_node_len<MAX_LEN>(node: [u8; MAX_LEN]) -> u64 {
     let node_rlp_header = decode_to_rlp_header(Fragment::from_array(node));
     let node_unpadded_len = node_rlp_header.offset + node_rlp_header.length;
