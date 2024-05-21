@@ -2,11 +2,13 @@ use crate::misc::uint256::U256;
 
 global high = U128::from_integer(0x10000000000000000000000000000000);
 global low = U128::from_integer(0x00000000000000000000000000000000);
+global limit = U128::from_integer(0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF);
 global u64s = [0x1000000000000000, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000];
+
+global big_number = U256 { high, low };
 
 #[test]
 fn success() {
-    let big_number = U256 { high, low };
     assert_eq(big_number.high, high);
     assert_eq(big_number.low, low);
 }
@@ -27,7 +29,6 @@ fn from_u64s() {
 
 #[test]
 fn eq() {
-    let big_number = U256 { high, low };
     assert_eq(big_number, big_number);
 
     let big_number2 = U256::new(high, low);
@@ -36,7 +37,6 @@ fn eq() {
 
 #[test]
 fn not_eq() {
-    let big_number = U256 { high, low };
     let big_number2 = U256 { high, low: high };
     assert(big_number != big_number2);
 
@@ -44,3 +44,23 @@ fn not_eq() {
     assert(big_number != big_number3);
 }
 
+#[test]
+fn sum() {
+    let sum = big_number + big_number;
+
+    assert_eq(sum, U256 { high: U128::from_integer(0x20000000000000000000000000000000), low });
+}
+
+#[test]
+fn sum_with_carry() {
+    let big_number = U256 { high, low: limit };
+    let sum = big_number + U256::one();
+
+    assert_eq(sum, U256 { high: U128::from_integer(0x10000000000000000000000000000001), low });
+}
+
+#[test(should_fail_with="attempt to add with overflow")]
+fn sum_overflow() {
+    let limit_number = U256 { high: limit, low: limit };
+    let _ = limit_number + U256::one();
+}
