@@ -36,15 +36,15 @@ impl Add for U256 {
         let lo: Field = one.low.to_integer() + other.low.to_integer();
 
         let mut low = U128::from_integer(0);
-        let mut carry = U128::from_integer(0);
+        let mut carry = 0;
         if(lo.lt(pow128)){
             low = U128::from_integer(lo);
         } else {
             low = U128::from_integer(lo - pow128);
-            carry = U128::from_integer(1);
+            carry = 1;
         }
 
-        let hi: Field = one.high.to_integer() + other.high.to_integer() + carry.to_integer();
+        let hi: Field = one.high.to_integer() + other.high.to_integer() + carry;
         assert(hi.lt(pow128), "attempt to add with overflow");
 
         let high = U128::from_integer(hi);
