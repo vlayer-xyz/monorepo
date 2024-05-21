@@ -1,6 +1,6 @@
 use dep::std::ops::Add;
 
-global pow128 = 340282366920938463463374607431768211456; // 2^128
+global uint128_overflow_value = 340282366920938463463374607431768211456; // 2^128
 
 struct U256 {
     high: U128,
@@ -33,15 +33,15 @@ impl Add for U256 {
 
         let mut low = U128::from_integer(0);
         let mut carry = 0;
-        if(lo.lt(pow128)){
+        if(lo.lt(uint128_overflow_value)){
             low = U128::from_integer(lo);
         } else {
-            low = U128::from_integer(lo - pow128);
+            low = U128::from_integer(lo - uint128_overflow_value);
             carry = 1;
         }
 
         let hi: Field = one.high.to_integer() + other.high.to_integer() + carry;
-        assert(hi.lt(pow128), "attempt to add with overflow");
+        assert(hi.lt(uint128_overflow_value), "attempt to add with overflow");
 
         let high = U128::from_integer(hi);
 
