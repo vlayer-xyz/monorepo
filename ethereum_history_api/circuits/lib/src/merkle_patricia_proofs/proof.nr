@@ -33,7 +33,7 @@ struct ProofInput<MAX_KEY_LEN, MAX_VALUE_LEN, MAX_DEPTH, MAX_LEAF_LEN> {
 
 impl<MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN> Eq for Proof<MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN> {
     fn eq(self, other: Self) -> bool {
-        (self.nodes == other.nodes) & (self.leaf == other.leaf) & (self.depth == other.depth)
+        (self.depth == other.depth) & (self.nodes == other.nodes) & (self.leaf == other.leaf)
     }
 }
 

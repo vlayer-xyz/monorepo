@@ -1,5 +1,10 @@
 use crate::account::AccountWithinBlock;
 use crate::account_with_storage::{StorageWithinBlock, Account};
+use crate::receipt::{
+    MAX_DEPTH_NO_LEAF as RECEIPT_MAX_DEPTH_NO_LEAF,
+    MAX_PREFIXED_KEY_NIBBLE_LEN as RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN,
+    MAX_LEAF_LEN_M as RECEIPT_MAX_LEAF_LEN_M, MAX_VALUE_LEN_M as RECEIPT_MAX_VALUE_LEN_M
+};
 use crate::misc::{fragment::Fragment, types::{BYTES32_LENGTH, Bytes32, ADDRESS_LENGTH, Address}};
 use crate::merkle_patricia_proofs::proof::{ProofInput, Proof, Node, MAX_NODE_LEN};
 use dep::std::unsafe::zeroed;
@@ -103,8 +108,7 @@ impl Serde<STORAGE_BLOCK_LEN> for StorageWithinBlock<1> {
     }
 }
 
-global RECEIPT_MAX_DEPTH_NO_LEAF = 6;
-global RECEIPT_NODES_LEN = 3192; // MAX_NODE_LEN * MAX_DEPTH_NO_LEAF;
+global RECEIPT_NODES_LEN = MAX_NODE_LEN * RECEIPT_MAX_DEPTH_NO_LEAF;
 
 pub fn serialize_nodes(nodes: [Node; RECEIPT_MAX_DEPTH_NO_LEAF]) -> [Field; RECEIPT_NODES_LEN] {
     let mut data: BoundedVec<Field, RECEIPT_NODES_LEN> = BoundedVec::new();
@@ -124,7 +128,6 @@ pub fn deserialize_nodes(data: [Field; RECEIPT_NODES_LEN]) -> [Node; RECEIPT_MAX
     result.data
 }
 
-global RECEIPT_MAX_LEAF_LEN_M = 1011;
 global RECEIPT_PROOF_LEN_M = RECEIPT_MAX_DEPTH_NO_LEAF * MAX_NODE_LEN + RECEIPT_MAX_LEAF_LEN_M + 1;
 
 impl Serde<RECEIPT_PROOF_LEN_M> for Proof<RECEIPT_MAX_DEPTH_NO_LEAF, RECEIPT_MAX_LEAF_LEN_M> {
@@ -149,8 +152,6 @@ impl Serde<RECEIPT_PROOF_LEN_M> for Proof<RECEIPT_MAX_DEPTH_NO_LEAF, RECEIPT_MAX
     }
 }
 
-global RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN = 8;
-global RECEIPT_MAX_VALUE_LEN_M = 1000;
 global RECEIPT_PROOF_INPUT_LEN_M = RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN + RECEIPT_MAX_VALUE_LEN_M + RECEIPT_PROOF_LEN_M;
 
 impl Serde<RECEIPT_PROOF_INPUT_LEN_M> for ProofInput<RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN, RECEIPT_MAX_VALUE_LEN_M, RECEIPT_MAX_DEPTH_NO_LEAF, RECEIPT_MAX_LEAF_LEN_M> {
