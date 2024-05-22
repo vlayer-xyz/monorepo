@@ -23,7 +23,7 @@ export function getProofConfig(maxKeyLen: number, maxValueLen: number, maxProofD
     maxValueLen,
     maxPrefixedKeyNibbleLen,
     maxLeafLen: getMaxRlpEncodedSize(maxLeafContentLen),
-    maxProofDepth: maxProofDepth,
+    maxProofDepth,
     maxProofLen
   };
 }
