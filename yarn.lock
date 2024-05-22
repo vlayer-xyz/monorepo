@@ -1464,6 +1464,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vlayer/monorepo@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@vlayer/monorepo@workspace:."
+  dependencies:
+    "@changesets/cli": "npm:^2.27.2"
+    "@typescript-eslint/eslint-plugin": "npm:^7.8.0"
+    "@typescript-eslint/parser": "npm:^7.8.0"
+    eslint: "npm:^8.57.0"
+    eslint-config-prettier: "npm:^9.1.0"
+    eslint-config-standard-with-typescript: "npm:^43.0.1"
+    eslint-plugin-import: "npm:^2.29.1"
+    eslint-plugin-n: "npm:^17.5.0"
+    eslint-plugin-prettier: "npm:^5.1.3"
+    eslint-plugin-promise: "npm:^6.1.1"
+    prettier: "npm:^3.2.5"
+    typescript: "npm:^5.4.5"
+  languageName: unknown
+  linkType: soft
+
 "abbrev@npm:^2.0.0":
   version: 2.0.0
   resolution: "abbrev@npm:2.0.0"
@@ -4727,9 +4746,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"noir-ethereum-api-e2e-tests@workspace:ethereum_history_api/tests":
+"noir-ethereum-api-e2e-tests@workspace:ethereum/tests":
   version: 0.0.0-use.local
-  resolution: "noir-ethereum-api-e2e-tests@workspace:ethereum_history_api/tests"
+  resolution: "noir-ethereum-api-e2e-tests@workspace:ethereum/tests"
   dependencies:
     "@noir-lang/backend_barretenberg": "npm:0.29.0-a5b7df1.nightly"
     "@noir-lang/noirc_abi": "npm:^0.29.0-a5b7df1.nightly"
@@ -4745,9 +4764,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"noir-ethereum-api-oracles@npm:^0.1.0, noir-ethereum-api-oracles@workspace:ethereum_history_api/oracles":
+"noir-ethereum-api-oracles@npm:^0.1.0, noir-ethereum-api-oracles@workspace:ethereum/oracles":
   version: 0.0.0-use.local
-  resolution: "noir-ethereum-api-oracles@workspace:ethereum_history_api/oracles"
+  resolution: "noir-ethereum-api-oracles@workspace:ethereum/oracles"
   dependencies:
     "@ethereumjs/trie": "npm:^6.2.0"
     "@iarna/toml": "npm:^2.2.5"
@@ -4772,25 +4791,6 @@ __metadata:
     typescript: "npm:^5.4.5"
     viem: "npm:^2.10.1"
     vitest: "npm:^1.6.0"
-  languageName: unknown
-  linkType: soft
-
-"noir-ethereum-history-api@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "noir-ethereum-history-api@workspace:."
-  dependencies:
-    "@changesets/cli": "npm:^2.27.2"
-    "@typescript-eslint/eslint-plugin": "npm:^7.8.0"
-    "@typescript-eslint/parser": "npm:^7.8.0"
-    eslint: "npm:^8.57.0"
-    eslint-config-prettier: "npm:^9.1.0"
-    eslint-config-standard-with-typescript: "npm:^43.0.1"
-    eslint-plugin-import: "npm:^2.29.1"
-    eslint-plugin-n: "npm:^17.5.0"
-    eslint-plugin-prettier: "npm:^5.1.3"
-    eslint-plugin-promise: "npm:^6.1.1"
-    prettier: "npm:^3.2.5"
-    typescript: "npm:^5.4.5"
   languageName: unknown
   linkType: soft
 

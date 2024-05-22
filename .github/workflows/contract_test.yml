@@ -1,4 +1,4 @@
-name: ethereum_history_api contract tests
+name: ethereum contract tests
 
 on: [push]
 
@@ -37,13 +37,13 @@ jobs:
 
       - name: Run Forge build
         run: |
-          cd ethereum_history_api/contracts
+          cd ethereum/contracts
           forge --version
           forge build --sizes
         id: build
 
       - name: Run Forge tests
         run: |
-          cd ethereum_history_api/contracts
+          cd ethereum/contracts
           forge test -vvv
         id: test

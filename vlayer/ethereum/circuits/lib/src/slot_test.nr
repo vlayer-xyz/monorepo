@@ -1,7 +1,7 @@
 mod mapping {
     use crate::slot::mapping;
-    use dep::ethereum_history_api::{misc::bytes32::address_to_bytes32};
-    use dep::ethereum_history_api::misc::{field::field_to_bytes32};
+    use dep::ethereum::{misc::bytes32::address_to_bytes32};
+    use dep::ethereum::misc::{field::field_to_bytes32};
 
     #[test]
     fn adress_mapping() {
@@ -53,7 +53,7 @@ mod mapping {
 
 mod dynamic_array {
     use crate::slot::dynamic_array;
-    use dep::ethereum_history_api::misc::field_test::MAX_FIELD_VALUE;
+    use dep::ethereum::misc::field_test::MAX_FIELD_VALUE;
 
     #[test]
     fn index_zero() {
@@ -88,7 +88,7 @@ mod dynamic_array {
 
 mod dynamic_array_with_precalculated_slot {
     use crate::slot::dynamic_array_with_precalculated_slot;
-    use dep::ethereum_history_api::misc::field_test::MAX_FIELD_VALUE;
+    use dep::ethereum::misc::field_test::MAX_FIELD_VALUE;
 
     #[test]
     fn index_zero() {
