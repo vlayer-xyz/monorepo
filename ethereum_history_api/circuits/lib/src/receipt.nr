@@ -14,12 +14,10 @@ global MAX_PREFIXED_KEY_NIBBLE_LEN = 8; // (MAX_KEY_LEN + 1) * 2
 global MAX_VALUE_LEN_M = 1000;
 global MAX_LEAF_LEN_M = 1011;
 
+global LEGACY_MAX_RECEIPT_ENCODED_LEN = 525;
 global LEGACY_MAX_RECEIPT_RLP_LENGTH = 524;
 
 type TxType = u8;
-
-struct PhantomReceiptEncodedLen<MAX_ENCODED_LEN> {}
-struct PhantomReceiptLeafLen<MAX_LEAF_LEN> {}
 
 struct TxReceiptPartial {
     status: Option<u1>,
