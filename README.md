@@ -9,7 +9,7 @@ This monorepo contains two sub-projects:
 
 **nargo** and **foundry** must be installed in order to compile and test code in this repository.
 
-- [nargo installation](https://noir-lang.org/docs/getting_started/installation/) `>= 0.29.0`
+- [nargo installation](https://noir-lang.org/docs/getting_started/installation/) `>= 0.30.0`
 - [foundry installation](https://book.getfoundry.sh/getting-started/installation)
 - [yarn](https://yarnpkg.com) `>= 4.1.0`
 

@@ -812,57 +812,41 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@noir-lang/backend_barretenberg@npm:0.29.0-a5b7df1.nightly":
-  version: 0.29.0-a5b7df1.nightly
-  resolution: "@noir-lang/backend_barretenberg@npm:0.29.0-a5b7df1.nightly"
+"@noir-lang/backend_barretenberg@npm:0.30.0":
+  version: 0.30.0
+  resolution: "@noir-lang/backend_barretenberg@npm:0.30.0"
   dependencies:
     "@aztec/bb.js": "npm:0.38.0"
-    "@noir-lang/types": "npm:0.29.0-a5b7df1.nightly"
+    "@noir-lang/types": "npm:0.30.0"
     fflate: "npm:^0.8.0"
-  checksum: 10c0/8ecc9ef73e654543362b67525caf95f29c6899574ce28188ead8b1ecad76781cd204f118b889a682a07e70c560b3993f440fd710b809579185f4f6b68204189d
+  checksum: 10c0/fc230ea413c4235c97a83d7e48137728af2501bad26bd1653244302726c4a230a1527b5fe260b145e43048be3a4b8cd61c8f0c965f951c68f9b1d3d935a28552
   languageName: node
   linkType: hard
 
-"@noir-lang/noir_js@npm:0.29.0-a5b7df1.nightly":
-  version: 0.29.0-a5b7df1.nightly
-  resolution: "@noir-lang/noir_js@npm:0.29.0-a5b7df1.nightly"
+"@noir-lang/noir_js@npm:0.30.0":
+  version: 0.30.0
+  resolution: "@noir-lang/noir_js@npm:0.30.0"
   dependencies:
     "@noir-lang/acvm_js": "npm:0.45.0-a5b7df1.nightly"
-    "@noir-lang/noirc_abi": "npm:0.29.0-a5b7df1.nightly"
-    "@noir-lang/types": "npm:0.29.0-a5b7df1.nightly"
-  checksum: 10c0/5ca32afbc8e096deaab01b18dc7c24b43af7908fc6b8dd5b66d8ee21a06628dac87072bbdf386b1e4e92478675a8636a5327d51716cd819e1091a94743a3c69e
+    "@noir-lang/noirc_abi": "npm:0.30.0"
+    "@noir-lang/types": "npm:0.30.0"
+  checksum: 10c0/87677839044585392572fb754b8c22a76512e0ddecd3dafc0842ab6d2d73913eddbc751d95bf3cfb609c0da5d4d5f1e3a0ea8c8e62c68e4998718078dfc41fb6
   languageName: node
   linkType: hard
 
-"@noir-lang/noirc_abi@npm:0.29.0-a5b7df1.nightly":
-  version: 0.29.0-a5b7df1.nightly
-  resolution: "@noir-lang/noirc_abi@npm:0.29.0-a5b7df1.nightly"
+"@noir-lang/noirc_abi@npm:0.30.0":
+  version: 0.30.0
+  resolution: "@noir-lang/noirc_abi@npm:0.30.0"
   dependencies:
-    "@noir-lang/types": "npm:0.29.0-a5b7df1.nightly"
-  checksum: 10c0/ca8e9d78878dc94086b39bd083480d735877bd99fdff9932a70903eaa2b1b034f55ab25b70c2522aef53430b9996033a96af7e7b608de6098e93953617d90b87
+    "@noir-lang/types": "npm:0.30.0"
+  checksum: 10c0/959c49fe39add76e2dd464d6350b2a89832fd98db9a789f887ec73fca0e1cebce68a64c02cf3694ea3a91b507103fa3db2dd5e20047b70b5ebe3d6033afc0091
   languageName: node
   linkType: hard
 
-"@noir-lang/noirc_abi@npm:^0.29.0-a5b7df1.nightly":
-  version: 0.29.0
-  resolution: "@noir-lang/noirc_abi@npm:0.29.0"
-  dependencies:
-    "@noir-lang/types": "npm:0.29.0"
-  checksum: 10c0/64e29a49790b6965f555ea7c1e4d401cd2b839223cf2d12b783f6d12db739abedd1633b3bb7bab5fc13202c5ddf4fd1020e69c1c41059a373c9af15efe2e8239
-  languageName: node
-  linkType: hard
-
-"@noir-lang/types@npm:0.29.0":
-  version: 0.29.0
-  resolution: "@noir-lang/types@npm:0.29.0"
-  checksum: 10c0/b689099072b1510d72cdd017acc409f476c5a5ae39c4456c1e9d5fa2100dd24fe2e212c9c9c533959d7f228d104c3d6f22b3f95a0f40258f0d2cbed2ec87357a
-  languageName: node
-  linkType: hard
-
-"@noir-lang/types@npm:0.29.0-a5b7df1.nightly":
-  version: 0.29.0-a5b7df1.nightly
-  resolution: "@noir-lang/types@npm:0.29.0-a5b7df1.nightly"
-  checksum: 10c0/9834bf2b0dfe5e9f67382b67d70941c3a380bd64e2207265f9a14f654e26bf68b7785002ee8d962ec5630a46b45abe2195ea494fe8cab499bb2fe5d4c32904ce
+"@noir-lang/types@npm:0.30.0":
+  version: 0.30.0
+  resolution: "@noir-lang/types@npm:0.30.0"
+  checksum: 10c0/585fd260f4a3054056d33ee37c75eca338a6fdff350df5187bde8da2a35bb53444737a438be4bd990329f80384cc57683ac19f2b36c800c9bfec15a951e14a4c
   languageName: node
   linkType: hard
 
@@ -4750,8 +4734,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "noir-ethereum-api-e2e-tests@workspace:ethereum/tests"
   dependencies:
-    "@noir-lang/backend_barretenberg": "npm:0.29.0-a5b7df1.nightly"
-    "@noir-lang/noirc_abi": "npm:^0.29.0-a5b7df1.nightly"
+    "@noir-lang/backend_barretenberg": "npm:0.30.0"
+    "@noir-lang/noirc_abi": "npm:0.30.0"
     "@types/node": "npm:^20.12.10"
     eslint: "npm:^8.57.0"
     noir-ethereum-api-oracles: "npm:^0.1.0"
@@ -4770,9 +4754,9 @@ __metadata:
   dependencies:
     "@ethereumjs/trie": "npm:^6.2.0"
     "@iarna/toml": "npm:^2.2.5"
-    "@noir-lang/backend_barretenberg": "npm:0.29.0-a5b7df1.nightly"
-    "@noir-lang/noir_js": "npm:0.29.0-a5b7df1.nightly"
-    "@noir-lang/noirc_abi": "npm:0.29.0-a5b7df1.nightly"
+    "@noir-lang/backend_barretenberg": "npm:0.30.0"
+    "@noir-lang/noir_js": "npm:0.30.0"
+    "@noir-lang/noirc_abi": "npm:0.30.0"
     "@types/iarna__toml": "npm:^2.0.5"
     "@types/json-bigint": "npm:^1.0.4"
     "@types/lodash.isequal": "npm:^4.5.8"
