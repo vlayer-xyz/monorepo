@@ -3,7 +3,6 @@ use crate::header::get_header;
 use crate::verifiers::receipt::verify_receipt;
 use crate::merkle_patricia_proofs::proof::{Proof, ProofInput};
 use dep::std::unsafe::zeroed;
-use dep::proof::receipt_proof::ReceiptProof;
 
 global BLOOM_FILTER_LEN: u64 = 256;
 
@@ -77,14 +76,14 @@ struct TxReceiptWithinBlock {
 }
 
 pub fn get_receipt(chain_id: Field, block_number: u64, tx_idx: Field) -> TxReceiptWithinBlock {
-    let (tx_type, receipt, proof) = get_receipt_unconstrained_M(chain_id, block_number, tx_idx);
+    let (tx_type, receipt, proof_input) = get_receipt_unconstrained_M(chain_id, block_number, tx_idx);
     let header = get_header(chain_id, block_number);
     verify_receipt(
         block_number,
         tx_idx,
         tx_type,
         receipt,
-        proof,
+        proof_input,
         header.receipts_root
     );
     TxReceiptWithinBlock { receipt, block_hash: header.hash }

@@ -1,13 +1,12 @@
 mod rlp;
 mod rlp_test;
 
-use dep::proof::{const::HASH_LENGTH, receipt_proof::ReceiptProof, node::key_as_nibbles};
 use crate::receipt::{TxReceiptPartial, TxType, MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_DEPTH_NO_LEAF};
 use crate::verifiers::{
     receipt::rlp::assert_receipt_rlp_equals,
     tx_helpers::{split::split_into_tx_type_and_rlp, idx::assert_tx_idx_equals}
 };
-use crate::misc::{bytes::right_pad, fragment::Fragment};
+use crate::misc::{types::HASH_LEN, bytes::right_pad, fragment::Fragment};
 use crate::merkle_patricia_proofs::proof::{ProofInput, verify_merkle_proof};
 
 global BYZANTIUM_BLOCK_NUM = 4_370_000;
@@ -36,7 +35,7 @@ pub fn verify_receipt<MAX_ENCODED_LEN, MAX_LEAF_LEN>(
     tx_type: TxType,
     receipt: TxReceiptPartial,
     receipt_proof_input: ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_ENCODED_LEN, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN>,
-    receipt_root: [u8; HASH_LENGTH]
+    receipt_root: [u8; HASH_LEN]
 ) {
     let key = Fragment::from_vec(right_pad(receipt_proof_input.key));
     assert_tx_idx_equals(key, tx_idx);

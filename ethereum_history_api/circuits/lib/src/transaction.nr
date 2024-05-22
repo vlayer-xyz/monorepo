@@ -1,8 +1,8 @@
 use crate::misc::{types::{Bytes32, Address}, option::make_option};
 use dep::std::unsafe::zeroed;
-use dep::proof::transaction_proof::TransactionProof;
 use crate::header::get_header;
 use crate::verifiers::transaction::verify_tx;
+use crate::merkle_patricia_proofs::proof::{Proof, ProofInput};
 
 global MAX_KEY_LEN = 3;
 global MAX_DEPTH_NO_LEAF = 6;
@@ -98,38 +98,40 @@ impl<MAX_DATA_LEN> From<ForeignCallTransaction> for TxPartial<MAX_DATA_LEN> {
 struct PhantomTransactionProofLen<MAX_PROOF_LEN> {}
 struct PhantomTransactionRlpLen<MAX_RLP_LEN> {}
 
+type ProofInputSerialized<LEN> = [Field; LEN];
+
 struct TransactionWithinBlock<MAX_DATA_LEN> {
     transaction: TxPartial<MAX_DATA_LEN>,
     block_hash: Bytes32
 }
 
-pub fn get_transaction<MAX_DATA_LEN, MAX_PROOF_LEN, MAX_RLP_LEN>(
+pub fn get_transaction<MAX_DATA_LEN>(
     chain_id: Field,
     block_number: u64,
     tx_idx: Field,
-    _max_transaction_proof_len: PhantomTransactionProofLen<MAX_PROOF_LEN>,
-    _max_transaction_rlp_len: PhantomTransactionRlpLen<MAX_RLP_LEN>
 ) -> TransactionWithinBlock<MAX_DATA_LEN> {
-    let (tx_type, transaction, proof):  (TxType, TxPartial<MAX_DATA_LEN>, TransactionProof<MAX_PROOF_LEN, MAX_RLP_LEN>) = get_transaction_unconstrained(chain_id, block_number, tx_idx);
+    let (tx_type, transaction, proof_input) = get_transaction_unconstrained(chain_id, block_number, tx_idx);
     let header = get_header(chain_id, block_number);
-    verify_tx(tx_idx, tx_type, transaction, proof, header.transactions_root);
+    verify_tx(tx_idx, tx_type, transaction, proof_input, header.transactions_root);
 
     TransactionWithinBlock { transaction, block_hash: header.hash }
 }
 
 #[oracle(get_transaction)]
-unconstrained fn get_transaction_oracle<MAX_DATA_LEN, MAX_PROOF_LEN, MAX_RLP_LEN>(
+unconstrained fn get_transaction_oracle<MAX_DATA_LEN, PROOF_INPUT_LEN>(
     _chain_id: Field,
     _block_number: u64,
     _tx_idx: Field
-) -> (TxType, ForeignCallTransaction<MAX_DATA_LEN>, TransactionProof<MAX_PROOF_LEN, MAX_RLP_LEN>) {}
+) -> (TxType, ForeignCallTransaction<MAX_DATA_LEN>, ProofInputSerialized<PROOF_INPUT_LEN>) {}
 
-unconstrained fn get_transaction_unconstrained<MAX_DATA_LEN, MAX_PROOF_LEN, MAX_RLP_LEN>(
+unconstrained fn get_transaction_unconstrained<MAX_DATA_LEN>(
     chain_id: Field,
     block_number: u64,
     tx_idx: Field
-) -> (TxType, TxPartial<MAX_DATA_LEN>, TransactionProof<MAX_PROOF_LEN, MAX_RLP_LEN>) {
-    let (tx_type, transaction, proof): (TxType, ForeignCallTransaction<MAX_DATA_LEN>, TransactionProof<MAX_PROOF_LEN, MAX_RLP_LEN>) = get_transaction_oracle(chain_id, block_number, tx_idx);
+) -> (TxType, TxPartial<MAX_DATA_LEN>, ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN_M, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN_M>) {
+    let (tx_type, transaction, proof_input) = get_transaction_oracle(chain_id, block_number, tx_idx);
     let transaction: TxPartial<MAX_DATA_LEN> = transaction.into();
-    (tx_type, transaction, proof)
+    let proof_input = ProofInput::deserialize(proof_input);
+
+    (tx_type, transaction, proof_input)
 }
