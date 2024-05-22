@@ -24,7 +24,11 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
         Fragment { offset: 0, length, data }
     }
 
-    pub fn from_array<DATA_LEN>(data: [T; DATA_LEN]) -> Fragment<MAX_DATA_LEN, T> {
+    pub fn from_array(data: [T; MAX_DATA_LEN]) -> Fragment<MAX_DATA_LEN, T> {
+        Fragment { offset: 0, length: data.len() as u64, data }
+    }
+
+    pub fn from_array_resize<DATA_LEN>(data: [T; DATA_LEN]) -> Fragment<MAX_DATA_LEN, T> {
         Fragment { offset: 0, length: data.len() as u64, data: resize(data) }
     }
 
@@ -32,8 +36,19 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
         self.focus().data
     }
 
-    pub fn new_focused(data: [T; MAX_DATA_LEN]) -> Fragment<MAX_DATA_LEN, T> {
-        Fragment { offset: 0, length: data.len() as u64, data }
+    pub fn to_bounded_vec<N>(self) -> BoundedVec<T, N> {
+        assert(self.length <= N, "Fragment length exceeds BoundedVec max length");
+        let mut bounded_vec: BoundedVec<T, N> = BoundedVec::new();
+        for i in 0..N {
+            if (i < self.length) {
+                bounded_vec.push(self.at(i));
+            }
+        }
+        bounded_vec
+    }
+
+    pub fn from_vec(vec: BoundedVec<T, MAX_DATA_LEN>) -> Fragment<MAX_DATA_LEN, T> {
+        Fragment::new_with_length(vec.len, vec.storage)
     }
 
     pub fn focus<NEW_MAX_LEN>(self) -> Fragment<NEW_MAX_LEN, T> {
@@ -56,10 +71,11 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
     }
 
     pub fn at(self, index: u64) -> T {
-        let length = self.length;
-        assert(
-            index < self.length, f"Index out of bounds, tried to access index {index} but the length is {length}"
-        );
+        // Previously, the assert message was f"Index out of bounds, tried to access index {index} but the length is {length}".
+        // However, this contributed to a compiler panic with message: Resolving an assert message should happen only once as the VM should have failed.
+        // An issue was posted about this to Noir: https://github.com/noir-lang/noir/issues/5036
+        // As of nargo 0.29.0 replacing the f-string with normal string prevents compiler panic e.g. on header_int_test. 
+        assert(index < self.length, "Index out of bounds");
 
         self.data[self.offset + index]
     }
@@ -86,6 +102,12 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
         res.map(|_| self.pop_front())
     }
 
+    pub fn pop_back(&mut self) -> T {
+        assert(!self.is_empty(), "Cannot pop from an empty fragment");
+        self.length -= 1;
+        self.data[self.offset + self.length]
+    }
+
     pub fn push_back(&mut self, value: T) {
         assert(self.offset + self.length + 1 <= MAX_DATA_LEN, "Cannot push: fragment is full");
         self.data[self.offset + self.length] = value;
@@ -96,6 +118,19 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
         for i in 0..LEN {
             self.push_back(other[i]);
         }
+    }
+
+    pub fn eq<OTHER_MAX_DATA_LEN>(self, other: Fragment<OTHER_MAX_DATA_LEN, T>) -> bool where T: Eq {
+        let mut res = true;
+        if (self.length != other.length) {
+            res = false;
+        }
+        for i in 0..MAX_DATA_LEN {
+            if i < self.length & i < other.length {
+                res &= self.at(i) == other.at(i);
+            }
+        }
+        res
     }
 }
 
@@ -113,11 +148,5 @@ impl<MAX_DATA_LEN, T> Eq for Fragment<MAX_DATA_LEN, T> where T: Eq {
         }
 
         res
-    }
-}
-
-impl<MAX_DATA_LEN, T> From<BoundedVec<T, MAX_DATA_LEN>> for Fragment<MAX_DATA_LEN, T> {
-    fn from(vec: BoundedVec<T, MAX_DATA_LEN>) -> Fragment<MAX_DATA_LEN, T> {
-        Fragment::new_with_length(vec.len, vec.storage)
     }
 }

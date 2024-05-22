@@ -1,4 +1,5 @@
 use crate::{verifiers::transaction::MAX_TX_RLP_LENGTH, transaction::{TxType, TxPartial}};
+use crate::misc::fragment::Fragment;
 use crate::rlp::decode::decode_list;
 use crate::rlp::types::RlpList;
 
@@ -19,8 +20,8 @@ global TX_TYPE_TO_FIELD_LAYOUT = [
 
 global MAX_TX_FIELDS_COUNT = 14;
 
-pub(crate) fn assert_tx_rlp_equals<MAX_DATA_LEN>(
-    tx_rlp: [u8; MAX_TX_RLP_LENGTH],
+pub(crate) fn assert_tx_rlp_equals<MAX_DATA_LEN, MAX_ENCODED_LEN>(
+    tx_rlp: Fragment<MAX_ENCODED_LEN, u8>,
     tx_type: TxType,
     tx: TxPartial<MAX_DATA_LEN>
 ) {

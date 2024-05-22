@@ -13,16 +13,17 @@ export enum OFFSETS {
   GAS_LIMIT,
   TO,
   TO_IS_SOME,
-  VALUE,
+  VALUE_HI,
+  VALUE_LO,
   DATA,
   DATA_LEN,
   V,
   R,
   S,
   PROOF_KEY,
-  PROOF_VALUE,
   PROOF,
-  PROOF_DEPTH
+  PROOF_DEPTH,
+  PROOF_VALUE
 }
 
 export const getTransactionOracle = async (

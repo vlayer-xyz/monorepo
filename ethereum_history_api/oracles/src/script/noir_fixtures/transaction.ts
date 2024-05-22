@@ -7,7 +7,7 @@ import { TxRlpEncoder, encodeTx } from '../../ethereum/transaction.js';
 import { ZERO_PAD_VALUE } from '../../noir/oracles/common/const.js';
 import { createBoundedVecFixture } from './boundedVec.js';
 import { LEGACY_MAX_TX_RLP_LEN, LEGACY_MAX_TX_ENCODED_LEN } from '../../noir/oracles/common/proofConfig/tx.js';
-import { MAX_DATA_LEN } from '../../noir/oracles/common/txConfig.js';
+import { MAX_DATA_LEN_M } from '../../noir/oracles/common/txConfig.js';
 
 export function createTransactionFixture(tx: GetTransactionReturnType): string {
   const rlpFields = TxRlpEncoder.txToFields(tx);
@@ -33,12 +33,12 @@ global transaction = TxPartial {
   gas_limit: ${tx.gas},
   to: ${indentBlock(to, 1)},
   value: U128::from_integer(${tx.value}),
-  data: ${indentBlock(createBoundedVecFixture(tx.input, MAX_DATA_LEN), 1)},
+  data: ${indentBlock(createBoundedVecFixture(tx.input, MAX_DATA_LEN_M), 1)},
   v: ${v},
   r: ${indentBlock(joinArray(r), 1)},
   s: ${indentBlock(joinArray(s), 1)}
 };
 
-global foreign_call_transaction: ForeignCallTransaction<${MAX_DATA_LEN}> = transaction.into();
+global foreign_call_transaction: ForeignCallTransaction<${MAX_DATA_LEN_M}> = transaction.into();
 `;
 }

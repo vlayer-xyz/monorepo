@@ -7,23 +7,23 @@ export interface ProofConfig {
   maxValueLen: number;
   maxPrefixedKeyNibbleLen: number;
   maxLeafLen: number;
-  maxProofLevels: number;
+  maxProofDepth: number;
   maxProofLen: number;
 }
 
-export function getProofConfig(maxKeyLen: number, maxValueLen: number, maxProofLevels: number): ProofConfig {
+export function getProofConfig(maxKeyLen: number, maxValueLen: number, maxProofDepth: number): ProofConfig {
   const maxPrefixedKeyLen = 1 + maxKeyLen;
   const maxPrefixedKeyNibbleLen = maxPrefixedKeyLen * BYTE_HEX_LEN;
   const maxLeafContentLen = getMaxRlpEncodedSize(maxPrefixedKeyLen) + getMaxRlpEncodedSize(maxValueLen);
 
-  const maxProofLen = MAX_TRIE_NODE_LEN * maxProofLevels;
+  const maxProofLen = MAX_TRIE_NODE_LEN * maxProofDepth;
 
   return {
     maxKeyLen,
     maxValueLen,
     maxPrefixedKeyNibbleLen,
     maxLeafLen: getMaxRlpEncodedSize(maxLeafContentLen),
-    maxProofLevels,
+    maxProofDepth: maxProofDepth,
     maxProofLen
   };
 }

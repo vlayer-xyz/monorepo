@@ -42,8 +42,8 @@ mod new {
     }
 
     #[test]
-    fn success_new_focused() {
-        let fragment = Fragment::new_focused([1, 2, 3, 4]);
+    fn success_from_array() {
+        let fragment = Fragment::from_array([1, 2, 3, 4]);
         assert_eq(fragment.data, [1, 2, 3, 4]);
         assert_eq(fragment.offset, 0);
         assert_eq(fragment.length, 4);
@@ -85,7 +85,7 @@ mod subfragment {
 
     #[test]
     fn simple() {
-        let fragment = Fragment::new_focused([1, 2, 3, 4]);
+        let fragment = Fragment::from_array([1, 2, 3, 4]);
         let subfragment = fragment.subfragment(1, 2);
         assert(subfragment.at(0) == 2);
         assert(subfragment.at(1) == 3);
@@ -138,7 +138,7 @@ mod at {
         assert(fragment.at(1) == 3);
     }
 
-    #[test(should_fail_with="Index out of bounds, tried to access index 2 but the length is 2")]
+    #[test(should_fail_with="Index out of bounds")]
     fn fail() {
         let fragment = Fragment::new(1, 2, [1, 2, 3]);
         let _ = fragment.at(2);
@@ -210,6 +210,27 @@ mod pop_front_array {
     }
 }
 
+mod pop_back {
+
+    use crate::misc::fragment::Fragment;
+
+    #[test]
+    fn success() {
+        let mut fragment = Fragment::new(1, 2, [1, 2, 3]);
+        assert(fragment.pop_back() == 3);
+        assert(fragment.pop_back() == 2);
+        assert(fragment.length == 0);
+    }
+
+    #[test(should_fail_with="Cannot pop from an empty fragment")]
+    fn fail() {
+        let mut fragment = Fragment::new(1, 2, [1, 2, 3]);
+        let _ = fragment.pop_back();
+        let _ = fragment.pop_back();
+        let _ = fragment.pop_back();
+    }
+}
+
 mod push_back {
 
     use crate::misc::fragment::Fragment;
@@ -260,6 +281,53 @@ mod eq {
     use crate::misc::fragment::Fragment;
 
     #[test]
+    fn empty() {
+        let empty: Fragment<0, Field> = Fragment::empty();
+        assert(empty.eq(empty));
+    }
+
+    #[test]
+    fn same_size() {
+        let f1 = Fragment::from_array([1, 2, 3]);
+        let f2 = Fragment::from_array([1, 2, 4]);
+        assert(f1.eq(f1));
+        assert(!f1.eq(f2));
+        assert(!f2.eq(f1));
+    }
+
+    #[test]
+    fn different_length() {
+        let f1 = Fragment::new_with_length(2, [1, 2, 3]);
+        let f2 = Fragment::new_with_length(3, [1, 2, 3]);
+        assert(!f1.eq(f2));
+        assert(!f2.eq(f1));
+    }
+
+    #[test]
+    fn different_size() {
+        let f1 = Fragment::new_with_length(2, [1, 2, 3]);
+        let f2 = Fragment::new_with_length(2, [1, 2, 3, 4]);
+        assert(f1.eq(f2));
+        assert(f2.eq(f1));
+    }
+
+    #[test]
+    fn different_offset() {
+        let f1 = Fragment::new(1, 2, [0, 1, 2, 3]);
+        let f2 = Fragment::new(2, 2, [0, 0, 1, 2]);
+        let f3 = Fragment::new(2, 2, [0, 1, 2, 3]);
+        assert(f1.eq(f2));
+        assert(f2.eq(f1));
+        assert(!f1.eq(f3));
+        assert(!f3.eq(f2));
+    }
+}
+
+mod eq_trait {
+
+    use crate::misc::fragment::Fragment;
+
+    #[test]
     fn simple() {
         let fragment1 = Fragment::new(1, 2, [1, 2, 3]);
         let fragment2 = Fragment::new(1, 2, [1, 2, 3]);
@@ -297,5 +365,31 @@ mod to_array {
         let fragment = Fragment::new(0, 4, [1, 2, 3, 4]);
         let array = fragment.to_array();
         assert(array == [1, 2, 3, 4]);
+    }
+}
+
+mod to_bounded_vec {
+    use crate::misc::fragment::Fragment;
+
+    #[test]
+    fn simple() {
+        let fragment = Fragment::new(1, 2, [1, 2, 3]);
+        let bounded_vec: BoundedVec<Field, 2> = fragment.to_bounded_vec();
+        let expected = BoundedVec::from_array([2, 3]);
+        assert_eq(bounded_vec, expected);
+    }
+
+    #[test]
+    fn full() {
+        let fragment = Fragment::new(0, 4, [1, 2, 3, 4]);
+        let bounded_vec: BoundedVec<Field, 4> = fragment.to_bounded_vec();
+        let expected = BoundedVec::from_array([1, 2, 3, 4]);
+        assert_eq(bounded_vec, expected);
+    }
+
+    #[test(should_fail_with="Fragment length exceeds BoundedVec max length")]
+    fn bounded_vec_too_small() {
+        let fragment = Fragment::new(0, 4, [1, 2, 3, 4]);
+        let _: BoundedVec<Field, 3> = fragment.to_bounded_vec();
     }
 }

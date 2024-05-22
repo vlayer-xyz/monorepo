@@ -8,7 +8,7 @@ use crate::verifiers::{
     transaction::rlp::assert_tx_rlp_equals,
     tx_helpers::{idx::assert_tx_idx_equals, split::split_into_tx_type_and_rlp}
 };
-use crate::misc::bytes::byte_value;
+use crate::misc::{bytes::right_pad, fragment::Fragment};
 
 global MAX_ENCODED_TX_LENGTH: u64 = 525;
 global MAX_TX_RLP_LENGTH: u64 = MAX_ENCODED_TX_LENGTH - 1;
@@ -20,9 +20,9 @@ pub(crate) fn assert_tx_proof<MAX_PROOF_LEN, MAX_RLP_LEN>(
     assert(proof.verify_transaction_root(root), "TrieProof: Invalid tx root");
 }
 
-pub(crate) fn assert_tx_equals<MAX_DATA_LEN, MAX_ENCODED_TX_LEN>(
+pub(crate) fn assert_tx_equals<MAX_DATA_LEN, MAX_ENCODED_LEN>(
     tx_type: TxType,
-    encoded_tx: [u8; MAX_ENCODED_TX_LEN],
+    encoded_tx: Fragment<MAX_ENCODED_LEN, u8>,
     tx: TxPartial<MAX_DATA_LEN>
 ) {
     let is_legacy = tx_type == 0;
@@ -39,8 +39,10 @@ pub fn verify_tx<MAX_DATA_LEN, MAX_PROOF_LEN, MAX_ENCODED_TX_LEN>(
     tx_proof: TransactionProof<MAX_PROOF_LEN, MAX_ENCODED_TX_LEN>,
     tx_root: [u8; HASH_LENGTH]
 ) {
-    assert_tx_idx_equals(key_as_nibbles(tx_proof.key), tx_idx);
-    let value = byte_value(tx_proof.value).storage;
-    assert_tx_equals(tx_type, value, tx);
+    let key = Fragment::from_vec(right_pad(tx_proof.key));
+    assert_tx_idx_equals(key, tx_idx);
+
+    let value = right_pad(tx_proof.value).storage;
+    assert_tx_equals(tx_type, Fragment::from_array(value), tx);
     assert_tx_proof(tx_proof, tx_root);
 }

@@ -13,24 +13,20 @@ mod U128_ {
     }
 }
 
-mod bytes32 {
-    use crate::misc::types::{Bytes32, BYTES32_LENGTH};
+mod u8_array {
+    use crate::misc::types::{Bytes32, BYTES32_LENGTH, Address, ADDRESS_LENGTH};
 
     #[test]
-    fn simple() {
+    fn bytes32() {
         let bytes: Bytes32 = [1; BYTES32_LENGTH];
         let serialized: [Field; BYTES32_LENGTH] = bytes.serialize();
         let expected: [Field; BYTES32_LENGTH] = [1; BYTES32_LENGTH];
         assert_eq(serialized, expected);
         assert_eq(serialized.deserialize(), bytes);
     }
-}
-
-mod address {
-    use crate::misc::types::{Address, ADDRESS_LENGTH};
 
     #[test]
-    fn simple() {
+    fn address() {
         let address: Address = [1; ADDRESS_LENGTH];
         let serialized: [Field; ADDRESS_LENGTH] = address.serialize();
         let expected: [Field; ADDRESS_LENGTH] = [1; ADDRESS_LENGTH];
@@ -107,5 +103,75 @@ mod storage_within_block {
             )
         );
         assert_eq(StorageWithinBlock::deserialize(serialized), storage_within_block);
+    }
+}
+
+mod nodes {
+    use crate::fixtures::mainnet::cancun::small_block::receipt_proof_new::proof_input;
+    use crate::merkle_patricia_proofs::proof::MAX_NODE_LEN;
+    use crate::misc::arrays::sub_array_equals;
+    use crate::serde::{deserialize_nodes, serialize_nodes};
+
+    #[test]
+    fn simple() {
+        let nodes = proof_input.proof.nodes;
+        let serialized = serialize_nodes(nodes);
+
+        assert(sub_array_equals(nodes[0].serialize(), serialized, 0));
+        assert(
+            sub_array_equals(
+                nodes[nodes.len() - 1].serialize(),
+                serialized,
+                MAX_NODE_LEN * (nodes.len() - 1) - 1
+            )
+        );
+        assert_eq(deserialize_nodes(serialized), nodes);
+    }
+}
+
+mod proof {
+    use crate::fixtures::mainnet::cancun::small_block::receipt_proof_new::proof_input;
+    use crate::serde::{serialize_nodes, RECEIPT_NODES_LEN, RECEIPT_MAX_LEAF_LEN_M};
+    use crate::merkle_patricia_proofs::proof::Proof;
+    use crate::misc::arrays::sub_array_equals;
+
+    #[test]
+    fn simple() {
+        let proof = proof_input.proof;
+        let serialized = proof.serialize();
+
+        assert(sub_array_equals(serialize_nodes(proof.nodes), serialized, 0));
+        assert(sub_array_equals(proof.leaf.serialize(), serialized, RECEIPT_NODES_LEN));
+        assert_eq(serialized[RECEIPT_NODES_LEN + RECEIPT_MAX_LEAF_LEN_M], proof.depth as Field);
+        assert_eq(Proof::deserialize(serialized), proof);
+    }
+}
+
+mod proof_input {
+    use crate::fixtures::mainnet::cancun::small_block::receipt_proof_new::proof_input;
+    use crate::serde::{RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN, RECEIPT_MAX_VALUE_LEN_M};
+    use crate::misc::arrays::sub_array_equals;
+    use crate::merkle_patricia_proofs::proof::ProofInput;
+
+    #[test]
+    fn simple() {
+        let serialized = proof_input.serialize();
+
+        assert(sub_array_equals(proof_input.key.serialize(), serialized, 0));
+        assert(
+            sub_array_equals(
+                proof_input.value.serialize(),
+                serialized,
+                RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN
+            )
+        );
+        assert(
+            sub_array_equals(
+                proof_input.proof.serialize(),
+                serialized,
+                RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN + RECEIPT_MAX_VALUE_LEN_M
+            )
+        );
+        assert_eq(ProofInput::deserialize(serialized), proof_input);
     }
 }

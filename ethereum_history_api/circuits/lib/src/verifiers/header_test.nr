@@ -159,7 +159,7 @@ global RLP_SHORT_STRING_TYPE = 0x80;
 fn test_verify_header_invalid_rlp() {
     let mut rlp_empty_string_encoding = [0; MAX_HEADER_RLP_LEN];
     rlp_empty_string_encoding[0] = RLP_SHORT_STRING_TYPE;
-    let malformed_block_header_rlp = BlockHeaderRlp { data: rlp_empty_string_encoding, length: 1 };
+    let malformed_block_header_rlp = BoundedVec { storage: rlp_empty_string_encoding, len: 1 };
     let paris_block_header_partial = BlockHeaderPartial { number, hash, state_root, transactions_root, receipts_root };
     verify_header(
         ETHEREUM_MAINNET_ID,

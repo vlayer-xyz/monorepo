@@ -2,25 +2,24 @@ mod rlp;
 mod rlp_test;
 
 use dep::proof::{const::HASH_LENGTH, receipt_proof::ReceiptProof, node::key_as_nibbles};
-use crate::receipt::{TxReceiptPartial, TxType};
+use crate::receipt::{TxReceiptPartial, TxType, MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_DEPTH_NO_LEAF};
 use crate::verifiers::{
     receipt::rlp::assert_receipt_rlp_equals,
     tx_helpers::{split::split_into_tx_type_and_rlp, idx::assert_tx_idx_equals}
 };
-use crate::misc::bytes::byte_value;
+use crate::misc::{bytes::right_pad, fragment::Fragment};
+use crate::merkle_patricia_proofs::proof::{ProofInput, verify_merkle_proof};
 
 global BYZANTIUM_BLOCK_NUM = 4_370_000;
-global MAX_ENCODED_RECEIPT_LENGTH: u64 = 525;
-global MAX_RECEIPT_RLP_LENGTH: u64 = MAX_ENCODED_RECEIPT_LENGTH - 1;
 
 pub(crate) fn is_pre_byzantium(block_number: u64) -> bool {
     block_number < BYZANTIUM_BLOCK_NUM as u64
 }
 
-pub(crate) fn assert_receipt_equals(
+pub(crate) fn assert_receipt_equals<MAX_ENCODED_LEN>(
     block_number: u64,
     tx_type: TxType,
-    encoded_receipt: [u8; MAX_ENCODED_RECEIPT_LENGTH],
+    encoded_receipt: Fragment<MAX_ENCODED_LEN, u8>,
     receipt: TxReceiptPartial
 ) {
     let is_legacy = tx_type == 0;
@@ -31,23 +30,23 @@ pub(crate) fn assert_receipt_equals(
     assert_receipt_rlp_equals(is_pre_byzantium, receipt_rlp, receipt);
 }
 
-pub(crate) fn assert_receipt_proof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>(
-    proof: ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_RLP_LEN>,
-    root: [u8; HASH_LENGTH]
-) {
-    assert(proof.verify_receipt_root(root), "TrieProof: Invalid receipt root");
-}
-
-pub fn verify_receipt<MAX_RECEIPT_PROOF_LEN>(
+pub fn verify_receipt<MAX_ENCODED_LEN, MAX_LEAF_LEN>(
     block_number: u64,
     tx_idx: Field,
     tx_type: TxType,
     receipt: TxReceiptPartial,
-    receipt_proof: ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_ENCODED_RECEIPT_LENGTH>,
+    receipt_proof_input: ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_ENCODED_LEN, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN>,
     receipt_root: [u8; HASH_LENGTH]
 ) {
-    assert_tx_idx_equals(key_as_nibbles(receipt_proof.key), tx_idx);
-    let value = byte_value(receipt_proof.value).storage;
-    assert_receipt_equals(block_number, tx_type, value, receipt);
-    assert_receipt_proof(receipt_proof, receipt_root);
+    let key = Fragment::from_vec(right_pad(receipt_proof_input.key));
+    assert_tx_idx_equals(key, tx_idx);
+
+    let value = right_pad(receipt_proof_input.value).storage;
+    assert_receipt_equals(block_number, tx_type, Fragment::from_array(value), receipt);
+    verify_merkle_proof(
+        receipt_proof_input.key,
+        receipt_proof_input.value,
+        receipt_root,
+        receipt_proof_input.proof
+    );
 }

@@ -6,24 +6,24 @@ describe('accountOracle', () => {
   it('getAccountOracle', async () => {
     const mainnetChainIdInNoirFormat = '0x01';
     // prettier-ignore
-    const cryptoPunksAccountAddressInNoirFormat = [
-        "0xb4", "0x7e", "0x3c", "0xd8", "0x37", "0xdd", "0xf8", "0xe4", "0xc5", "0x7f",
-        "0x05", "0xd7", "0x0a", "0xb8", "0x65", "0xde", "0x6e", "0x19", "0x3b", "0xbb"
+    const vitalikAccountAddressInNoirFormat = [
+        "0xd8", "0xda", "0x6b", "0xf2", "0x69", "0x64", "0xaf", "0x9d", "0x7e", "0xed", 
+        "0x9e", "0x03", "0xe5", "0x34", "0x15", "0xd3", "0x7a", "0xa9", "0x60", "0x45"
       ]
-    const londonBlockNumberInNoirFormat = '0xd895ce';
+    const londonBlockNumberInNoirFormat = '0xc5d488';
     const mockFilePaths = [
-      './fixtures/mainnet/london/crypto_punks/eth_getBlockByHash_14194126.json',
-      './fixtures/mainnet/london/crypto_punks/eth_getProof_14194126.json'
+      './fixtures/mainnet/london/vitalik_balance/eth_getBlockByHash_12965000.json',
+      './fixtures/mainnet/london/vitalik_balance/eth_getProof_12965000.json'
     ];
     const multiChainClient = await createMockMultiChainClient(mockFilePaths);
     const account = await getAccountOracle(multiChainClient, [
       [mainnetChainIdInNoirFormat],
       [londonBlockNumberInNoirFormat],
-      cryptoPunksAccountAddressInNoirFormat
+      vitalikAccountAddressInNoirFormat
     ]);
-    expect(account[OFFSETS.NONCE]).toStrictEqual('0x01');
-    expect(account[OFFSETS.BALANCE]).toStrictEqual('0x0313570a84bf378efd25');
-    expect(account[OFFSETS.PROOF_KEY]).toStrictEqual(cryptoPunksAccountAddressInNoirFormat);
-    expect(account[OFFSETS.PROOF_DEPTH]).toStrictEqual('0x08');
+    expect(account[OFFSETS.NONCE]).toStrictEqual('0x02cb');
+    expect(account[OFFSETS.BALANCE]).toStrictEqual('0x019c54c1cc8b1ad5994d');
+    expect(account[OFFSETS.PROOF_KEY]).toStrictEqual(vitalikAccountAddressInNoirFormat);
+    expect(account[OFFSETS.PROOF_DEPTH]).toStrictEqual('0x09');
   });
 });

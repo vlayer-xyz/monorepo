@@ -25,14 +25,26 @@ struct Proof<MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN> {
 	depth: u64
 }
 
-struct ProofInput<MAX_KEY_LEN, MAX_VALUE_LEN, MAX_DEPTH, MAX_LEAF_LEN> {
-    key: Key<MAX_KEY_LEN>,
+struct ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN> {
+    key: Key<MAX_PREFIXED_KEY_NIBBLE_LEN>,
     value: Value<MAX_VALUE_LEN>,
-    proof: Proof<MAX_DEPTH, MAX_LEAF_LEN>
+    proof: Proof<MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN>
+}
+
+impl<MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN> Eq for Proof<MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN> {
+    fn eq(self, other: Self) -> bool {
+        (self.depth == other.depth) & (self.nodes == other.nodes) & (self.leaf == other.leaf)
+    }
+}
+
+impl<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN> Eq for ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN> {
+    fn eq(self, other: Self) -> bool {
+        (self.key == other.key) & (self.value == other.value) & (self.proof == other.proof)
+    }
 }
 
 pub fn get_node_len<MAX_LEN>(node: [u8; MAX_LEN]) -> u64 {
-    let node_rlp_header = decode_to_rlp_header(node);
+    let node_rlp_header = decode_to_rlp_header(Fragment::from_array(node));
     let node_unpadded_len = node_rlp_header.offset + node_rlp_header.length;
     assert(node_unpadded_len <= MAX_LEN, "Node RLP length exceeds MAX_LEN");
 
@@ -104,8 +116,8 @@ pub fn extract_hash<MAX_PREFIXED_KEY_NIBBLE_LEN>(
     key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8>,
     key_ptr: &mut u64
 ) -> Fragment<HASH_LEN, u8> {
-    let mut hash = Fragment::new_focused([0; HASH_LEN]);
-    let node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list_of_small_strings(node);
+    let mut hash = Fragment::from_array([0; HASH_LEN]);
+    let node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list_of_small_strings(Fragment::from_array(node));
 
     if (node_rlp_list.len == BRANCH_NODE_NUM_FIELDS) {
         hash = extract_hash_from_branch_node(node, node_rlp_list, key_nibbles, key_ptr);
@@ -128,7 +140,7 @@ pub fn verify_leaf<MAX_LEAF_LEN, MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN>(
     key_ptr: &mut u64,
     value: Value<MAX_VALUE_LEN>
 ) {
-    let leaf_rlp_list: RlpList<2> = decode_list(leaf);
+    let leaf_rlp_list: RlpList<2> = decode_list(Fragment::from_array(leaf));
     assert(leaf_rlp_list.len == 2, "Leaf expected to have 2 fields");
 
     let prefixed_leaf_key_part: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8> = Fragment::new(leaf_rlp_list.get(0).offset, leaf_rlp_list.get(0).length, leaf).focus();
@@ -162,11 +174,11 @@ pub fn verify_merkle_proof<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH
     proof: Proof<MAX_DEPTH, MAX_LEAF_LEN>
 ) {
     let key = right_pad(key);
-    let key_nibbles = bytes_to_nibbles(Fragment::from(key));
+    let key_nibbles = bytes_to_nibbles(Fragment::from_vec(key));
     let mut key_ptr = 0;
 
     // Verify hashes of all the nodes in the proof path.
-    let mut curr_hash = Fragment::new_focused(root);
+    let mut curr_hash = Fragment::from_array(root);
     for i in 0..MAX_DEPTH {
         if i < proof.depth - 1 {
             verify_node_hash(proof.nodes[i], curr_hash.data);

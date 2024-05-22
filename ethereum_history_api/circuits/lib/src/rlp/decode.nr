@@ -1,5 +1,6 @@
 use dep::std::wrapping_sub;
 use crate::rlp::types::{RlpList, RlpFragment, RlpHeader};
+use crate::misc::fragment::Fragment;
 
 /// Max number of bytes required to represent length of a string or list
 global MAX_LEN_IN_BYTES: u64 = 2;
@@ -8,31 +9,25 @@ global MAX_LEN_IN_BYTES: u64 = 2;
 global STRING: u64 = 0;
 global LIST: u64 = 1;
 
-pub fn extract_payload_len<N>(arr: [u8; N], lenlen: u64) -> u64 {
+pub fn extract_payload_len<N>(data: Fragment<N, u8>, lenlen: u64) -> u64 {
     assert(lenlen <= MAX_LEN_IN_BYTES, "Length of length exceeds maximum");
-    assert(lenlen < N, "Length of length exceeds input length");
+    assert(lenlen <= data.length, "Length of length exceeds input length");
     assert(lenlen != 0, "Length of length is zero");
 
     let mut payload_length = 0;
 
-    let mut loop_len: u64 = 0;
-    if (MAX_LEN_IN_BYTES < N - 1) {
-        loop_len = MAX_LEN_IN_BYTES;
-    } else {
-        loop_len = N - 1;
-    }
-
-    for i in 0..loop_len {
-        if (i < lenlen) {
-            payload_length = (arr[i + 1] as u64) + payload_length * 256;
+    for i in 0..MAX_LEN_IN_BYTES {
+        if (i < lenlen & i < data.length) {
+            payload_length = data.at(i) as u64 + payload_length * 256;
         }
     }
 
     payload_length
 }
 
-pub fn decode_to_rlp_header<N>(arr: [u8; N]) -> RlpHeader {
-    let prefix = arr[0];
+pub fn decode_to_rlp_header<N>(data: Fragment<N, u8>) -> RlpHeader {
+    let mut data = data;
+    let prefix = data.pop_front();
 
     if (prefix < 0x80) { // single byte
         RlpHeader { offset: 0, length: 1, data_type: STRING }
@@ -44,7 +39,7 @@ pub fn decode_to_rlp_header<N>(arr: [u8; N]) -> RlpHeader {
         RlpHeader { offset, length, data_type: STRING }
     } else if (prefix < 0xc0) { // >55-byte string
         let offset = wrapping_sub(1 + prefix, 0xb7) as u64;
-        let length = extract_payload_len(arr, wrapping_sub(prefix, 0xb7) as u64);
+        let length = extract_payload_len(data, wrapping_sub(prefix, 0xb7) as u64);
         assert(offset + length <= N, "Decoded length of long string exceeds input length");
 
         RlpHeader { offset, length, data_type: STRING }
@@ -56,39 +51,39 @@ pub fn decode_to_rlp_header<N>(arr: [u8; N]) -> RlpHeader {
         RlpHeader { offset, length, data_type: LIST }
     } else { // >55-byte list
         let offset = wrapping_sub(1 + prefix, 0xf7) as u64;
-        let length = extract_payload_len(arr, wrapping_sub(prefix, 0xf7) as u64);
+        let length = extract_payload_len(data, wrapping_sub(prefix, 0xf7) as u64);
         assert(offset + length <= N, "Decoded length of long list exceeds input length");
 
         RlpHeader { offset, length, data_type: LIST }
     }
 }
 
-pub fn decode_string<N>(input: [u8; N]) -> (u64, u64) {
+pub fn decode_string<N>(input: Fragment<N, u8>) -> RlpFragment {
     let mut RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
     assert(data_type == STRING, "Wrong data type");
 
     let total_len = length + offset;
-    assert(total_len <= input.len(), "Total length exceeds input length");
+    assert(total_len <= input.length, "Total length exceeds input length");
 
-    (offset, length)
+    RlpFragment { offset, length, data_type: STRING }
 }
 
 /// Returns an RLP list look-up table.
 /// For string elements, the offset points to the payload, whereas the offset
 ///   of a list element points to the RLP header of that element.
-pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
-    let mut rlp_list: RlpList<NUM_FIELDS> = BoundedVec::new();
+pub fn decode_list<N, MAX_FIELDS>(data: Fragment<N, u8>) -> RlpList<MAX_FIELDS> {
+    let mut rlp_list: RlpList<MAX_FIELDS> = BoundedVec::new();
 
-    let RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
+    let RlpHeader {offset, length, data_type} = decode_to_rlp_header(data);
     assert(data_type == LIST, "Expected a list");
 
     let total_len = length + offset;
-    assert(total_len <= input.len(), "Total length exceeds input length");
+    assert(total_len <= data.length, "Total length exceeds input length");
 
     let mut current_offset = offset;
-    for _ in 0..NUM_FIELDS {
+    for _ in 0..MAX_FIELDS {
         if (current_offset < total_len) {
-            let header: [u8; N] = copy_subarray(input, current_offset);
+            let header: Fragment<N, u8> = data.subfragment(current_offset, data.length - current_offset);
 
             let RlpHeader {offset: field_off, length: field_len, data_type: field_type} = decode_to_rlp_header(header);
 
@@ -109,19 +104,19 @@ pub fn decode_list<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
 
 /// RLP list decoder for lists of strings of length < 56 bytes.
 /// Returns an RLP list look-up table.
-pub fn decode_list_of_small_strings<N, NUM_FIELDS>(input: [u8; N]) -> RlpList<NUM_FIELDS> {
+pub fn decode_list_of_small_strings<N, NUM_FIELDS>(data: Fragment<N, u8>) -> RlpList<NUM_FIELDS> {
     let mut rlp_list: RlpList<NUM_FIELDS> = BoundedVec::new();
 
-    let RlpHeader {offset, length, data_type} = decode_to_rlp_header(input);
+    let RlpHeader {offset, length, data_type} = decode_to_rlp_header(data);
     assert(data_type == LIST, "Expected a list");
 
     let total_len = length + offset;
-    assert(total_len <= input.len(), "Total length exceeds input length");
+    assert(total_len <= data.length, "Total length exceeds input length");
 
     let mut current_offset = offset;
     for _ in 0..NUM_FIELDS {
         if (current_offset < total_len) {
-            let first_byte = input[current_offset];
+            let first_byte = data.at(current_offset);
 
             let (field_off, field_len) = get_small_string_offset_and_length(first_byte);
 
@@ -144,15 +139,4 @@ pub fn get_small_string_offset_and_length(first_byte: u8) -> (u64, u64) {
     } else {
         (1, wrapping_sub(first_byte as u64, 0x80))
     }
-}
-
-pub fn copy_subarray<T, N, M>(arr: [T; N], offset: u64) -> [T; M] {
-    let mut out = [dep::std::unsafe::zeroed(); M];
-
-    for i in 0..M {
-        let j = (((offset + i) as u64) < N) as u64 * (offset + i); // Restrict to proper range and fill with arr[0] otherwise.
-        out[i] = arr[j];
-    }
-
-    out
 }

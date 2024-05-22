@@ -19,7 +19,7 @@ describe('get_receipt', async () => {
     ({ proof, inputMap } = await readProofData('get_receipt'));
   });
 
-  it('proof verification successes', async () => {
+  it('proof verification succeeds', async () => {
     const witnessMap = abiEncode(abi, inputMap, inputMap.return);
     expect(await proofVerifier.verify(proof, witnessMap)).toEqual(true);
   });

@@ -1,7 +1,7 @@
 use dep::proof::{const::{MAX_ACCOUNT_STATE_LENGTH, HASH_LENGTH}, trie_proof::TrieProof};
 
 use crate::account::{Account, StateProof};
-use crate::misc::{types::Address, bytes::byte_value};
+use crate::misc::{types::Address, bytes::right_pad, fragment::Fragment};
 use crate::rlp::decode::decode_list_of_small_strings;
 use crate::rlp::types::RlpList;
 
@@ -14,19 +14,16 @@ global STORAGE_ROOT_INDEX = 2;
 global CODE_HASH_INDEX = 3;
 
 pub(crate) fn assert_account_equals(account_rlp_left_padded: [u8; MAX_ACCOUNT_STATE_LENGTH], account: Account) {
-    let account_rlp_right_padded = byte_value(account_rlp_left_padded).storage;
-    let account_rlp_list: RlpList<ACCOUNT_FIELDS_COUNT> = decode_list_of_small_strings(account_rlp_right_padded);
+    let account_rlp_right_padded = right_pad(account_rlp_left_padded).storage;
+    let account_rlp_list: RlpList<ACCOUNT_FIELDS_COUNT> = decode_list_of_small_strings(Fragment::from_array(account_rlp_right_padded));
     assert(account_rlp_list.len == ACCOUNT_FIELDS_COUNT, "Invalid number of fields in account RLP");
 
-    account_rlp_list.get(NONCE_INDEX).assert_eq_u64("Nonce", account_rlp_right_padded, account.nonce as u64);
-    account_rlp_list.get(BALANCE_INDEX).assert_eq_u128(
-        "Balance",
-        account_rlp_right_padded,
-        U128::from_integer(account.balance)
-    );
+    let account_rlp = Fragment::from_array(account_rlp_right_padded);
+    account_rlp_list.get(NONCE_INDEX).assert_eq_u64("Nonce", account_rlp, account.nonce as u64);
+    account_rlp_list.get(BALANCE_INDEX).assert_eq_u128("Balance", account_rlp, U128::from_integer(account.balance));
 
-    account_rlp_list.get(STORAGE_ROOT_INDEX).assert_eq_bytes32("Storage root", account_rlp_right_padded, account.storage_root);
-    account_rlp_list.get(CODE_HASH_INDEX).assert_eq_bytes32("Code hash", account_rlp_right_padded, account.code_hash);
+    account_rlp_list.get(STORAGE_ROOT_INDEX).assert_eq_bytes32("Storage root", account_rlp, account.storage_root);
+    account_rlp_list.get(CODE_HASH_INDEX).assert_eq_bytes32("Code hash", account_rlp, account.code_hash);
 }
 
 fn assert_address_equals(address1: Address, address2: Address) {

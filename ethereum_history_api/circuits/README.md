@@ -11,6 +11,7 @@ Noir circuits for proving and verifying historical data on the Ethereum blockcha
 | [`get_account`](./get_header/)  | Binary crate for generating account proofs  | [Docs](./get_account/README.md) |
 | [`get_storage`](./get_storage/) | Binary crate for generating storage proofs  | [Docs](./get_storage/README.md) |
 | [`get_receipt`](./get_receipt/) | Binary crate for generating receipt proofs  | [Docs](./get_receipt/README.md) |
+| [`get_transaction`](./get_transaction/) | Binary crate for generating transaction proofs  | [Docs](./get_transaction/README.md) |
 
 ## Compile
 
