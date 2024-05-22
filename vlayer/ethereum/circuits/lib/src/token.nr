@@ -1,4 +1,4 @@
-use dep::ethereum_history_api::{
+use dep::ethereum::{
     account_with_storage::get_account_with_storage, misc::types::{Address, Bytes32},
     misc::bytes32::address_to_bytes32
 };

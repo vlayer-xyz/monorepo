@@ -41,16 +41,16 @@ jobs:
       - name: Create fake smart contract build artefacts
         working-directory: .
         run: |
-          mkdir -p ethereum_history_api/contracts/out/GetStorageUltraPLONKVerifier.sol
-          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum_history_api/contracts/out/GetStorageUltraPLONKVerifier.sol/UltraVerifier.json
-          mkdir -p ethereum_history_api/contracts/out/GetAccountUltraPLONKVerifier.sol
-          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum_history_api/contracts/out/GetAccountUltraPLONKVerifier.sol/UltraVerifier.json
-          mkdir -p ethereum_history_api/contracts/out/GetHeaderUltraPLONKVerifier.sol
-          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum_history_api/contracts/out/GetHeaderUltraPLONKVerifier.sol/UltraVerifier.json
-          mkdir -p ethereum_history_api/contracts/out/GetReceiptUltraPLONKVerifier.sol
-          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum_history_api/contracts/out/GetReceiptUltraPLONKVerifier.sol/UltraVerifier.json
-          mkdir -p ethereum_history_api/contracts/out/GetTransactionUltraPLONKVerifier.sol
-          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum_history_api/contracts/out/GetTransactionUltraPLONKVerifier.sol/UltraVerifier.json
+          mkdir -p ethereum/contracts/out/GetStorageUltraPLONKVerifier.sol
+          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum/contracts/out/GetStorageUltraPLONKVerifier.sol/UltraVerifier.json
+          mkdir -p ethereum/contracts/out/GetAccountUltraPLONKVerifier.sol
+          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum/contracts/out/GetAccountUltraPLONKVerifier.sol/UltraVerifier.json
+          mkdir -p ethereum/contracts/out/GetHeaderUltraPLONKVerifier.sol
+          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum/contracts/out/GetHeaderUltraPLONKVerifier.sol/UltraVerifier.json
+          mkdir -p ethereum/contracts/out/GetReceiptUltraPLONKVerifier.sol
+          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum/contracts/out/GetReceiptUltraPLONKVerifier.sol/UltraVerifier.json
+          mkdir -p ethereum/contracts/out/GetTransactionUltraPLONKVerifier.sol
+          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum/contracts/out/GetTransactionUltraPLONKVerifier.sol/UltraVerifier.json
 
       - name: Run TypeScript Build
         run: yarn build
@@ -65,7 +65,7 @@ jobs:
 
       - name: Check if fixtures are up to date
         run: |
-          cd ./ethereum_history_api/oracles
+          cd ./ethereum/oracles
           yarn prepare-js-fixtures
           yarn prepare-noir-fixtures
 

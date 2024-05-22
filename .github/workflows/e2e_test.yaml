@@ -37,7 +37,7 @@ jobs:
         run: nargo compile --workspace
 
       - name: Start Oracle Server
-        working-directory: ethereum_history_api/oracles
+        working-directory: ethereum/oracles
         run: |
           yarn oracle-server &
           ORACLE_SERVER_PID=$!
@@ -65,18 +65,18 @@ jobs:
           version: nightly
 
       - name: Compile Smart Contract
-        working-directory: ethereum_history_api/contracts
+        working-directory: ethereum/contracts
         run: forge build
 
       - name: Run TypeScript Build
         run: yarn build
 
       - name: Run Unit Tests
-        working-directory: ethereum_history_api/oracles
+        working-directory: ethereum/oracles
         run: yarn test:unit
 
       - name: Run e2e Tests
-        working-directory: ethereum_history_api/tests
+        working-directory: ethereum/tests
         run: yarn test:e2e
 
       - name: Stop Oracle Server

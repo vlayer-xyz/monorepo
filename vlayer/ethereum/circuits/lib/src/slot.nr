@@ -1,4 +1,4 @@
-use dep::ethereum_history_api::misc::{types::{Address, Bytes32, ADDRESS_LENGTH, BYTES32_LENGTH}, field::field_to_bytes32, bytes::add_bigint};
+use dep::ethereum::misc::{types::{Address, Bytes32, ADDRESS_LENGTH, BYTES32_LENGTH}, field::field_to_bytes32, bytes::add_bigint};
 use dep::std::hash::keccak256;
 
 global STORAGE_KEY_HASH_INPUT_LENGTH = 64;

@@ -37,7 +37,7 @@ jobs:
         run: nargo compile --workspace --deny-warnings
 
       - name: Start Oracle Server
-        working-directory: ethereum_history_api/oracles
+        working-directory: ethereum/oracles
         run: |
           yarn oracle-server &
           ORACLE_SERVER_PID=$!
