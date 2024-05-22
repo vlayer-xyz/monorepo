@@ -1,4 +1,7 @@
-use crate::{verifiers::receipt::is_pre_byzantium, receipt::{BLOOM_FILTER_LEN, TxReceiptPartial}};
+use crate::{
+    verifiers::receipt::is_pre_byzantium,
+    receipt::{BLOOM_FILTER_LEN, TxReceiptPartial}
+};
 use crate::misc::fragment::Fragment;
 use crate::rlp::decode::decode_list;
 use crate::rlp::types::RlpList;
