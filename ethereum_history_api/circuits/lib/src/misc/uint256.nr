@@ -33,7 +33,7 @@ impl Add for U256 {
 
         let mut low = U128::from_integer(0);
         let mut carry = 0;
-        if(lo.lt(uint128_overflow_value)){
+        if(lo.lt(uint128_overflow_value)) {
             low = U128::from_integer(lo);
         } else {
             low = U128::from_integer(lo - uint128_overflow_value);
