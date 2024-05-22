@@ -7,7 +7,7 @@ This package ties together all the pieces. It takes proofs, input data, verifier
 ### Oracle server
 
 Before running tests start oracle server in a separate terminal.
-Make sure JSON-RPC is configured in your `.env` ([details](https://github.com/vlayer-xyz/noir-ethereum-history-api/blob/main/ethereum/oracles/README.md#starting-oracle-server))
+Make sure JSON-RPC is configured in your `.env` ([details](https://github.com/vlayer-xyz/monorepo/blob/main/ethereum/oracles/README.md#starting-oracle-server))
 
 ```sh
 (cd ../oracles && yarn oracle-server)

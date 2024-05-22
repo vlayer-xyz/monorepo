@@ -1,5 +1,5 @@
 {
-  "name": "noir-ethereum-history-api",
+  "name": "@vlayer/monorepo",
   "workspaces": [
     "ethereum/oracles",
     "ethereum/tests"

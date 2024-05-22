@@ -1,4 +1,4 @@
-# noir-ethereum-history-api
+# Ethereum
 
 This project contains a library that allows you to prove:
 
