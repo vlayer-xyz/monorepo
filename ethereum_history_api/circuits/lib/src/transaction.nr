@@ -3,6 +3,7 @@ use dep::std::unsafe::zeroed;
 use crate::header::get_header;
 use crate::verifiers::transaction::verify_tx;
 use crate::merkle_patricia_proofs::proof::{Proof, ProofInput};
+use crate::serde::TX_PROOF_INPUT_LEN_M;
 
 global MAX_KEY_LEN = 3;
 global MAX_DEPTH_NO_LEAF = 6;
@@ -110,7 +111,7 @@ pub fn get_transaction<MAX_DATA_LEN>(
     block_number: u64,
     tx_idx: Field,
 ) -> TransactionWithinBlock<MAX_DATA_LEN> {
-    let (tx_type, transaction, proof_input) = get_transaction_unconstrained(chain_id, block_number, tx_idx);
+    let (tx_type, transaction, proof_input) = get_transaction_unconstrained_M(chain_id, block_number, tx_idx);
     let header = get_header(chain_id, block_number);
     verify_tx(tx_idx, tx_type, transaction, proof_input, header.transactions_root);
 
@@ -124,12 +125,12 @@ unconstrained fn get_transaction_oracle<MAX_DATA_LEN, PROOF_INPUT_LEN>(
     _tx_idx: Field
 ) -> (TxType, ForeignCallTransaction<MAX_DATA_LEN>, ProofInputSerialized<PROOF_INPUT_LEN>) {}
 
-unconstrained fn get_transaction_unconstrained<MAX_DATA_LEN>(
+unconstrained fn get_transaction_unconstrained_M<MAX_DATA_LEN>(
     chain_id: Field,
     block_number: u64,
     tx_idx: Field
 ) -> (TxType, TxPartial<MAX_DATA_LEN>, ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN_M, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN_M>) {
-    let (tx_type, transaction, proof_input) = get_transaction_oracle(chain_id, block_number, tx_idx);
+    let (tx_type, transaction, proof_input): (TxType, ForeignCallTransaction<MAX_DATA_LEN>, ProofInputSerialized<TX_PROOF_INPUT_LEN_M>) = get_transaction_oracle(chain_id, block_number, tx_idx);
     let transaction: TxPartial<MAX_DATA_LEN> = transaction.into();
     let proof_input = ProofInput::deserialize(proof_input);
 
