@@ -3,7 +3,7 @@ mod rlp_test;
 
 use dep::proof::{transaction_proof::TransactionProof, node::key_as_nibbles, const::HASH_LENGTH};
 
-use crate::transaction::{TxPartial, TxType};
+use crate::transaction::{TxPartial, TxType, MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_DEPTH_NO_LEAF};
 use crate::verifiers::{
     transaction::rlp::assert_tx_rlp_equals,
     tx_helpers::{idx::assert_tx_idx_equals, split::split_into_tx_type_and_rlp}
@@ -32,11 +32,11 @@ pub(crate) fn assert_tx_equals<MAX_DATA_LEN, MAX_ENCODED_LEN>(
     assert_tx_rlp_equals(tx_rlp, tx_type, tx);
 }
 
-pub fn verify_tx<MAX_DATA_LEN, MAX_PROOF_LEN, MAX_ENCODED_TX_LEN>(
+pub fn verify_tx<MAX_ENCODED_LEN, MAX_LEAF>(
     tx_idx: Field,
     tx_type: TxType,
     tx: TxPartial<MAX_DATA_LEN>,
-    tx_proof: TransactionProof<MAX_PROOF_LEN, MAX_ENCODED_TX_LEN>,
+    tx_proof_input: ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_ENCODED_LEN, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN>,
     tx_root: [u8; HASH_LENGTH]
 ) {
     let key = Fragment::from_vec(right_pad(tx_proof.key));
