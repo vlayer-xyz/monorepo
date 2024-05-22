@@ -1,8 +1,8 @@
-use dep::ethereum_history_api::transaction::{
+use dep::ethereum::transaction::{
     get_transaction, TransactionWithinBlock, PhantomTransactionProofLen, PhantomTransactionRlpLen,
     MAX_TREE_DEPTH
 };
-use dep::ethereum_history_api::verifiers::transaction::MAX_ENCODED_TX_LENGTH;
+use dep::ethereum::verifiers::transaction::MAX_ENCODED_TX_LENGTH;
 use dep::proof::const::MAX_TRIE_NODE_LENGTH;
 
 global MAX_DATA_LEN_M = 1000;

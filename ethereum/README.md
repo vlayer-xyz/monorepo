@@ -14,14 +14,14 @@ This project contains a library that allows you to prove:
 - Log inclusion
   - Example: _Log number `0` within transaction number `115` in block `N` has `topic0 === 0x...`_
 
-Additionally, we provide [smart contracts](./ethereum_history_api/contracts/src/EthereumHistoryVerifier.sol) that allow to verify inclusion of block in the chain for last 256 blocks.
+Additionally, we provide [smart contracts](./ethereum/contracts/src/EthereumHistoryVerifier.sol) that allow to verify inclusion of block in the chain for last 256 blocks.
 
 ## Repository structure
 
 This monorepo consists of the following sub-projects:
 
-| Package                                          | Description                                                                     | Docs                                                |
-| ------------------------------------------------ | ------------------------------------------------------------------------------- | --------------------------------------------------- |
+| Package                       | Description                                                                     | Docs                             |
+| ----------------------------- | ------------------------------------------------------------------------------- | -------------------------------- |
 | [`Circuits`](./circuits/lib/) | Noir circuits to generate account and storage proofs for historical blocks data | [Docs](./circuits/lib/README.md) |
 | [`Contracts`](./contracts/)   | Related Solidity contracts with tests                                           | [Docs](./contracts/README.md)    |
 | [`Oracles`](./oracles/)       | TypeScript oracle server that provides data for circuits                        | [Docs](./oracles/README.md)      |

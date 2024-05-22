@@ -1,7 +1,7 @@
 mod test_ERC20Token {
     use dep::std::test::OracleMock;
     use crate::token::ERC20Token;
-    use dep::ethereum_history_api::fixtures::mainnet::{
+    use dep::ethereum::fixtures::mainnet::{
         paris::usdc_circle::header::{block_header_partial as paris_block_header_partial, block_header_rlp as paris_block_header_rlp},
         paris::usdc_circle::header::{hash, number, state_root, transactions_root, receipts_root},
         paris::usdc_circle::account::account, paris::usdc_circle::state_proof::state_proof,

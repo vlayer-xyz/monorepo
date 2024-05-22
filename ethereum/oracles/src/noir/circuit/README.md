@@ -14,7 +14,7 @@ Unfortunately `nargo` does not generate any of the recursion artifacts. Noir tea
 
 ## Dictionary
 
-- Circuit source code - `ethereum_history_api/circuits`
+- Circuit source code - `ethereum/circuits`
   - the source of truth, all artifacts are generated from it
 - Compiled artifact - `target/${name}.json`
   - generated from code using `nargo compile --package ${name}`

@@ -1,6 +1,6 @@
 mod is_crypto_punk_owner_main {
     use dep::std::test::OracleMock;
-    use dep::ethereum_history_api::{
+    use dep::ethereum::{
         fixtures::mainnet::london::crypto_punks::{
         header::{block_header_partial as london_block_header_partial, block_header_rlp as london_block_header_rlp},
         account::account, state_proof::state_proof, storage_proof::proofs

@@ -22,7 +22,7 @@ export class MonorepoCircuit {
   }
 
   public packagePath(): string {
-    return path.join(this.root, 'ethereum_history_api', 'circuits', this.name);
+    return path.join(this.root, 'ethereum', 'circuits', this.name);
   }
 
   private constructor(

@@ -1,6 +1,6 @@
 mod is_ape_owner_main {
     use dep::std::test::OracleMock;
-    use dep::ethereum_history_api::{
+    use dep::ethereum::{
         fixtures::mainnet::paris::bored_ape_yacht_club::{
         header::{block_header_partial as paris_block_header_partial, block_header_rlp as paris_block_header_rlp},
         account::account, state_proof::state_proof, storage_proof::proofs

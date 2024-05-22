@@ -1,4 +1,4 @@
-use dep::ethereum_history_api::misc::types::Address;
+use dep::ethereum::misc::types::Address;
 use dep::token::token_list::mainnet::USDC;
 
 mod main_test;

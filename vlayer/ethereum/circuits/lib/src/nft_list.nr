@@ -3,7 +3,7 @@ mod mainnet {
     use crate::chain_id;
     use crate::slot::{struct_slot, dynamic_array_with_precalculated_slot, mapping};
     use dep::std::field::bytes32_to_field;
-    use dep::ethereum_history_api::misc::{types::Bytes32, field::field_to_bytes32};
+    use dep::ethereum::misc::{types::Bytes32, field::field_to_bytes32};
 
     pub fn BORED_APE_YACHT_CLUB() -> ERC721Token {
         ERC721Token {
@@ -47,7 +47,7 @@ mod sepolia {
     use crate::chain_id;
     use crate::slot::{struct_slot, dynamic_array_with_precalculated_slot};
     use dep::std::field::bytes32_to_field;
-    use dep::ethereum_history_api::misc::{types::Bytes32, field::field_to_bytes32};
+    use dep::ethereum::misc::{types::Bytes32, field::field_to_bytes32};
 
     // free mint: https://sepolia.etherscan.io/address/0x80d97726548fedae6ad7cf8df4f2b514fd24afba#readContract
     fn FAKE_BORED_APE_YACHT_CLUB() -> ERC721Token {

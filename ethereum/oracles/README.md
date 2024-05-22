@@ -81,7 +81,7 @@ To generate `JS` fixtures:
 yarn prepare-js-fixtures
 ```
 
-Files will be generated in `ethereum_history_api/oracles/fixtures`.
+Files will be generated in `ethereum/oracles/fixtures`.
 
 #### Noir Fixtures
 
@@ -93,7 +93,7 @@ To generate `Noir` fixtures:
 yarn prepare-noir-fixtures
 ```
 
-Files will be generated in `ethereum_history_api/circuits/lib/src/fixtures`.
+Files will be generated in `ethereum/circuits/lib/src/fixtures`.
 
 #### Configuration of Fixtures
 

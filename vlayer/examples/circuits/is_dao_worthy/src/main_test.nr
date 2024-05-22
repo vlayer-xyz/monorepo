@@ -1,6 +1,6 @@
 mod is_dao_worthy_main {
     use dep::std::test::OracleMock;
-    use dep::ethereum_history_api::fixtures::mainnet::{
+    use dep::ethereum::fixtures::mainnet::{
         paris::usdc_circle::header::{block_header_partial as paris_block_header_partial, block_header_rlp as paris_block_header_rlp},
         paris::usdc_circle::account::account, paris::usdc_circle::state_proof::state_proof,
         paris::usdc_circle::storage_proof::proofs

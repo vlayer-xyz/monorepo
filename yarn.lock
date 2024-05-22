@@ -4727,9 +4727,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"noir-ethereum-api-e2e-tests@workspace:ethereum_history_api/tests":
+"noir-ethereum-api-e2e-tests@workspace:ethereum/tests":
   version: 0.0.0-use.local
-  resolution: "noir-ethereum-api-e2e-tests@workspace:ethereum_history_api/tests"
+  resolution: "noir-ethereum-api-e2e-tests@workspace:ethereum/tests"
   dependencies:
     "@noir-lang/backend_barretenberg": "npm:0.29.0-a5b7df1.nightly"
     "@noir-lang/noirc_abi": "npm:^0.29.0-a5b7df1.nightly"
@@ -4745,9 +4745,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"noir-ethereum-api-oracles@npm:^0.1.0, noir-ethereum-api-oracles@workspace:ethereum_history_api/oracles":
+"noir-ethereum-api-oracles@npm:^0.1.0, noir-ethereum-api-oracles@workspace:ethereum/oracles":
   version: 0.0.0-use.local
-  resolution: "noir-ethereum-api-oracles@workspace:ethereum_history_api/oracles"
+  resolution: "noir-ethereum-api-oracles@workspace:ethereum/oracles"
   dependencies:
     "@ethereumjs/trie": "npm:^6.2.0"
     "@iarna/toml": "npm:^2.2.5"

@@ -1,4 +1,4 @@
-use dep::ethereum_history_api::{account_with_storage::{get_account_with_storage, StorageWithinBlock}, misc::types::{Address, Bytes32}};
+use dep::ethereum::{account_with_storage::{get_account_with_storage, StorageWithinBlock}, misc::types::{Address, Bytes32}};
 
 fn main(
     chain_id: pub Field,
