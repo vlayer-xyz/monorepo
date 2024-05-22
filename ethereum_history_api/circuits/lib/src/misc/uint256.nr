@@ -28,8 +28,8 @@ impl Eq for U256 {
 }
 
 impl Add for U256 {
-    fn add(one: Self, other: Self) -> Self {
-        let lo: Field = one.low.to_integer() + other.low.to_integer();
+    fn add(self, other: Self) -> Self {
+        let lo: Field = self.low.to_integer() + other.low.to_integer();
 
         let mut low = U128::from_integer(0);
         let mut carry = 0;
@@ -40,7 +40,7 @@ impl Add for U256 {
             carry = 1;
         }
 
-        let hi: Field = one.high.to_integer() + other.high.to_integer() + carry;
+        let hi: Field = self.high.to_integer() + other.high.to_integer() + carry;
         assert(hi.lt(uint128_overflow_value), "attempt to add with overflow");
 
         let high = U128::from_integer(hi);
