@@ -24,10 +24,17 @@ jobs:
         with:
           node-version: 20
 
+      - name: Enable Corepack and Install Yarn 4
+        run: |
+          corepack enable
+          yarn set version latest
+
       - name: Install Dependencies
         run: yarn install
 
       - name: Create Release Pull Request
         uses: changesets/action@v1
+        with:
+          version: yarn changeset version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

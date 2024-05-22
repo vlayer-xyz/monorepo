@@ -1,14 +1,14 @@
 [workspace]
 members = [
-    "ethereum_history_api/circuits/lib",
-    "ethereum_history_api/circuits/get_receipt",
-    "ethereum_history_api/circuits/get_storage",
-    "ethereum_history_api/circuits/get_account",
-    "ethereum_history_api/circuits/get_header",
-    "ethereum_history_api/circuits/get_transaction",
+    "ethereum/circuits/lib",
+    "ethereum/circuits/get_receipt",
+    "ethereum/circuits/get_storage",
+    "ethereum/circuits/get_account",
+    "ethereum/circuits/get_header",
+    "ethereum/circuits/get_transaction",
     "vlayer/ethereum/circuits/lib",
     "vlayer/examples/circuits/is_dao_worthy",
     "vlayer/examples/circuits/is_ape_owner",
     "vlayer/examples/circuits/is_crypto_punk_owner",
 ]
-default-member = "ethereum_history_api/circuits/lib"
+default-member = "ethereum/circuits/lib"

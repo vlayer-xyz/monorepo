@@ -1,8 +1,8 @@
 {
-  "name": "noir-ethereum-history-api",
+  "name": "@vlayer/monorepo",
   "workspaces": [
-    "ethereum_history_api/oracles",
-    "ethereum_history_api/tests"
+    "ethereum/oracles",
+    "ethereum/tests"
   ],
   "scripts": {
     "build": "tsc --build --verbose",
