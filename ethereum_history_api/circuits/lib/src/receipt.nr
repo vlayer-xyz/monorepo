@@ -5,8 +5,12 @@ use dep::std::unsafe::zeroed;
 use dep::proof::receipt_proof::ReceiptProof;
 
 global BLOOM_FILTER_LEN: u64 = 256;
-global MAX_RECEIPT_KEY_LEN = 3;
-global MAX_RECEIPT_TREE_DEPTH = 7;
+
+global MAX_DEPTH_NO_LEAF = 6;
+global MAX_PREFIXED_KEY_NIBBLE_LEN = 8;
+
+global MAX_VALUE_LEN_M = 1000;
+global MAX_LEAF_LEN_M = 1011;
 
 type TxType = u8;
 
