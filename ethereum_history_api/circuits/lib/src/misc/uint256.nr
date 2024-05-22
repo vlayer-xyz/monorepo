@@ -22,7 +22,7 @@ impl U256 {
 }
 
 impl Eq for U256 {
-    fn eq(self, other: Self) -> bool {
+    fn eq(self, other: U256) -> bool {
         (self.high == other.high) & (self.low == other.low)
     }
 }
