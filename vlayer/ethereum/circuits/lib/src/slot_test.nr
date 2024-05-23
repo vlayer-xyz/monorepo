@@ -57,7 +57,7 @@ mod dynamic_array {
         let expected_slot = [
             0x40, 0x57, 0x87, 0xfa, 0x12, 0xa8, 0x23, 0xe0, 0xf2, 0xb7, 0x63, 0x1c, 0xc4, 0x1b, 0x3b, 0xa8, 0x82, 0x8b, 0x33, 0x21, 0xca, 0x81, 0x11, 0x11, 0xfa, 0x75, 0xcd, 0x3a, 0xa3, 0xbb, 0x5a, 0xce
         ];
-        assert_eq(expected_slot, dynamic_array(slot, 0, 2));
+        assert_eq(expected_slot, dynamic_array(slot, 2, 0));
     }
 
     #[test]
@@ -66,13 +66,13 @@ mod dynamic_array {
         let expected_slot = [
             0x40, 0x57, 0x87, 0xfa, 0x12, 0xa8, 0x23, 0xe0, 0xf2, 0xb7, 0x63, 0x1c, 0xc4, 0x1b, 0x3b, 0xa8, 0x82, 0x8b, 0x33, 0x21, 0xca, 0x81, 0x11, 0x11, 0xfa, 0x75, 0xcd, 0x3a, 0xa3, 0xbb, 0x5a, 0xdc
         ];
-        assert_eq(expected_slot, dynamic_array(slot, 7, 2));
+        assert_eq(expected_slot, dynamic_array(slot, 2, 7));
     }
 
     #[test(should_fail_with="Addition overflow")]
     fn fail_overflow() {
         let slot = field_to_bytes32(6);
-        let _ = dynamic_array(slot, MAX_FIELD_VALUE, 2);
+        let _ = dynamic_array(slot, 2, MAX_FIELD_VALUE);
     }
 }
 
@@ -83,14 +83,14 @@ mod dynamic_array_with_precalculated_slot {
     #[test]
     fn index_zero() {
         let slot = field_to_bytes32(2);
-        assert_eq(slot, dynamic_array_with_precalculated_slot(slot, 0, 2));
+        assert_eq(slot, dynamic_array_with_precalculated_slot(slot, 2, 0));
     }
 
     #[test]
     fn index_positive() {
         let slot = field_to_bytes32(2);
         let expected_slot = field_to_bytes32(2 + 2 * 7);
-        assert_eq(expected_slot, dynamic_array_with_precalculated_slot(slot, 7, 2));
+        assert_eq(expected_slot, dynamic_array_with_precalculated_slot(slot, 2, 7));
     }
 
     #[test]
@@ -99,13 +99,13 @@ mod dynamic_array_with_precalculated_slot {
         let expected_slot = [
             0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x9, 0x0b, 0x5d, 0x14, 0xed, 9
         ];
-        assert_eq(expected_slot, dynamic_array_with_precalculated_slot(slot, 1_000_000_000, 10));
+        assert_eq(expected_slot, dynamic_array_with_precalculated_slot(slot, 10, 1_000_000_000));
     }
 
     #[test(should_fail_with="Addition overflow")]
     fn fail_overflow() {
         let slot = [0xfe; 32];
-        let _ = dynamic_array_with_precalculated_slot(slot, MAX_FIELD_VALUE, 2);
+        let _ = dynamic_array_with_precalculated_slot(slot, 2, MAX_FIELD_VALUE);
     }
 }
 
