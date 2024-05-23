@@ -59,8 +59,9 @@ describe('getTransactionOracle', () => {
         '0x4c','0x9e','0xb5','0xa5','0x51','0xd0','0xf4','0x86','0xd8','0x18',
         '0x66','0xf7'
     ]);
-    expect(txWithProof[OFFSETS.PROOF_INPUT].slice(0, 8)).toStrictEqual(
-      padArray(['0x08'], txProofConfigM.maxPrefixedKeyNibbleLen, ZERO_PAD_VALUE, 'left')
-    );
+
+    const proofInputKeyPart = txWithProof[OFFSETS.PROOF_INPUT].slice(0, txProofConfigM.maxPrefixedKeyNibbleLen);
+    const paddedKey = padArray(['0x08'], txProofConfigM.maxPrefixedKeyNibbleLen, ZERO_PAD_VALUE, 'left');
+    expect(proofInputKeyPart).toStrictEqual(paddedKey);
   });
 });
