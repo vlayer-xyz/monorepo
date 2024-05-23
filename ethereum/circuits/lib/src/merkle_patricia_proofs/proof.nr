@@ -25,10 +25,10 @@ struct Proof<MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN> {
 	depth: u64
 }
 
-struct ProofInput<MAX_KEY_LEN, MAX_VALUE_LEN, MAX_DEPTH, MAX_LEAF_LEN> {
-    key: Key<MAX_KEY_LEN>,
+struct ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN> {
+    key: Key<MAX_PREFIXED_KEY_NIBBLE_LEN>,
     value: Value<MAX_VALUE_LEN>,
-    proof: Proof<MAX_DEPTH, MAX_LEAF_LEN>
+    proof: Proof<MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN>
 }
 
 impl<MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN> Eq for Proof<MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN> {

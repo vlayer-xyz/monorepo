@@ -3,5 +3,7 @@ import { receiptProofConfigM } from '../../noir/oracles/common/proofConfig/recei
 import { createNewTopLevelProofFixture } from './new_proof.js';
 
 export function createNewReceiptProofFixture(proof: Proof): string {
-  return createNewTopLevelProofFixture(proof, receiptProofConfigM);
+  return `${createNewTopLevelProofFixture(proof, receiptProofConfigM)}
+global proof_input_serialized = proof_input.serialize();
+`;
 }

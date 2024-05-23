@@ -1,21 +1,23 @@
 use crate::misc::{types::{Bytes32, Address}, option::make_option};
 use crate::header::get_header;
-use crate::verifiers::receipt::{MAX_ENCODED_RECEIPT_LENGTH, verify_receipt};
+use crate::verifiers::receipt::verify_receipt;
+use crate::merkle_patricia_proofs::proof::{Proof, ProofInput};
 use dep::std::unsafe::zeroed;
 use dep::proof::receipt_proof::ReceiptProof;
 
 global BLOOM_FILTER_LEN: u64 = 256;
 
+global MAX_KEY_LEN = 3;
 global MAX_DEPTH_NO_LEAF = 6;
-global MAX_PREFIXED_KEY_NIBBLE_LEN = 8;
+global MAX_PREFIXED_KEY_NIBBLE_LEN = 8; // (MAX_KEY_LEN + 1) * 2
 
 global MAX_VALUE_LEN_M = 1000;
 global MAX_LEAF_LEN_M = 1011;
 
-type TxType = u8;
+global LEGACY_MAX_RECEIPT_ENCODED_LEN = 525;
+global LEGACY_MAX_RECEIPT_RLP_LENGTH = 524;
 
-struct PhantomReceiptProofLen<MAX_RECEIPT_PROOF_LEN> {}
-struct PhantomReceiptRlpLen<MAX_RECEIPT_ENCODED_LEN> {}
+type TxType = u8;
 
 struct TxReceiptPartial {
     status: Option<u1>,
@@ -67,19 +69,15 @@ impl From<TxReceiptPartial> for ForeignCallTxReceiptPartial {
     }
 }
 
+type ProofInputSerialized<LEN> = [Field; LEN];
+
 struct TxReceiptWithinBlock {
     receipt: TxReceiptPartial,
     block_hash: Bytes32
 }
 
-pub fn get_receipt<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_ENCODED_LEN>(
-    chain_id: Field,
-    block_number: u64,
-    tx_idx: Field,
-    _max_receipt_proof_len: PhantomReceiptProofLen<MAX_RECEIPT_PROOF_LEN>,
-    _max_receipt_rlp_len: PhantomReceiptRlpLen<MAX_RECEIPT_ENCODED_LEN>
-) -> TxReceiptWithinBlock {
-    let (tx_type, receipt, proof): (TxType, TxReceiptPartial, ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_ENCODED_RECEIPT_LENGTH>) = get_receipt_unconstrained(chain_id, block_number, tx_idx);
+pub fn get_receipt(chain_id: Field, block_number: u64, tx_idx: Field) -> TxReceiptWithinBlock {
+    let (tx_type, receipt, proof) = get_receipt_unconstrained_M(chain_id, block_number, tx_idx);
     let header = get_header(chain_id, block_number);
     verify_receipt(
         block_number,
@@ -93,18 +91,18 @@ pub fn get_receipt<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_ENCODED_LEN>(
 }
 
 #[oracle(get_receipt)]
-unconstrained fn get_receipt_oracle<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_ENCODED_LEN>(
+unconstrained fn get_receipt_oracle<PROOF_INPUT_LEN>(
     _chain_id: Field,
     _block_number: u64,
     _tx_idx: Field
-) -> (TxType, ForeignCallTxReceiptPartial, ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_ENCODED_RECEIPT_LENGTH>) {}
+) -> (TxType, ForeignCallTxReceiptPartial, ProofInputSerialized<PROOF_INPUT_LEN>) {}
 
-unconstrained fn get_receipt_unconstrained<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_ENCODED_LEN>(
+unconstrained fn get_receipt_unconstrained_M(
     chain_id: Field,
     block_number: u64,
     tx_idx: Field
-) -> (TxType, TxReceiptPartial, ReceiptProof<MAX_RECEIPT_PROOF_LEN, MAX_ENCODED_RECEIPT_LENGTH>) {
-    let (tx_type, receipt, proof) = get_receipt_oracle(chain_id, block_number, tx_idx);
+) -> (TxType, TxReceiptPartial, ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN_M, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN_M>) {
+    let (tx_type, receipt, proof_input) = get_receipt_oracle(chain_id, block_number, tx_idx);
 
     let receipt = TxReceiptPartial {
         status: make_option(receipt.status, receipt.status_is_some),
@@ -112,5 +110,7 @@ unconstrained fn get_receipt_unconstrained<MAX_RECEIPT_PROOF_LEN, MAX_RECEIPT_EN
         cumulative_gas_used: receipt.cumulative_gas_used,
         logs_bloom: receipt.logs_bloom
     };
-    (tx_type, receipt, proof)
+    let proof_input = ProofInput::deserialize(proof_input);
+
+    (tx_type, receipt, proof_input)
 }

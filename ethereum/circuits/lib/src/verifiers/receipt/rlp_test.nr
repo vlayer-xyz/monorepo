@@ -13,7 +13,7 @@ global pre_byzantium_receipt_rlp_fragment = Fragment::from_array(pre_byzantium_r
 fn test_pre_byzantium() {
     assert_receipt_rlp_equals(
         true,
-        pre_byzantium_receipt_rlp_fragment,
+        Fragment::from_array(pre_byzantium_receipt_rlp),
         pre_byzantium_receipt
     );
 }
