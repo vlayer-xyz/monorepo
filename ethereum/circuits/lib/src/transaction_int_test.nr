@@ -1,4 +1,4 @@
-use crate::transaction::{get_transaction, TransactionWithinBlock, PhantomTransactionProofLen, PhantomTransactionRlpLen};
+use crate::transaction::{get_transaction, TransactionWithinBlock};
 use crate::fixtures::mainnet::{
     cancun::small_block::{
     header::{number, block_header_partial, block_header_rlp},
@@ -20,20 +20,18 @@ use dep::std::test::OracleMock;
 use crate::chain::ETHEREUM_MAINNET_ID;
 
 global MAX_DATA_LEN = 1000;
-global phantom_transaction_proof_len: PhantomTransactionProofLen<3724> = PhantomTransactionProofLen {}; //= 7 (MAX_TREE_DEPTH) * 532 (MAX_TRIE_NODE_LEN)
-global phantom_transaction_rlp_len: PhantomTransactionRlpLen<525> = PhantomTransactionRlpLen {};
+global PROOF_LEN = 3724;
+global MAX_RLP_LEN = 525;
 
 #[test]
 fn get_transaction_success() {
     let _ = OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp));
     let _ = OracleMock::mock("get_transaction").returns((tx_type, foreign_call_transaction, proof));
 
-    let transaction_within_block: TransactionWithinBlock<MAX_DATA_LEN> = get_transaction(
+    let transaction_within_block: TransactionWithinBlock<MAX_DATA_LEN> = get_transaction::<MAX_DATA_LEN, PROOF_LEN, MAX_RLP_LEN>(
         ETHEREUM_MAINNET_ID,
         number,
-        tx_idx,
-        phantom_transaction_proof_len,
-        phantom_transaction_rlp_len
+        tx_idx
     );
 
     assert_eq(transaction_within_block.block_hash, block_header_partial.hash);
@@ -46,12 +44,10 @@ fn get_transaction_wrong_block_number() {
     let _ = OracleMock::mock("get_transaction").returns((tx_type, foreign_call_transaction, proof));
 
     let wrong_number = number + 1;
-    let _: TransactionWithinBlock<MAX_DATA_LEN> = get_transaction(
+    let _: TransactionWithinBlock<MAX_DATA_LEN> = get_transaction::<MAX_DATA_LEN, PROOF_LEN, MAX_RLP_LEN>(
         ETHEREUM_MAINNET_ID,
         wrong_number,
-        tx_idx,
-        phantom_transaction_proof_len,
-        phantom_transaction_rlp_len
+        tx_idx
     );
 }
 
@@ -61,12 +57,10 @@ fn get_transaction_wrong_tx_idx() {
     let _ = OracleMock::mock("get_transaction").returns((tx_type, foreign_call_transaction, proof));
 
     let wrong_tx_idx = tx_idx + 1;
-    let _: TransactionWithinBlock<MAX_DATA_LEN> = get_transaction(
+    let _: TransactionWithinBlock<MAX_DATA_LEN> = get_transaction::<MAX_DATA_LEN, PROOF_LEN, MAX_RLP_LEN>(
         ETHEREUM_MAINNET_ID,
         number,
-        wrong_tx_idx,
-        phantom_transaction_proof_len,
-        phantom_transaction_rlp_len
+        wrong_tx_idx
     );
 }
 
@@ -75,12 +69,10 @@ fn get_transaction_wrong_transaction() {
     let _ = OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp));
     let _ = OracleMock::mock("get_transaction").returns((another_tx_type, another_foreign_call_transaction, another_proof));
 
-    let _: TransactionWithinBlock<MAX_DATA_LEN> = get_transaction(
+    let _: TransactionWithinBlock<MAX_DATA_LEN> = get_transaction::<MAX_DATA_LEN, PROOF_LEN, MAX_RLP_LEN>(
         ETHEREUM_MAINNET_ID,
         number,
-        another_tx_idx,
-        phantom_transaction_proof_len,
-        phantom_transaction_rlp_len
+        another_tx_idx
     );
 }
 
@@ -89,11 +81,9 @@ fn get_transaction_wrong_header() {
     let _ = OracleMock::mock("get_header").returns((another_block_header_partial, another_block_header_rlp));
     let _ = OracleMock::mock("get_transaction").returns((tx_type, foreign_call_transaction, proof));
 
-    let _: TransactionWithinBlock<MAX_DATA_LEN> = get_transaction(
+    let _: TransactionWithinBlock<MAX_DATA_LEN> = get_transaction::<MAX_DATA_LEN, PROOF_LEN, MAX_RLP_LEN>(
         ETHEREUM_MAINNET_ID,
         another_number,
-        tx_idx,
-        phantom_transaction_proof_len,
-        phantom_transaction_rlp_len
+        tx_idx
     );
 }
