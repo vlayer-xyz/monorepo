@@ -1,7 +1,7 @@
 use dep::ethereum::misc::types::Address;
 use dep::token::nft_list::mainnet::BORED_APE_YACHT_CLUB;
 use dep::std::field::bytes32_to_field;
-use dep::ethereum::misc::field::field_to_bytes32;
+use dep::ethereum::misc::bytes32::field_to_bytes32;
 
 mod main_test;
 

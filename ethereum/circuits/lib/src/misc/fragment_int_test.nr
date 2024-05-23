@@ -21,7 +21,7 @@ mod u8_fragment {
 }
 
 mod Field_fragment {
-    use crate::misc::{fragment::Fragment, field_test::MAX_FIELD_VALUE};
+    use crate::misc::{fragment::Fragment, bytes32_test::MAX_FIELD_VALUE};
 
     #[test]
     fn success() {
