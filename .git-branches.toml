@@ -100,4 +100,4 @@ feature-branches = "rebase"
 # Perennial branches have no parent branch.
 # The only updates they receive are additional commits
 # made to their tracking branch somewhere else.
-perennial-branches = "merge"
+perennial-branches = "rebase"
