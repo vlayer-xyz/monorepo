@@ -7,6 +7,8 @@ use crate::verifiers::transaction::verify_tx;
 global MAX_TREE_DEPTH = 7;
 global MAX_KEY_LEN = 3;
 
+global LEGACY_MAX_TX_ENCODED_LEN = 525;
+
 type TxType = u8;
 
 struct TxPartial<MAX_DATA_LEN> {

@@ -22,10 +22,7 @@ export enum OFFSETS {
   STATE_ROOT_IS_SOME,
   CUMULATIVE_GAS_USED,
   LOGS_BLOOM,
-  PROOF_KEY,
-  PROOF,
-  PROOF_DEPTH,
-  PROOF_VALUE
+  PROOF_INPUT
 }
 
 export const getReceiptOracle = async (
@@ -47,7 +44,7 @@ export const getReceiptOracle = async (
 
   const encodedReceipt = encodeReceipt(receipt);
   const encodedReceiptProof = encodeReceiptProof(receiptProof);
-  return [txType, ...encodedReceipt, ...encodedReceiptProof];
+  return [txType, ...encodedReceipt, encodedReceiptProof];
 };
 
 export function decodeGetReceiptArguments(args: NoirArguments): {

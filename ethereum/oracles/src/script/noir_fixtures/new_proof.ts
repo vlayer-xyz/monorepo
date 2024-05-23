@@ -32,7 +32,7 @@ export function createNewProofInputFixture(proof: Proof, config: ProofConfig): s
   key: ${indentBlock(joinArray(key), 1)},
   value: ${indentBlock(joinArray(value), 1)},
 
-  proof: ${indentBlock(createProofFixture(proof, config.maxProofLevels, config.maxLeafLen), 1)}
+  proof: ${indentBlock(createProofFixture(proof, config.maxProofDepth, config.maxLeafLen), 1)}
 }`;
 }
 
