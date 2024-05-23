@@ -1,6 +1,6 @@
 name: circuit tests
 
-on: [push]
+on: [push, merge_group]
 
 jobs:
   test:
