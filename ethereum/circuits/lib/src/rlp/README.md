@@ -83,3 +83,7 @@ type RlpList<MAX_FIELDS> = BoundedVec<RlpFragment, MAX_FIELDS>;
 ```
 
 `RlpList` is a list of `RlpFragments`. As the length before decoding data is unknown, the maximum number of fields needs to be passed as a generic parameter. Don't forget to check the actual number of fields returned.
+
+## Acknowledgements
+
+This lib was inspired by [noir-trie-proofs](https://github.com/aragonzkresearch/noir-trie-proofs/blob/main/lib/src/rlp.nr).
