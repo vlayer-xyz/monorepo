@@ -28,11 +28,7 @@ fn get_transaction_success() {
     let _ = OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp));
     let _ = OracleMock::mock("get_transaction").returns((tx_type, foreign_call_transaction, proof));
 
-    let transaction_within_block: TransactionWithinBlock<MAX_DATA_LEN> = get_transaction::<MAX_DATA_LEN, PROOF_LEN, MAX_RLP_LEN>(
-        ETHEREUM_MAINNET_ID,
-        number,
-        tx_idx
-    );
+    let transaction_within_block: TransactionWithinBlock<MAX_DATA_LEN> = get_transaction::<MAX_DATA_LEN, PROOF_LEN, MAX_RLP_LEN>(ETHEREUM_MAINNET_ID, number, tx_idx);
 
     assert_eq(transaction_within_block.block_hash, block_header_partial.hash);
     assert_eq(transaction_within_block.transaction, foreign_call_transaction.into());
@@ -44,11 +40,7 @@ fn get_transaction_wrong_block_number() {
     let _ = OracleMock::mock("get_transaction").returns((tx_type, foreign_call_transaction, proof));
 
     let wrong_number = number + 1;
-    let _: TransactionWithinBlock<MAX_DATA_LEN> = get_transaction::<MAX_DATA_LEN, PROOF_LEN, MAX_RLP_LEN>(
-        ETHEREUM_MAINNET_ID,
-        wrong_number,
-        tx_idx
-    );
+    let _: TransactionWithinBlock<MAX_DATA_LEN> = get_transaction::<MAX_DATA_LEN, PROOF_LEN, MAX_RLP_LEN>(ETHEREUM_MAINNET_ID, wrong_number, tx_idx);
 }
 
 #[test(should_fail_with = "Key does not match rlp-encoded transaction index")]
@@ -57,11 +49,7 @@ fn get_transaction_wrong_tx_idx() {
     let _ = OracleMock::mock("get_transaction").returns((tx_type, foreign_call_transaction, proof));
 
     let wrong_tx_idx = tx_idx + 1;
-    let _: TransactionWithinBlock<MAX_DATA_LEN> = get_transaction::<MAX_DATA_LEN, PROOF_LEN, MAX_RLP_LEN>(
-        ETHEREUM_MAINNET_ID,
-        number,
-        wrong_tx_idx
-    );
+    let _: TransactionWithinBlock<MAX_DATA_LEN> = get_transaction::<MAX_DATA_LEN, PROOF_LEN, MAX_RLP_LEN>(ETHEREUM_MAINNET_ID, number, wrong_tx_idx);
 }
 
 #[test(should_fail_with = "Internal node hash does not match the hash extracted from the preceding node")]
@@ -69,11 +57,7 @@ fn get_transaction_wrong_transaction() {
     let _ = OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp));
     let _ = OracleMock::mock("get_transaction").returns((another_tx_type, another_foreign_call_transaction, another_proof));
 
-    let _: TransactionWithinBlock<MAX_DATA_LEN> = get_transaction::<MAX_DATA_LEN, PROOF_LEN, MAX_RLP_LEN>(
-        ETHEREUM_MAINNET_ID,
-        number,
-        another_tx_idx
-    );
+    let _: TransactionWithinBlock<MAX_DATA_LEN> = get_transaction::<MAX_DATA_LEN, PROOF_LEN, MAX_RLP_LEN>(ETHEREUM_MAINNET_ID, number, another_tx_idx);
 }
 
 #[test(should_fail_with = "Internal node hash does not match the hash extracted from the preceding node")]
@@ -81,9 +65,5 @@ fn get_transaction_wrong_header() {
     let _ = OracleMock::mock("get_header").returns((another_block_header_partial, another_block_header_rlp));
     let _ = OracleMock::mock("get_transaction").returns((tx_type, foreign_call_transaction, proof));
 
-    let _: TransactionWithinBlock<MAX_DATA_LEN> = get_transaction::<MAX_DATA_LEN, PROOF_LEN, MAX_RLP_LEN>(
-        ETHEREUM_MAINNET_ID,
-        another_number,
-        tx_idx
-    );
+    let _: TransactionWithinBlock<MAX_DATA_LEN> = get_transaction::<MAX_DATA_LEN, PROOF_LEN, MAX_RLP_LEN>(ETHEREUM_MAINNET_ID, another_number, tx_idx);
 }

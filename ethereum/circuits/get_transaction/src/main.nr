@@ -10,10 +10,6 @@ fn main(
     block_number: pub u64,
     tx_idx: pub Field
 ) -> pub TransactionWithinBlock<MAX_DATA_LEN_M> {
-    let transaction_within_block: TransactionWithinBlock<MAX_DATA_LEN_M> = get_transaction::<MAX_DATA_LEN_M, PROOF_LEN, MAX_ENCODED_TX_LENGTH>(
-        chain_id,
-        block_number,
-        tx_idx
-    );
+    let transaction_within_block: TransactionWithinBlock<MAX_DATA_LEN_M> = get_transaction::<MAX_DATA_LEN_M, PROOF_LEN, MAX_ENCODED_TX_LENGTH>(chain_id, block_number, tx_idx);
     transaction_within_block
 }
