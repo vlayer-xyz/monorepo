@@ -26,9 +26,9 @@
   "dependencies": {
     "@ethereumjs/trie": "^6.2.0",
     "@iarna/toml": "^2.2.5",
-    "@noir-lang/backend_barretenberg": "0.29.0-a5b7df1.nightly",
-    "@noir-lang/noir_js": "0.29.0-a5b7df1.nightly",
-    "@noir-lang/noirc_abi": "0.29.0-a5b7df1.nightly",
+    "@noir-lang/backend_barretenberg": "0.30.0",
+    "@noir-lang/noir_js": "0.30.0",
+    "@noir-lang/noirc_abi": "0.30.0",
     "dotenv": "^16.4.5",
     "execa": "^9.0.2",
     "fastify": "^4.26.2",
