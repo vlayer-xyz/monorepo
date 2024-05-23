@@ -125,7 +125,6 @@ mod struct_slot {
     #[test(should_fail_with="Addition overflow")]
     fn overflow() {
         let slot = [0xff; 32];
-        let expected_slot = field_to_bytes32(1);
-        assert_eq(expected_slot, struct_slot(slot, 256));
+        let _ = struct_slot(slot, 256);
     }
 }
