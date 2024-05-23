@@ -47,8 +47,7 @@ pub fn get_log<MAX_LOG_DATA_LEN>(_block_number: Field, _tx_idx: Field, _log_idx:
 
 pub(crate) fn extract_log<MAX_LOG_DATA_LEN, MAX_LOGS_COUNT>(
     receipt_rlp: [u8; LEGACY_MAX_RECEIPT_RLP_LENGTH],
-    log_idx: u64,
-    phantom_max_logs_count: PhantomMaxLogsCount<MAX_LOGS_COUNT>
+    log_idx: u64
 ) -> Log<MAX_LOG_DATA_LEN> {
     let receipt_rlp_fragment = Fragment::from_array(receipt_rlp);
     let logs_fragment = extract_logs_fragment(receipt_rlp_fragment);
@@ -74,8 +73,8 @@ fn extract_logs_fragment(receipt_rlp_fragment: ReceiptFragment) -> ReceiptFragme
 }
 
 fn extract_log_fragment<MAX_LOGS_COUNT>(logs_fragment: ReceiptFragment, log_idx: u64) -> ReceiptFragment {
-    let logs_rlp_list = decode_list::<MAX_RECEIPT_RLP_LENGTH, MAX_LOGS_COUNT>(logs_fragment);
-    rlp_subfragment::<MAX_LOGS_COUNT, MAX_RECEIPT_RLP_LENGTH>(logs_fragment, logs_rlp_list.get(log_idx))
+    let logs_rlp_list = decode_list::<LEGACY_MAX_RECEIPT_RLP_LENGTH, MAX_LOGS_COUNT>(logs_fragment);
+    rlp_subfragment::<MAX_LOGS_COUNT, LEGACY_MAX_RECEIPT_RLP_LENGTH>(logs_fragment, logs_rlp_list.get(log_idx))
 }
 
 fn extract_address(
