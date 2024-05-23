@@ -1,6 +1,6 @@
 name: circuit profiling
 
-on: [push]
+on: [push, merge_group]
 
 jobs:
   test:

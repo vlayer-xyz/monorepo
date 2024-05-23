@@ -1,6 +1,6 @@
 name: Static checks
 
-on: [push]
+on: [push, merge_group]
 
 jobs:
   test:

@@ -1,6 +1,6 @@
 name: ethereum_history_api contract tests
 
-on: [push]
+on: [push, merge_group]
 
 env:
   FOUNDRY_PROFILE: ci
