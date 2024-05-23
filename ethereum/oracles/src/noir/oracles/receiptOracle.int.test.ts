@@ -65,9 +65,9 @@ describe('getReceiptOracle', () => {
       "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", "0x00", 
       "0x00", "0x00", "0x00", "0x00", "0x02", "0x00", "0x00", "0x00"
     ]);
-    expect(receiptWithProof[OFFSETS.PROOF_INPUT].slice(0, 8)).toStrictEqual(
-      padArray(['0x08'], receiptProofConfigM.maxPrefixedKeyNibbleLen, ZERO_PAD_VALUE, 'left')
-    );
+    const proofInputKeyPart = receiptWithProof[OFFSETS.PROOF_INPUT].slice(0, 8);
+    const paddedKey = padArray(['0x08'], receiptProofConfigM.maxPrefixedKeyNibbleLen, ZERO_PAD_VALUE, 'left');
+    expect(proofInputKeyPart).toStrictEqual(paddedKey);
   });
 
   it('transaction not found', async () => {
