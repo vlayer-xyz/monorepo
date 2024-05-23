@@ -1,5 +1,3 @@
-import { Abi, InputMap, abiEncode } from '@noir-lang/noirc_abi';
-import { filterPublic } from '../../util/abi.js';
 import { writeFile } from 'fs/promises';
 import { Hex, concatHex } from 'viem';
 import { removeHexPrefix } from '../../util/hex.js';
@@ -24,10 +22,4 @@ export async function encodeProofAsFields(
   const proofAsFieldsWithInputs = await readObject<Hex[]>(proofAsFieldsPath);
   const proofAsFields = proofAsFieldsWithInputs.slice(publicInputs.length);
   return proofAsFields;
-}
-
-export function encodePublicInputs(abi: Abi, verifierData: InputMap): Hex[] {
-  const publicInputsAbi = filterPublic(abi);
-  const publicInputsEncodedMap = abiEncode(publicInputsAbi, verifierData, verifierData.return);
-  return Array.from(publicInputsEncodedMap.values()) as Hex[];
 }
