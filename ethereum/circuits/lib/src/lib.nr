@@ -16,6 +16,8 @@ mod misc;
 mod chain;
 mod serde;
 mod serde_test;
+mod uint256;
+mod uint256_test;
 
 mod fixtures;
 mod verifiers;

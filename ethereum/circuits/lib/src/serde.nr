@@ -13,7 +13,8 @@ use crate::account_with_storage::{
     MAX_PREFIXED_KEY_NIBBLE_LEN as STORAGE_MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_STORAGE_DEPTH_NO_LEAF_M,
     MAX_STORAGE_VALUE_LEN, MAX_STORAGE_LEAF_LEN
 };
-use crate::misc::{fragment::Fragment, types::{BYTES32_LENGTH, Bytes32, ADDRESS_LENGTH, Address}, uint256::U256};
+use crate::misc::{fragment::Fragment, types::{BYTES32_LENGTH, Bytes32, ADDRESS_LENGTH, Address}};
+use crate::uint256::U256;
 use crate::merkle_patricia_proofs::proof::{ProofInput, Proof, Node, MAX_NODE_LEN};
 use dep::std::unsafe::zeroed;
 

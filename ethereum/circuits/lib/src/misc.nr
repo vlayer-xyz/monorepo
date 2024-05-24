@@ -11,5 +11,3 @@ mod types;
 mod option;
 mod bytes32;
 mod bytes32_test;
-mod uint256;
-mod uint256_test;
