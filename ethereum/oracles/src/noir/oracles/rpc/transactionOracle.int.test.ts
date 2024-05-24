@@ -4,6 +4,7 @@ import { OFFSETS, getTransactionOracle } from './transactionOracle.js';
 import { MAX_DATA_LEN_M } from './common/txConfig.js';
 import { ZERO_PAD_VALUE } from '../common/const.js';
 import { padArray } from '../../../util/array.js';
+import { txProofConfigM } from './common/proofConfig/tx.js';
 
 describe('getTransactionOracle', () => {
   it('success', async () => {
@@ -58,9 +59,19 @@ describe('getTransactionOracle', () => {
         '0x4c','0x9e','0xb5','0xa5','0x51','0xd0','0xf4','0x86','0xd8','0x18',
         '0x66','0xf7'
     ]);
-    expect(txWithProof[OFFSETS.PROOF_KEY]).toStrictEqual(['0x00', '0x00', '0x08']);
-    expect(txWithProof[OFFSETS.PROOF]).toMatchSnapshot();
-    expect(txWithProof[OFFSETS.PROOF_DEPTH]).toStrictEqual('0x03');
-    expect(txWithProof[OFFSETS.PROOF_VALUE]).toMatchSnapshot();
+
+    const proofInputKeyPart = txWithProof[OFFSETS.PROOF_INPUT].slice(0, txProofConfigM.maxPrefixedKeyNibbleLen);
+    const paddedKey = padArray(['0x08'], txProofConfigM.maxPrefixedKeyNibbleLen, ZERO_PAD_VALUE, 'left');
+    expect(proofInputKeyPart).toStrictEqual(paddedKey);
+    const proofInputValuePart = txWithProof[OFFSETS.PROOF_INPUT].slice(
+      txProofConfigM.maxPrefixedKeyNibbleLen,
+      txProofConfigM.maxPrefixedKeyNibbleLen + txProofConfigM.maxValueLen
+    );
+    expect(proofInputValuePart).toMatchSnapshot();
+    const proofInputDepthPart = txWithProof[OFFSETS.PROOF_INPUT].slice(
+      txWithProof[OFFSETS.PROOF_INPUT].length - 1,
+      txWithProof[OFFSETS.PROOF_INPUT].length
+    );
+    expect(proofInputDepthPart).toStrictEqual(['0x03']);
   });
 });
