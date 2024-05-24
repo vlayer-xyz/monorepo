@@ -91,9 +91,6 @@ impl<MAX_DATA_LEN> From<ForeignCallTransaction> for TxPartial<MAX_DATA_LEN> {
     }
 }
 
-struct PhantomTransactionProofLen<MAX_PROOF_LEN> {}
-struct PhantomTransactionRlpLen<MAX_RLP_LEN> {}
-
 struct TransactionWithinBlock<MAX_DATA_LEN> {
     transaction: TxPartial<MAX_DATA_LEN>,
     block_hash: Bytes32
@@ -102,9 +99,7 @@ struct TransactionWithinBlock<MAX_DATA_LEN> {
 pub fn get_transaction<MAX_DATA_LEN, MAX_PROOF_LEN, MAX_RLP_LEN>(
     chain_id: Field,
     block_number: u64,
-    tx_idx: Field,
-    _max_transaction_proof_len: PhantomTransactionProofLen<MAX_PROOF_LEN>,
-    _max_transaction_rlp_len: PhantomTransactionRlpLen<MAX_RLP_LEN>
+    tx_idx: Field
 ) -> TransactionWithinBlock<MAX_DATA_LEN> {
     let (tx_type, transaction, proof):  (TxType, TxPartial<MAX_DATA_LEN>, TransactionProof<MAX_PROOF_LEN, MAX_RLP_LEN>) = get_transaction_unconstrained(chain_id, block_number, tx_idx);
     let header = get_header(chain_id, block_number);
