@@ -3,6 +3,7 @@ members = [
     "ethereum/circuits/lib",
     "ethereum/circuits/get_receipt",
     "ethereum/circuits/get_storage",
+    "ethereum/circuits/get_storage_recursive",
     "ethereum/circuits/get_account",
     "ethereum/circuits/get_header",
     "ethereum/circuits/get_transaction",
