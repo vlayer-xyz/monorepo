@@ -1,7 +1,7 @@
 import { ForeignCallResult, ForeignCallParams } from './types.js';
 import { decodeNoirArguments, encodeForeignCallResult } from './encode.js';
 import { MultiChainClient } from '../../../ethereum/client.js';
-import { Oracle } from '../oracles.js';
+import { Oracle } from '../types.js';
 
 /**
  * The format that the Noir oracles server receives the arguments in is slightly different than the format that acvm.js uses.

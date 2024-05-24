@@ -3,7 +3,7 @@ import { type Address } from 'viem';
 import { assert } from '../../../util/assert.js';
 import { encodeAccount, encodeStateProof } from './accountOracle/encode.js';
 import { decodeAddress, decodeField } from '../common/decode.js';
-import { NoirArguments } from '../oracles.js';
+import { NoirArguments } from '../types.js';
 import { MultiChainClient } from '../../../ethereum/client.js';
 import { Enum } from '../../../util/enum.js';
 

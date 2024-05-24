@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { decodeNoirArguments, encodeForeignCallResult } from './encode.js';
 import { ForeignCallParams, ForeignCallResult } from './types.js';
-import { NoirArguments } from '../oracles.js';
+import { NoirArguments } from '../types.js';
 
 describe('decodeNoirArguments', () => {
   it('should decode a single foreign call param correctly', () => {

@@ -1,6 +1,6 @@
 import { ForeignCallOutput } from '@noir-lang/noir_js';
 import { ForeignCallParam, ForeignCallParams, ForeignCallResult } from './types.js';
-import { NoirArguments } from '../oracles.js';
+import { NoirArguments } from '../types.js';
 
 /// DECODE
 export function decodeNoirArguments(params: ForeignCallParams): NoirArguments {
