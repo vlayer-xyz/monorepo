@@ -63,5 +63,15 @@ describe('getTransactionOracle', () => {
     const proofInputKeyPart = txWithProof[OFFSETS.PROOF_INPUT].slice(0, txProofConfigM.maxPrefixedKeyNibbleLen);
     const paddedKey = padArray(['0x08'], txProofConfigM.maxPrefixedKeyNibbleLen, ZERO_PAD_VALUE, 'left');
     expect(proofInputKeyPart).toStrictEqual(paddedKey);
+    const proofInputValuePart = txWithProof[OFFSETS.PROOF_INPUT].slice(
+      txProofConfigM.maxPrefixedKeyNibbleLen,
+      txProofConfigM.maxPrefixedKeyNibbleLen + txProofConfigM.maxValueLen
+    );
+    expect(proofInputValuePart).toMatchSnapshot();
+    const proofInputDepthPart = txWithProof[OFFSETS.PROOF_INPUT].slice(
+      txWithProof[OFFSETS.PROOF_INPUT].length - 1,
+      txWithProof[OFFSETS.PROOF_INPUT].length
+    );
+    expect(proofInputDepthPart).toStrictEqual(['0x03']);
   });
 });
