@@ -20,10 +20,7 @@ export enum OFFSETS {
   V,
   R,
   S,
-  PROOF_KEY,
-  PROOF,
-  PROOF_DEPTH,
-  PROOF_VALUE
+  PROOF_INPUT
 }
 
 export const getTransactionOracle = async (
@@ -47,7 +44,7 @@ export const getTransactionOracle = async (
   const txType = txTypeToHex(transaction.type);
   const encodedTransaction = encodeTx(transaction);
   const encodedTxProof = encodeTxProof(txProof);
-  return [txType, ...encodedTransaction, ...encodedTxProof];
+  return [txType, ...encodedTransaction, encodedTxProof];
 };
 
 export function decodeGetTransactionArguments(args: NoirArguments): {
