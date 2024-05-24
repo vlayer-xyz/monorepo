@@ -6,7 +6,7 @@ import { BYTES_32_ZERO } from '../../util/const.js';
 import { logToRlpFields } from '../../ethereum/receipt.js';
 import { encodeHex } from '../../noir/oracles/common/encode.js';
 import { ZERO_PAD_VALUE } from '../../noir/oracles/common/const.js';
-import { LEGACY_MAX_RECEIPT_RLP_LEN } from '../../noir/oracles/common/proofConfig/receipt.js';
+import { LEGACY_MAX_RECEIPT_RLP_LEN } from '../../noir/oracles/rpc/common/proofConfig/receipt.js';
 
 const MAX_TOPICS = 4;
 

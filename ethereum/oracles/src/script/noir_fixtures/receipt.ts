@@ -8,7 +8,7 @@ import { toRlp } from 'viem';
 import {
   LEGACY_MAX_RECEIPT_ENCODED_LEN,
   LEGACY_MAX_RECEIPT_RLP_LEN
-} from '../../noir/oracles/common/proofConfig/receipt.js';
+} from '../../noir/oracles/rpc/common/proofConfig/receipt.js';
 
 export function createReceiptFixture(receipt: TransactionReceipt): string {
   const receiptRlp = joinArray(

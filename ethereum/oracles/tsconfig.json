@@ -1,6 +1,6 @@
 {
   "extends": "../../tsconfig.common.json",
-  "include": ["src/**/*", "src/noir/oracles/accountOracle/fixtures/*.json"],
+  "include": ["src/**/*", "src/noir/oracles/rpc/accountOracle/fixtures/*.json"],
   "compilerOptions": {
     "rootDirs": ["src"],
     "outDir": "dist"
