@@ -3,11 +3,11 @@ import Fastify from 'fastify';
 import http from 'http';
 import { JSONRPCServerMethods, ServerParams, getOracleHandler } from './handlers.js';
 import { MultiChainClient } from '../../../ethereum/client.js';
-import { getHeaderOracle } from '../headerOracle.js';
-import { getAccountOracle } from '../accountOracle.js';
-import { getProofOracle } from '../proofOracle.js';
-import { getReceiptOracle } from '../receiptOracle.js';
-import { getTransactionOracle } from '../transactionOracle.js';
+import { getHeaderOracle } from '../rpc/headerOracle.js';
+import { getAccountOracle } from '../rpc/accountOracle.js';
+import { getProofOracle } from '../rpc/proofOracle.js';
+import { getReceiptOracle } from '../rpc/receiptOracle.js';
+import { getTransactionOracle } from '../rpc/transactionOracle.js';
 
 const HTTP_STATUS_NO_CONTENT = 204;
 

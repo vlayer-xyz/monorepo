@@ -2,7 +2,7 @@ import { Hex, keccak256, toRlp } from 'viem';
 import { createNewProofInputFixture } from './new_proof.js';
 import { joinArrayVertical } from '../../noir/noir_js/encode.js';
 import { toHexString } from '../../ethereum/blockHeader.js';
-import { storageProofConfig } from '../../noir/oracles/common/proofConfig/storage.js';
+import { storageProofConfig } from '../../noir/oracles/rpc/common/proofConfig/storage.js';
 
 interface StorageProof {
   key: Hex;
