@@ -1,7 +1,7 @@
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { assert } from '../../../util/assert.js';
 import { decodeField } from '../common/decode.js';
-import { NoirArguments } from '../oracles.js';
+import { NoirArguments } from '../types.js';
 import { MultiChainClient } from '../../../ethereum/client.js';
 import { getReceiptProof } from '../../../ethereum/receiptProof.js';
 import { encodeReceipt, encodeReceiptProof } from './receiptOracle/encode.js';

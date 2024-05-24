@@ -3,7 +3,7 @@ import { type BlockHeader, blockToHeader } from '../../../ethereum/blockHeader.j
 import { assert } from '../../../util/assert.js';
 import { encodeBlockHeader } from './headerOracle/encode.js';
 import { decodeField } from '../common/decode.js';
-import { NoirArguments } from '../oracles.js';
+import { NoirArguments } from '../types.js';
 import { type Block } from '../../../ethereum/blockHeader.js';
 import { AlchemyClient, MultiChainClient } from '../../../ethereum/client.js';
 import { Enum } from '../../../util/enum.js';

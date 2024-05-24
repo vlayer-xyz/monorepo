@@ -1,5 +1,5 @@
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
-import { NoirArguments } from '../oracles.js';
+import { NoirArguments } from '../types.js';
 import { MultiChainClient } from '../../../ethereum/client.js';
 import { txTypeToHex } from '../../../ethereum/receipt.js';
 import { getTxProof } from '../../../ethereum/txProof.js';
