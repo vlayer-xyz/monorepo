@@ -3,7 +3,7 @@ use crate::rlp::types::{RlpList, RlpFragment, RlpHeader, STRING, LIST};
 use crate::misc::fragment::Fragment;
 
 // Maximum number of bytes required to represent entity length.
-// This means that this library can only decode RLP entities with a length of up to 2^16 bytes.
+// This means that this library can only decode RLP entities with a length of up to 2^16 - 1 bytes.
 global MAX_LEN_IN_BYTES: u64 = 2;
 
 pub fn extract_payload_len<N>(data: Fragment<N, u8>, lenlen: u64) -> u64 {

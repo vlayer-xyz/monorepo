@@ -32,7 +32,7 @@ pub(crate) fn memcpy_up_to_length<TItem, SRC_LEN, DEST_LEN>(dest: &mut [TItem; D
     }
 }
 
-// Fills destination array with content of source array starting from the starting position.
+// Fills destination array with content of source array starting from the offset in source array.
 pub(crate) fn memcpy<TItem, SRC_LEN, DEST_LEN>(dest: &mut [TItem; DEST_LEN], src: [TItem; SRC_LEN], offset: u64) {
     memcpy_up_to_length(dest, src, offset, DEST_LEN);
 }

@@ -71,7 +71,6 @@ pub fn shift_right_by_one<N>(arr: &mut [u8; N]) {
     }
 }
 
-// Left-shift the byte array
 pub(crate) fn left_byte_shift<N>(input: [u8; N], n: u64) -> [u8; N] {
     let mut out = [0; N];
 
