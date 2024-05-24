@@ -1,22 +1,24 @@
 import { JSONRPCRequest, JSONRPCServer, TypedJSONRPCServer } from 'json-rpc-2.0';
 import Fastify from 'fastify';
 import http from 'http';
-import { JSONRPCServerMethods, ServerParams, getOracleHandler } from './handlers.js';
+import { JSONRPCServerMethods, ServerParams, getOracleHandler, getRpcOracleHandler } from './handlers.js';
 import { MultiChainClient } from '../../../ethereum/client.js';
 import { getHeaderOracle } from '../rpc/headerOracle.js';
 import { getAccountOracle } from '../rpc/accountOracle.js';
 import { getProofOracle } from '../rpc/proofOracle.js';
 import { getReceiptOracle } from '../rpc/receiptOracle.js';
 import { getTransactionOracle } from '../rpc/transactionOracle.js';
+import { getStorageOracle } from '../recursive/getStorageOracle.js';
 
 const HTTP_STATUS_NO_CONTENT = 204;
 
 const jsonRPCServer: TypedJSONRPCServer<JSONRPCServerMethods, ServerParams> = new JSONRPCServer();
-jsonRPCServer.addMethod('get_header', getOracleHandler.bind(this, getHeaderOracle));
-jsonRPCServer.addMethod('get_account', getOracleHandler.bind(this, getAccountOracle));
-jsonRPCServer.addMethod('get_proof', getOracleHandler.bind(this, getProofOracle));
-jsonRPCServer.addMethod('get_receipt', getOracleHandler.bind(this, getReceiptOracle));
-jsonRPCServer.addMethod('get_transaction', getOracleHandler.bind(this, getTransactionOracle));
+jsonRPCServer.addMethod('get_header', getRpcOracleHandler.bind(this, getHeaderOracle));
+jsonRPCServer.addMethod('get_account', getRpcOracleHandler.bind(this, getAccountOracle));
+jsonRPCServer.addMethod('get_proof', getRpcOracleHandler.bind(this, getProofOracle));
+jsonRPCServer.addMethod('get_receipt', getRpcOracleHandler.bind(this, getReceiptOracle));
+jsonRPCServer.addMethod('get_transaction', getRpcOracleHandler.bind(this, getTransactionOracle));
+jsonRPCServer.addMethod('recursive_get_storage', getOracleHandler.bind(this, getStorageOracle));
 
 export function buildOracleServer(
   opts: Fastify.FastifyHttpOptions<http.Server> = {},
