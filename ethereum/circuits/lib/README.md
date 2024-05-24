@@ -107,6 +107,7 @@ All the function in this library prove that the objects are contained within som
     ├── account.nr
     ├── account_with_storage.nr
     ├── transaction.nr
+    ├── uint256.nr
     └── verifiers
         ├── header.nr
         ├── receipt.nr
