@@ -71,20 +71,11 @@ pub fn shift_right_by_one<N>(arr: &mut [u8; N]) {
     }
 }
 
-/// Left-shift for byte arrays
-/// Returns an appropriately shifted byte array.
-///
-/// # Arguments
-/// * `input` - Byte array
-/// * `n` - Amount to left-shift elements by
-///
-/// # Quirks
-/// The empty slots are set to 0.
+// Left-shift the byte array
 pub(crate) fn left_byte_shift<N>(input: [u8; N], n: u64) -> [u8; N] {
     let mut out = [0; N];
 
     for i in 0..N {
-        // Restrict indices to be shifted, i.e. ∀i: i+n < N, out[i] ← input[i+n].
         let index_ind = (((i + n) as u32) < (N as u32)) as u64;
         out[i] = (index_ind as u8) * input[index_ind * (i + n)];
     }
@@ -92,11 +83,7 @@ pub(crate) fn left_byte_shift<N>(input: [u8; N], n: u64) -> [u8; N] {
     out
 }
 
-/// Function for expressing a big-endian byte array as a right-padded one.
-/// Returns a right-padded byte array together with the actual byte length of the number.
-///
-/// # Arguments
-/// * `in_value` - Byte array representing a number in big-endian form.
+// Converts big-endian byte array to a right-padded one.
 pub(crate) fn byte_value<N>(in_value: [u8; N]) -> BoundedVec<u8, N> {
     let mut value_length = 0;
 

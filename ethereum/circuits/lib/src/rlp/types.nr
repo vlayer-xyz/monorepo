@@ -1,15 +1,18 @@
 use crate::misc::{arrays::sub_array_equals_up_to_length, fragment::Fragment};
-use crate::rlp::decode::STRING;
 use crate::misc::bytes::byte_value;
 use dep::u2b::{u64_to_u8, u32_to_u8};
 use crate::misc::types::{Bytes32, BYTES32_LENGTH, Address, ADDRESS_LENGTH};
+
+// Enum for RLP data type
+global STRING: u64 = 0;
+global LIST: u64 = 1;
 
 type RlpList<MAX_FIELDS> = BoundedVec<RlpFragment, MAX_FIELDS>;
 
 struct RlpHeader {
     offset: u64,
     length: u64, 
-    data_type: u64 // STRING or LIST    
+    data_type: u64
 }
 
 impl Eq for RlpHeader {
@@ -21,7 +24,7 @@ impl Eq for RlpHeader {
 struct RlpFragment {
     offset: u64,
     length: u64,    
-    data_type: u64 // STRING or LIST
+    data_type: u64
 }
 
 impl RlpFragment {
