@@ -1,7 +1,6 @@
 use dep::ethereum::transaction::{get_transaction, TransactionWithinBlock};
 
 global MAX_DATA_LEN_M = 1000;
-global PROOF_LEN = MAX_TREE_DEPTH * MAX_TRIE_NODE_LENGTH;
 
 fn main(
     chain_id: pub Field,
