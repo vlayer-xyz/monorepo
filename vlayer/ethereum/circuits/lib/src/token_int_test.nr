@@ -4,15 +4,15 @@ mod test_ERC20Token {
     use dep::ethereum::fixtures::mainnet::{
         paris::usdc_circle::header::{block_header_partial as paris_block_header_partial, block_header_rlp as paris_block_header_rlp},
         paris::usdc_circle::header::{hash, number, state_root, transactions_root, receipts_root},
-        paris::usdc_circle::account::account, paris::usdc_circle::state_proof::state_proof,
-        paris::usdc_circle::storage_proof::proofs
+        paris::usdc_circle::account::account, paris::usdc_circle::state_proof_new::proof_input_serialized as state_proof_input_serialized,
+        paris::usdc_circle::storage_proof_new::proofs_serialized
     };
     use crate::chain_id::MAINNET;
 
     #[test]
     fn success() {
         let _ = OracleMock::mock("get_header").returns((paris_block_header_partial, paris_block_header_rlp));
-        let _ = OracleMock::mock("get_proof").returns((account, state_proof, proofs[0]));
+        let _ = OracleMock::mock("get_proof").returns((account, state_proof_input_serialized, proofs_serialized[0]));
 
         let usdc_token = ERC20Token {
             address: [

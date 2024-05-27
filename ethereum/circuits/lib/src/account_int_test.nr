@@ -3,14 +3,14 @@ use crate::chain::ETHEREUM_MAINNET_ID;
 use crate::fixtures::mainnet::{
     paris::{
     usdc_circle::{
-    header::{number, state_root, block_header_partial, block_header_rlp}, account::account,
-    state_proof::state_proof
+    header::{number, state_root, block_header_partial, block_header_rlp}, account::{account, address},
+    state_proof_new::proof_input_serialized as state_proof_input_serialized
 }
 },
     london::vitalik_balance::{
-    account::account as account_from_different_header,
+    account::{account as account_from_different_header, address as address_from_different_header},
     header::state_root as state_root_from_different_header,
-    state_proof::state_proof as state_proof_from_different_header
+    state_proof_new::proof_input_serialized as state_proof_input_from_different_header_serialized
 }
 };
 use dep::std::test::OracleMock;
@@ -18,9 +18,9 @@ use dep::std::test::OracleMock;
 #[test]
 fn test_get_account_success() {
     let _ = OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp));
-    let _ = OracleMock::mock("get_account").returns((account, state_proof));
+    let _ = OracleMock::mock("get_account").returns((account, state_proof_input_serialized));
 
-    let account_within_block = get_account(ETHEREUM_MAINNET_ID, number, state_proof.key);
+    let account_within_block = get_account(ETHEREUM_MAINNET_ID, number, address);
 
     assert_eq(account.nonce, account_within_block.account.nonce);
     assert_eq(account.balance, account_within_block.account.balance);
@@ -33,11 +33,7 @@ fn test_get_account_success() {
 #[test(should_fail)]
 fn test_get_account_wrong_state_root() {
     let _ = OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp));
-    let _ = OracleMock::mock("get_account").returns((account_from_different_header, state_proof_from_different_header));
+    let _ = OracleMock::mock("get_account").returns((account_from_different_header, state_proof_input_from_different_header_serialized));
 
-    let _ = get_account(
-        ETHEREUM_MAINNET_ID,
-        number,
-        state_proof_from_different_header.key
-    );
+    let _ = get_account(ETHEREUM_MAINNET_ID, number, address_from_different_header);
 }

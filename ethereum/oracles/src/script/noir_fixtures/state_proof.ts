@@ -9,9 +9,9 @@ export function createStateProofFixture(stateProof: GetProofReturnType): string 
   const value = encodeValue(stateProof.accountProof);
   const proof = encodeProof(stateProof.accountProof, accountProofConfig.maxProofLen);
   const depth = stateProof.accountProof.length;
-  const stateProofFixture = `use crate::account::StateProof;
+  const stateProofFixture = `use crate::account::LegacyStateProof;
 
-global state_proof = StateProof {
+global state_proof = LegacyStateProof {
   key: ${indentBlock(joinArray(key), 1)},
   value: ${indentBlock(joinArray(value), 1)},
   proof: ${indentBlock(joinArray(proof), 1)},

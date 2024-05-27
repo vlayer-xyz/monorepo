@@ -3,7 +3,7 @@ mod is_crypto_punk_owner_main {
     use dep::ethereum::{
         fixtures::mainnet::london::crypto_punks::{
         header::{block_header_partial as london_block_header_partial, block_header_rlp as london_block_header_rlp},
-        account::account, state_proof::state_proof, storage_proof::proofs
+        account::account, state_proof_new::proof_input_serialized as state_proof_input_serialized, storage_proof_new::proofs_serialized
     },
         misc::arrays::alter_array
     };
@@ -17,7 +17,7 @@ mod is_crypto_punk_owner_main {
     #[test]
     fn success() {
         let _ = OracleMock::mock("get_header").returns((london_block_header_partial, london_block_header_rlp));
-        let _ = OracleMock::mock("get_proof").returns((account, state_proof, proofs[0]));
+        let _ = OracleMock::mock("get_proof").returns((account, state_proof_input_serialized, proofs_serialized[0]));
         let token_id = 9;
         main(CRYPTO_PUNK_OWNER_WALLER_ADDRESS, token_id, BLOCK_NUMBER);
     }
@@ -25,7 +25,7 @@ mod is_crypto_punk_owner_main {
     #[test(should_fail_with = "Owner is not the same as the wallet address")]
     fn invalid_wallet() {
         let _ = OracleMock::mock("get_header").returns((london_block_header_partial, london_block_header_rlp));
-        let _ = OracleMock::mock("get_proof").returns((account, state_proof, proofs[0]));
+        let _ = OracleMock::mock("get_proof").returns((account, state_proof_input_serialized, proofs_serialized[0]));
 
         let token_id = 9;
         main(

@@ -11,7 +11,7 @@ interface StorageProof {
 
 export function createStorageProofFixture(storageProofs: StorageProof[]): string {
   const storageProofsNoir = storageProofs.map(createSingleStorageProofFixture);
-  return `use crate::account_with_storage::StorageProof;
+  return `use crate::account_with_storage::LegacyStorageProof;
 
 global proofs = ${joinArray(storageProofsNoir)};
 `;
@@ -22,7 +22,7 @@ function createSingleStorageProofFixture(storageProof: StorageProof): string {
   const value = encodeBytes32(storageProof.value);
   const proof = encodeProof(storageProof.proof, storageProofConfig.maxProofLen);
   const depth = storageProof.proof.length;
-  const storageProofFixture = `StorageProof {
+  const storageProofFixture = `LegacyStorageProof {
   key: ${indentBlock(joinArray(key), 1)},
   value: ${indentBlock(joinArray(value), 1)},
   proof: ${indentBlock(joinArray(proof), 1)},

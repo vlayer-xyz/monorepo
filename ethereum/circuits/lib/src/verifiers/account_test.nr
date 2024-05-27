@@ -1,9 +1,9 @@
-use crate::account_with_storage::{Account, MAX_ACCOUNT_STATE_LENGTH, verify_account};
+use crate::{account::MAX_ACCOUNT_STATE_LEN, account_with_storage::{Account, verify_account}};
 use crate::fixtures::{
     mainnet::london::{
     crypto_punks::{
-    account::{rlp_encoded_left_padded_account, account, balance, storage_root, code_hash, nonce},
-    header::state_root, state_proof::state_proof
+    account::{rlp_encoded_left_padded_account, account, address, balance, storage_root, code_hash, nonce},
+    header::state_root, state_proof_new::proof_input as state_proof_input
 }
 }
 };
@@ -19,15 +19,15 @@ global RLP_SHORT_STRING_TYPE = 0x80;
 
 #[test(should_fail_with = "Expected a list")]
 fn test_account_rlp_invalid_type() {
-    let mut rlp_empty_string_encoding = [0; MAX_ACCOUNT_STATE_LENGTH];
-    rlp_empty_string_encoding[MAX_ACCOUNT_STATE_LENGTH - 1] = RLP_SHORT_STRING_TYPE;
+    let mut rlp_empty_string_encoding = [0; MAX_ACCOUNT_STATE_LEN];
+    rlp_empty_string_encoding[MAX_ACCOUNT_STATE_LEN - 1] = RLP_SHORT_STRING_TYPE;
     assert_account_equals(rlp_empty_string_encoding, account)
 }
 
 #[test(should_fail_with = "Invalid number of fields in account RLP")]
 fn test_account_rlp_invalid_field_count() {
     let rlp_encoded_left_padded_account_with_invalid_field_count = [
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 237, 1, 138, 3, 19, 87, 10, 132, 191, 55, 142, 253, 37, 160, 174, 39, 146, 36, 68, 17, 188, 174, 73, 185, 205, 154, 11, 220, 28, 74, 108, 243, 47, 20, 123, 67, 32, 44, 140, 179, 89, 7, 118, 89, 174, 202
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 237, 1, 138, 3, 19, 87, 10, 132, 191, 55, 142, 253, 37, 160, 174, 39, 146, 36, 68, 17, 188, 174, 73, 185, 205, 154, 11, 220, 28, 74, 108, 243, 47, 20, 123, 67, 32, 44, 140, 179, 89, 7, 118, 89, 174, 202
     ];
     assert_account_equals(
         rlp_encoded_left_padded_account_with_invalid_field_count,
@@ -79,20 +79,20 @@ fn test_assert_account_equals_code_hash_with_wrong_value() {
 
 #[test]
 fn test_verify_account() {
-    let _ = verify_account(state_proof.key, account, state_proof, state_root);
+    let _ = verify_account(address, account, state_proof_input, state_root);
 }
 
 #[test(should_fail_with="Address mismatch")]
 fn test_verify_account_wrong_address() {
-    let mut wrong_address = state_proof.key;
+    let mut wrong_address = address;
     wrong_address[0] += 1;
-    let _ = verify_account(wrong_address, account, state_proof, state_root);
+    let _ = verify_account(wrong_address, account, state_proof_input, state_root);
 }
 
 // TODO: Add correct assertion message when noir-trie-proofs is updated
 #[test(should_fail)]
 fn test_verify_account_wrong_state_proof() {
-    let mut wrong_proof = state_proof;
-    wrong_proof.proof[0] += 1;
-    let _ = verify_account(state_proof.key, account, wrong_proof, state_root);
+    let mut wrong_proof = state_proof_input;
+    wrong_proof.proof.nodes[0][0] -= 1;
+    let _ = verify_account(address, account, wrong_proof, state_root);
 }

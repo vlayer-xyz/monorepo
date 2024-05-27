@@ -2,6 +2,7 @@ use crate::misc::{types::{Bytes32, Address}, option::make_option, fragment::Frag
 use crate::header::get_header;
 use crate::verifiers::{receipt::verify_receipt, tx_helpers::split::split_into_tx_type_and_rlp};
 use crate::merkle_patricia_proofs::proof::{Proof, ProofInput};
+use crate::serde::Serde;
 use dep::std::unsafe::zeroed;
 
 global BLOOM_FILTER_LEN: u64 = 256;
@@ -109,7 +110,7 @@ unconstrained pub(crate) fn get_receipt_unconstrained_M(
         cumulative_gas_used: receipt.cumulative_gas_used,
         logs_bloom: receipt.logs_bloom
     };
-    let proof_input = ProofInput::deserialize(proof_input);
+    let proof_input: ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN_M, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN_M> = Serde::deserialize(proof_input);
 
     (tx_type, receipt, proof_input)
 }
