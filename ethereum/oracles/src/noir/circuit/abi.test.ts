@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CircuitAbi } from './abi.js';
+import { publicInputs } from './abi.js';
 import { Abi } from '@noir-lang/noirc_abi';
 
 const type = { kind: 'field' } as const;
@@ -15,8 +15,7 @@ describe('abi', () => {
       return_witnesses: [],
       error_types: {}
     };
-    const circuitAbi = new CircuitAbi(abi);
 
-    expect(circuitAbi.public().parameters).toEqual([publicParam]);
+    expect(publicInputs(abi).parameters).toEqual([publicParam]);
   });
 });

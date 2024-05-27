@@ -1,20 +1,20 @@
 import { Abi, InputMap, abiEncode } from '@noir-lang/noirc_abi';
 import { readTomlObject } from '../../util/file.js';
 import { Hex } from 'viem';
-import { CircuitAbi } from './abi.js';
+import { publicInputs, returnValues } from './abi.js';
 
 export class VerifierData {
   public static async create(verifierTomlPath: string, abi: Abi) {
     const verifierData = await readTomlObject<InputMap>(verifierTomlPath);
-    return new VerifierData(new CircuitAbi(abi), verifierData);
+    return new VerifierData(abi, verifierData);
   }
 
   public publicInputs(): Hex[] {
-    return this.encodeSubset(this.abi.public());
+    return this.encodeSubset(publicInputs(this.abi));
   }
 
   public returnValues(): Hex[] {
-    return this.encodeSubset(this.abi.return());
+    return this.encodeSubset(returnValues(this.abi));
   }
 
   public encodeSubset(subset: Abi): Hex[] {
@@ -23,7 +23,7 @@ export class VerifierData {
   }
 
   private constructor(
-    private abi: CircuitAbi,
+    private abi: Abi,
     private verifierData: InputMap
   ) {}
 }
