@@ -28,7 +28,7 @@ export const getProofOracle = async (
   const encodedAccount = encodeAccount(accountProof);
   const encodedStateProof = encodeStateProof(accountProof);
   const encodedStorageProof = encodeStorageProof(storageKey, accountProof.storageProof[0]);
-  return [...encodedAccount, ...encodedStateProof, ...encodedStorageProof];
+  return [...encodedAccount, encodedStateProof, encodedStorageProof];
 };
 
 export function decodeGetProofArguments(args: NoirArguments): {

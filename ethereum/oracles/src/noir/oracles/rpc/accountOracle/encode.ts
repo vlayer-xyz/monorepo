@@ -1,11 +1,12 @@
 import { ForeignCallOutput } from '@noir-lang/noir_js';
-import { GetProofReturnType, Hex, fromRlp, isHex } from 'viem';
-import { encodeBytes32, encodeField, encodeHex, encodeProof } from '../../common/encode.js';
-import { padArray } from '../../../../util/array.js';
-import { ZERO_PAD_VALUE } from '../../common/const.js';
-import { assert } from '../../../../util/assert.js';
-import { accountProofConfig, LEGACY_MAX_ACCOUNT_STATE_LEN } from '../common/proofConfig/account.js';
+import { GetProofReturnType, Hex, fromRlp, isHex, keccak256, toRlp } from 'viem';
+import { encodeField, encodeHex, encodeProof } from '../common/encode.js';
+import { padArray } from '../../../util/array.js';
+import { MAX_TRIE_NODE_LEN, ZERO_PAD_VALUE } from '../common/const.js';
+import { assert } from '../../../util/assert.js';
+import { accountProofConfig } from '../common/proofConfig/account.js';
 import { storageProofConfig } from '../common/proofConfig/storage.js';
+import { toHexString } from '../../../ethereum/blockHeader.js';
 
 const RLP_VALUE_INDEX = 1;
 
@@ -19,12 +20,25 @@ export function encodeAccount(ethProof: GetProofReturnType): ForeignCallOutput[]
 }
 
 export function encodeStateProof(ethProof: GetProofReturnType): ForeignCallOutput[] {
-  const key = encodeHex(ethProof.address);
-  const value = encodeValue(ethProof.accountProof);
-  const proof = encodeProof(ethProof.accountProof, accountProofConfig.maxProofLen);
+  const key = padArray(
+    encodeHex(keccak256(ethProof.address)),
+    accountProofConfig.maxPrefixedKeyNibbleLen,
+    ZERO_PAD_VALUE,
+    'left'
+  );
+  const value = padArray(encodeValue(ethProof.accountProof), accountProofConfig.maxValueLen, ZERO_PAD_VALUE, 'left');
+  const nodes = encodeProof(
+    ethProof.accountProof.slice(0, ethProof.accountProof.length - 1),
+    (accountProofConfig.maxProofDepth - 1) * MAX_TRIE_NODE_LEN
+  );
+  const leaf = padArray(
+    encodeHex(ethProof.accountProof[ethProof.accountProof.length - 1]),
+    accountProofConfig.maxLeafLen,
+    ZERO_PAD_VALUE
+  );
   const depth = encodeField(ethProof.accountProof.length);
 
-  return [key, value, proof, depth];
+  return [...key, ...value, ...nodes, ...leaf, depth];
 }
 
 export function getValue(proof: Hex[]): Hex {
@@ -35,16 +49,34 @@ export function getValue(proof: Hex[]): Hex {
 }
 
 export function encodeValue(proof: Hex[]): string[] {
-  return padArray(encodeHex(getValue(proof)), LEGACY_MAX_ACCOUNT_STATE_LEN, ZERO_PAD_VALUE, 'left');
+  return padArray(encodeHex(getValue(proof)), accountProofConfig.maxValueLen, ZERO_PAD_VALUE, 'left');
 }
 
 type StorageProof = GetProofReturnType['storageProof'][number];
 
 export function encodeStorageProof(storageKey: Hex, storageProof: StorageProof): ForeignCallOutput[] {
-  const key = encodeHex(storageKey);
-  const value = encodeBytes32(storageProof.value);
-  const proof = encodeProof(storageProof.proof, storageProofConfig.maxProofLen);
+  const key = padArray(
+    encodeHex(keccak256(storageKey)),
+    storageProofConfig.maxPrefixedKeyNibbleLen,
+    ZERO_PAD_VALUE,
+    'left'
+  );
+  const value = padArray(
+    encodeHex(toRlp(toHexString(storageProof.value))),
+    storageProofConfig.maxValueLen,
+    ZERO_PAD_VALUE,
+    'left'
+  );
+  const nodes = encodeProof(
+    storageProof.proof.slice(0, storageProof.proof.length - 1),
+    (storageProofConfig.maxProofDepth - 1) * MAX_TRIE_NODE_LEN
+  );
+  const leaf = padArray(
+    encodeHex(storageProof.proof[storageProof.proof.length - 1]),
+    storageProofConfig.maxLeafLen,
+    ZERO_PAD_VALUE
+  );
   const depth = encodeField(storageProof.proof.length);
 
-  return [key, value, proof, depth];
+  return [...key, ...value, ...nodes, ...leaf, depth];
 }
