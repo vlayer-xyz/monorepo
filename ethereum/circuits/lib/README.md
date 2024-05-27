@@ -205,3 +205,12 @@ struct TransactionWithinBlock<MAX_DATA_LEN> {
 ## RLP decoding
 
 [rlp folder](./src/rlp/README.md) contains tools to work with RLP encoded data
+
+## U256
+
+[uint256.nr](.src/uint256.nr) file includes implementation of U256 type. It is an unoptimized implementation of this type. Optimized version will appear in Noir.  
+Traits implemented for U256:
+
+- Add
+- Eq
+- Serde
