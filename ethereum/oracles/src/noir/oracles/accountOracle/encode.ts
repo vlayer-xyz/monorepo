@@ -19,7 +19,7 @@ export function encodeAccount(ethProof: GetProofReturnType): ForeignCallOutput[]
   return [nonce, balance, storageRoot, codeHash];
 }
 
-export function encodeStateProof(ethProof: GetProofReturnType): ForeignCallOutput[] {
+export function encodeStateProof(ethProof: GetProofReturnType): ForeignCallOutput {
   const key = padArray(
     encodeHex(keccak256(ethProof.address)),
     accountProofConfig.maxPrefixedKeyNibbleLen,
@@ -54,7 +54,7 @@ export function encodeValue(proof: Hex[]): string[] {
 
 type StorageProof = GetProofReturnType['storageProof'][number];
 
-export function encodeStorageProof(storageKey: Hex, storageProof: StorageProof): ForeignCallOutput[] {
+export function encodeStorageProof(storageKey: Hex, storageProof: StorageProof): ForeignCallOutput {
   const key = padArray(
     encodeHex(keccak256(storageKey)),
     storageProofConfig.maxPrefixedKeyNibbleLen,
