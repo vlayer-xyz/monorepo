@@ -21,7 +21,7 @@
     "prepare-js-fixtures": "tsx src/script/prepareJSHistoryAPIFixtures",
     "prepare-noir-fixtures": "rm -rf ../circuits/lib/src/fixtures && tsx src/script/prepareNoirHistoryAPIFixtures && tsx src/script/prepareMerkleProofFixtures"
   },
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@ethereumjs/trie": "^6.2.0",
     "@iarna/toml": "^2.2.5",
