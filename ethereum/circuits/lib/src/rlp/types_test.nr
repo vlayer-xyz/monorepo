@@ -1,6 +1,6 @@
 mod rlp_fragment {
     mod assert_eq_bytes {
-        use crate::rlp::{decode::{STRING, LIST}, types::RlpFragment};
+        use crate::rlp::types::{STRING, LIST, RlpFragment};
         use crate::misc::{arrays::alter_fragment, fragment::Fragment};
 
         global bytes = Fragment::new_with_length(2, [0x12, 0x34, 0x00]);
@@ -42,7 +42,7 @@ mod rlp_fragment {
     }
 
     mod assert_eq_bounded_vec {
-        use crate::rlp::{decode::{STRING, LIST}, types::RlpFragment};
+        use crate::rlp::types::{STRING, LIST, RlpFragment};
         use crate::misc::{arrays::alter_array, fragment::Fragment};
 
         global bytes = [0x12, 0x34];
@@ -82,7 +82,7 @@ mod rlp_fragment {
     }
 
     mod assert_empty_string {
-        use crate::rlp::{decode::{STRING, LIST}, types::RlpFragment};
+        use crate::rlp::types::{STRING, LIST, RlpFragment};
 
         global fragment = RlpFragment { offset: 0, length: 0, data_type: STRING };
 
@@ -109,7 +109,7 @@ mod rlp_fragment {
     }
 
     mod assert_eq_u1 {
-        use crate::rlp::{decode::STRING, types::RlpFragment};
+        use crate::rlp::types::{STRING, RlpFragment};
         use crate::misc::fragment::Fragment;
 
         global bit_value: u1 = 0x01;
@@ -142,7 +142,7 @@ mod rlp_fragment {
     }
 
     mod assert_eq_u8 {
-        use crate::rlp::{decode::STRING, types::RlpFragment};
+        use crate::rlp::types::{STRING, RlpFragment};
         use crate::misc::fragment::Fragment;
 
         global value = 0x10;
@@ -169,7 +169,7 @@ mod rlp_fragment {
     }
 
     mod assert_eq_u32 {
-        use crate::rlp::{decode::STRING, types::RlpFragment};
+        use crate::rlp::types::{STRING, RlpFragment};
         use crate::misc::fragment::Fragment;
 
         global value = 0x10000000;
@@ -194,7 +194,7 @@ mod rlp_fragment {
     }
 
     mod assert_eq_u64 {
-        use crate::rlp::{decode::STRING, types::RlpFragment};
+        use crate::rlp::types::{STRING, RlpFragment};
         use crate::misc::fragment::Fragment;
 
         global value = 0x1000000000000000;
@@ -219,7 +219,7 @@ mod rlp_fragment {
     }
 
     mod assert_eq_u128 {
-        use crate::rlp::{decode::STRING, types::RlpFragment};
+        use crate::rlp::types::{STRING, RlpFragment};
         use crate::misc::fragment::Fragment;
 
         global value = U128::from_integer(0x10000000000000000000000000000000);
@@ -244,7 +244,7 @@ mod rlp_fragment {
     }
 
     mod assert_eq_address {
-        use crate::rlp::{decode::STRING, types::RlpFragment};
+        use crate::rlp::types::{STRING, RlpFragment};
         use crate::misc::types::Address;
         use crate::misc::{arrays::alter_array, fragment::Fragment};
         use crate::fixtures::mainnet::frontier::first::state_proof::state_proof as state_proof;
@@ -273,7 +273,7 @@ mod rlp_fragment {
     }
 
     mod assert_eq_bytes32 {
-        use crate::rlp::{decode::STRING, types::RlpFragment};
+        use crate::rlp::types::{STRING, RlpFragment};
         use crate::misc::types::Bytes32;
         use crate::misc::{arrays::alter_array, fragment::Fragment};
         use crate::fixtures::mainnet::frontier::first::header::hash;

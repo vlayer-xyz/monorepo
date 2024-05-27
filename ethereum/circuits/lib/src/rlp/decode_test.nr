@@ -43,7 +43,7 @@ mod extract_payload_len {
 }
 
 mod decode_string {
-    use crate::rlp::decode::{decode_string, STRING};
+    use crate::rlp::{decode::decode_string, types::STRING};
     use crate::misc::{arrays::resize, fragment::Fragment};
     use crate::rlp::types::RlpFragment;
 
@@ -90,7 +90,7 @@ mod decode_string {
 }
 
 mod decode_list {
-    use crate::rlp::{decode::{decode_list, RlpList, STRING}, types::RlpFragment};
+    use crate::rlp::{decode::{decode_list, RlpList}, types::{RlpFragment, STRING}};
     use crate::misc::{bounded_vecs::bounded_vec_from_array, fragment::Fragment};
 
     #[test]
@@ -134,7 +134,7 @@ mod decode_list {
 }
 
 mod decode_list_of_small_strings {
-    use crate::rlp::decode::{decode_list_of_small_strings, RlpList, RlpFragment, STRING};
+    use crate::rlp::{decode::{decode_list_of_small_strings, RlpList, RlpFragment}, types::STRING};
     use crate::misc::{bounded_vecs::bounded_vec_from_array, fragment::Fragment};
 
     #[test]
@@ -221,7 +221,7 @@ mod get_small_string_offset_and_length {
 }
 
 mod decode_to_rlp_header {
-    use crate::rlp::decode::{decode_to_rlp_header, RlpHeader, STRING, LIST};
+    use crate::rlp::{decode::{decode_to_rlp_header, RlpHeader}, types::{STRING, LIST}};
     use crate::misc::{arrays::resize, fragment::Fragment};
 
     #[test]
