@@ -10,7 +10,6 @@ mod receipt {
 
     #[test]
     fn eip1559() {
-        let encoded_receipt = Fragment::from_array(encoded_receipt);
         let (tx_type, receipt_rlp) = split_into_tx_type_and_rlp(false, encoded_receipt);
         assert_eq(tx_type, encoded_receipt.at(0), "Incorrect tx type returned");
         assert_eq(receipt_rlp.length, encoded_receipt.length - 1, "Incorrect receipt RLP length returned");
@@ -21,10 +20,10 @@ mod receipt {
 
     #[test]
     fn legacy() {
-        let pre_byzantium_encoded_receipt = Fragment::from_array(pre_byzantium_encoded_receipt);
+        let pre_byzantium_encoded_receipt = pre_byzantium_encoded_receipt;
         let (tx_type, receipt_rlp) = split_into_tx_type_and_rlp(true, pre_byzantium_encoded_receipt);
         assert_eq(tx_type, legacy_tx_type, "Incorrect tx type returned");
-        assert_eq(receipt_rlp.length, encoded_receipt.len() - 1, "Incorrect receipt RLP length returned");
+        assert_eq(receipt_rlp.length, encoded_receipt.length - 1, "Incorrect receipt RLP length returned");
         assert_eq(
             pre_byzantium_encoded_receipt.subfragment(0, pre_byzantium_encoded_receipt.length - 1), receipt_rlp, "Incorrect receipt RLP returned"
         );
@@ -32,7 +31,7 @@ mod receipt {
 
     #[test(should_fail_with="RLP receipt exceeds MAX_RLP_LENGTH")]
     fn legacy_wrong_rlp() {
-        let mut wrong_legacy_rlp: Fragment<LEGACY_MAX_RECEIPT_ENCODED_LEN, u8> = Fragment::from_array_resize(pre_byzantium_encoded_receipt);
+        let mut wrong_legacy_rlp: Fragment<LEGACY_MAX_RECEIPT_ENCODED_LEN, u8> = pre_byzantium_encoded_receipt.focus();
         let not_zero_byte = 0x01;
         wrong_legacy_rlp.set(wrong_legacy_rlp.length - 1, not_zero_byte);
 

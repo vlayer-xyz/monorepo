@@ -23,10 +23,11 @@ export function createReceiptFixture(receipt: TransactionReceipt): string {
   const logsBloom = joinArray(encodeHex(receipt.logsBloom));
 
   return `use crate::receipt::{TxReceiptPartial, ForeignCallTxReceiptPartial};
+use crate::misc::fragment::Fragment;
 
 global tx_type = ${txTypeToField(receipt.type)};
 global receipt_rlp = ${receiptRlp};
-global encoded_receipt = ${encodedReceipt};
+global encoded_receipt = Fragment::from_array(${encodedReceipt});
 
 global receipt = TxReceiptPartial {
   status: ${status},

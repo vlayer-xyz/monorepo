@@ -1,6 +1,6 @@
-use crate::misc::{types::{Bytes32, Address}, option::make_option};
+use crate::misc::{types::{Bytes32, Address}, option::make_option, fragment::Fragment, bytes::byte_value};
 use crate::header::get_header;
-use crate::verifiers::receipt::verify_receipt;
+use crate::verifiers::{receipt::verify_receipt, tx_helpers::split::split_into_tx_type_and_rlp};
 use crate::merkle_patricia_proofs::proof::{Proof, ProofInput};
 use dep::std::unsafe::zeroed;
 
@@ -96,7 +96,7 @@ unconstrained fn get_receipt_oracle<PROOF_INPUT_LEN>(
     _tx_idx: Field
 ) -> (TxType, ForeignCallTxReceiptPartial, ProofInputSerialized<PROOF_INPUT_LEN>) {}
 
-unconstrained fn get_receipt_unconstrained_M(
+unconstrained pub(crate) fn get_receipt_unconstrained_M(
     chain_id: Field,
     block_number: u64,
     tx_idx: Field
@@ -112,4 +112,17 @@ unconstrained fn get_receipt_unconstrained_M(
     let proof_input = ProofInput::deserialize(proof_input);
 
     (tx_type, receipt, proof_input)
+}
+
+pub(crate) fn receipt_rlp_from_proof<MAX_VALUE_LEN, MAX_LEAF_LEN>(
+    tx_type: TxType,
+    receipt_proof_input: ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN>
+) -> Fragment<MAX_VALUE_LEN, u8> {
+    let value = byte_value(receipt_proof_input.value);
+    let encoded_receipt = Fragment::from_vec(value);
+
+    let is_legacy = tx_type == 0;
+    let (_actual_tx_type, receipt_rlp) = split_into_tx_type_and_rlp(is_legacy, encoded_receipt);
+
+    receipt_rlp
 }
