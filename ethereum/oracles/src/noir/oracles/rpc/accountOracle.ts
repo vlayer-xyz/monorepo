@@ -34,7 +34,6 @@ export async function getAccountOracle(
   });
   const encodedAccount = encodeAccount(accountProof);
   const encodedProof = encodeStateProof(accountProof);
-  console.log(encodedProof.length);
   return [...encodedAccount, encodedProof];
 }
 

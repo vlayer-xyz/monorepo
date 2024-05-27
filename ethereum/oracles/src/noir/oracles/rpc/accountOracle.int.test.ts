@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { OFFSETS, getAccountOracle } from './accountOracle.js';
-import { createMockMultiChainClient } from '../../../ethereum/mockClient.js';
+import { createMockMultiChainClient } from '../../ethereum/mockClient.js';
+import { accountProofConfig } from './common/proofConfig/account.js';
 
 describe('accountOracle', () => {
   it('getAccountOracle', async () => {
@@ -23,7 +24,18 @@ describe('accountOracle', () => {
     ]);
     expect(account[OFFSETS.NONCE]).toStrictEqual('0x02cb');
     expect(account[OFFSETS.BALANCE]).toStrictEqual('0x019c54c1cc8b1ad5994d');
-    expect(account[OFFSETS.PROOF_KEY]).toStrictEqual(vitalikAccountAddressInNoirFormat);
-    expect(account[OFFSETS.PROOF_DEPTH]).toStrictEqual('0x09');
+
+    const proofInputKeyPart = account[OFFSETS.PROOF_INPUT].slice(0, accountProofConfig.maxPrefixedKeyNibbleLen);
+    expect(proofInputKeyPart).toMatchSnapshot();
+    const proofInputValuePart = account[OFFSETS.PROOF_INPUT].slice(
+      accountProofConfig.maxPrefixedKeyNibbleLen,
+      accountProofConfig.maxPrefixedKeyNibbleLen + accountProofConfig.maxValueLen
+    );
+    expect(proofInputValuePart).toMatchSnapshot();
+    const proofInputDepthPart = account[OFFSETS.PROOF_INPUT].slice(
+      account[OFFSETS.PROOF_INPUT].length - 1,
+      account[OFFSETS.PROOF_INPUT].length
+    );
+    expect(proofInputDepthPart).toStrictEqual(['0x09']);
   });
 });

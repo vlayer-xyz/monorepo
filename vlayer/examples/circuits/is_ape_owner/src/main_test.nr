@@ -3,7 +3,8 @@ mod is_ape_owner_main {
     use dep::ethereum::{
         fixtures::mainnet::paris::bored_ape_yacht_club::{
         header::{block_header_partial as paris_block_header_partial, block_header_rlp as paris_block_header_rlp},
-        account::account, state_proof_new::proof_input_serialized as state_proof_input_serialized, storage_proof_new::proofs_serialized
+        account::account, state_proof_new::proof_input_serialized as state_proof_input_serialized,
+        storage_proof_new::proofs_serialized
     },
         misc::arrays::alter_array
     };

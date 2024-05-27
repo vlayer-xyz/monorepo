@@ -98,8 +98,6 @@ impl<MAX_DATA_LEN> From<ForeignCallTransaction> for TxPartial<MAX_DATA_LEN> {
 
 type ProofInputSerialized<LEN> = [Field; LEN];
 
-type ProofInputSerialized<LEN> = [Field; LEN];
-
 struct TransactionWithinBlock<MAX_DATA_LEN> {
     transaction: TxPartial<MAX_DATA_LEN>,
     block_hash: Bytes32

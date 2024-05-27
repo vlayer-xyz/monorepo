@@ -72,6 +72,16 @@ describe('getReceiptOracle', () => {
     );
     const paddedKey = padArray(['0x08'], receiptProofConfigM.maxPrefixedKeyNibbleLen, ZERO_PAD_VALUE, 'left');
     expect(proofInputKeyPart).toStrictEqual(paddedKey);
+    const proofInputValuePart = receiptWithProof[OFFSETS.PROOF_INPUT].slice(
+      receiptProofConfigM.maxPrefixedKeyNibbleLen,
+      receiptProofConfigM.maxPrefixedKeyNibbleLen + receiptProofConfigM.maxValueLen
+    );
+    expect(proofInputValuePart).toMatchSnapshot();
+    const proofInputDepthPart = receiptWithProof[OFFSETS.PROOF_INPUT].slice(
+      receiptWithProof[OFFSETS.PROOF_INPUT].length - 1,
+      receiptWithProof[OFFSETS.PROOF_INPUT].length
+    );
+    expect(proofInputDepthPart).toStrictEqual(['0x03']);
   });
 
   it('transaction not found', async () => {
