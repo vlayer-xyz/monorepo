@@ -7,14 +7,14 @@ import { Hex } from 'viem';
 import path from 'path';
 import { VerifierData } from './verifierData.js';
 
-export interface ProofWithVerifierData {
+export interface VerifiableComputation {
   proofAsFields: Hex[];
   verifierData: VerifierData;
 }
 
 export class BaseProver {
   constructor(public circuit: MonorepoCircuit) {}
-  public async proveBase(inputs: InputMap): Promise<ProofWithVerifierData> {
+  public async proveBase(inputs: InputMap): Promise<VerifiableComputation> {
     const proofId = randomUUID();
     const prover = new NargoProver(this.circuit, proofId);
 
