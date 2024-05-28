@@ -6,7 +6,7 @@ mod receipt {
         cancun::small_block::{receipt::{encoded_receipt, tx_type}},
         homestead::fork::{receipt::{encoded_receipt as pre_byzantium_encoded_receipt, tx_type as legacy_tx_type}}
     };
-    use crate::receipt::{TxType, LEGACY_MAX_RECEIPT_ENCODED_LEN};
+    use crate::receipt::{TxType, MAX_RECEIPT_ENCODED_LEN_M};
 
     #[test]
     fn eip1559() {
@@ -31,7 +31,7 @@ mod receipt {
 
     #[test(should_fail_with="RLP receipt exceeds MAX_RLP_LENGTH")]
     fn legacy_wrong_rlp() {
-        let mut wrong_legacy_rlp: Fragment<LEGACY_MAX_RECEIPT_ENCODED_LEN, u8> = pre_byzantium_encoded_receipt.focus();
+        let mut wrong_legacy_rlp: Fragment<MAX_RECEIPT_ENCODED_LEN_M, u8> = pre_byzantium_encoded_receipt.focus();
         let not_zero_byte = 0x01;
         wrong_legacy_rlp.set(wrong_legacy_rlp.length - 1, not_zero_byte);
 
