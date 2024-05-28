@@ -53,7 +53,7 @@ unconstrained fn get_account_oracle<PROOF_INPUT_LEN>(
 
 unconstrained fn get_account_unconstrained_M(chain_id: Field, block_no: u64, address: Address) -> AccountWithStateProofM {
     let (account, proof_input) = get_account_oracle(chain_id, block_no, address);
-    let proof_input: ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_ACCOUNT_STATE_LEN, MAX_ACCOUNT_DEPTH_NO_LEAF_M, MAX_ACCOUNT_LEAF_LEN> = Serde::deserialize(proof_input);
+    let proof_input = Serde::deserialize(proof_input);
 
     (account, proof_input)
 }

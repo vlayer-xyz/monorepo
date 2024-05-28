@@ -1,12 +1,12 @@
 import { ForeignCallOutput } from '@noir-lang/noir_js';
 import { GetProofReturnType, Hex, fromRlp, isHex, keccak256, toRlp } from 'viem';
-import { encodeField, encodeHex, encodeProof } from '../common/encode.js';
-import { padArray } from '../../../util/array.js';
-import { MAX_TRIE_NODE_LEN, ZERO_PAD_VALUE } from '../common/const.js';
-import { assert } from '../../../util/assert.js';
+import { encodeField, encodeHex, encodeProof } from '../../common/encode.js';
+import { padArray } from '../../../../util/array.js';
+import { MAX_TRIE_NODE_LEN, ZERO_PAD_VALUE } from '../../common/const.js';
+import { assert } from '../../../../util/assert.js';
 import { accountProofConfig } from '../common/proofConfig/account.js';
 import { storageProofConfig } from '../common/proofConfig/storage.js';
-import { toHexString } from '../../../ethereum/blockHeader.js';
+import { toHexString } from '../../../../ethereum/blockHeader.js';
 
 const RLP_VALUE_INDEX = 1;
 

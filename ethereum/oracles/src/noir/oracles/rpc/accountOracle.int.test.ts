@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { OFFSETS, getAccountOracle } from './accountOracle.js';
-import { createMockMultiChainClient } from '../../ethereum/mockClient.js';
+import { createMockMultiChainClient } from '../../../ethereum/mockClient.js';
 import { accountProofConfig } from './common/proofConfig/account.js';
 
 describe('accountOracle', () => {
