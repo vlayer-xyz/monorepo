@@ -4,7 +4,7 @@ import { padArray } from '../../util/array.js';
 import { MAX_TRIE_NODE_LEN, ZERO_PAD_VALUE } from '../../noir/oracles/common/const.js';
 import { Proof } from '../../ethereum/proof.js';
 import { Hex, padHex } from 'viem';
-import { ProofConfig } from '../../noir/oracles/common/proofConfig.js';
+import { ProofConfig } from '../../noir/oracles/rpc/common/proofConfig.js';
 
 export function createTopLevelProofFixtureWithRoot(proof: Proof, root: Hex[], config: ProofConfig): string {
   return `use crate::merkle_patricia_proofs::proof::{Proof, ProofInput};
