@@ -12,7 +12,7 @@ global MAX_PREFIXED_KEY_NIBBLE_LEN = 8; // (MAX_KEY_LEN + 1) * 2
 global MAX_VALUE_LEN_M = 1000; // Values taken from txProofConfigM in tx.ts.
 global MAX_LEAF_LEN_M = 1011;
 
-global LEGACY_MAX_TX_ENCODED_LEN = 525;
+global MAX_TX_ENCODED_LEN_M = MAX_VALUE_LEN_M;
 
 type TxType = u8;
 
