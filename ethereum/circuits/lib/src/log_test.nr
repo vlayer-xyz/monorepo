@@ -26,10 +26,7 @@ mod extract_log {
 
     #[test]
     fn success_approve() {
-        let log = extract_log::<MAX_LOG_DATA_LEN_M, MAX_LOG_NUM, MAX_RECEIPT_ENCODED_LEN_M>(
-            approve_receipt_rlp.subfragment(1, MAX_RECEIPT_RLP_LEN_M),
-            0
-        );
+        let log = extract_log::<MAX_LOG_DATA_LEN_M, MAX_LOG_NUM, MAX_RECEIPT_ENCODED_LEN_M>(approve_receipt_rlp.subfragment(1, MAX_RECEIPT_RLP_LEN_M), 0);
         assert_eq(log, approve_log);
     }
 
@@ -101,11 +98,7 @@ mod extract_log {
         ];
 
         let _ = extract_log::<MAX_LOG_DATA_LEN_M, MAX_LOG_NUM, MAX_RECEIPT_ENCODED_LEN_M>(
-            Fragment::new(
-                1,
-                MAX_RECEIPT_RLP_LEN_M,
-                receipt_rlp_with_two_log_fields
-            ),
+            Fragment::new(1, MAX_RECEIPT_RLP_LEN_M, receipt_rlp_with_two_log_fields),
             0
         );
     }
