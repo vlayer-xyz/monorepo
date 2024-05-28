@@ -41,16 +41,12 @@ describe(
       expect(stateAndStorageProof[OFFSETS.NONCE]).toStrictEqual('0x01');
       expect(stateAndStorageProof[OFFSETS.BALANCE]).toStrictEqual('0x');
 
-      const stateProofInputDepthPart = stateAndStorageProof[OFFSETS.STATE_PROOF_INPUT].slice(
-        stateAndStorageProof[OFFSETS.STATE_PROOF_INPUT].length - 1,
-        stateAndStorageProof[OFFSETS.STATE_PROOF_INPUT].length
-      );
-      expect(stateProofInputDepthPart).toStrictEqual(['0x09']);
-      const storageProofInputDepthPart = stateAndStorageProof[OFFSETS.STORAGE_PROOF_INPUT].slice(
-        stateAndStorageProof[OFFSETS.STORAGE_PROOF_INPUT].length - 1,
-        stateAndStorageProof[OFFSETS.STORAGE_PROOF_INPUT].length
-      );
-      expect(storageProofInputDepthPart).toStrictEqual(['0x07']);
+      const stateProofInputDepthPart =
+        stateAndStorageProof[OFFSETS.STATE_PROOF_INPUT][stateAndStorageProof[OFFSETS.STATE_PROOF_INPUT].length - 1];
+      expect(stateProofInputDepthPart).toStrictEqual('0x09');
+      const storageProofInputDepthPart =
+        stateAndStorageProof[OFFSETS.STORAGE_PROOF_INPUT][stateAndStorageProof[OFFSETS.STORAGE_PROOF_INPUT].length - 1];
+      expect(storageProofInputDepthPart).toStrictEqual('0x07');
     });
   },
   {

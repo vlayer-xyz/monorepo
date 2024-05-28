@@ -32,10 +32,7 @@ describe('accountOracle', () => {
       accountProofConfig.maxPrefixedKeyNibbleLen + accountProofConfig.maxValueLen
     );
     expect(proofInputValuePart).toMatchSnapshot();
-    const proofInputDepthPart = account[OFFSETS.PROOF_INPUT].slice(
-      account[OFFSETS.PROOF_INPUT].length - 1,
-      account[OFFSETS.PROOF_INPUT].length
-    );
-    expect(proofInputDepthPart).toStrictEqual(['0x09']);
+    const proofInputDepthPart = account[OFFSETS.PROOF_INPUT][account[OFFSETS.PROOF_INPUT].length - 1];
+    expect(proofInputDepthPart).toStrictEqual('0x09');
   });
 });

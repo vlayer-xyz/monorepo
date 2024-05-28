@@ -77,11 +77,8 @@ describe('getReceiptOracle', () => {
       receiptProofConfigM.maxPrefixedKeyNibbleLen + receiptProofConfigM.maxValueLen
     );
     expect(proofInputValuePart).toMatchSnapshot();
-    const proofInputDepthPart = receiptWithProof[OFFSETS.PROOF_INPUT].slice(
-      receiptWithProof[OFFSETS.PROOF_INPUT].length - 1,
-      receiptWithProof[OFFSETS.PROOF_INPUT].length
-    );
-    expect(proofInputDepthPart).toStrictEqual(['0x03']);
+    const proofInputDepthPart = receiptWithProof[OFFSETS.PROOF_INPUT][receiptWithProof[OFFSETS.PROOF_INPUT].length - 1];
+    expect(proofInputDepthPart).toStrictEqual('0x03');
   });
 
   it('transaction not found', async () => {
