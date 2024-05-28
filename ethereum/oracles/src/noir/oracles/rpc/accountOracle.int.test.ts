@@ -33,6 +33,7 @@ describe('accountOracle', () => {
     );
     expect(proofInputValuePart).toMatchSnapshot();
 <<<<<<< HEAD:ethereum/oracles/src/noir/oracles/rpc/accountOracle.int.test.ts
+<<<<<<< HEAD:ethereum/oracles/src/noir/oracles/rpc/accountOracle.int.test.ts
     const proofInputDepthPart = account[OFFSETS.PROOF_INPUT][account[OFFSETS.PROOF_INPUT].length - 1];
     expect(proofInputDepthPart).toStrictEqual('0x09');
 =======
@@ -42,5 +43,9 @@ describe('accountOracle', () => {
     );
     expect(proofInputDepthPart).toStrictEqual(['0x09']);
 >>>>>>> ea830395 (Update account & proof oracles tests):ethereum/oracles/src/noir/oracles/accountOracle.int.test.ts
+=======
+    const proofInputDepthPart = account[OFFSETS.PROOF_INPUT][account[OFFSETS.PROOF_INPUT].length - 1];
+    expect(proofInputDepthPart).toStrictEqual('0x09');
+>>>>>>> f869f18a (Remove slicing where unnecessary):ethereum/oracles/src/noir/oracles/accountOracle.int.test.ts
   });
 });
