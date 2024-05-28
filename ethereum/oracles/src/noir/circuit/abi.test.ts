@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { filterPublic } from './abi.js';
+import { publicInputs } from './abi.js';
 import { Abi } from '@noir-lang/noirc_abi';
 
 const type = { kind: 'field' } as const;
@@ -16,6 +16,6 @@ describe('abi', () => {
       error_types: {}
     };
 
-    expect(filterPublic(abi).parameters).toEqual([publicParam]);
+    expect(publicInputs(abi).parameters).toEqual([publicParam]);
   });
 });
