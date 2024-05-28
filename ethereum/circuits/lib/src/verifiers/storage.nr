@@ -8,7 +8,6 @@ pub fn verify_storage_values<N, MAX_STORAGE_DEPTH_NO_LEAF>(
     storage_root: Bytes32
 ) {
     for i in 0..N {
-        // verify_storage_value(storage_root, proofs[i]);
         let proof_input = proof_inputs[i];
         verify_merkle_proof(
             proof_input.key,

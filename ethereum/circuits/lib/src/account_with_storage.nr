@@ -75,17 +75,25 @@ fn assert_storage_key_equals(
     );
 }
 
+fn get_fragment<N>(left_padded_value: [u8; N]) -> Fragment<N, u8> {
+    let value_len = right_pad(left_padded_value).len();
+    let value_offset = N - value_len;
+    Fragment::new(value_offset, value_len, left_padded_value)
+}
+
 fn get_storage_value(rlp_encoded_value: [u8; MAX_STORAGE_VALUE_LEN]) -> [u8; MAX_STORAGE_VALUE_LEN] {
-    let mut storage_value = rlp_encoded_value;
-    let rlp_value_len = right_pad(rlp_encoded_value).len();
-    let left_pad_len = MAX_STORAGE_VALUE_LEN - rlp_value_len;
-    let rlp_fragment = decode_string(Fragment::new(left_pad_len, rlp_value_len, rlp_encoded_value));
-    if rlp_fragment.offset > 0 {
-        assert_eq(rlp_fragment.offset, 1, "Expected RLP header to be maximum 1 byte long");
-        storage_value[left_pad_len] = 0;
+    let mut storage_value = get_fragment(rlp_encoded_value);
+    let rlp_fragment = decode_string(storage_value);
+    let rlp_header_len = rlp_fragment.offset;
+
+    // Storage value is maximum 32 bytes long, so its RLP-encoding's header is maximum 1 byte long.
+    assert(rlp_header_len <= 1, "Expected RLP header to be maximum 1 byte long");
+    if rlp_fragment.offset == 1 {
+        let rlp_header_position = storage_value.offset;
+        storage_value.data[rlp_header_position] = 0;
     }
 
-    storage_value
+    storage_value.data
 }
 
 pub fn get_account_with_storage(
@@ -120,8 +128,8 @@ unconstrained fn get_proof_unconstrained(
     storage_key: Bytes32
 ) -> StateAndStorageProofInput {
     let (account, state_proof_input, storage_proof_input) = get_proof_oracle(chain_id, block_no, address, storage_key);
-    let state_proof_input: ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_ACCOUNT_STATE_LEN, MAX_ACCOUNT_DEPTH_NO_LEAF_M, MAX_ACCOUNT_LEAF_LEN> = Serde::deserialize(state_proof_input);
-    let storage_proof_input: ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_STORAGE_VALUE_LEN, MAX_STORAGE_DEPTH_NO_LEAF_M, MAX_STORAGE_LEAF_LEN> = Serde::deserialize(storage_proof_input);
+    let state_proof_input = Serde::deserialize(state_proof_input);
+    let storage_proof_input = Serde::deserialize(storage_proof_input);
 
     StateAndStorageProofInput { account, state_proof_input, storage_proof_input }
 }
