@@ -208,7 +208,11 @@ struct TransactionWithinBlock<MAX_DATA_LEN> {
 
 ## U256
 
-[uint256.nr](.src/uint256.nr) file includes implementation of U256 type. It is an unoptimized implementation of this type. Optimized version will appear in Noir.  
+U256 is a structure to use as a type for big numbers.  
+It is used when dealing with numbers up to 2<sup>256</sup>. They can exceed Field maximum value.
+
+[There](.src/uint256.nr) is an unoptimized implementation of this type using two U128 structures. Optimized version will appear in Noir.
+
 Traits implemented for U256:
 
 - Add
