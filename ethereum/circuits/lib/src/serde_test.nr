@@ -168,7 +168,7 @@ mod proof {
         assert(sub_array_equals(proof.leaf.serialize(), serialized, RECEIPT_NODES_LEN));
         assert_eq(serialized[RECEIPT_NODES_LEN + RECEIPT_MAX_LEAF_LEN_M], proof.depth as Field);
 
-        let deserialized: Proof<RECEIPT_MAX_DEPTH_NO_LEAF, RECEIPT_MAX_LEAF_LEN_M> = Serde::deserialize(serialized);
+        let deserialized = Serde::deserialize(serialized);
         assert_eq(deserialized, proof);
     }
 }
@@ -200,7 +200,7 @@ mod proof_input {
             )
         );
 
-        let deserialized: ProofInput<RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN, RECEIPT_MAX_VALUE_LEN_M, RECEIPT_MAX_DEPTH_NO_LEAF, RECEIPT_MAX_LEAF_LEN_M> = Serde::deserialize(serialized);
+        let deserialized = Serde::deserialize(serialized);
         assert_eq(deserialized, proof_input);
     }
 }

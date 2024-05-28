@@ -189,7 +189,7 @@ impl Serde<STATE_PROOF_INPUT_LEN_M> for ProofInput<ACCOUNT_MAX_PREFIXED_KEY_NIBB
         let mut fragment = Fragment::from_array(data);
         let key = fragment.pop_front_array().deserialize();
         let value = fragment.pop_front_array().deserialize();
-        let proof: Proof<MAX_ACCOUNT_DEPTH_NO_LEAF_M, MAX_ACCOUNT_LEAF_LEN> = Serde::deserialize(fragment.pop_front_array());
+        let proof = Serde::deserialize(fragment.pop_front_array());
         ProofInput {
             key,
             value,
@@ -259,7 +259,7 @@ impl Serde<STORAGE_PROOF_INPUT_LEN_M> for ProofInput<STORAGE_MAX_PREFIXED_KEY_NI
         let mut fragment = Fragment::from_array(data);
         let key = fragment.pop_front_array().deserialize();
         let value = fragment.pop_front_array().deserialize();
-        let proof: Proof<MAX_STORAGE_DEPTH_NO_LEAF_M, MAX_STORAGE_LEAF_LEN> = Serde::deserialize(fragment.pop_front_array());
+        let proof = Serde::deserialize(fragment.pop_front_array());
         ProofInput {
             key,
             value,
@@ -330,7 +330,7 @@ impl Serde<RECEIPT_PROOF_INPUT_LEN_M> for ProofInput<RECEIPT_MAX_PREFIXED_KEY_NI
         let mut fragment = Fragment::from_array(data);
         let key = fragment.pop_front_array().deserialize();
         let value = fragment.pop_front_array().deserialize();
-        let proof: Proof<RECEIPT_MAX_DEPTH_NO_LEAF, RECEIPT_MAX_LEAF_LEN_M> = Serde::deserialize(fragment.pop_front_array());
+        let proof = Serde::deserialize(fragment.pop_front_array());
         ProofInput {
             key,
             value,

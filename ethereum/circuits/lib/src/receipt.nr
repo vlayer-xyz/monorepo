@@ -110,7 +110,7 @@ unconstrained pub(crate) fn get_receipt_unconstrained_M(
         cumulative_gas_used: receipt.cumulative_gas_used,
         logs_bloom: receipt.logs_bloom
     };
-    let proof_input: ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN_M, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN_M> = Serde::deserialize(proof_input);
+    let proof_input = Serde::deserialize(proof_input);
 
     (tx_type, receipt, proof_input)
 }
