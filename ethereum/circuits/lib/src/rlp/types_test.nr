@@ -247,9 +247,8 @@ mod rlp_fragment {
         use crate::rlp::types::{STRING, RlpFragment};
         use crate::misc::types::Address;
         use crate::misc::{arrays::alter_array, fragment::Fragment};
-        use crate::fixtures::mainnet::frontier::first::state_proof::state_proof as state_proof;
+        use crate::fixtures::mainnet::london::crypto_punks::account::address;
 
-        global address = state_proof.key;
         global address_fragment = Fragment::from_array(address);
         global fragment = RlpFragment { offset: 0, length: 20, data_type: STRING };
 

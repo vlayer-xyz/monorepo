@@ -8,12 +8,8 @@ import { HISTORY_API_FIXTURES } from '../fixtures/historyAPIConfig.js';
 import { assert } from '../main.js';
 import { createAccountFixture } from './noir_fixtures/account.js';
 import { createHeaderFixture } from './noir_fixtures/header.js';
-import { createReceiptProofFixture } from './noir_fixtures/receipt_proof.js';
-import { createStateProofFixture } from './noir_fixtures/state_proof.js';
-import { createStorageProofFixture } from './noir_fixtures/storage_proof.js';
 import { createTransactionFixture } from './noir_fixtures/transaction.js';
 import { getTxProof } from '../ethereum/txProof.js';
-import { createTransactionProofFixture } from './noir_fixtures/transaction_proof.js';
 import { createReceiptFixture } from './noir_fixtures/receipt.js';
 import { createLogFixture } from './noir_fixtures/log.js';
 import { createNewReceiptProofFixture } from './noir_fixtures/new_receipt_proof.js';
@@ -63,17 +59,15 @@ for (const chain in HISTORY_API_FIXTURES) {
         });
 
         await writeFile(join(modulePath, 'account.nr'), createAccountFixture(stateProof));
-        await writeFile(join(modulePath, 'state_proof.nr'), createStateProofFixture(stateProof));
         await writeFile(join(modulePath, 'state_proof_new.nr'), createNewStateProofFixture(stateProof));
-        fixtureModules.push('account', 'state_proof', 'state_proof_new');
+        fixtureModules.push('account', 'state_proof_new');
         if (storageKeys) {
           await writeFile(join(modulePath, 'storage.nr'), createStorageFixture(stateProof));
-          await writeFile(join(modulePath, 'storage_proof.nr'), createStorageProofFixture(stateProof.storageProof));
           await writeFile(
             join(modulePath, 'storage_proof_new.nr'),
             createNewStorageProofFixture(stateProof.storageProof)
           );
-          fixtureModules.push('storage', 'storage_proof', 'storage_proof_new');
+          fixtureModules.push('storage', 'storage_proof_new');
         }
       }
 
@@ -84,9 +78,8 @@ for (const chain in HISTORY_API_FIXTURES) {
         const receipt = blockReceipts[txIdx];
         const txReceiptProof = await getReceiptProof(block, blockReceipts, txIdx);
         await writeFile(join(modulePath, 'receipt.nr'), createReceiptFixture(receipt));
-        await writeFile(join(modulePath, 'receipt_proof.nr'), createReceiptProofFixture(txReceiptProof));
         await writeFile(join(modulePath, 'receipt_proof_new.nr'), createNewReceiptProofFixture(txReceiptProof));
-        fixtureModules.push('receipt_proof_new', 'receipt_proof', 'receipt');
+        fixtureModules.push('receipt_proof_new', 'receipt');
 
         const tx = await client.getTransaction({ hash: transactionHash });
         await writeFile(join(modulePath, 'transaction.nr'), createTransactionFixture(tx));
@@ -97,9 +90,8 @@ for (const chain in HISTORY_API_FIXTURES) {
           blockWithTransactions.transactionsRoot,
           txIdx
         );
-        await writeFile(join(modulePath, 'transaction_proof.nr'), createTransactionProofFixture(txProof));
         await writeFile(join(modulePath, 'transaction_proof_new.nr'), createNewTransactionProofFixture(txProof));
-        fixtureModules.push('transaction_proof_new', 'transaction_proof');
+        fixtureModules.push('transaction_proof_new');
         if (logIdx !== undefined) {
           const log = receipt.logs[logIdx];
           await writeFile(join(modulePath, 'log.nr'), createLogFixture(log, logIdx));
