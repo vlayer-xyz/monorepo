@@ -89,10 +89,12 @@ fn test_verify_account_wrong_address() {
     let _ = verify_account(wrong_address, account, state_proof_input, state_root);
 }
 
-// TODO: Add correct assertion message when noir-trie-proofs is updated
-#[test(should_fail)]
+#[test(should_fail_with="Invalid node hash")]
 fn test_verify_account_wrong_state_proof() {
     let mut wrong_proof = state_proof_input;
+    // The value must be decreased and not increased by 1. If it is increased by 1, length of length 
+    // in rlp header would increase, which would cause out of bounds error when decoding, which would 
+    // cause compiler panic (as of Nargo 0.30.0).
     wrong_proof.proof.nodes[0][0] -= 1;
     let _ = verify_account(address, account, wrong_proof, state_root);
 }
