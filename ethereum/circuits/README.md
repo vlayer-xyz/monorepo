@@ -4,14 +4,19 @@ Noir circuits for proving and verifying historical data on the Ethereum blockcha
 
 ## Monorepo structure
 
-| Package                         | Description                                 | Docs                            |
-| ------------------------------- | ------------------------------------------- | ------------------------------- |
-| [`lib`](./lib/)                 | Main library containing oracles & verifiers | [Docs](./lib/README.md)         |
-| [`get_header`](./get_header/)   | Binary crate for generating header proofs   | [Docs](./get_header/README.md)  |
-| [`get_account`](./get_header/)  | Binary crate for generating account proofs  | [Docs](./get_account/README.md) |
-| [`get_storage`](./get_storage/) | Binary crate for generating storage proofs  | [Docs](./get_storage/README.md) |
-| [`get_receipt`](./get_receipt/) | Binary crate for generating receipt proofs  | [Docs](./get_receipt/README.md) |
-| [`get_transaction`](./get_transaction/) | Binary crate for generating transaction proofs  | [Docs](./get_transaction/README.md) |
+| Package                                             | Description                                          | Docs                                      |
+| --------------------------------------------------- | ---------------------------------------------------- | ----------------------------------------- |
+| [`lib`](./lib/)                                     | Main library containing oracles & verifiers          | [Docs](./lib/README.md)                   |
+| [`get_header`](./get_header/)                       | Binary crate for generating header proofs            | [Docs](./get_header/README.md)            |
+| [`get_account`](./get_header/)                      | Binary crate for generating account proofs           | [Docs](./get_account/README.md)           |
+| [`get_storage`](./get_storage/)                     | Binary crate for generating storage proofs           | [Docs](./get_storage/README.md)           |
+| [`get_storage_recursive`](./get_storage_recursive/) | Binary crate for generating recursive storage proofs | [Docs](./get_storage_recursive/README.md) |
+| [`get_receipt`](./get_receipt/)                     | Binary crate for generating receipt proofs           | [Docs](./get_receipt/README.md)           |
+| [`get_transaction`](./get_transaction/)             | Binary crate for generating transaction proofs       | [Docs](./get_transaction/README.md)       |
+
+### Recursive binaries
+
+Some binary crates have `_recursive` suffix. This means that their `main` function is decorated with `#[recursive]` attribute. It instructs `nargo` to generate proofs that are possible to verify within another circuit using `std::verify_proof`. Unfortunately - Solidity can only verify normal proofs, so we need both.
 
 ## Compile
 
