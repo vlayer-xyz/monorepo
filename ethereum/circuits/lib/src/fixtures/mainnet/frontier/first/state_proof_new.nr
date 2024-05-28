@@ -48,3 +48,5 @@ global proof_input = ProofInput {
     depth: 5
   }
 };
+
+global proof_input_serialized = proof_input.serialize();

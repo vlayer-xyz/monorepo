@@ -89,7 +89,7 @@ pub(crate) fn byte_value<N>(in_value: [u8; N]) -> BoundedVec<u8, N> {
     for i in 0..N {
         let num_bytes_ind = (value_length == 0) as u64;
         let byte_ind = (in_value[i] != 0) as u64;
-        value_length = num_bytes_ind*byte_ind * (N - i) + (1 - num_bytes_ind) * value_length;
+        value_length = num_bytes_ind * byte_ind * (N - i) + (1 - num_bytes_ind) * value_length;
     }
 
     let value = left_byte_shift(in_value, N - value_length);

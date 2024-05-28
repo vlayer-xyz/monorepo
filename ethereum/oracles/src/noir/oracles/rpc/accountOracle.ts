@@ -18,10 +18,7 @@ export enum OFFSETS {
   BALANCE,
   STORAGE_ROOT,
   CODE_HASH,
-  PROOF_KEY,
-  PROOF_VALUE,
-  PROOF,
-  PROOF_DEPTH
+  PROOF_INPUT
 }
 
 export async function getAccountOracle(
@@ -37,7 +34,7 @@ export async function getAccountOracle(
   });
   const encodedAccount = encodeAccount(accountProof);
   const encodedProof = encodeStateProof(accountProof);
-  return [...encodedAccount, ...encodedProof];
+  return [...encodedAccount, encodedProof];
 }
 
 export function decodeGetAccountArguments(args: NoirArguments): {

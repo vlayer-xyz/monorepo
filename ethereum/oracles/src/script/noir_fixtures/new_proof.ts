@@ -19,6 +19,8 @@ export function createNewTopLevelProofFixture(proof: Proof, config: ProofConfig)
   return `use crate::merkle_patricia_proofs::proof::{Proof, ProofInput};
 
 global proof_input = ${createNewProofInputFixture(proof, config)};
+
+global proof_input_serialized = proof_input.serialize();
 `;
 }
 

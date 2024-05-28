@@ -68,10 +68,7 @@ describe('getTransactionOracle', () => {
       txProofConfigM.maxPrefixedKeyNibbleLen + txProofConfigM.maxValueLen
     );
     expect(proofInputValuePart).toMatchSnapshot();
-    const proofInputDepthPart = txWithProof[OFFSETS.PROOF_INPUT].slice(
-      txWithProof[OFFSETS.PROOF_INPUT].length - 1,
-      txWithProof[OFFSETS.PROOF_INPUT].length
-    );
-    expect(proofInputDepthPart).toStrictEqual(['0x03']);
+    const proofInputDepthPart = txWithProof[OFFSETS.PROOF_INPUT][txWithProof[OFFSETS.PROOF_INPUT].length - 1];
+    expect(proofInputDepthPart).toStrictEqual('0x03');
   });
 });

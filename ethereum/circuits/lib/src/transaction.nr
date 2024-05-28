@@ -3,7 +3,7 @@ use dep::std::unsafe::zeroed;
 use crate::header::get_header;
 use crate::verifiers::transaction::verify_tx;
 use crate::merkle_patricia_proofs::proof::{Proof, ProofInput};
-use crate::serde::TX_PROOF_INPUT_LEN_M;
+use crate::serde::{TX_PROOF_INPUT_LEN_M, Serde};
 
 global MAX_KEY_LEN = 3;
 global MAX_DEPTH_NO_LEAF = 6;
@@ -135,7 +135,7 @@ unconstrained fn get_transaction_unconstrained_M<MAX_DATA_LEN>(
 ) -> (TxType, TxPartial<MAX_DATA_LEN>, ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN_M, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN_M>) {
     let (tx_type, transaction, proof_input): (TxType, ForeignCallTransaction<MAX_DATA_LEN>, ProofInputSerialized<TX_PROOF_INPUT_LEN_M>) = get_transaction_oracle(chain_id, block_number, tx_idx);
     let transaction: TxPartial<MAX_DATA_LEN> = transaction.into();
-    let proof_input = ProofInput::deserialize(proof_input);
+    let proof_input = Serde::deserialize(proof_input);
 
     (tx_type, transaction, proof_input)
 }

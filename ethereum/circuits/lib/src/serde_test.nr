@@ -133,12 +133,12 @@ mod nodes {
     use crate::fixtures::mainnet::cancun::small_block::receipt_proof_new::proof_input;
     use crate::merkle_patricia_proofs::proof::MAX_NODE_LEN;
     use crate::misc::arrays::sub_array_equals;
-    use crate::serde::{deserialize_nodes, serialize_nodes};
+    use crate::serde::{deserialize_receipt_nodes, serialize_receipt_nodes};
 
     #[test]
     fn simple() {
         let nodes = proof_input.proof.nodes;
-        let serialized = serialize_nodes(nodes);
+        let serialized = serialize_receipt_nodes(nodes);
 
         assert(sub_array_equals(nodes[0].serialize(), serialized, 0));
         assert(
@@ -148,13 +148,14 @@ mod nodes {
                 MAX_NODE_LEN * (nodes.len() - 1) - 1
             )
         );
-        assert_eq(deserialize_nodes(serialized), nodes);
+        assert_eq(deserialize_receipt_nodes(serialized), nodes);
     }
 }
 
 mod proof {
     use crate::fixtures::mainnet::cancun::small_block::receipt_proof_new::proof_input;
-    use crate::serde::{serialize_nodes, RECEIPT_NODES_LEN, RECEIPT_MAX_LEAF_LEN_M};
+    use crate::receipt::MAX_DEPTH_NO_LEAF as RECEIPT_MAX_DEPTH_NO_LEAF;
+    use crate::serde::{Serde, serialize_receipt_nodes, RECEIPT_MAX_LEAF_LEN_M, RECEIPT_NODES_LEN};
     use crate::merkle_patricia_proofs::proof::Proof;
     use crate::misc::arrays::sub_array_equals;
 
@@ -163,16 +164,19 @@ mod proof {
         let proof = proof_input.proof;
         let serialized = proof.serialize();
 
-        assert(sub_array_equals(serialize_nodes(proof.nodes), serialized, 0));
+        assert(sub_array_equals(serialize_receipt_nodes(proof.nodes), serialized, 0));
         assert(sub_array_equals(proof.leaf.serialize(), serialized, RECEIPT_NODES_LEN));
         assert_eq(serialized[RECEIPT_NODES_LEN + RECEIPT_MAX_LEAF_LEN_M], proof.depth as Field);
-        assert_eq(Proof::deserialize(serialized), proof);
+
+        let deserialized = Serde::deserialize(serialized);
+        assert_eq(deserialized, proof);
     }
 }
 
 mod proof_input {
     use crate::fixtures::mainnet::cancun::small_block::receipt_proof_new::proof_input;
-    use crate::serde::{RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN, RECEIPT_MAX_VALUE_LEN_M};
+    use crate::receipt::{MAX_DEPTH_NO_LEAF as RECEIPT_MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN_M as RECEIPT_MAX_LEAF_LEN_M};
+    use crate::serde::{Serde, RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN, RECEIPT_MAX_VALUE_LEN_M};
     use crate::misc::arrays::sub_array_equals;
     use crate::merkle_patricia_proofs::proof::ProofInput;
 
@@ -195,6 +199,8 @@ mod proof_input {
                 RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN + RECEIPT_MAX_VALUE_LEN_M
             )
         );
-        assert_eq(ProofInput::deserialize(serialized), proof_input);
+
+        let deserialized = Serde::deserialize(serialized);
+        assert_eq(deserialized, proof_input);
     }
 }
