@@ -1,7 +1,7 @@
 import { ForeignCallResult, ForeignCallParams } from './types.js';
 import { decodeNoirArguments, encodeForeignCallResult } from './encode.js';
 import { MultiChainClient } from '../../../ethereum/client.js';
-import { Oracle } from '../types.js';
+import { Oracle, RpcOracle } from '../types.js';
 
 /**
  * The format that the Noir oracles server receives the arguments in is slightly different than the format that acvm.js uses.
@@ -17,19 +17,25 @@ export type JSONRPCServerMethods = {
   get_proof(params: ForeignCallParams): ForeignCallResult;
   get_receipt(params: ForeignCallParams): ForeignCallResult;
   get_transaction(params: ForeignCallParams): ForeignCallResult;
+  recursive_get_storage(params: ForeignCallParams): ForeignCallResult;
 };
 
 export interface ServerParams {
   client: MultiChainClient;
 }
 
-export async function getOracleHandler(
-  oracle: Oracle,
+export async function getRpcOracleHandler(
+  rpcOracle: RpcOracle,
   params: ForeignCallParams,
   { client }: ServerParams
 ): Promise<ForeignCallResult> {
+  const oracle = rpcOracle.bind(null, client);
+  return getOracleHandler(oracle, params);
+}
+
+export async function getOracleHandler(oracle: Oracle, params: ForeignCallParams): Promise<ForeignCallResult> {
   const noirArguments = decodeNoirArguments(params);
-  const noirOutputs = await oracle(client, noirArguments);
+  const noirOutputs = await oracle(noirArguments);
   const result = encodeForeignCallResult(noirOutputs);
   return result;
 }
