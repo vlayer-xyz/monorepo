@@ -1,6 +1,6 @@
 import { GetProofReturnType } from 'viem';
 import { encodeHexString, joinArray } from '../../noir/noir_js/encode.js';
-import { encodeValue } from '../../noir/oracles/accountOracle/encode.js';
+import { encodeValue } from '../../noir/oracles/rpc/accountOracle/encode.js';
 
 export function createAccountFixture(stateProof: GetProofReturnType): string {
   const address = encodeHexString(stateProof.address);

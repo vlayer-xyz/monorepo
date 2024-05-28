@@ -5,7 +5,7 @@ import { assert, encodeHexStringToArray } from '../main.js';
 import { hasDuplicates } from '../util/array.js';
 import { bytesToHex } from 'viem';
 import { createNewTopLevelProofFixtureWithRoot } from './noir_fixtures/new_proof.js';
-import { getProofConfig } from '../noir/oracles/common/proofConfig.js';
+import { getProofConfig } from '../noir/oracles/rpc/common/proofConfig.js';
 import { BYTE_HEX_LEN } from '../util/const.js';
 import { encodeUint8Array } from '../noir/oracles/common/encode.js';
 

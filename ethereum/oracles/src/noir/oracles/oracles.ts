@@ -1,10 +1,10 @@
 import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { MultiChainClient } from '../../ethereum/client.js';
-import { getAccountOracle } from './accountOracle.js';
-import { getHeaderOracle } from './headerOracle.js';
-import { getProofOracle } from './proofOracle.js';
-import { getReceiptOracle } from './receiptOracle.js';
-import { getTransactionOracle } from './transactionOracle.js';
+import { getAccountOracle } from './rpc/accountOracle.js';
+import { getHeaderOracle } from './rpc/headerOracle.js';
+import { getProofOracle } from './rpc/proofOracle.js';
+import { getReceiptOracle } from './rpc/receiptOracle.js';
+import { getTransactionOracle } from './rpc/transactionOracle.js';
 
 export type NoirArgument = string[];
 export type NoirArguments = NoirArgument[];
