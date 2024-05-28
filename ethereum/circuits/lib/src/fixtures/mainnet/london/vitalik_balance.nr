@@ -1,3 +1,3 @@
 mod header;
 mod account;
-mod state_proof_new;
+mod state_proof;
