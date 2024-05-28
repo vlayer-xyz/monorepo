@@ -72,3 +72,11 @@ pub fn sub_array_equals<TItem, SUBARRAY_LEN, ARRAY_LEN>(
     }
     result
 }
+
+pub fn slice_to_array<LENGTH>(slice: [u8]) -> [u8; LENGTH] {
+    let mut array = [0; LENGTH];
+    for i in 0..LENGTH {
+        array[i] = slice[i];
+    }
+    array
+}

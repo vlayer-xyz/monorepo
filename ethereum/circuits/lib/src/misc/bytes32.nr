@@ -1,4 +1,4 @@
-use crate::misc::arrays::memcpy;
+use crate::misc::arrays::{memcpy, slice_to_array};
 use crate::misc::types::Bytes32;
 
 pub fn address_to_bytes32(address: [u8; 20]) -> Bytes32 {
@@ -10,10 +10,6 @@ pub fn address_to_bytes32(address: [u8; 20]) -> Bytes32 {
 }
 
 pub fn field_to_bytes32(value: Field) -> [u8; 32] {
-    let byte_array = value.to_be_bytes(32);
-    let mut bytes = [0; 32];
-    for i in 0..32 {
-        bytes[i] = byte_array[i];
-    }
-    bytes
+    let byte_slice = value.to_be_bytes(32);
+    slice_to_array(byte_slice)
 }
