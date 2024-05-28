@@ -1,4 +1,3 @@
-import { Transaction } from 'viem';
 import { MAX_DATA_LEN_M } from '../common/txConfig.js';
 import { ForeignCallOutput } from '@noir-lang/noir_js';
 import { padArray } from '../../../../util/array.js';
@@ -8,6 +7,7 @@ import { ZERO_PAD_VALUE, MAX_TRIE_NODE_LEN } from '../../common/const.js';
 import { encodeField, encodeAddress, encodeU128, encodeHex, encodeBytes, encodeProof } from '../../common/encode.js';
 import { txProofConfigM } from '../common/proofConfig/tx.js';
 import { Proof } from '../../../../ethereum/proof.js';
+import { Transaction } from 'viem';
 
 export enum TX_OFFSETS {
   NONCE,

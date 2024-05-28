@@ -2,7 +2,7 @@ import { type ForeignCallOutput } from '@noir-lang/noir_js';
 import { assert } from '../../../util/assert.js';
 import { encodeAccount, encodeStateProof, encodeStorageProof } from './accountOracle/encode.js';
 import { decodeAddress, decodeBytes32, decodeField } from '../common/decode.js';
-import { NoirArguments } from '../oracles.js';
+import { NoirArguments } from '../types.js';
 import { Hex } from 'viem';
 import { MultiChainClient } from '../../../ethereum/client.js';
 import { Enum } from '../../../util/enum.js';

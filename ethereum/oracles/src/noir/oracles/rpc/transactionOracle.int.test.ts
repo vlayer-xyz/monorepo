@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { createMockMultiChainClient } from '../../../ethereum/mockClient.js';
-import { OFFSETS, getTransactionOracle } from './transactionOracle.js';
-import { MAX_DATA_LEN_M } from './common/txConfig.js';
 import { padArray } from '../../../util/array.js';
+import { MAX_DATA_LEN_M } from './common/txConfig.js';
 import { ZERO_PAD_VALUE } from '../common/const.js';
 import { txProofConfigM } from './common/proofConfig/tx.js';
+import { OFFSETS, getTransactionOracle } from './transactionOracle.js';
 
 describe('getTransactionOracle', () => {
   it('success', async () => {
