@@ -8,6 +8,7 @@ mod receipt;
 mod receipt_int_test;
 mod log;
 mod log_test;
+mod log_int_test;
 mod transaction;
 mod transaction_test;
 mod transaction_int_test;
