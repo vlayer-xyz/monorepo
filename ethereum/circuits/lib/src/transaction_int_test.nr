@@ -3,7 +3,7 @@ use crate::fixtures::mainnet::{
     cancun::small_block::{
     header::{number, block_header_partial, block_header_rlp},
     transaction::{tx_idx, tx_type, transaction, foreign_call_transaction},
-    transaction_proof_new::proof_input_serialized
+    transaction_proof::proof_input_serialized
 },
     homestead::fork::{
     header::{
@@ -14,7 +14,7 @@ use crate::fixtures::mainnet::{
     tx_idx as another_tx_idx, tx_type as another_tx_type,
     foreign_call_transaction as another_foreign_call_transaction
 },
-    transaction_proof_new::proof_input_serialized as another_proof_input_serialized
+    transaction_proof::proof_input_serialized as another_proof_input_serialized
 }
 };
 use dep::std::test::OracleMock;

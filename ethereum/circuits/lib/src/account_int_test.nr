@@ -4,13 +4,13 @@ use crate::fixtures::mainnet::{
     paris::{
     usdc_circle::{
     header::{number, state_root, block_header_partial, block_header_rlp}, account::{account, address},
-    state_proof_new::proof_input_serialized as state_proof_input_serialized
+    state_proof::proof_input_serialized as state_proof_input_serialized
 }
 },
     london::vitalik_balance::{
     account::{account as account_from_different_header, address as address_from_different_header},
     header::state_root as state_root_from_different_header,
-    state_proof_new::proof_input_serialized as state_proof_input_from_different_header_serialized
+    state_proof::proof_input_serialized as state_proof_input_from_different_header_serialized
 }
 };
 use dep::std::test::OracleMock;

@@ -5,8 +5,8 @@ use crate::fixtures::mainnet::{
     paris::{
     usdc_circle::{
     header::{number, block_header_partial, block_header_rlp}, account::{account, address},
-    state_proof_new::proof_input_serialized as state_proof_input_serialized,
-    storage_proof_new::proofs_serialized, storage::{values, keys as storage_keys}
+    state_proof::proof_input_serialized as state_proof_input_serialized,
+    storage_proof::proofs_serialized, storage::{values, keys as storage_keys}
 },
     usdc_uniswap::{storage::keys as usdc_uniswap_storage_keys}
 },
@@ -17,7 +17,7 @@ use crate::fixtures::mainnet::{
     block_header_rlp as crypto_punks_block_header_rlp, number as crypto_punks_number
 },
     account::{address as crypto_punks_address, account as crypto_punks_account},
-    state_proof_new::proof_input_serialized as crypto_punks_state_proof_input_serialized
+    state_proof::proof_input_serialized as crypto_punks_state_proof_input_serialized
 }
 }
 };

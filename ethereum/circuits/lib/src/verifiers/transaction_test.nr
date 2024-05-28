@@ -32,7 +32,7 @@ mod verify_tx {
     use crate::misc::arrays::alter_array;
     use crate::fixtures::mainnet::{
         cancun::small_block::{
-        transaction::{transaction, encoded_tx, tx_type, tx_idx}, transaction_proof_new::proof_input,
+        transaction::{transaction, encoded_tx, tx_type, tx_idx}, transaction_proof::proof_input,
         header::transactions_root
     },
         homestead::fork::{
@@ -40,7 +40,7 @@ mod verify_tx {
         transaction as legacy_transaction, encoded_tx as legacy_encoded_tx, tx_type as legacy_tx_type,
         tx_idx as legacy_tx_idx
     },
-        transaction_proof_new::proof_input as legacy_proof_input,
+        transaction_proof::proof_input as legacy_proof_input,
         header::transactions_root as legacy_transactions_root
     }
     };
