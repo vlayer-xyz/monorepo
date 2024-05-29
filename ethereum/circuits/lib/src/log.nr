@@ -93,8 +93,8 @@ fn extract_log_fragment<MAX_LOGS_COUNT, MAX_RECEIPT_RLP_FRAGMENT_LEN>(
     logs_fragment: Fragment<MAX_RECEIPT_RLP_FRAGMENT_LEN, u8>,
     log_idx: u64
 ) -> Fragment<MAX_RECEIPT_RLP_FRAGMENT_LEN, u8> {
-    let logs_rlp_list = decode_list::<MAX_RECEIPT_RLP_FRAGMENT_LEN, MAX_LOGS_COUNT>(logs_fragment);
-    rlp_subfragment::<MAX_LOGS_COUNT, MAX_RECEIPT_RLP_FRAGMENT_LEN>(logs_fragment, logs_rlp_list.get(log_idx))
+    let logs_rlp_list: RlpList<MAX_LOGS_COUNT> = decode_list(logs_fragment);
+    rlp_subfragment(logs_fragment, logs_rlp_list.get(log_idx))
 }
 
 fn extract_address<MAX_RECEIPT_RLP_FRAGMENT_LEN>(
@@ -123,7 +123,7 @@ fn extract_data<MAX_RECEIPT_RLP_FRAGMENT_LEN>(
     rlp_subfragment(log_fragment, log_values_rlp_list.get(LOG_DATA_INDEX))
 }
 
-fn rlp_subfragment<MAX_FIELDS, MAX_RECEIPT_RLP_FRAGMENT_LEN>(
+fn rlp_subfragment<MAX_RECEIPT_RLP_FRAGMENT_LEN>(
     fragment: Fragment<MAX_RECEIPT_RLP_FRAGMENT_LEN, u8>,
     rlp_fragment: RlpFragment
 ) -> Fragment<MAX_RECEIPT_RLP_FRAGMENT_LEN, u8> {

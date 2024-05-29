@@ -50,6 +50,7 @@ jobs:
           nargo prove --package get_storage --oracle-resolver=http://localhost:5555
           nargo prove --package get_receipt --oracle-resolver=http://localhost:5555
           nargo prove --package get_transaction --oracle-resolver=http://localhost:5555
+          nargo prove --package get_log --oracle-resolver=http://localhost:5555
 
       - name: Run nargo codegen-verifier
         run: |
@@ -58,6 +59,7 @@ jobs:
           nargo codegen-verifier --package get_storage
           nargo codegen-verifier --package get_receipt
           nargo codegen-verifier --package get_transaction
+          nargo codegen-verifier --package get_log
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
