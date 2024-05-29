@@ -2,7 +2,29 @@
 
 Noir circuits for proving and verifying historical data on the Ethereum blockchain and other EVMs.
 
-## Monorepo structure
+## Main library content
+
+The main library is available in [lib/](./lib) directory and consist of:
+
+- Generation of proofs for:
+  - [block headers](./get_header/README.md)
+  - [ethereum accounts](./get_account/README.md)
+  - [smart contract storage variables](./get_storage/README.md)
+  - [transaction](./get_transaction/README.md)
+  - [receipts](./get_receipt/README.md)
+  - logs
+- [rlp decoding](./lib/src/rlp/README.md) used by Ethereum to store data
+- [merkle patricia proofs](./lib/src/merkle_patricia_proofs/README.md) - implementation for Ethereum Merkle Patricia tries
+- [fragments](./lib/src/misc/fragment.nr) structure similar to Rust's slice, used for parsing data
+- Basic Ethereum data types:
+  [U256](./lib/src/misc/uint256.nr),
+  [Address](./lib/src/misc/types.nr),
+  [Bytes32](./lib/src/misc/types.nr),
+  [Hash](./lib/src/misc/types.nr), along with util functions.
+
+Additionally, there are binary creates used for recursive proving. See detailed structure in the following section.
+
+## Circuit folder structure
 
 | Package                                             | Description                                          | Docs                                      |
 | --------------------------------------------------- | ---------------------------------------------------- | ----------------------------------------- |

@@ -2,8 +2,9 @@
 
 This monorepo contains two sub-projects:
 
-- **ethereum** - [Noir](https://noir-lang.org) library for proving and verifying historical data on the Ethereum blockchain and other EVM compatible blockchains. It supports proving accounts, storage, logs, receipts & transactions. Checkout it's **[docs](./ethereum/README.md)** for more details.
-- **vlayer** - Contains real life examples of what can be built using **ethereum**. It's a work in progress and lacks documentation.
+- **ethereum** - [Noir](https://noir-lang.org) library for proving and verifying historical data on the Ethereum blockchain and other EVM compatible blockchains. It supports proving accounts, storage, logs, receipts & transactions. **[Read more](./ethereum/README.md)**.
+
+- **vlayer** - Contains vlayer SDK along with real life examples. It's a work in progress and lacks documentation. Stay tuned for updates.
 
 ## Prerequisites
 
