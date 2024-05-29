@@ -209,7 +209,8 @@ struct TransactionWithinBlock<MAX_DATA_LEN> {
 ## U256
 
 U256 is a structure to use as a type for big numbers.  
-It is used when dealing with numbers up to 2<sup>256</sup>. They can exceed Field maximum value.
+It is used when dealing with numbers up to 2<sup>256</sup>. They can exceed Field maximum value.  
+In particular it is a word size in ETH and therefore it is a basic type used in both storage and slot values calculations.
 
 [There](.src/uint256.nr) is an unoptimized implementation of this type using two U128 structures. Optimized version will appear in Noir.
 
