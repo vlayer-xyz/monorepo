@@ -37,6 +37,7 @@ jobs:
           echo '{ "abi": [] }' > target/get_header.json
           echo '{ "abi": [] }' > target/get_receipt.json
           echo '{ "abi": [] }' > target/get_transaction.json
+          echo '{ "abi": [] }' > target/get_log.json
 
       - name: Create fake smart contract build artefacts
         working-directory: .
@@ -51,6 +52,8 @@ jobs:
           echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum/contracts/out/GetReceiptUltraPLONKVerifier.sol/UltraVerifier.json
           mkdir -p ethereum/contracts/out/GetTransactionUltraPLONKVerifier.sol
           echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum/contracts/out/GetTransactionUltraPLONKVerifier.sol/UltraVerifier.json
+          mkdir -p ethereum/contracts/out/GetLogUltraPLONKVerifier.sol
+          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum/contracts/out/GetLogUltraPLONKVerifier.sol/UltraVerifier.json
 
       - name: Run TypeScript Build
         run: yarn build

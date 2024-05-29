@@ -50,6 +50,7 @@ jobs:
           nargo prove --package get_storage --oracle-resolver=http://localhost:5555
           nargo prove --package get_receipt --oracle-resolver=http://localhost:5555
           nargo prove --package get_transaction --oracle-resolver=http://localhost:5555
+          nargo prove --package get_log --oracle-resolver=http://localhost:5555
           nargo prove --package is_dao_worthy --oracle-resolver=http://localhost:5555
           nargo prove --package is_ape_owner --oracle-resolver=http://localhost:5555
 
@@ -60,6 +61,7 @@ jobs:
           nargo verify --package get_storage
           nargo verify --package get_receipt
           nargo verify --package get_transaction
+          nargo verify --package get_log
           nargo verify --package is_dao_worthy
           nargo verify --package is_ape_owner
 
