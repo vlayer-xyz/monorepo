@@ -1,54 +1,82 @@
 # Solidity storage slots
 
-This is a [Noir](https://noir-lang.org) library for calculating slot positions in contract storage.
+This is a [Noir](https://noir-lang.org) library for calculating storage locations (later: slots) of Solidity variables.
 
-The library consists of functions:
+The library consists of the following functions:
 
 - ```rust
   pub(crate) fn mapping(slot: Bytes32, key: Bytes32) -> Bytes32;
   ```
 
-  Calculates the slot of a value corresponding to a mapping `key`. `Slot` argument is the storage location of the mapping calculated after applying storage layout rules.
+  Takes in the mapping `slot`, the `key` and outputs the respective value `slot`.
 
 - ```rust
   pub(crate) fn dynamic_array(slot: Bytes32, size: Field, index: Field) -> Bytes32;
   ```
 
-  Calculates the slot where element at `index` in dynamic array is located. `Slot` argument is the storage location of the dynamic array calculated after applying storage layout rules. `Size` defines the size of elements in the array.
-
-- There is an analogical function where `slot` argument is a precalculated slot of the first element in the array:
+  Takes in the array `slot`, the element `size` and `index` and outputs the respective element `slot`.
 
   ```rust
   pub(crate) fn dynamic_array_with_precalculated_slot(slot: Bytes32, size: Field, index: Field) -> Bytes32;
   ```
 
+  Similar to a function above, but instead of taking in the array slot it takes in the slot of it's first element which is equal to the `keccak` of the array slot.
+
+  This is useful in cases like EIP 1967 where storage slot is computed manually from variable name instead of numeric storage slot to avoid collisions and achieve storage slots stability throughout code upgrades.
+  Example:
+  Storage slot `0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc` (obtained as `bytes32(uint256(keccak256('eip1967.proxy.implementation')) - 1))`.
+
 - ```rust
   pub(crate) fn struct_slot(slot: Bytes32, offset: Field) -> Bytes32;
   ```
 
-  Calculates the slot of an element at `offset` in the structure that begins at `slot`.
+  Takes in the struct `slot`, the element `offset` and outputs the respective struct field `slot`.
 
-### Examples
+## Examples
 
-The examples below show how slots of particular data can be found using this library. In this case searched data will be the owner of a token of `token_id`.
-There are two types of tokens used in these examples.
+Below is the example of how we can use this library to find a storage slot of an NFT owner by `token_id`.
 
-#### [Crypto Punk token](https://etherscan.io/address/0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb)
+### [CryptoPunks](https://etherscan.io/address/0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb#code)
 
-In case of Crypto Punk tokens, owners of tokens are stored in a map that is stored at 10th slot. It can be found there: https://etherscan.io/address/0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb#code.
+Owners of tokens are stored in a map at position 10.
 
-```rust
-    mapping(field_to_bytes32(10), token_id)
+```solidity
+mapping (uint => address) public punkIndexToAddress;
 ```
 
-#### [Bored ape yacht club token example](https://etherscan.io/token/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d)
+```rust
+let owner_slot = mapping(field_to_bytes32(10), token_id)
+```
 
-In case of Bored Ape Yacht Club tokens, list of owners is stored in a dynamic array of structures of two elements simulating a map. The starting position of this list is 2 as can be checked here: https://evm.storage/eth/19967215/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d#table. Because of that one can use either `dynamic_array` function with `slot` argument set to 2, or `dynamic_array_with_precalculated_slot` with precalculated slot of this array. After finding position of a structure, `struct_slot` function finds the searched information in this structure. Owner is stored at the second position in this structure, so `offset` argument is set to 1.
+### [Bored Ape Yacht Club](https://etherscan.io/token/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d#code)
+
+This contract is harder to read, but we can use [evm.storage](https://evm.storage/eth/19967215/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d#table) to find storage layout.
+
+```solidity
+struct MapEntry {
+    _key bytes32;
+    _value bytes32; // This contains padded owner address
+};
+
+struct EnumerableMap {
+    MapEntry[] _entries;
+    mapping(bytes32 => uint256) _indexes;
+};
+
+EnumerableMap _tokenOwners;
+```
+
+`_tokenOwners` is a struct that occupies slots 2 and 3, but we are only interested in it's first field.
+
+`_entries` is a dynamic array of structs (of size 2) and we are interested in the second field (with offset 1).
+`_entries` array is indexed by `token_id`.
 
 ```rust
-let BORED_APE_YACHT_CLUB_TOKEN_OWNERS_INNER_ENTRIES_SLOT = keccak256(2, 32);
-
-let owner_slot = dynamic_array_with_precalculated_slot(BORED_APE_YACHT_CLUB_TOKEN_OWNERS_INNER_ENTRIES_SLOT, 2, bytes32_to_field(token_id));
-
-struct_slot(owner_slot, 1)
+let array_elem_size = 2; // This element is a struct with two fields. Owner is the second field
+let array_elem_idx = bytes32_to_field(token_id);
+let struct_owner_field_offset = 1;
+let owner_slot = struct_slot(
+    dynamic_array(2, array_elem_size, array_elem_idx),
+    struct_owner_field_offset
+);
 ```
