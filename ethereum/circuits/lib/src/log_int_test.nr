@@ -7,7 +7,7 @@ use crate::{
     small_block::{
     header::{number, block_header_partial, block_header_rlp, hash},
     receipt::{tx_type, foreign_call_receipt}, transaction::tx_idx,
-    receipt_proof_new::proof_input_serialized, log::{log_idx, log}
+    receipt_proof::proof_input_serialized, log::{log_idx, log}
 },
     approve::header::{block_header_partial as another_block_header_partial, block_header_rlp as another_block_header_rlp}
 }

@@ -3,7 +3,7 @@ use crate::fixtures::mainnet::{
     cancun::small_block::{
     header::{number, block_header_partial, block_header_rlp},
     receipt::{tx_type, receipt, foreign_call_receipt}, transaction::tx_idx,
-    receipt_proof_new::proof_input_serialized
+    receipt_proof::proof_input_serialized
 },
     cancun::approve::{
     header::{
@@ -15,7 +15,7 @@ use crate::fixtures::mainnet::{
     foreign_call_receipt as another_foreign_call_receipt
 },
     transaction::tx_idx as another_tx_idx,
-    receipt_proof_new::proof_input_serialized as another_proof_input_serialized
+    receipt_proof::proof_input_serialized as another_proof_input_serialized
 }
 };
 use dep::std::test::OracleMock;

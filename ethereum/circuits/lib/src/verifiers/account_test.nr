@@ -3,7 +3,7 @@ use crate::fixtures::{
     mainnet::london::{
     crypto_punks::{
     account::{rlp_encoded_left_padded_account, account, address, balance, storage_root, code_hash, nonce},
-    header::state_root, state_proof_new::proof_input as state_proof_input
+    header::state_root, state_proof::proof_input as state_proof_input
 }
 }
 };

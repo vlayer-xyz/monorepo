@@ -355,24 +355,24 @@ mod verify_merkle_proof {
     use crate::fixtures::mainnet::{
         homestead::fork::{
         header::receipts_root as homestead_receipts_root,
-        receipt_proof_new::proof_input as homestead_receipt_proof_input,
+        receipt_proof::proof_input as homestead_receipt_proof_input,
         header::transactions_root as homestead_transactions_root,
-        transaction_proof_new::proof_input as homestead_transaction_proof_input
+        transaction_proof::proof_input as homestead_transaction_proof_input
     },
         cancun::small_block::{
         header::receipts_root as cancun_receipts_root,
-        receipt_proof_new::proof_input as cancun_receipt_proof_input,
+        receipt_proof::proof_input as cancun_receipt_proof_input,
         header::transactions_root as cancun_transactions_root,
-        transaction_proof_new::proof_input as cancun_transaction_proof_input
+        transaction_proof::proof_input as cancun_transaction_proof_input
     },
-        london::crypto_punks::{state_proof_new::proof_input as london_state_proof_input, header::state_root as london_state_root},
-        paris::bored_ape_yacht_club::{state_proof_new::proof_input as paris_state_proof_input, header::state_root as paris_state_root},
+        london::crypto_punks::{state_proof::proof_input as london_state_proof_input, header::state_root as london_state_root},
+        paris::bored_ape_yacht_club::{state_proof::proof_input as paris_state_proof_input, header::state_root as paris_state_root},
         paris::usdc_circle::{
-        storage_proof_new::proofs as paris_circle_storage_proof_inputs,
+        storage_proof::proofs as paris_circle_storage_proof_inputs,
         account::storage_root as paris_circle_storage_root
     },
         paris::usdc_uniswap::{
-        storage_proof_new::proofs as paris_uniswap_storage_proof_inputs,
+        storage_proof::proofs as paris_uniswap_storage_proof_inputs,
         account::storage_root as paris_uniswap_storage_root
     }
     };

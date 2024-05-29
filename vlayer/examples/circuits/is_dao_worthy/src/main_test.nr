@@ -3,8 +3,8 @@ mod is_dao_worthy_main {
     use dep::ethereum::fixtures::mainnet::{
         paris::usdc_circle::header::{block_header_partial as paris_block_header_partial, block_header_rlp as paris_block_header_rlp},
         paris::usdc_circle::account::account,
-        paris::usdc_circle::state_proof_new::proof_input_serialized as state_proof_input_serialized,
-        paris::usdc_circle::storage_proof_new::proofs_serialized
+        paris::usdc_circle::state_proof::proof_input_serialized as state_proof_input_serialized,
+        paris::usdc_circle::storage_proof::proofs_serialized
     };
     use crate::main;
 

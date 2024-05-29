@@ -2,7 +2,7 @@ use crate::fixtures::mainnet::{
     cancun::{
     small_block::{
     receipt::{encoded_receipt, receipt, tx_type}, header::{number as block_number, receipts_root},
-    receipt_proof_new::proof_input, transaction::tx_idx
+    receipt_proof::proof_input, transaction::tx_idx
 },
     access_list::header::receipts_root as access_list_receipts_root
 },
@@ -12,7 +12,7 @@ use crate::fixtures::mainnet::{
     receipt as pre_byzantium_receipt
 },
     header::{number as pre_byzantium_block_number, receipts_root as pre_byzantium_receipt_root},
-    receipt_proof_new::proof_input as pre_byzantium_receipt_proof_input
+    receipt_proof::proof_input as pre_byzantium_receipt_proof_input
 }
 };
 use crate::verifiers::receipt::{BYZANTIUM_BLOCK_NUM, assert_receipt_equals, assert_receipt_rlp_equals, verify_receipt};

@@ -3,8 +3,8 @@ mod is_crypto_punk_owner_main {
     use dep::ethereum::{
         fixtures::mainnet::london::crypto_punks::{
         header::{block_header_partial as london_block_header_partial, block_header_rlp as london_block_header_rlp},
-        account::account, state_proof_new::proof_input_serialized as state_proof_input_serialized,
-        storage_proof_new::proofs_serialized
+        account::account, state_proof::proof_input_serialized as state_proof_input_serialized,
+        storage_proof::proofs_serialized
     },
         misc::arrays::alter_array
     };

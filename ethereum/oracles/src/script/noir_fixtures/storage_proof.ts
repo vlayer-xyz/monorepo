@@ -1,32 +1,29 @@
-import { Hash } from 'viem';
-import { encodeHexString, indentBlock, joinArray } from '../../noir/noir_js/encode.js';
-import { encodeBytes32, encodeProof } from '../../noir/oracles/common/encode.js';
+import { Hex, keccak256, toRlp } from 'viem';
+import { createProofInputFixture } from './proof.js';
+import { joinArrayVertical } from '../../noir/noir_js/encode.js';
+import { toHexString } from '../../ethereum/blockHeader.js';
 import { storageProofConfig } from '../../noir/oracles/rpc/common/proofConfig/storage.js';
 
 interface StorageProof {
-  key: Hash;
-  proof: Hash[];
+  key: Hex;
+  proof: Hex[];
   value: bigint;
 }
 
 export function createStorageProofFixture(storageProofs: StorageProof[]): string {
   const storageProofsNoir = storageProofs.map(createSingleStorageProofFixture);
-  return `use crate::account_with_storage::LegacyStorageProof;
+  return `use crate::merkle_patricia_proofs::proof::{Proof, ProofInput};
+use crate::account_with_storage::{MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_STORAGE_DEPTH_NO_LEAF_M, MAX_STORAGE_VALUE_LEN, MAX_STORAGE_LEAF_LEN};
 
-global proofs = ${joinArray(storageProofsNoir)};
+global proofs = ${joinArrayVertical(storageProofsNoir)};
+
+global proofs_serialized = proofs.map(|proof: ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_STORAGE_VALUE_LEN, MAX_STORAGE_DEPTH_NO_LEAF_M, MAX_STORAGE_LEAF_LEN>| proof.serialize());
 `;
 }
 
 function createSingleStorageProofFixture(storageProof: StorageProof): string {
-  const key = encodeHexString(storageProof.key);
-  const value = encodeBytes32(storageProof.value);
-  const proof = encodeProof(storageProof.proof, storageProofConfig.maxProofLen);
-  const depth = storageProof.proof.length;
-  const storageProofFixture = `LegacyStorageProof {
-  key: ${indentBlock(joinArray(key), 1)},
-  value: ${indentBlock(joinArray(value), 1)},
-  proof: ${indentBlock(joinArray(proof), 1)},
-  depth: ${depth}
-}`;
-  return indentBlock(storageProofFixture, 1);
+  return createProofInputFixture(
+    { key: keccak256(storageProof.key), value: toRlp(toHexString(storageProof.value)), proof: storageProof.proof },
+    storageProofConfig
+  );
 }

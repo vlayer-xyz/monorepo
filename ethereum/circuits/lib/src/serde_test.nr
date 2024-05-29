@@ -102,7 +102,7 @@ mod account_within_block {
 mod storage_within_block {
     use crate::serde::{STORAGE_BLOCK_LEN, ACCOUNT_LEN};
     use crate::account_with_storage::StorageWithinBlock;
-    use crate::fixtures::mainnet::paris::usdc_circle::{account::account, header::hash, storage_proof_new::proofs, storage::values};
+    use crate::fixtures::mainnet::paris::usdc_circle::{account::account, header::hash, storage_proof::proofs, storage::values};
     use crate::misc::{types::BYTES32_LENGTH, arrays::sub_array_equals};
 
     #[test]
@@ -130,7 +130,7 @@ mod storage_within_block {
 }
 
 mod nodes {
-    use crate::fixtures::mainnet::cancun::small_block::receipt_proof_new::proof_input;
+    use crate::fixtures::mainnet::cancun::small_block::receipt_proof::proof_input;
     use crate::merkle_patricia_proofs::proof::MAX_NODE_LEN;
     use crate::misc::arrays::sub_array_equals;
     use crate::serde::{deserialize_receipt_nodes, serialize_receipt_nodes};
@@ -153,7 +153,7 @@ mod nodes {
 }
 
 mod proof {
-    use crate::fixtures::mainnet::cancun::small_block::receipt_proof_new::proof_input;
+    use crate::fixtures::mainnet::cancun::small_block::receipt_proof::proof_input;
     use crate::receipt::MAX_DEPTH_NO_LEAF as RECEIPT_MAX_DEPTH_NO_LEAF;
     use crate::serde::{Serde, serialize_receipt_nodes, RECEIPT_MAX_LEAF_LEN_M, RECEIPT_NODES_LEN};
     use crate::merkle_patricia_proofs::proof::Proof;
@@ -174,7 +174,7 @@ mod proof {
 }
 
 mod proof_input {
-    use crate::fixtures::mainnet::cancun::small_block::receipt_proof_new::proof_input;
+    use crate::fixtures::mainnet::cancun::small_block::receipt_proof::proof_input;
     use crate::receipt::{MAX_DEPTH_NO_LEAF as RECEIPT_MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN_M as RECEIPT_MAX_LEAF_LEN_M};
     use crate::serde::{Serde, RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN, RECEIPT_MAX_VALUE_LEN_M};
     use crate::misc::arrays::sub_array_equals;
