@@ -1,6 +1,6 @@
 # Solidity storage slots
 
-This is a [Noir](https://noir-lang.org) library for calculating storage locations (later: slots) of Solidity variables.
+This is a [Noir](https://noir-lang.org) library for calculating storage locations (later: slots) of Solidity variables. More on storage layout and slots [here](./STORAGE_LAYOUT.md).
 
 The library consists of the following functions:
 
