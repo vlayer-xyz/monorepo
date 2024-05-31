@@ -22,7 +22,7 @@ The main library is available in [lib/](./lib) directory and consist of:
   [Bytes32](./lib/src/misc/types.nr),
   [Hash](./lib/src/misc/types.nr), along with util functions.
 
-Additionally, there are binary creates used for recursive proving. See detailed structure in the following section.
+Additionally, there are binary crates used for recursive proving. See detailed structure in the following section.
 
 ## Circuit folder structure
 
