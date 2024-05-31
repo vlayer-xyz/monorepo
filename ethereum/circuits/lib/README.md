@@ -107,6 +107,7 @@ All the function in this library prove that the objects are contained within som
     ├── account.nr
     ├── account_with_storage.nr
     ├── transaction.nr
+    ├── uint256.nr
     └── verifiers
         ├── header.nr
         ├── receipt.nr
@@ -204,3 +205,29 @@ struct TransactionWithinBlock<MAX_DATA_LEN> {
 ## RLP decoding
 
 [rlp folder](./src/rlp/README.md) contains tools to work with RLP encoded data
+
+## U256
+
+U256 is a structure to use as a type for big numbers.  
+It is used when dealing with numbers up to 2<sup>256</sup>. They can exceed Field maximum value.  
+In particular it is a word size in ETH and therefore it is a basic type used in both storage and slot values calculations.
+
+[There](.src/uint256.nr) is an unoptimized implementation of this type using two U128 structures. Optimized version will appear in Noir.
+
+Traits implemented for U256:
+
+- Add
+- Eq
+- Serde
+
+```rust
+global u128_number = 0x10000000000000000000000000000000;
+
+let big_number = U256::new(u128_number, u128_number);
+
+let sum = big_number + U256::one();
+assert_eq(sum, U256 { high: u128_number, low: u128_number + U128::one()});
+
+let serialized: [Field; 4] = big_number.serialize();
+assert_eq(U256::deserialize(serialized), big_number);
+```

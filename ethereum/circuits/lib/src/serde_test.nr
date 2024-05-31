@@ -14,7 +14,7 @@ mod U128_ {
 }
 
 mod U256 {
-    use crate::misc::uint256::U256;
+    use crate::uint256::U256;
     use crate::serde::U256_SERIALIZED_LEN;
 
     global u128_number = 0x10000000000000000000000000000000;
