@@ -4,7 +4,7 @@ Noir circuits for proving and verifying historical data on the Ethereum blockcha
 
 ## Main library content
 
-The main library is available in [lib/](./lib) directory and consist of:
+The main library is available in [lib/](./lib) directory and consists of:
 
 - Generation of proofs for:
   - [block headers](./get_header/README.md)
