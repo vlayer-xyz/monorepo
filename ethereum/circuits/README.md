@@ -12,7 +12,7 @@ The main library is available in [lib/](./lib) directory and consists of:
   - [smart contract storage variables](./get_storage/README.md)
   - [transaction](./get_transaction/README.md)
   - [receipts](./get_receipt/README.md)
-  - logs
+  - [logs](./get_log/README.md)
 - [rlp decoding](./lib/src/rlp/README.md) used by Ethereum to store data
 - [merkle patricia proofs](./lib/src/merkle_patricia_proofs/README.md) - implementation for Ethereum Merkle Patricia tries
 - [fragments](./lib/src/misc/fragment.nr) structure similar to Rust's slice, used for parsing data
@@ -35,6 +35,7 @@ Additionally, there are binary crates used for recursive proving. See detailed s
 | [`get_storage_recursive`](./get_storage_recursive/) | Binary crate for generating recursive storage proofs | [Docs](./get_storage_recursive/README.md) |
 | [`get_receipt`](./get_receipt/)                     | Binary crate for generating receipt proofs           | [Docs](./get_receipt/README.md)           |
 | [`get_transaction`](./get_transaction/)             | Binary crate for generating transaction proofs       | [Docs](./get_transaction/README.md)       |
+| [`get_log`](./get_log/)                             | Binary crate for generating log proofs               | [Docs](./get_log/README.md)       |
 
 ### Recursive binaries
 
