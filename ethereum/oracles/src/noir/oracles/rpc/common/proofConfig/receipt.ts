@@ -1,9 +1,8 @@
 import { BYTE_HEX_LEN } from '../../../../../util/const.js';
 import { getProofConfig } from '../proofConfig.js';
 
-// TODO: Remove this when we remove legacy fixtures
-export const LEGACY_MAX_RECEIPT_ENCODED_LEN = 525;
-export const LEGACY_MAX_RECEIPT_RLP_LEN = LEGACY_MAX_RECEIPT_ENCODED_LEN - 1;
+export const MAX_RECEIPT_ENCODED_LEN_M = 1000;
+export const MAX_RECEIPT_RLP_LEN_M = MAX_RECEIPT_ENCODED_LEN_M - 1;
 
 const MAX_KEY_LEN = 3;
 const MAX_VALUE_LEN = 1000;

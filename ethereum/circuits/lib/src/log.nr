@@ -4,8 +4,8 @@ use crate::{
     verifiers::receipt::{rlp::RECEIPT_FIELDS_COUNT, verify_receipt},
     receipt::{
     receipt_rlp_from_proof, get_receipt_unconstrained_M, TxType, TxReceiptPartial, ProofInput,
-    LEGACY_MAX_RECEIPT_RLP_LENGTH, LEGACY_MAX_RECEIPT_ENCODED_LEN, MAX_PREFIXED_KEY_NIBBLE_LEN,
-    MAX_VALUE_LEN_M, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN_M
+    MAX_RECEIPT_RLP_LEN_M, MAX_RECEIPT_ENCODED_LEN_M, MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN_M,
+    MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN_M
 },
     header::get_header
 };

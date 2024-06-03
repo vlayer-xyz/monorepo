@@ -12,9 +12,6 @@ global MAX_ACCOUNT_DEPTH_NO_LEAF_M = 10; // Emperically correct values to be det
 global MAX_ACCOUNT_STATE_LEN = 110; // Values taken from accountProofConfig in account.ts.
 global MAX_ACCOUNT_LEAF_LEN = 148;
 
-global LEGACY_MAX_ACCOUNT_STATE_LEN = 134; // Legacy, incorrect (too big) limit.
-global LEGACY_STATE_PROOF_LEN = 5852; // = 11 (MAX_STATE_PROOF_LEVELS) * 532 (MAX_TRIE_NODE_LEN)
-
 struct AccountWithinBlock {
     account: Account,
     block_hash: Bytes32,
@@ -24,13 +21,6 @@ impl Eq for AccountWithinBlock {
     fn eq(self, other: Self) -> bool {
         (self.account == other.account) & (self.block_hash == other.block_hash)
     }
-}
-
-struct LegacyStateProof {
-    key: Address,
-    value: [u8; MAX_ACCOUNT_STATE_LEN],
-    proof: [u8; LEGACY_STATE_PROOF_LEN],
-    depth: u64,
 }
 
 type AccountWithStateProofM = (Account, ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_ACCOUNT_STATE_LEN, MAX_ACCOUNT_DEPTH_NO_LEAF_M, MAX_ACCOUNT_LEAF_LEN>);

@@ -16,8 +16,6 @@ global MAX_STORAGE_DEPTH_NO_LEAF_M = 6; // Emperically correct values to be dete
 global MAX_STORAGE_VALUE_LEN = 32; // Values taken from storageProofConfig in storage.ts.
 global MAX_STORAGE_LEAF_LEN = 69;
 
-global LEGACY_STORAGE_PROOF_LEN = 3724; // = 7 (MAX_STORAGE_PROOF_LEVELS) * 532 (MAX_TRIE_NODE_LEN)
-
 struct Account {
     nonce: u64,
     balance: Field,
@@ -29,13 +27,6 @@ impl Eq for Account {
     fn eq(self, other: Self) -> bool {
         (self.nonce == other.nonce) & (self.balance == other.balance) & (self.storage_root == other.storage_root) & (self.code_hash == other.code_hash)
     }
-}
-
-struct LegacyStorageProof {
-    key: Bytes32,
-    value: Bytes32,
-    proof: [u8; LEGACY_STORAGE_PROOF_LEN],
-    depth: u64
 }
 
 // For now oracle does not support returning array of arrays so at the moment we support only one storage proof.

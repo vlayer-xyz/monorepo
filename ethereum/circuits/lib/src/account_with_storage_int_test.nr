@@ -1,6 +1,6 @@
 use crate::misc::types::Bytes32;
 use crate::chain::ETHEREUM_MAINNET_ID;
-use crate::account_with_storage::{LegacyStorageProof, get_account_with_storage};
+use crate::account_with_storage::get_account_with_storage;
 use crate::fixtures::mainnet::{
     paris::{
     usdc_circle::{

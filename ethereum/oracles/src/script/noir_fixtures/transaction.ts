@@ -6,13 +6,13 @@ import { padArray } from '../../util/array.js';
 import { TxRlpEncoder, encodeTx } from '../../ethereum/transaction.js';
 import { ZERO_PAD_VALUE } from '../../noir/oracles/common/const.js';
 import { createBoundedVecFixture } from './boundedVec.js';
-import { LEGACY_MAX_TX_RLP_LEN, LEGACY_MAX_TX_ENCODED_LEN } from '../../noir/oracles/rpc/common/proofConfig/tx.js';
+import { MAX_TX_RLP_LEN_M, MAX_TX_ENCODED_LEN_M } from '../../noir/oracles/rpc/common/proofConfig/tx.js';
 import { MAX_DATA_LEN_M } from '../../noir/oracles/rpc/common/txConfig.js';
 
 export function createTransactionFixture(tx: GetTransactionReturnType): string {
   const rlpFields = TxRlpEncoder.txToFields(tx);
-  const txRlp = joinArray(padArray(encodeHex(toRlp(rlpFields)), LEGACY_MAX_TX_RLP_LEN, ZERO_PAD_VALUE));
-  const encodedTx = joinArray(padArray(encodeHex(encodeTx(tx)), LEGACY_MAX_TX_ENCODED_LEN, ZERO_PAD_VALUE));
+  const txRlp = joinArray(padArray(encodeHex(toRlp(rlpFields)), MAX_TX_RLP_LEN_M, ZERO_PAD_VALUE));
+  const encodedTx = joinArray(padArray(encodeHex(encodeTx(tx)), MAX_TX_ENCODED_LEN_M, ZERO_PAD_VALUE));
 
   const txIdx = encodeField(tx.transactionIndex);
   const to = encodeOptional(tx.to ? joinArray(encodeAddress(tx.to)) : undefined);

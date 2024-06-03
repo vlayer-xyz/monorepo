@@ -5,17 +5,14 @@ import { padArray } from '../../util/array.js';
 import { ZERO_PAD_VALUE } from '../../noir/oracles/common/const.js';
 import { TransactionReceipt } from '../../types.js';
 import { toRlp } from 'viem';
-import {
-  LEGACY_MAX_RECEIPT_ENCODED_LEN,
-  LEGACY_MAX_RECEIPT_RLP_LEN
-} from '../../noir/oracles/rpc/common/proofConfig/receipt.js';
+import { MAX_RECEIPT_ENCODED_LEN_M, MAX_RECEIPT_RLP_LEN_M } from '../../noir/oracles/rpc/common/proofConfig/receipt.js';
 
 export function createReceiptFixture(receipt: TransactionReceipt): string {
   const receiptRlp = joinArray(
-    padArray(encodeHex(toRlp(receiptToRlpFields(receipt))), LEGACY_MAX_RECEIPT_RLP_LEN, ZERO_PAD_VALUE)
+    padArray(encodeHex(toRlp(receiptToRlpFields(receipt))), MAX_RECEIPT_RLP_LEN_M, ZERO_PAD_VALUE)
   );
   const encodedReceipt = joinArray(
-    padArray(encodeHex(encodeReceipt(receipt)), LEGACY_MAX_RECEIPT_ENCODED_LEN, ZERO_PAD_VALUE)
+    padArray(encodeHex(encodeReceipt(receipt)), MAX_RECEIPT_ENCODED_LEN_M, ZERO_PAD_VALUE)
   );
 
   const status = encodeOptional(receipt.status === null ? null : statusToField(receipt.status).toString());
