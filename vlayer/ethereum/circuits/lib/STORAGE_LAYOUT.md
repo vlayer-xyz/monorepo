@@ -1,65 +1,75 @@
 # Solidity storage layout
 
-Storage refers to smart contracts' storage that is stored as long-term memory. It allows contracts to use variables that aren't cleaned or removed after a function or transaction finish execution.
+EVM storage is a mapping from a number of `bytes32` type to another `bytes32` value. Each of 2<sup>256</sup> values is initialized to `0` by default. It's a kind of long-term memory used as smart contracts' storage. It allows contracts to use variables that aren't cleaned or removed after a function or transaction finish execution.
 
-Contract storage is divided into 2<sup>256</sup> **slots** - 32 bytes each. Such a huge number of slots enables storing dynamically sized structures in an efficient way. For details read [below](#dynamically-sized-values).
+How variables are stored depends on compiler. This documentation describes how Solidity manages EVM storage.
 
-## Layout
+In Solidity each value in EVM storage is called a **slot**: there are 2<sup>256</sup> slots - 32 bytes each.
 
-### Statically-sized values
+From the perspective of storage layout, all values are divided into statically-sized and dynamically-sized and are stored accordingly.
 
-Statically-sized values are stored one by one, starting at slot 0, in the order of their initialization in the contract. If two or more consecutive variables can fit into one slot, they are packed there together. If a variable can't fit with the previous variable, it is stored in the next slot. Variables that appear after an array or structure variables, always start a new slot. Similarly arrays and structures also always start a new storage slot.
+## Statically-sized values
 
-Variables of a structure are stored just as standalone variables.
+Statically-sized values are stored one after another in consecutive slots in the order of their initialization in the contract. First variable is stored in slot `0`, the second one in slot `1` and so on.
 
-### Dynamically-sized values
+Fields of a structure are stored just as standalone variables:
 
-Dynamically-sized values can't be stored in the same way as statically-sized values. Adding new elements to an existing dynamic array would demand values stored in succeeding slots to shift further away.  
-Instead, dynamically-sized values are stored at slots chosen by keccak hashing. This is where such an enormous number of storage slots is used. It prevents data from overlapping.  
+```Solidity
+contract Contract {
+    struct A { uint256 a; uint256 b; } // slot 1 & 2
+    uint c = 1; // slot 3
+}
+```
+
+## Dynamically-sized values
+
+Dynamically-sized values can't be stored in the same way as statically-sized values. Adding new elements to an existing dynamic array would demand reallocation of succeeding values.  
+Instead, dynamically-sized values are stored at slots chosen by keccak hashing. This is where such an enormous number of storage slots is used - it prevents collisions.  
 **Slot position `p`** - the starting position of a structure that is calculated based on previously appearing in contract values - is used to calculate further the positions of data.
 
-#### Dynamic arrays
+### Dynamic arrays
 
-In case of dynamic arrays, position `p` contains the length of the array. Position of the first element is calculated by `keccak256(p)`. The next elements are stored just as statically-sized array's elements - one after another.
+In case of dynamic arrays, position `p` contains the length of the array. Position of the first element is calculated by `keccak256(p)`. The next elements are stored just as statically-sized array's elements - one after another in consecutive slots.
 
-#### Mapping
+#### Example
 
-Values of mapping are stored at slots: `keccak256(h(k).p)`, where `k` is a key in mapping and `h` is a function as follows: in case of value types `h` is a padding to 32 bytes, in case of strings and byte arrays `h(k) = k`.
-
-## Employment
-
-Understanding how contract storage works enables developer to make gas-efficient contracts.
-
-### Less storage used
-
-One way of saving gas is to pack variables so that contract uses less storage. To do this, one can reorder the variables' initialization in their contract.  
-For example:
-
-```
-contract Contract{
-    bool a = true;
-    uint256 b = 0x100000;
-    bool c = true;
-}
-```
-
-If variables are initialized in this order, variable `b` wouldn't fit into the same slot as `a` (because `b` takes up all 32 bytes) and `c` also wouldn't fit with `b`. Because of that contract will use three slots.
-
-If the order is changed:
-
-```
+```Solidity
 contract Contract {
-    bool a = true;
-    bool c = true;
-    uint256 b = 0x100000;
+    struct A { uint256 a; uint256 b; }
+
+    A[] array; // length of the array is stored at slot 0
+    array.push(A(0x100000, 0x100000)); // slots keccak(0) & keccak(0) + 1
+    array.push(A(0x100000, 0x100000)); // slots keccak(0) + 2 & keccak(0) + 3
 }
 ```
 
-Now variables `a` and `c` can be packed into one slot and memory is saved since this contract uses only three slots.
+### Mapping
 
-### Efficient variables reading
+Values of mapping are stored at slots calculated by keccak hash of concatenation of the key and `p` number. If the key is a value type, it is additionally padded to 32 bytes.
 
-At the same time more gas is used when variables are packed in a way, that EVM has to perform additional bitwise operations to read only one of the variables stored in one slot.  
-For example: two variables - `a` and `b` - are stored in one slot. When reading variable `a`, EVM has to mask out bits of variable `b`.
+## Example
 
-Optimally it is worth packing together variables that will be also read together.
+```Solidity
+contract Contract {
+    uint a = 1; // slot 0
+    bytes32 b = [...]; //slot 1
+    mapping(uint => uint) c; // keccak(key, 3)
+    uint d = 1; //slot 4
+}
+```
+
+## Packing
+
+Packing means merging to values into one slot. This occurs when consecutive variables in the contract fit together into 32 bytes of one slot:
+
+```Solidity
+contract Contract {
+    uint128 a = 0x100000;
+    uint128 b = 0x100000;
+}
+```
+
+Variables `a` and `b` will be packed into one slot and memory is saved since this contract uses only one slot.  
+At the same time more gas is used when EVM has to perform additional bitwise operations to read only one of the variables stored in one slot - reading `a` and ignoring `b`.
+
+Variables that appear after an array or structure variables, always start a new slot. Similarly arrays and structures also always start a new storage slot.
