@@ -64,8 +64,8 @@ Packing means merging to values into one slot. This occurs when consecutive vari
 
 ```Solidity
 contract Contract {
-    uint128 a = 0x100000;
-    uint128 b = 0x100000;
+    uint128 a = 0x100000; // slot 0 bytes [0..16)
+    uint128 b = 0x100000; // slot 0 bytes [16..32)
 }
 ```
 
