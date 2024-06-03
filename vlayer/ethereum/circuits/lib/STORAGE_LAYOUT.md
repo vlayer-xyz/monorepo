@@ -1,6 +1,6 @@
 # Solidity storage layout
 
-EVM storage is a mapping from a number of `bytes32` type to another `bytes32` value. Each of 2<sup>256</sup> values is initialized to `0` by default. It's a kind of long-term memory used as smart contracts' storage. It allows contracts to use variables that aren't cleaned or removed after a function or transaction finish execution.
+EVM storage is a mapping from a `bytes32` key to `bytes32` value. Each of 2<sup>256</sup> values is initialized to `0` by default. It's a kind of long-term memory used as smart contracts' storage. It allows contracts to use variables that aren't cleaned or removed after a function or transaction finish execution.
 
 How variables are stored depends on compiler. This documentation describes how Solidity manages EVM storage.
 
