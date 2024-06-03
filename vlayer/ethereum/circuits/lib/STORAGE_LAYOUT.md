@@ -16,8 +16,8 @@ Fields of a structure are stored just as standalone variables:
 
 ```Solidity
 contract Contract {
-    struct A { uint256 a; uint256 b; } // slot 1 & 2
-    uint c = 1; // slot 3
+    struct A { uint256 a; uint256 b; } // slot 0 & 1
+    uint c = 1; // slot 2
 }
 ```
 
