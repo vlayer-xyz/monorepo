@@ -48,6 +48,15 @@ pub fn get_transaction<MAX_DATA_LEN, ...>(
 ) -> TransactionWithinBlock<MAX_DATA_LEN>;
 ```
 
+```rust
+pub fn get_log<MAX_LOG_DATA_LEN, MAX_LOGS_COUNT>(
+    chain_id: Field,
+    block_number: u64,
+    tx_idx: Field,
+    log_idx: u64
+) -> LogWithinBlock<MAX_LOG_DATA_LEN>;
+```
+
 ### Without oracles
 
 If you decide to not use Oracles - you will need to provide all the data manually, but you can still use verifier functions to verify data & proofs.
@@ -106,6 +115,7 @@ All the function in this library prove that the objects are contained within som
     ├── receipt.nr
     ├── account.nr
     ├── account_with_storage.nr
+    ├── log.nr
     ├── transaction.nr
     ├── uint256.nr
     └── verifiers
@@ -198,6 +208,21 @@ struct TxPartial<MAX_DATA_LEN> {
 ```rust
 struct TransactionWithinBlock<MAX_DATA_LEN> {
     transaction: TxPartial<MAX_DATA_LEN>,
+    block_hash: Bytes32
+}
+```
+
+```rust
+struct Log<MAX_LOG_DATA_LEN> {
+    address: Address,
+    topics: BoundedVec<Bytes32, MAX_TOPICS_COUNT>,
+    data: BoundedVec<u8, MAX_LOG_DATA_LEN>,
+}
+```
+
+```rust
+struct LogWithinBlock<MAX_LOG_DATA_LEN> {
+    log: Log<MAX_LOG_DATA_LEN>,
     block_hash: Bytes32
 }
 ```
