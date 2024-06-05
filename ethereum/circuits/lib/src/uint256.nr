@@ -47,6 +47,18 @@ impl U256 {
     }
 }
 
+impl From<Bytes32> for U256 {
+    fn from(bytes: Bytes32) -> Self {
+        U256::from_bytes32(bytes)
+    }
+}
+
+impl Into<Bytes32> for U256 {
+    fn into(self) -> Bytes32 {
+        self.to_bytes32()
+    }
+}
+
 impl Eq for U256 {
     fn eq(self, other: U256) -> bool {
         (self.high == other.high) & (self.low == other.low)
