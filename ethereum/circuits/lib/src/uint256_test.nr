@@ -31,6 +31,20 @@ fn zero_and_one() {
 }
 
 #[test]
+fn from_bytes32() {
+    let mut bytes = [0x00; 32];
+    bytes[31] = 0x10;
+    assert_eq(U256::from_bytes32(bytes), big_number);
+}
+
+#[test]
+fn to_bytes32() {
+    let mut bytes = [0x00; 32];
+    bytes[31] = 0x10;
+    assert_eq(big_number.to_bytes32(), bytes);
+}
+
+#[test]
 fn eq() {
     assert_eq(big_number, big_number);
 

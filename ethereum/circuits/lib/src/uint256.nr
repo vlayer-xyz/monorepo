@@ -1,4 +1,6 @@
 use dep::std::ops::Add;
+use crate::misc::types::Bytes32;
+use crate::misc::arrays::memcpy_up_to_length;
 
 global uint128_overflow_value = 340282366920938463463374607431768211456; // 2^128
 
@@ -18,6 +20,30 @@ impl U256 {
 
     fn one() -> Self {
         Self { high: U128::from_integer(0), low: U128::from_integer(1) }
+    }
+
+    fn from_bytes32(bytes: Bytes32) -> Self {
+        let mut high_bytes = [0; 16];
+        memcpy_up_to_length(&mut high_bytes, bytes, 16, 16);
+        let high = U128::from_le_bytes(high_bytes);
+
+        let mut low_bytes = [0; 16];
+        memcpy_up_to_length(&mut low_bytes, bytes, 0, 16);
+        let low = U128::from_le_bytes(low_bytes);
+
+        U256::new(high, low)
+    }
+
+    fn to_bytes32(self) -> Bytes32 {
+        let mut bytes = [0; 32];
+        memcpy_up_to_length(&mut bytes, self.low.to_le_bytes(), 0, 16);
+
+        let high_bytes = self.high.to_le_bytes();
+        for i in 0..16 {
+            bytes[i + 16] = high_bytes[i];
+        }
+
+        bytes
     }
 }
 
