@@ -14,15 +14,15 @@ pub(crate) fn mapping(slot: U256, key: Bytes32) -> U256 {
     U256::from(keccak256(vector.storage(), STORAGE_KEY_HASH_INPUT_LENGTH))
 }
 
-pub(crate) fn dynamic_array(slot: Bytes32, size: Field, index: Field) -> Bytes32 {
-    let start = keccak256(slot, 32);
+pub(crate) fn dynamic_array(slot: U256, size: Field, index: Field) -> U256 {
+    let start: U256 = U256::from(keccak256(U256::into(slot), 32));
     dynamic_array_with_precalculated_slot(start, size, index)
 }
 
-pub(crate) fn dynamic_array_with_precalculated_slot(slot: Bytes32, size: Field, index: Field) -> Bytes32 {
-    add_bigint(slot, field_to_bytes32(size * index))
+pub(crate) fn dynamic_array_with_precalculated_slot(slot: U256, size: Field, index: Field) -> U256 {
+    slot + U256::from(field_to_bytes32(size * index))
 }
 
-pub(crate) fn struct_slot(slot: Bytes32, offset: Field) -> Bytes32 {
-    add_bigint(slot, field_to_bytes32(offset))
+pub(crate) fn struct_slot(slot: U256, offset: Field) -> U256 {
+    slot + U256::from(field_to_bytes32(offset))
 }
