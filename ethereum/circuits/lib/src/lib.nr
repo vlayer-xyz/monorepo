@@ -4,6 +4,8 @@ mod header;
 mod header_int_test;
 mod account_with_storage;
 mod account_with_storage_int_test;
+mod account_with_storage_recursive;
+mod account_with_storage_recursive_int_test;
 mod receipt;
 mod receipt_int_test;
 mod log;

@@ -7,7 +7,7 @@ import { VerificationKey } from '../../circuit/vk.js';
 
 export const getStorageOracle = async (args: NoirArguments): Promise<ForeignCallOutput[]> => {
   const { blockNumber, address, storageKey, chainId } = decodeGetProofArguments(args);
-  const circuit = await MonorepoCircuit.create('../../', 'get_storage');
+  const circuit = await MonorepoCircuit.create('../../', 'get_storage_recursive');
   const vk = await VerificationKey.create(circuit.vkAsFieldsPath());
   const { proofAsFields, verifierData } = await new GetStorageProver(circuit).prove(
     chainId,
