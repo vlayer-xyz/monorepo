@@ -3,14 +3,15 @@ use dep::ethereum::misc::{
     bytes::add_bigint
 };
 use dep::std::hash::keccak256;
+use dep::ethereum::uint256::U256;
 
 global STORAGE_KEY_HASH_INPUT_LENGTH = 64;
 
-pub(crate) fn mapping(slot: Bytes32, key: Bytes32) -> Bytes32 {
+pub(crate) fn mapping(slot: U256, key: Bytes32) -> U256 {
     let mut vector: BoundedVec<u8, STORAGE_KEY_HASH_INPUT_LENGTH> = BoundedVec::new();
     vector.extend_from_array(key);
-    vector.extend_from_array(slot);
-    keccak256(vector.storage(), STORAGE_KEY_HASH_INPUT_LENGTH)
+    vector.extend_from_array(U256::into(slot));
+    U256::from(keccak256(vector.storage(), STORAGE_KEY_HASH_INPUT_LENGTH))
 }
 
 pub(crate) fn dynamic_array(slot: Bytes32, size: Field, index: Field) -> Bytes32 {

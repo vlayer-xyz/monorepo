@@ -3,7 +3,7 @@ mod mainnet {
     use crate::chain_id;
     use crate::slot::{struct_slot, dynamic_array_with_precalculated_slot, mapping};
     use dep::std::field::bytes32_to_field;
-    use dep::ethereum::misc::{types::Bytes32, bytes32::field_to_bytes32};
+    use dep::ethereum::{misc::{types::Bytes32, bytes32::field_to_bytes32}, uint256::U256};
 
     pub fn BORED_APE_YACHT_CLUB() -> ERC721Token {
         ERC721Token {
@@ -32,10 +32,10 @@ mod mainnet {
             ],
             token_id_to_slot: |token_id| {
                 let CRYPTO_PUNK_MAX_TOKEN_ID: u64 = 9999;
-                let CRYPTO_PUNK_TOKEN_OWNERS_INNER_ENTRIES_SLOT = field_to_bytes32(10);
+                let CRYPTO_PUNK_TOKEN_OWNERS_INNER_ENTRIES_SLOT = U256::from(field_to_bytes32(10));
 
                 assert(bytes32_to_field(token_id) as u64 <= CRYPTO_PUNK_MAX_TOKEN_ID, "Token ID is too high");
-                mapping(CRYPTO_PUNK_TOKEN_OWNERS_INNER_ENTRIES_SLOT, token_id)
+                U256::into(mapping(CRYPTO_PUNK_TOKEN_OWNERS_INNER_ENTRIES_SLOT, token_id))
             },
             chain_id: chain_id::MAINNET
         }
