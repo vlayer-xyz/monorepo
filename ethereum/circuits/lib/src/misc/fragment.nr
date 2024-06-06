@@ -40,7 +40,7 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
         assert(self.length <= N, "Fragment length exceeds BoundedVec max length");
         let bounded_vec: &mut BoundedVec<T, N> = &mut BoundedVec::new();
         self.for_each(|x| bounded_vec.push(x));
-        
+
         *bounded_vec
     }
 
