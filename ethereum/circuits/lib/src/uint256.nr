@@ -1,5 +1,6 @@
 use dep::std::ops::Add;
 use crate::misc::types::Bytes32;
+use crate::misc::bytes32::field_to_bytes32;
 use crate::misc::arrays::memcpy_up_to_length;
 
 global uint128_overflow_value = 340282366920938463463374607431768211456; // 2^128
@@ -32,6 +33,10 @@ impl U256 {
         let low = U128::from_le_bytes(low_bytes);
 
         U256::new(high, low)
+    }
+
+    fn from_field(field: Field) -> Self {
+        U256::from_bytes32(field_to_bytes32(field))
     }
 
     fn to_bytes32(self) -> Bytes32 {

@@ -20,9 +20,9 @@ pub(crate) fn dynamic_array(slot: U256, size: Field, index: Field) -> U256 {
 }
 
 pub(crate) fn dynamic_array_with_precalculated_slot(slot: U256, size: Field, index: Field) -> U256 {
-    slot + U256::from(field_to_bytes32(size * index))
+    slot + U256::from_field(size * index)
 }
 
 pub(crate) fn struct_slot(slot: U256, offset: Field) -> U256 {
-    slot + U256::from(field_to_bytes32(offset))
+    slot + U256::from_field(offset)
 }

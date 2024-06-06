@@ -60,7 +60,7 @@ mod dynamic_array {
 
     #[test]
     fn index_zero() {
-        let slot = U256::from(field_to_bytes32(2));
+        let slot = U256::from_field(2);
         let expected_slot = U256::from(
             [
             0x40, 0x57, 0x87, 0xfa, 0x12, 0xa8, 0x23, 0xe0, 0xf2, 0xb7, 0x63, 0x1c, 0xc4, 0x1b, 0x3b, 0xa8, 0x82, 0x8b, 0x33, 0x21, 0xca, 0x81, 0x11, 0x11, 0xfa, 0x75, 0xcd, 0x3a, 0xa3, 0xbb, 0x5a, 0xce
@@ -71,7 +71,7 @@ mod dynamic_array {
 
     #[test]
     fn index_positive() {
-        let slot = U256::from(field_to_bytes32(2));
+        let slot = U256::from_field(2);
         let expected_slot = U256::from(
             [
             0x40, 0x57, 0x87, 0xfa, 0x12, 0xa8, 0x23, 0xe0, 0xf2, 0xb7, 0x63, 0x1c, 0xc4, 0x1b, 0x3b, 0xa8, 0x82, 0x8b, 0x33, 0x21, 0xca, 0x81, 0x11, 0x11, 0xfa, 0x75, 0xcd, 0x3a, 0xa3, 0xbb, 0x5a, 0xdc
@@ -82,7 +82,7 @@ mod dynamic_array {
 
     #[test(should_fail_with="attempt to add with overflow")]
     fn fail_overflow() {
-        let slot = U256::from(field_to_bytes32(6));
+        let slot = U256::from_field(6);
         let _ = dynamic_array(slot, 2, MAX_FIELD_VALUE);
     }
 }
@@ -94,14 +94,14 @@ mod dynamic_array_with_precalculated_slot {
 
     #[test]
     fn index_zero() {
-        let slot = U256::from(field_to_bytes32(2));
+        let slot = U256::from_field(2);
         assert_eq(slot, dynamic_array_with_precalculated_slot(slot, 2, 0));
     }
 
     #[test]
     fn index_positive() {
-        let slot = U256::from(field_to_bytes32(2));
-        let expected_slot = U256::from(field_to_bytes32(2 + 2 * 7));
+        let slot = U256::from_field(2);
+        let expected_slot = U256::from_field(2 + 2 * 7);
         assert_eq(expected_slot, dynamic_array_with_precalculated_slot(slot, 2, 7));
     }
 
@@ -130,7 +130,7 @@ mod struct_slot {
 
     #[test]
     fn success() {
-        let slot = U256::from(field_to_bytes32(2));
+        let slot = U256::from_field(2);
         let expected_slot = U256::from(
             [
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2

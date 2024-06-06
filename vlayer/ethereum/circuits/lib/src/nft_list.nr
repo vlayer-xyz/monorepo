@@ -32,7 +32,7 @@ mod mainnet {
             ],
             token_id_to_slot: |token_id| {
                 let CRYPTO_PUNK_MAX_TOKEN_ID: u64 = 9999;
-                let CRYPTO_PUNK_TOKEN_OWNERS_INNER_ENTRIES_SLOT = U256::from(field_to_bytes32(10));
+                let CRYPTO_PUNK_TOKEN_OWNERS_INNER_ENTRIES_SLOT = U256::from_field(10);
 
                 assert(bytes32_to_field(token_id) as u64 <= CRYPTO_PUNK_MAX_TOKEN_ID, "Token ID is too high");
                 U256::into(mapping(CRYPTO_PUNK_TOKEN_OWNERS_INNER_ENTRIES_SLOT, token_id))
