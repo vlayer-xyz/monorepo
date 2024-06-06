@@ -10,17 +10,14 @@ global TOKEN_BALANCE_INDEX = 0;
 
 struct ERC20Token {
     address: Address,
-    balances_slot: Bytes32,
-    allowances_slot: Bytes32,
+    balances_slot: U256,
+    allowances_slot: U256,
     chain_id: Field
 }
 
 impl ERC20Token {
     fn calculate_balance_storage_key(self, wallet_address: Address) -> U256 {
-        mapping(
-            U256::from(self.balances_slot),
-            address_to_bytes32(wallet_address)
-        )
+        mapping(self.balances_slot, address_to_bytes32(wallet_address))
     }
 }
 
