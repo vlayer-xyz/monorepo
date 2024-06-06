@@ -11,3 +11,4 @@ mod types;
 mod option;
 mod bytes32;
 mod bytes32_test;
+mod iterator;
