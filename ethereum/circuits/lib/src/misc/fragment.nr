@@ -1,4 +1,4 @@
-use crate::misc::arrays::{memcpy_up_to_length, resize};
+use crate::misc::{arrays::{memcpy_up_to_length, resize}, iterator::Iterator};
 use dep::std::unsafe::zeroed;
 
 struct Fragment<MAX_DATA_LEN, T> {
@@ -38,13 +38,10 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
 
     pub fn to_bounded_vec<N>(self) -> BoundedVec<T, N> {
         assert(self.length <= N, "Fragment length exceeds BoundedVec max length");
-        let mut bounded_vec: BoundedVec<T, N> = BoundedVec::new();
-        for i in 0..N {
-            if (i < self.length) {
-                bounded_vec.push(self.at(i));
-            }
-        }
-        bounded_vec
+        let bounded_vec: &mut BoundedVec<T, N> = &mut BoundedVec::new();
+        self.for_each(|x| bounded_vec.push(x));
+        
+        *bounded_vec
     }
 
     pub fn from_vec(vec: BoundedVec<T, MAX_DATA_LEN>) -> Fragment<MAX_DATA_LEN, T> {
@@ -148,5 +145,15 @@ impl<MAX_DATA_LEN, T> Eq for Fragment<MAX_DATA_LEN, T> where T: Eq {
         }
 
         res
+    }
+}
+
+impl<MAX_DATA_LEN, T> Iterator<T> for Fragment<MAX_DATA_LEN, T> {
+    fn for_each<Env>(self, f: fn[Env](T) -> ()) {
+        for i in 0..MAX_DATA_LEN {
+            if i < self.length {
+                f(self.at(i));
+            }
+        }
     }
 }
