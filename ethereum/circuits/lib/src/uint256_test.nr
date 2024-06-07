@@ -30,7 +30,7 @@ fn zero_and_one() {
     assert_eq(one.low, U128::one());
 }
 
-mod trait_from {
+mod from_bytes32 {
     use crate::uint256::U256;
     global high = U128::from_integer(0x10000000000000000000000000000000);
     global low = U128::zero();
@@ -40,39 +40,49 @@ mod trait_from {
     global limit_u256 = U256 {high: limit, low:limit};
 
     #[test]
-    fn from_bytes32_zero() {
+    fn zero() {
         let bytes = [0x00; 32];
         assert_eq(U256::from(bytes), U256::zero());
     }
 
     #[test]
-    fn from_bytes32() {
+    fn success() {
         let mut bytes = [0x00; 32];
         bytes[31] = 0x10;
         assert_eq(U256::from(bytes), big_number);
     }
 
     #[test]
-    fn from_bytes32_limit() {
+    fn u256_limit() {
         let bytes = [0xff; 32];
         assert_eq(U256::from(bytes), limit_u256);
     }
+}
+
+mod into_bytes32 {
+    use crate::uint256::U256;
+    global high = U128::from_integer(0x10000000000000000000000000000000);
+    global low = U128::zero();
+    global limit = U128::from_integer(0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF);
+
+    global big_number = U256 { high, low };
+    global limit_u256 = U256 {high: limit, low:limit};
 
     #[test]
-    fn into_bytes32_zero() {
+    fn zero() {
         let bytes = [0x00; 32];
         assert_eq(U256::into(U256::zero()), bytes);
     }
 
     #[test]
-    fn into_bytes32() {
+    fn success() {
         let mut bytes = [0x00; 32];
         bytes[31] = 0x10;
         assert_eq(U256::into(big_number), bytes);
     }
 
     #[test]
-    fn into_bytes32_limit() {
+    fn u256_limit() {
         let bytes = [0xff; 32];
         assert_eq(U256::into(limit_u256), bytes);
     }
