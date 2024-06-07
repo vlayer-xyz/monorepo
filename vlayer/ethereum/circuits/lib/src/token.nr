@@ -1,5 +1,5 @@
 use dep::ethereum::{
-    account_with_storage::get_account_with_storage, misc::types::{Address, Bytes32},
+    account_with_storage::get_account_with_storage, misc::types::Address,
     misc::bytes32::address_to_bytes32
 };
 use dep::std::field::bytes32_to_field;

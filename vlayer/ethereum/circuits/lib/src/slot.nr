@@ -1,7 +1,4 @@
-use dep::ethereum::misc::{
-    types::{Address, Bytes32, ADDRESS_LENGTH, BYTES32_LENGTH}, bytes32::field_to_bytes32,
-    bytes::add_bigint
-};
+use dep::ethereum::misc::types::Bytes32;
 use dep::std::hash::keccak256;
 use dep::ethereum::uint256::U256;
 
