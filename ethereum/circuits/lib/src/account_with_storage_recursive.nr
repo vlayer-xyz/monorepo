@@ -1,8 +1,7 @@
+use crate::account_with_storage::StorageWithinBlock;
 use crate::misc::{fragment::Fragment, types::{Address, Bytes32, ADDRESS_LENGTH, BYTES32_LENGTH}};
 use crate::serde::STORAGE_BLOCK_LEN;
-use dep::std::verify_proof;
-use crate::account_with_storage::StorageWithinBlock;
-use dep::std::unsafe::zeroed;
+use dep::std::{verify_proof, unsafe::zeroed};
 
 struct RecursiveProof {
     key_hash: Field,
@@ -26,19 +25,18 @@ pub fn get_account_with_storage_recursive(
     public_inputs.extend_back(address.serialize());
     public_inputs.extend_back(storage_key.serialize());
     public_inputs.extend_back(storage_within_block.serialize());
-    let public_inputs_array: [Field; NUM_PUBLIC_INPUTS] = public_inputs.to_array();
 
     verify_proof(
         verification_key.as_slice(),
         proof.as_slice(),
-        public_inputs_array.as_slice(),
+        public_inputs.to_array::<NUM_PUBLIC_INPUTS>().as_slice(),
         key_hash
     );
 
     storage_within_block
 }
 
-#[oracle(get_account_with_storage_recursive)]
+#[oracle(get_storage_recursive)]
 unconstrained fn get_account_with_storage_recursive_oracle(
     chain_id: Field,
     block_number: u64,

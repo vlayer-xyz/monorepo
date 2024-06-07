@@ -1,0 +1,8 @@
+[package]
+name = "is_dao_worthy_recursive"
+type = "bin"
+compiler_version = ">=0.30.0"
+
+[dependencies]
+ethereum = { path = "../../../../ethereum/circuits/lib" }
+token = { path = "../../../ethereum/circuits/lib" }

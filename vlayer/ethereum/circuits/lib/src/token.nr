@@ -1,4 +1,5 @@
 use dep::ethereum::{
+    account_with_storage::get_account_with_storage,
     account_with_storage_recursive::get_account_with_storage_recursive, misc::types::Address,
     misc::bytes32::address_to_bytes32
 };
@@ -22,13 +23,17 @@ impl ERC20Token {
 }
 
 trait ERC20 {
-    fn get_balance(self, wallet_address: Address, block_number: u64) -> U128 ;
+    fn get_balance(self, wallet_address: Address, block_number: u64, recursive: bool) -> U128;
 }
 
 impl ERC20 for ERC20Token {
-    fn get_balance(self, wallet_address: Address, block_number: u64) -> U128 {
+    fn get_balance(self, wallet_address: Address, block_number: u64, recursive: bool) -> U128 {
         let storage_key = self.calculate_balance_storage_key(wallet_address);
-        let account = get_account_with_storage_recursive(self.chain_id, block_number, self.address, U256::into(storage_key));
+        let account = if recursive {
+            get_account_with_storage_recursive(self.chain_id, block_number, self.address, U256::into(storage_key))
+        } else {
+            get_account_with_storage(self.chain_id, block_number, self.address, U256::into(storage_key))
+        };
         let balance = account.values[TOKEN_BALANCE_INDEX];
 
         U128::from_integer(bytes32_to_field(balance))
