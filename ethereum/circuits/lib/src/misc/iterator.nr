@@ -1,3 +1,3 @@
 trait Iterator<T> {
-    fn for_each<Env>(self, f: fn[Env](T) -> ());
+    fn each<Env>(self, f: fn[Env](T, u64) -> ());
 }
