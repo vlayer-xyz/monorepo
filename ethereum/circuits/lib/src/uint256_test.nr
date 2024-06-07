@@ -41,7 +41,7 @@ mod trait_from {
 
     #[test]
     fn from_bytes32_zero() {
-        let mut bytes = [0x00; 32];
+        let bytes = [0x00; 32];
         assert_eq(U256::from(bytes), U256::zero());
     }
 
@@ -54,13 +54,13 @@ mod trait_from {
 
     #[test]
     fn from_bytes32_limit() {
-        let mut bytes = [0xff; 32];
+        let bytes = [0xff; 32];
         assert_eq(U256::from(bytes), limit_u256);
     }
 
     #[test]
     fn into_bytes32_zero() {
-        let mut bytes = [0x00; 32];
+        let bytes = [0x00; 32];
         assert_eq(U256::into(U256::zero()), bytes);
     }
 
@@ -73,7 +73,7 @@ mod trait_from {
 
     #[test]
     fn into_bytes32_limit() {
-        let mut bytes = [0xff; 32];
+        let bytes = [0xff; 32];
         assert_eq(U256::into(limit_u256), bytes);
     }
 }
