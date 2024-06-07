@@ -12,17 +12,17 @@ pub fn bytes_to_nibbles<MAX_NIBBLE_LEN>(bytes: Fragment<MAX_NIBBLE_LEN, u8>) -> 
         MAX_NIBBLE_LEN >= 2 * bytes.length, "Bytes implicit data length must be at least 2 times larger than bytes explicit length"
     );
 
-    let mut nibbles = Fragment::new_with_length(2 * bytes.length, [0; MAX_NIBBLE_LEN]);
-    for i in 0..MAX_NIBBLE_LEN {
-        if i < bytes.length {
-            let (hi, lo) = byte_to_nibbles(bytes.at(i));
+    let nibbles = &mut Fragment::new_with_length(2 * bytes.length, [0; MAX_NIBBLE_LEN]);
+    bytes.each(
+        |byte, i| {
+        let (hi, lo) = byte_to_nibbles(byte);
 
-            nibbles.set(2 * i, hi);
-            nibbles.set(2 * i + 1, lo);
-        }
+        nibbles.set(2 * i, hi);
+        nibbles.set(2 * i + 1, lo);
     }
+    );
 
-    nibbles
+    *nibbles
 }
 
 pub fn nibbles_to_byte(upper: u8, lower: u8) -> u8 {

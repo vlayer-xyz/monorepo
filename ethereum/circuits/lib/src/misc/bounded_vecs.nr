@@ -13,16 +13,16 @@ pub fn bounded_vec_map<U, T, N, Env>(
     f: fn[Env](T) -> U
 ) -> BoundedVec<U, N> {
     let result: &mut BoundedVec<U, N> = &mut BoundedVec::new();
-    bounded_vec.for_each(|x| result.push(f(x)));
+    bounded_vec.each(|x, _| result.push(f(x)));
 
     *result
 }
 
 impl<T, N> Iterator<T> for BoundedVec<T, N> {
-    fn for_each<Env>(self, f: fn[Env](T) -> ()) {
+    fn each<Env>(self, f: fn[Env](T, u64) -> ()) {
         for i in 0..N {
             if i < self.len {
-                f(self.get(i));
+                f(self.get(i), i);
             }
         }
     }

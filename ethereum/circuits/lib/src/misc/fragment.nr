@@ -39,7 +39,7 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
     pub fn to_bounded_vec<N>(self) -> BoundedVec<T, N> {
         assert(self.length <= N, "Fragment length exceeds BoundedVec max length");
         let bounded_vec: &mut BoundedVec<T, N> = &mut BoundedVec::new();
-        self.for_each(|x| bounded_vec.push(x));
+        self.each(|x, _| bounded_vec.push(x));
 
         *bounded_vec
     }
@@ -118,41 +118,42 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
     }
 
     pub fn eq<OTHER_MAX_DATA_LEN>(self, other: Fragment<OTHER_MAX_DATA_LEN, T>) -> bool where T: Eq {
-        let mut res = true;
+        let res = &mut true;
         if (self.length != other.length) {
-            res = false;
+            *res = false;
         }
-        for i in 0..MAX_DATA_LEN {
-            if i < self.length & i < other.length {
-                res &= self.at(i) == other.at(i);
+        self.each(
+            |el, i| {
+            if i < other.length {
+                *res &= el == other.at(i);
             }
         }
-        res
+        );
+
+        *res
     }
 }
 
 impl<MAX_DATA_LEN, T> Eq for Fragment<MAX_DATA_LEN, T> where T: Eq {
     fn eq(self, other: Fragment<MAX_DATA_LEN, T>) -> bool {
-        let mut res = true;
+        let res = &mut true;
         if self.length != other.length {
-            res = false;
+            *res = false;
         } else {
-            for i in 0..MAX_DATA_LEN {
-                if i < self.length {
-                    res &= self.at(i) == other.at(i);
-                }
-            }
-        }
+            self.each(|el, i| {
+                *res &= el == other.at(i);
+            });
+        };
 
-        res
+        *res
     }
 }
 
 impl<MAX_DATA_LEN, T> Iterator<T> for Fragment<MAX_DATA_LEN, T> {
-    fn for_each<Env>(self, f: fn[Env](T) -> ()) {
+    fn each<Env>(self, f: fn[Env](T, u64) -> ()) {
         for i in 0..MAX_DATA_LEN {
             if i < self.length {
-                f(self.at(i));
+                f(self.at(i), i);
             }
         }
     }
