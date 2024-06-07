@@ -58,7 +58,6 @@ impl<MAX_DATA_LEN> From<TxPartial> for ForeignCallTransaction<MAX_DATA_LEN> {
     fn from(tx: TxPartial<MAX_DATA_LEN>) -> Self {
         let mut data = [0; MAX_DATA_LEN];
 
-        // For some unclear reason (https://github.com/noir-lang/noir/issues/5011) - dynamic loop also works here, but we refrain from using it out of abundance of caution
         for i in 0..MAX_DATA_LEN {
             if (i < tx.data.len) {
                 data[i] = tx.data.storage[i];
