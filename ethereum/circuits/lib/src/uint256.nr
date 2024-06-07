@@ -23,7 +23,13 @@ impl U256 {
         Self { high: U128::from_integer(0), low: U128::from_integer(1) }
     }
 
-    fn from_bytes32(bytes: Bytes32) -> Self {
+    fn from_field(field: Field) -> Self {
+        U256::from(field_to_bytes32(field))
+    }
+}
+
+impl From<Bytes32> for U256 {
+    fn from(bytes: Bytes32) -> Self {
         let mut high_bytes = [0; 16];
         memcpy_up_to_length(&mut high_bytes, bytes, 16, 16);
         let high = U128::from_le_bytes(high_bytes);
@@ -34,12 +40,10 @@ impl U256 {
 
         U256::new(high, low)
     }
+}
 
-    fn from_field(field: Field) -> Self {
-        U256::from_bytes32(field_to_bytes32(field))
-    }
-
-    fn to_bytes32(self) -> Bytes32 {
+impl Into<Bytes32> for U256 {
+    fn into(self) -> Bytes32 {
         let mut bytes = [0; 32];
         memcpy_up_to_length(&mut bytes, self.low.to_le_bytes(), 0, 16);
 
@@ -49,18 +53,6 @@ impl U256 {
         }
 
         bytes
-    }
-}
-
-impl From<Bytes32> for U256 {
-    fn from(bytes: Bytes32) -> Self {
-        U256::from_bytes32(bytes)
-    }
-}
-
-impl Into<Bytes32> for U256 {
-    fn into(self) -> Bytes32 {
-        self.to_bytes32()
     }
 }
 
