@@ -34,7 +34,20 @@ jobs:
           toolchain: nightly-2024-05-22
 
       - name: Compile Circuit
-        run: nargo compile --workspace --deny-warnings
+        run: |
+          nargo compile --package get_header --deny-warnings
+          nargo compile --package get_account --deny-warnings
+          nargo compile --package get_storage --deny-warnings
+          nargo compile --package get_storage_recursive --deny-warnings
+          nargo compile --package get_receipt --deny-warnings
+          nargo compile --package get_transaction --deny-warnings
+          nargo compile --package get_log --deny-warnings
+          nargo compile --package is_dao_worthy --deny-warnings
+          nargo compile --package is_ape_owner --deny-warnings
+
+          # We cannot use the `--deny-warnings` option in `is_dao_worthy_recursive` because the `verify_proof` method generates warnings 
+          # that are actually informational messages from the compiler and cannot be ignored.
+          nargo compile --package is_dao_worthy_recursive
 
       - name: Start Oracle Server
         working-directory: ethereum/oracles
@@ -53,6 +66,18 @@ jobs:
           nargo prove --package get_log --oracle-resolver=http://localhost:5555
           nargo prove --package is_dao_worthy --oracle-resolver=http://localhost:5555
           nargo prove --package is_ape_owner --oracle-resolver=http://localhost:5555
+
+      - name: Generate verification key for recursive proof
+        working-directory: ethereum/oracles
+        run: |
+          # Verification key generation uses Barretenberg backend located at ~/.nargo/backends/acvm-backend-barretenberg/backend_binary. 
+          # It is automatically installed during the execution of the `nargo prove` command in previous step.
+          yarn generate-get-storage-vk
+
+      - name: Generate Recursive Proof
+        run: |
+          export NARGO_FOREIGN_CALL_TIMEOUT=100000 # miliseconds
+          nargo prove --package is_dao_worthy_recursive --oracle-resolver=http://localhost:5555
 
       - name: Verify Proof
         run: |

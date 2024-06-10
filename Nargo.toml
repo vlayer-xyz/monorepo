@@ -10,6 +10,7 @@ members = [
     "ethereum/circuits/get_log",
     "vlayer/ethereum/circuits/lib",
     "vlayer/examples/circuits/is_dao_worthy",
+    "vlayer/examples/circuits/is_dao_worthy_recursive",
     "vlayer/examples/circuits/is_ape_owner",
     "vlayer/examples/circuits/is_crypto_punk_owner",
 ]

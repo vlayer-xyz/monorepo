@@ -18,7 +18,7 @@ jsonRPCServer.addMethod('get_account', getRpcOracleHandler.bind(this, getAccount
 jsonRPCServer.addMethod('get_proof', getRpcOracleHandler.bind(this, getProofOracle));
 jsonRPCServer.addMethod('get_receipt', getRpcOracleHandler.bind(this, getReceiptOracle));
 jsonRPCServer.addMethod('get_transaction', getRpcOracleHandler.bind(this, getTransactionOracle));
-jsonRPCServer.addMethod('recursive_get_storage', getOracleHandler.bind(this, getStorageOracle));
+jsonRPCServer.addMethod('get_storage_recursive', getOracleHandler.bind(this, getStorageOracle));
 
 export function buildOracleServer(
   opts: Fastify.FastifyHttpOptions<http.Server> = {},
