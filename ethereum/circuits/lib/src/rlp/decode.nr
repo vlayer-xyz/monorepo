@@ -4,9 +4,9 @@ use crate::misc::fragment::Fragment;
 
 // Maximum number of bytes required to represent entity length.
 // This means that this library can only decode RLP entities with a length of up to 2^16 - 1 bytes.
-global MAX_LEN_IN_BYTES: u64 = 2;
+global MAX_LEN_IN_BYTES: u32 = 2;
 
-pub fn extract_payload_len<N>(data: Fragment<N, u8>, lenlen: u64) -> u64 {
+pub fn extract_payload_len<N>(data: Fragment<N, u8>, lenlen: u32) -> u32 {
     assert(lenlen <= MAX_LEN_IN_BYTES, "Length of length exceeds maximum");
     assert(lenlen <= data.length, "Length of length exceeds input length");
     assert(lenlen != 0, "Length of length is zero");
@@ -15,7 +15,7 @@ pub fn extract_payload_len<N>(data: Fragment<N, u8>, lenlen: u64) -> u64 {
 
     for i in 0..MAX_LEN_IN_BYTES {
         if (i < lenlen & i < data.length) {
-            payload_length = data.at(i) as u64 + payload_length * 256;
+            payload_length = data.at(i) as u32 + payload_length * 256;
         }
     }
 
@@ -30,25 +30,25 @@ pub fn decode_to_rlp_header<N>(data: Fragment<N, u8>) -> RlpHeader {
         RlpHeader { offset: 0, length: 1, data_type: STRING }
     } else if (prefix < 0xb8) { // [0, 55] byte string
         let offset = 1;
-        let length = wrapping_sub(prefix, 0x80) as u64;
+        let length = wrapping_sub(prefix, 0x80) as u32;
         assert(offset + length <= N, "Decoded length of short string exceeds input length");
 
         RlpHeader { offset, length, data_type: STRING }
     } else if (prefix < 0xc0) { // > 55 byte string
-        let offset = wrapping_sub(1 + prefix, 0xb7) as u64;
-        let length = extract_payload_len(data, wrapping_sub(prefix, 0xb7) as u64);
+        let offset = wrapping_sub(1 + prefix, 0xb7) as u32;
+        let length = extract_payload_len(data, wrapping_sub(prefix, 0xb7) as u32);
         assert(offset + length <= N, "Decoded length of long string exceeds input length");
 
         RlpHeader { offset, length, data_type: STRING }
     } else if (prefix < 0xf8) { // [0, 55] byte list
         let offset = 1;
-        let length = wrapping_sub(prefix, 0xc0) as u64;
+        let length = wrapping_sub(prefix, 0xc0) as u32;
         assert(offset + length <= N, "Decoded length of short list exceeds input length");
 
         RlpHeader { offset, length, data_type: LIST }
     } else { // > 55 byte list
-        let offset = wrapping_sub(1 + prefix, 0xf7) as u64;
-        let length = extract_payload_len(data, wrapping_sub(prefix, 0xf7) as u64);
+        let offset = wrapping_sub(1 + prefix, 0xf7) as u32;
+        let length = extract_payload_len(data, wrapping_sub(prefix, 0xf7) as u32);
         assert(offset + length <= N, "Decoded length of long list exceeds input length");
 
         RlpHeader { offset, length, data_type: LIST }
@@ -126,12 +126,12 @@ pub fn decode_list_of_small_strings<N, NUM_FIELDS>(data: Fragment<N, u8>) -> Rlp
     rlp_list
 }
 
-pub fn get_small_string_offset_and_length(first_byte: u8) -> (u64, u64) {
+pub fn get_small_string_offset_and_length(first_byte: u8) -> (u32, u32) {
     assert(first_byte < 0xb8, "Element is not a string of length < 56 bytes");
 
     if (first_byte < 0x80) {
         (0, 1)
     } else {
-        (1, wrapping_sub(first_byte as u64, 0x80))
+        (1, wrapping_sub(first_byte as u32, 0x80))
     }
 }

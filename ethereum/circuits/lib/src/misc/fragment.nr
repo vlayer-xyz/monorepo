@@ -2,8 +2,8 @@ use crate::misc::{arrays::{memcpy_up_to_length, resize}, iterator::Iterator};
 use dep::std::unsafe::zeroed;
 
 struct Fragment<MAX_DATA_LEN, T> {
-    offset: u64,
-    length: u64,
+    offset: u32,
+    length: u32,
     data: [T; MAX_DATA_LEN]
 }
 
@@ -12,24 +12,24 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
         Fragment { offset: 0, length: 0, data: zeroed() }
     }
 
-    pub fn new(offset: u64, length: u64, data: [T; MAX_DATA_LEN]) -> Fragment<MAX_DATA_LEN, T> {
-        assert(offset + length <= data.len() as u64, "Fragment length exceeds data length");
+    pub fn new(offset: u32, length: u32, data: [T; MAX_DATA_LEN]) -> Fragment<MAX_DATA_LEN, T> {
+        assert(offset + length <= data.len() as u32, "Fragment length exceeds data length");
 
         Fragment { offset, length, data }
     }
 
-    pub fn new_with_length(length: u64, data: [T; MAX_DATA_LEN]) -> Fragment<MAX_DATA_LEN, T> {
-        assert(length <= data.len() as u64, "Fragment length exceeds data length");
+    pub fn new_with_length(length: u32, data: [T; MAX_DATA_LEN]) -> Fragment<MAX_DATA_LEN, T> {
+        assert(length <= data.len() as u32, "Fragment length exceeds data length");
 
         Fragment { offset: 0, length, data }
     }
 
     pub fn from_array(data: [T; MAX_DATA_LEN]) -> Fragment<MAX_DATA_LEN, T> {
-        Fragment { offset: 0, length: data.len() as u64, data }
+        Fragment { offset: 0, length: data.len() as u32, data }
     }
 
     pub fn from_array_resize<DATA_LEN>(data: [T; DATA_LEN]) -> Fragment<MAX_DATA_LEN, T> {
-        Fragment { offset: 0, length: data.len() as u64, data: resize(data) }
+        Fragment { offset: 0, length: data.len() as u32, data: resize(data) }
     }
 
     pub fn to_array<NEW_MAX_LEN>(self) -> [T; NEW_MAX_LEN] {
@@ -45,7 +45,7 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
     }
 
     pub fn from_vec(vec: BoundedVec<T, MAX_DATA_LEN>) -> Fragment<MAX_DATA_LEN, T> {
-        Fragment::new_with_length(vec.len, vec.storage)
+        Fragment::new_with_length(vec.len as u32, vec.storage)
     }
 
     pub fn focus<NEW_MAX_LEN>(self) -> Fragment<NEW_MAX_LEN, T> {
@@ -57,7 +57,7 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
         Fragment { offset: 0, length: self.length, data: new_data }
     }
 
-    pub fn subfragment(self, offset: u64, length: u64) -> Fragment<MAX_DATA_LEN, T> {
+    pub fn subfragment(self, offset: u32, length: u32) -> Fragment<MAX_DATA_LEN, T> {
         assert(offset + length <= self.length, "Subfragment overflows fragment");
 
         Fragment { offset: self.offset + offset, length, data: self.data }
@@ -67,7 +67,7 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
         self.length == 0
     }
 
-    pub fn at(self, index: u64) -> T {
+    pub fn at(self, index: u32) -> T {
         // Previously, the assert message was f"Index out of bounds, tried to access index {index} but the length is {length}".
         // However, this contributed to a compiler panic with message: Resolving an assert message should happen only once as the VM should have failed.
         // An issue was posted about this to Noir: https://github.com/noir-lang/noir/issues/5036
@@ -77,7 +77,7 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
         self.data[self.offset + index]
     }
 
-    pub fn set(&mut self, index: u64, value: T) {
+    pub fn set(&mut self, index: u32, value: T) {
         let length = self.length;
         assert(
             index < self.length, f"Index out of bounds, tried to set at index {index} but the length is {length}"
@@ -94,7 +94,7 @@ impl<MAX_DATA_LEN, T> Fragment<MAX_DATA_LEN, T> {
     }
 
     pub fn pop_front_array<LEN>(&mut self) -> [T; LEN] {
-        assert(self.length >= LEN as u64, "Cannot pop array: fragment is too short");
+        assert(self.length >= LEN as u32, "Cannot pop array: fragment is too short");
         let mut res: [T; LEN] = zeroed();
         res.map(|_| self.pop_front())
     }
@@ -150,10 +150,10 @@ impl<MAX_DATA_LEN, T> Eq for Fragment<MAX_DATA_LEN, T> where T: Eq {
 }
 
 impl<MAX_DATA_LEN, T> Iterator<T> for Fragment<MAX_DATA_LEN, T> {
-    fn each<Env>(self, f: fn[Env](T, u64) -> ()) {
+    fn each<Env>(self, f: fn[Env](T, u32) -> ()) {
         for i in 0..MAX_DATA_LEN {
             if i < self.length {
-                f(self.at(i), i);
+                f(self.at(i), i as u32);
             }
         }
     }

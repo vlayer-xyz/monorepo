@@ -7,7 +7,7 @@ fn main(
     chain_id: pub Field,
     block_number: pub u64,
     tx_idx: pub Field,
-    log_idx: pub u64
+    log_idx: pub u32
 ) -> pub LogWithinBlock<MAX_LOG_DATA_LEN> {
     get_log::<MAX_LOG_DATA_LEN, MAX_LOGS_COUNT>(chain_id, block_number, tx_idx, log_idx)
 }

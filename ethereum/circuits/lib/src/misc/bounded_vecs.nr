@@ -19,7 +19,7 @@ pub fn bounded_vec_map<U, T, N, Env>(
 }
 
 impl<T, N> Iterator<T> for BoundedVec<T, N> {
-    fn each<Env>(self, f: fn[Env](T, u64) -> ()) {
+    fn each<Env>(self, f: fn[Env](T, u32) -> ()) {
         for i in 0..N {
             if i < self.len {
                 f(self.get(i), i);

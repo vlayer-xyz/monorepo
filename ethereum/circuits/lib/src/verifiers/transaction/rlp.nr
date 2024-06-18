@@ -4,11 +4,11 @@ use crate::rlp::decode::decode_list;
 use crate::rlp::types::RlpList;
 
 struct FieldLayout {
-    field_count: u64,
-    nonce_idx: u64,
-    gas_limit_idx: u64,
-    to_idx: u64,
-    signature_idx: u64,
+    field_count: u32,
+    nonce_idx: u32,
+    gas_limit_idx: u32,
+    to_idx: u32,
+    signature_idx: u32,
 }
 
 global TX_TYPE_TO_FIELD_LAYOUT = [

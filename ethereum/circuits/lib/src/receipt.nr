@@ -5,7 +5,7 @@ use crate::merkle_patricia_proofs::proof::{Proof, ProofInput};
 use crate::serde::Serde;
 use dep::std::unsafe::zeroed;
 
-global BLOOM_FILTER_LEN: u64 = 256;
+global BLOOM_FILTER_LEN: u32 = 256;
 
 global MAX_KEY_LEN = 3;
 global MAX_DEPTH_NO_LEAF = 6;

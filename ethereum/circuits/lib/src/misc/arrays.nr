@@ -22,7 +22,7 @@ pub fn resize<TItem, NEW_LEN, OLD_LEN>(src: [TItem; OLD_LEN]) -> [TItem; NEW_LEN
     dest
 }
 
-pub(crate) fn memcpy_up_to_length<TItem, SRC_LEN, DEST_LEN>(dest: &mut [TItem; DEST_LEN], src: [TItem; SRC_LEN], offset: u64, length: u64) {
+pub(crate) fn memcpy_up_to_length<TItem, SRC_LEN, DEST_LEN>(dest: &mut [TItem; DEST_LEN], src: [TItem; SRC_LEN], offset: u32, length: u32) {
     assert(length <= DEST_LEN, "Destination index out of bound");
     assert(offset + length <= SRC_LEN, "Source index out of bound");
     for i in 0..DEST_LEN {
@@ -33,11 +33,11 @@ pub(crate) fn memcpy_up_to_length<TItem, SRC_LEN, DEST_LEN>(dest: &mut [TItem; D
 }
 
 // Fills destination array with content of source array starting from the offset in source array.
-pub(crate) fn memcpy<TItem, SRC_LEN, DEST_LEN>(dest: &mut [TItem; DEST_LEN], src: [TItem; SRC_LEN], offset: u64) {
+pub(crate) fn memcpy<TItem, SRC_LEN, DEST_LEN>(dest: &mut [TItem; DEST_LEN], src: [TItem; SRC_LEN], offset: u32) {
     memcpy_up_to_length(dest, src, offset, DEST_LEN);
 }
 
-pub fn subarray_inferred_len<TItem, SRC_LEN, DEST_LEN>(src: [TItem; SRC_LEN], offset: u64) -> [TItem; DEST_LEN] {
+pub fn subarray_inferred_len<TItem, SRC_LEN, DEST_LEN>(src: [TItem; SRC_LEN], offset: u32) -> [TItem; DEST_LEN] {
     let mut dest = [zeroed(); DEST_LEN];
     memcpy(&mut dest, src, offset);
     dest
@@ -46,8 +46,8 @@ pub fn subarray_inferred_len<TItem, SRC_LEN, DEST_LEN>(src: [TItem; SRC_LEN], of
 pub fn sub_array_equals_up_to_length<TItem, SUBARRAY_LEN, ARRAY_LEN>(
     subarray: [TItem; SUBARRAY_LEN],
     array: [TItem; ARRAY_LEN],
-    offset: u64,
-    length: u64
+    offset: u32,
+    length: u32
 ) -> bool where TItem: Eq {
     assert(length <= SUBARRAY_LEN, "Subarray index out of bound");
     assert(offset + length <= ARRAY_LEN, "Array index out of bound");
@@ -63,7 +63,7 @@ pub fn sub_array_equals_up_to_length<TItem, SUBARRAY_LEN, ARRAY_LEN>(
 pub fn sub_array_equals<TItem, SUBARRAY_LEN, ARRAY_LEN>(
     subarray: [TItem; SUBARRAY_LEN],
     array: [TItem; ARRAY_LEN],
-    offset: u64
+    offset: u32
 ) -> bool where TItem: Eq {
     assert(offset + SUBARRAY_LEN <= ARRAY_LEN, "Array index out of bound");
     let mut result = true;
