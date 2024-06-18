@@ -12,6 +12,6 @@ export function returnValues(abi: Abi): Abi {
   return {
     parameters: [],
     error_types: {},
-    return_type: abi.return_type,
+    return_type: abi.return_type
   };
 }
