@@ -48,7 +48,7 @@ struct ForeignCallTransaction<MAX_DATA_LEN> {
     value_hi: u64,
     value_lo: u64,
     data: [u8; MAX_DATA_LEN],
-    data_len: u64,
+    data_len: u32,
     v: u8,  // ECDSA recovery id
     r: Bytes32,  // ECDSA signature part
     s: Bytes32,  // ECDSA signature part

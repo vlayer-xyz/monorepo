@@ -42,7 +42,7 @@ pub fn get_log<MAX_LOG_DATA_LEN, MAX_LOGS_COUNT>(
     chain_id: Field,
     block_number: u64,
     tx_idx: Field,
-    log_idx: u64
+    log_idx: u32
 ) -> LogWithinBlock<MAX_LOG_DATA_LEN> {
     let (tx_type, receipt, receipt_proof_input): (TxType, TxReceiptPartial, ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN_M, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN_M>) = get_receipt_unconstrained_M(chain_id, block_number, tx_idx);
 
@@ -65,7 +65,7 @@ pub fn get_log<MAX_LOG_DATA_LEN, MAX_LOGS_COUNT>(
 
 pub(crate) fn extract_log<MAX_LOG_DATA_LEN, MAX_LOGS_COUNT, MAX_RECEIPT_RLP_FRAGMENT_LEN>(
     receipt_rlp_fragment: Fragment<MAX_RECEIPT_RLP_FRAGMENT_LEN, u8> ,
-    log_idx: u64
+    log_idx: u32
 ) -> Log<MAX_LOG_DATA_LEN> {
     let logs_fragment = extract_logs_fragment(receipt_rlp_fragment);
     let log_fragment = extract_log_fragment::<MAX_LOGS_COUNT, MAX_RECEIPT_RLP_FRAGMENT_LEN>(logs_fragment, log_idx);
@@ -91,7 +91,7 @@ fn extract_logs_fragment<MAX_RECEIPT_RLP_FRAGMENT_LEN>(receipt_rlp_fragment: Fra
 
 fn extract_log_fragment<MAX_LOGS_COUNT, MAX_RECEIPT_RLP_FRAGMENT_LEN>(
     logs_fragment: Fragment<MAX_RECEIPT_RLP_FRAGMENT_LEN, u8>,
-    log_idx: u64
+    log_idx: u32
 ) -> Fragment<MAX_RECEIPT_RLP_FRAGMENT_LEN, u8> {
     let logs_rlp_list: RlpList<MAX_LOGS_COUNT> = decode_list(logs_fragment);
     rlp_subfragment(logs_fragment, logs_rlp_list.get(log_idx))

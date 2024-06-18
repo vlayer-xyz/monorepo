@@ -43,7 +43,7 @@ impl<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN
     }
 }
 
-pub fn get_node_len<MAX_LEN>(node: [u8; MAX_LEN]) -> u64 {
+pub fn get_node_len<MAX_LEN>(node: [u8; MAX_LEN]) -> u32 {
     let node_rlp_header = decode_to_rlp_header(Fragment::from_array(node));
     let node_unpadded_len = node_rlp_header.offset + node_rlp_header.length;
     assert(node_unpadded_len <= MAX_LEN, "Node RLP length exceeds MAX_LEN");
@@ -79,9 +79,9 @@ pub fn extract_hash_from_branch_node<MAX_PREFIXED_KEY_NIBBLE_LEN>(
     node: Node,
     node_rlp_list: RlpList<MAX_NODE_FIELDS>,
     key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8>,
-    key_ptr: &mut u64
+    key_ptr: &mut u32
 ) -> Fragment<HASH_LEN, u8> {
-    let curr_nibble = key_nibbles.at(*key_ptr) as u64;
+    let curr_nibble = key_nibbles.at(*key_ptr) as u32;
     assert(
         node_rlp_list.get(curr_nibble).length == HASH_LEN, "Expected a hash at position given by the key nibble"
     );
@@ -94,7 +94,7 @@ pub fn extract_hash_from_extension_node<MAX_PREFIXED_KEY_NIBBLE_LEN>(
     node: Node,
     node_rlp_list: RlpList<MAX_NODE_FIELDS>,
     key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8>,
-    key_ptr: &mut u64
+    key_ptr: &mut u32
 ) -> Fragment<HASH_LEN, u8> {
     let prefixed_extension_key_part: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8> = Fragment::new(node_rlp_list.get(0).offset, node_rlp_list.get(0).length, node).focus();
 
@@ -114,7 +114,7 @@ pub fn extract_hash_from_extension_node<MAX_PREFIXED_KEY_NIBBLE_LEN>(
 pub fn extract_hash<MAX_PREFIXED_KEY_NIBBLE_LEN>(
     node: Node,
     key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8>,
-    key_ptr: &mut u64
+    key_ptr: &mut u32
 ) -> Fragment<HASH_LEN, u8> {
     let mut hash = Fragment::from_array([0; HASH_LEN]);
     let node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list_of_small_strings(Fragment::from_array(node));
@@ -137,7 +137,7 @@ pub fn verify_node_hash<MAX_LEN>(node: [u8; MAX_LEN], hash: [u8; HASH_LEN]) {
 pub fn verify_leaf<MAX_LEAF_LEN, MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN>(
     leaf: Leaf<MAX_LEAF_LEN>,
     key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8>,
-    key_ptr: &mut u64,
+    key_ptr: &mut u32,
     value: Value<MAX_VALUE_LEN>
 ) {
     let leaf_rlp_list: RlpList<2> = decode_list(Fragment::from_array(leaf));

@@ -24,7 +24,7 @@ global state_root = ${joinArray(stateRoot)};
 global transactions_root = ${joinArray(transactionsRoot)};
 global receipts_root = ${joinArray(receiptsRoot)};
 
-global encoded_length: u64 = ${headerHexArray.length};
+global encoded_length: u32 = ${headerHexArray.length};
 global encoded_data: [u8; ${MAX_HEADER_RLP_LEN}] = ${joinArray(headerData)};
 
 global block_header_partial = BlockHeaderPartial { number, hash, state_root, transactions_root, receipts_root };

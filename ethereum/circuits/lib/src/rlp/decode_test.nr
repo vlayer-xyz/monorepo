@@ -5,7 +5,7 @@ mod extract_payload_len {
     #[test] 
     fn unpadded() {
         let mut rlp_header = Fragment::from_array([0xf9, 1, 1]);
-        let lenlen = (rlp_header.pop_front() - 0xf7) as u64;
+        let lenlen = (rlp_header.pop_front() - 0xf7) as u32;
         assert(extract_payload_len(rlp_header, lenlen) == 0x0101);
     }
 
@@ -13,7 +13,7 @@ mod extract_payload_len {
     fn padded() {
         let rlp_header = [249, 1, 1];
         let mut rlp_header_padded : Fragment<200, u8> = Fragment::from_array(resize(rlp_header));
-        let lenlen = (rlp_header_padded.pop_front() - 0xf7) as u64;
+        let lenlen = (rlp_header_padded.pop_front() - 0xf7) as u32;
         assert(extract_payload_len(rlp_header_padded, lenlen) == 0x0101);
     }
 
