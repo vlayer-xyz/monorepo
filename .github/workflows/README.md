@@ -1,21 +1,21 @@
 # Workflows
 
-- [Circuits profiling](./circuits_profile.yml)
+- [Circuits profiling](.github/workflows/circuits_profile.yaml)
   - Runs `nargo info` and stores the results into an artefact
-- [Circuits tests](./circuits_test.yml)
+- [Circuits tests](.github/workflows/circuits_test.yaml)
   - Runs `nargo test`
-- [Circuits E2E tests](./circuits_e2e.yml)
+- [Circuits E2E tests](.github/workflows/e2e_test.yaml)
   - Runs `nargo prove` & `nargo verify`
-- [Solidity tests](./contract_test.yml)
+- [Solidity tests](.github/workflows/contract_test.yml)
   - Runs `forge test`
 - [TypeScript E2E tests using solidity verifiers](./e2e_test.yml)
   - Runs `yarn test:e2e`
-- [Static checks](./static_checks.yaml)
+- [Static checks](.github/workflows/static_checks.yaml)
   - Runs `yarn format:all:ci`
   - Runs `yarn lint:all`
   - Runs `yarn prepare-js-fixtures`
   - Runs `yarn prepare-noir-fixtures`
   - Runs `nargo fmt --check`
-- [Release](./release.yaml)
+- [Release](.github/workflows/release.yaml)
   - Applies version changes
   - Publishes NPM packages
