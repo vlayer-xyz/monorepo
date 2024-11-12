@@ -21,7 +21,7 @@ Codebase also includes support for base Ethereum structures in Noir:
 - Mappings of Basic Ethereum data types: uint256, address, bytes32, hash
 - Fragment data structure, similar to Rust's slice, used for parsing data
 
-Additionally, we provide [smart contracts](./ethereum/contracts/src/EthereumHistoryVerifier.sol) that allow to verify inclusion of block in the chain for last 256 blocks.
+Additionally, we provide [smart contracts](./contracts/src/EthereumHistoryVerifier.sol) that allow to verify inclusion of block in the chain for last 256 blocks.
 
 ## Repository structure
 

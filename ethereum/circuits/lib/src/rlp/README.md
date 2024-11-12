@@ -12,7 +12,7 @@ pub fn decode_string<N>(data: Fragment) -> RlpFragment;
 pub fn decode_list<N, NUM_FIELDS>(data: Fragment) -> RlpList<NUM_FIELDS>;
 ```
 
-**Note:** For string elements - offset points at the beginning of the data itself, while for lists - it points at the beginning of it's RLP Header.
+**Note:** For string elements - offset points at the beginning of the data itself, while for lists - it points at the beginning of its RLP Header.
 
 The library also exports a more performant special case version of `decode_list`, that can be used when the input consists exclusively of strings of length <= 55 bytes:
 
@@ -50,7 +50,7 @@ struct RlpFragment {
 
 `RlpFragment` contains the `offset` and `length` of the decoded item within the input data. It also contains the `data_type` of an item. Unlike the Fragment it does not contain the data as RLP data can have multiple fields and having multiple data copies is costly.
 
-Whe working with RLP data - it's a common pattern to have a structure (Tx, Log, Receipt) and its RLP encoding and comparing both field by field. To simplify this flow - we export some helper methods on `RlpFragment`. Each of those methods accepts `field_name`, `rlp` and `expected_value`.
+When working with RLP data - it's a common pattern to have a structure (Tx, Log, Receipt) and its RLP encoding and comparing both field by field. To simplify this flow - we export some helper methods on `RlpFragment`. Each of those methods accepts `field_name`, `rlp` and `expected_value`.
 
 - `field_name` is used in assertion messages
 - `rlp` contains the data to compare the `value` against using `offset` and `length` from `RlpFragment`

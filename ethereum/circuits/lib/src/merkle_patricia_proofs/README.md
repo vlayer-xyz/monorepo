@@ -19,7 +19,7 @@ pub fn verify_merkle_proof<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH
 )
 ```
 
-**verify_merkle_proof** doesn't return a boolean value but rather succeeds or fails depending on the correctness of given arguments. It takes four parameteres described below:
+**verify_merkle_proof** doesn't return a boolean value but rather succeeds or fails depending on the correctness of given arguments. It takes four parameters described below:
 
 ### Key
 
