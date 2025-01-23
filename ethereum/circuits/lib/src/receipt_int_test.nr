@@ -51,7 +51,7 @@ fn get_receipt_wrong_tx_idx() {
 }
 
 #[test(should_fail_with = "Invalid node hash")]
-fn get_receipt_wrong_recipt() {
+fn get_receipt_wrong_receipt() {
     let _ = OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp));
     let _ = OracleMock::mock("get_receipt").returns((another_tx_type, another_foreign_call_receipt, another_proof_input_serialized));
 
