@@ -52,7 +52,7 @@ mod rlp_fragment {
         global fragment = RlpFragment { offset: 0, length, data_type: STRING };
 
         #[test]
-        fn success_short() {
+        fn s_short() {
             let short_fragment = RlpFragment { offset: 0, length: 1, data_type: STRING };
             let short_bounded_vec = BoundedVec { storage: bytes, len: 1 };
 
@@ -60,7 +60,7 @@ mod rlp_fragment {
         }
 
         #[test]
-        fn success() {
+        fn s() {
             fragment.assert_eq_bounded_vec("Field", encoded_bytes, bounded_vec)
         }
 
@@ -87,7 +87,7 @@ mod rlp_fragment {
         global fragment = RlpFragment { offset: 0, length: 0, data_type: STRING };
 
         #[test]
-        fn success() {
+        fn s() {
             fragment.assert_empty_string("Field")
         }
 
@@ -117,7 +117,7 @@ mod rlp_fragment {
         global fragment = RlpFragment { offset: 0, length: 1, data_type: STRING };
 
         #[test]
-        fn succes() {
+        fn success() {
             fragment.assert_eq_u1("Field", encoded_value, bit_value)
         }
 
