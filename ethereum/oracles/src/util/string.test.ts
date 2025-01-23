@@ -27,7 +27,7 @@ describe('incHexByte', () => {
     expect(incHexByte('0xAA')).toEqual('0xab');
   });
 
-  it('oveflow', () => {
+  it('overflow', () => {
     expect(incHexByte('0xFF')).toEqual('0x0');
   });
 });
