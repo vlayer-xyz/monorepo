@@ -1,32 +1,20 @@
-nargo compile --package get_header
-nargo compile --package get_account
-nargo compile --package get_storage
-nargo compile --package get_receipt
-nargo compile --package get_transaction
-nargo compile --package get_log
+#!/bin/bash
 
-echo "Prove get_header"
-nargo prove --package get_header --oracle-resolver=http://localhost:5555
-echo "Prove get_account"
-nargo prove --package get_account --oracle-resolver=http://localhost:5555
-echo "Prove get_storage"
-nargo prove --package get_storage --oracle-resolver=http://localhost:5555
-echo "Prove get_receipt"
-nargo prove --package get_receipt --oracle-resolver=http://localhost:5555
-echo "Prove get_transaction"
-nargo prove --package get_transaction --oracle-resolver=http://localhost:5555
-echo "Prove get_log"
-nargo prove --package get_log --oracle-resolver=http://localhost:5555
+packages=(get_header get_account get_storage get_receipt get_transaction get_log)
 
-echo "Codegen get_header"
-nargo codegen-verifier --package get_header
-echo "Codegen get_account"
-nargo codegen-verifier --package get_account
-echo "Codegen get_storage"
-nargo codegen-verifier --package get_storage
-echo "Codegen get_receipt"
-nargo codegen-verifier --package get_receipt
-echo "Codegen get_transaction"
-nargo codegen-verifier --package get_transaction
-echo "Codegen get_log"
-nargo codegen-verifier --package get_log
+for pkg in "${packages[@]}"; do
+  echo "Compiling $pkg"
+  nargo compile --package "$pkg"
+
+  echo "Executing $pkg"
+  nargo execute --package "$pkg"
+
+  echo "Proving $pkg"
+  nargo prove --package "$pkg" --oracle-resolver=http://localhost:5555
+
+  echo "Generating verifier for $pkg"
+  nargo codegen-verifier --package "$pkg"
+
+  echo "Done with $pkg"
+  echo "-------------------------"
+done
