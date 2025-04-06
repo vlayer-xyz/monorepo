@@ -1,10 +1,24 @@
-# vlayer monorepo
+# vLayer Monorepo
 
 This monorepo contains two sub-projects:
 
 - **ethereum** - [Noir](https://noir-lang.org) library for proving and verifying historical data on the Ethereum blockchain and other EVM compatible blockchains. It supports proving accounts, storage, logs, receipts & transactions. **[Read more](./ethereum/README.md)**.
 
-- **vlayer** - Contains vlayer SDK along with real life examples. It's a work in progress and lacks documentation. Stay tuned for updates.
+- **vlayer** - Contains vLayer SDK along with real-life examples. The SDK provides tools for zero-knowledge proofs of blockchain data. **[See examples](./vlayer/examples)**.
+
+## Project Structure
+
+```
+vlayer-monorepo/
+├── ethereum/         # Noir circuits and smart contracts
+│   ├── circuits/     # Zero-knowledge circuits
+│   ├── contracts/    # Solidity contracts
+│   ├── oracles/      # Blockchain data providers
+│   └── tests/        # Test suite
+├── vlayer/           # vLayer SDK
+│   ├── ethereum/     # Ethereum-specific implementations
+│   └── examples/     # Example applications
+```
 
 ## Prerequisites
 
@@ -14,13 +28,13 @@ This monorepo contains two sub-projects:
 - [foundry installation](https://book.getfoundry.sh/getting-started/installation)
 - [yarn](https://yarnpkg.com) `>= 4.1.0`
 
-## Getting started
+## Getting Started
 
-### Installing dependencies
+### Installing Dependencies
 
 Run `yarn` to install dependencies.
 
-### Running checks
+### Running Checks
 
 To run all static checks (eslint, prettier, typecheck) type:
 
@@ -36,9 +50,25 @@ To run checks individually use:
 
 - `yarn typecheck:all` - to run `typescript` checks on the whole repo
 
-### CI workflows
+### Building the Project
 
-We use Github actions to run tests on CI. For a detailed description of what does each workflow do consult [Workflow Docs](./.github/workflows/README.md)
+```sh
+yarn build
+```
+
+### CI Workflows
+
+We use Github Actions to run tests on CI. For a detailed description of what each workflow does, consult [Workflow Docs](./.github/workflows/README.md).
+
+## Contributing
+
+We welcome contributions to vLayer! Please feel free to submit a PR or open an issue.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## DISCLAIMER
 
